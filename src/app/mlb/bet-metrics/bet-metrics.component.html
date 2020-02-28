@@ -1,0 +1,65 @@
+<div class="container-fluid">
+  <form class="form-inline lu-parameters-inline-form">
+    <div *ngFor="let oneParameter of parameters; let i = index;">
+      <label class="mr-sm-2" [for]="'parameter_input'+i">{{oneParameter.title}}</label>
+      <input class="form-control mb-2 mr-sm-2 mb-sm-0" [(ngModel)]="oneParameter.value"
+             [id]="'parameter_input_'+i"  [name]="'parameter_input_'+i">
+    </div>
+    <button (click)="onParametersSubmit()" [disabled]="isSubmitting" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+<table class="table">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th>Win%</th>
+    <th>Lose%</th>
+    <th>Profit</th>
+    <th>max kelly</th>
+    <th>min kelly</th>
+    <th>max ev</th>
+    <th>min ev</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <th scope="row">{{ betMetrics?.bets?.length }}</th>
+    <td>{{ betMetrics?.win_pct }}</td>
+    <td>{{ betMetrics?.lose_pct }}</td>
+    <td>{{ betMetrics?.profit }}</td>
+    <td>{{ betMetrics?.max_kelly }}</td>
+    <td>{{ betMetrics?.min_kelly }}</td>
+    <td>{{ betMetrics?.max_ev }}</td>
+    <td>{{ betMetrics?.min_ev }}</td>
+  </tr>
+  </tbody>
+</table>
+<table class="table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Win%</th>
+      <th>Lose%</th>
+      <th>Outcome</th>
+      <th>bet</th>
+      <th>odds</th>
+      <th>ev</th>
+      <th>prediction</th>
+      <th>model_type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let bet of betMetrics?.bets; let i = index;">
+      <th scope="row">{{ i }}</th>
+      <td>{{ bet.win_prob }}</td>
+      <td>{{ bet.lose_prob }}</td>
+      <td>{{ bet.outcome }}</td>
+      <td>{{ bet.bet }}</td>
+      <td>{{ bet.odds }}</td>
+      <td>{{ bet.ev }}</td>
+      <td>{{ bet.prediction }}</td>
+      <td>{{ bet.model_type }}</td>
+    </tr>
+  </tbody>
+</table>

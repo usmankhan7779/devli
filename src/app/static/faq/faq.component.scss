@@ -1,0 +1,40 @@
+/**Faq**/
+.faq-wrapper{
+  float:left;
+  width:100%;
+  clear:both;
+  color:#333333;
+  margin-bottom:20px;
+}
+.faq-wrapper h1{
+  font-size:20px;
+  font-family: 'Lato', sans-serif;
+  font-weight:700;
+  margin:0px;
+  float:left;
+  width:100%;
+}
+.faq-wrapper-item{
+  float:left;
+  width:100%;
+  margin-top:16px;
+}
+.faq-wrapper-item h2{
+  font-size:15px;
+  font-family: 'Lato', sans-serif;
+  font-weight:700;
+  margin:0px 0px 5px 0px;
+  float:left;
+  width:100%;
+}
+.faq-wrapper-item p{
+  float:left;
+  width:100%;
+  font-family: 'Lato', sans-serif;
+  font-size:14px;
+  margin:0px 0px 3px 0px;
+}
+.faq-wrapper-item p:last-child{
+  margin:0px;
+}
+/**Faq End**/

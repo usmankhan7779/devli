@@ -1,0 +1,329 @@
+<div class="row pb-4">
+
+  <div *ngIf="data.intro_paragraph" class="col-12 col-lg-8 flex-last flex-sm-unordered">
+    <p class="site-pages-content" [innerHtml]="data.intro_paragraph | safeHtml"></p>
+  </div>
+
+  <div class="col-12 col-lg-8">
+    <!-- Collapse Menu -->
+    <div class="in-page-dropdown-toggle" [ngClass]="{'no-dropdown': !dropdownCollapsed}">
+      <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="dropdownCollapsed = !dropdownCollapsed"
+              [attr.aria-expanded]="!dropdownCollapsed" aria-controls="collapseExample">
+        <i class="fa fa-bars dropdown-icon" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="d-flex updated-date-time-block-wrapper">
+      <div class="in-page-dropdown-menu" [ngbCollapse]="!dropdownCollapsed" [ngClass]="{'hidden-dropdown': !dropdownCollapsed}">
+        <!-- Grouped Dropdown -->
+        <div class="grouped-dropdown-wrapper btn-group mb-0">
+
+          <div ngbDropdown class="grouped-dropdown dropdown">
+            <button type="button" class="grouped-dropdown-btn btn btn-secondary first px-3" id="main-dropdown" ngbDropdownToggle>
+              <span class="pr-0 pr-sm-3">{{activeYear | handleLeagueYear : 'nba'}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="down-arrow"/>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="main-dropdown">
+              <div *ngFor="let season of data.seasons_dropdown;">
+                <button
+                  [ngClass]="{'dd-active-btn': activeYear === season.year}"
+                  (click)="onYearDdChange(season)"
+                  class="dropdown-item">
+                  <span>{{season.name}}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <app-dropdown
+            [ddData]="lineupDDs"
+            [filterItems]="onDropdownChange.bind(this)"
+            prop="main"
+            className="big-dd"
+            [isSingleSelect]="true"
+          ></app-dropdown>
+          <app-dropdown
+            [isDisabled]="lineupDDs.activeMain === 'advanced'"
+            [ddData]="lineupDDs"
+            [filterItems]="onDropdownChange.bind(this)"
+            prop="secondary"
+            [allowHiddenFiltering]="true"
+            className="last big-dd"
+            [isSingleSelect]="true"
+          ></app-dropdown>
+        </div>
+      </div> <!-- END: 'in-page-nav-menu' -->
+      <!--updated-nba-commented-->
+      <!--<div *ngIf="data.nav.updated" class="updated-date-time-block next-to-dd align-self-center">-->
+        <!--Updated: <app-general-time-format [time]="data.nav.updated" [showTimeAgo]="true"></app-general-time-format>-->
+      <!--</div>-->
+    </div>
+  </div>
+
+
+  <div class="col-12">
+    <h2 class="page-heading-two">
+      {{data.header_one}}
+    </h2>
+  </div>
+  <div class="col-12 col-lg-8">
+    <div class="lineup-player-image-list nba-lineup-player-list d-flex flex-wrap after-heading-margin">
+      <div class="player-image-wrapper" *ngFor="let player of data.starters">
+        <div>
+          <a [routerLink]="[player.profile_url || '']" rel="nofollow" class="link-black">
+            <img [src]="player.photo_url" alt="{{player.name}}">
+          </a>
+        </div>
+        <div class="player-under-image-details">
+          <span *ngIf="player.batting_order; let batting_order">{{batting_order}}.</span>
+          <app-player-link [league]="'nba'" [playerName]="player.name | shortPlayerName" [playerUrl]="player.profile_url" [generateShortName]="false"></app-player-link>,
+          <span>{{player.position}}</span>
+          <span *ngIf="player.jersey || player.jersey === 0">#{{player.jersey}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="starting-hitters-data">
+      <div class="row table-row table-sect-wrap large-table-wrapper scrollbar-margin">
+        <!-- Static Positioned Tabled -->
+        <div class="static-table-wrapper">
+          <table
+            [mfRowsOnPage]="10000" [mfData]="data.starters"
+            [(mfSortBy)]="sortByStarters"
+            [(mfSortOrder)]="sortOrderStarters"
+            (mfSortByChange)="onSortOrder('sortByStarters', 'sortOrderStarters', 'by', $event)"
+            (mfSortOrderChange)="onSortOrder('sortByStarters', 'sortOrderStarters', 'order', $event)"
+            #staticStarters="mfDataTable"
+            class="static-table stats-table table table-bordered starting-pitcher-table">
+            <thead>
+            <tr>
+              <th class="position-col">
+                <mfSorter by="position">Pos</mfSorter>
+              </th>
+              <th class="player-name-col">
+                <mfSorter by="name">Player</mfSorter>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let starter of staticStarters.data">
+              <td class="position-col">{{starter.position}}</td>
+              <td class="player-name-col">
+                <app-player-link [league]="'nba'" [playerName]="starter.name" [playerUrl]="starter.profile_url"></app-player-link>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Starting Hitters Table-->
+        <div class="horizontal-table-wrapper team-lineups">
+          <table
+            [mfRowsOnPage]="10000" [mfData]="data.starters"
+            [(mfSortBy)]="sortByStarters"
+            [(mfSortOrder)]="sortOrderStarters"
+            (mfSortByChange)="onSortOrder('sortByStarters', 'sortOrderStarters', 'by', $event)"
+            (mfSortOrderChange)="onSortOrder('sortByStarters', 'sortOrderStarters', 'order', $event)"
+            #starters="mfDataTable"
+            class="table table-bordered starting-hitters-table stats-table">
+            <thead>
+            <tr>
+              <th class="position-col inner-col-switch">
+                <mfSorter by="position">Pos</mfSorter>
+              </th>
+              <th class="player-name-col inner-col-switch">
+                <mfSorter by="name">Player</mfSorter>
+              </th>
+              <th>
+                <mfSorter by="rating">Rating</mfSorter>
+              </th>
+              <th *ngFor="let heading of data[lineupDDs.activeMain + '_headings']">
+                <mfSorter by="{{lineupDDs.activeMain}}.{{lineupDDs.activeSecondary}}.{{heading.prop}}">{{heading.name}}</mfSorter>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let starter of starters.data">
+              <td scope="row" class="position-col inner-col-switch">{{starter.position}}</td>
+              <td class="player-name-col inner-col-switch">
+                <app-player-link [league]="'nba'" [playerName]="starter.name" [playerUrl]="starter.profile_url"></app-player-link>
+              </td>
+              <td>
+                <app-rating *ngIf="starter.rating !== null" [value]="starter.rating"></app-rating>
+                <span *ngIf="starter.rating === null">N/A</span>
+              </td>
+              <td *ngFor="let td of data[lineupDDs.activeMain + '_headings']">
+                {{starter[lineupDDs.activeMain][lineupDDs.activeSecondary][td.prop]}}
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div *ngIf="benchTableActive" class="row bench-hitter-table-wrapper table-row">
+        <div class="table-row row table-sect-wrap large-table-wrapper scrollbar-margin">
+          <!-- Static Positioned Tabled -->
+          <div class="static-table-wrapper">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="data.bench"
+              [(mfSortBy)]="sortByStartersBench"
+              [(mfSortOrder)]="sortOrderStartersBench"
+              (mfSortByChange)="onSortOrder('sortByStartersBench', 'sortOrderStartersBench', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('sortByStartersBench', 'sortOrderStartersBench', 'order', $event)"
+              #staticStartersBench="mfDataTable"
+              class="static-table stats-table table table-bordered starting-pitcher-table">
+              <thead>
+              <tr>
+                <th class="position-col">
+                  <mfSorter by="position">Pos</mfSorter>
+                </th>
+                <th class="player-name-col">
+                  <mfSorter by="name">Player</mfSorter>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let player of staticStartersBench.data">
+                <td class="position-col">{{player.position}}</td>
+                <td class="player-name-col">
+                  <app-player-link [league]="'nba'" [playerName]="player.name" [playerUrl]="player.profile_url"></app-player-link>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Bench Hitters Table -->
+          <div class="horizontal-table-wrapper">
+            <!-- Bench Hitters Table -->
+            <table
+              [mfRowsOnPage]="10000" [mfData]="data.bench"
+              [(mfSortBy)]="sortByStartersBench"
+              [(mfSortOrder)]="sortOrderStartersBench"
+              (mfSortByChange)="onSortOrder('sortByStartersBench', 'sortOrderStartersBench', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('sortByStartersBench', 'sortOrderStartersBench', 'order', $event)"
+              #startersBench="mfDataTable"
+              class="table table-bordered bench-hitters-table stats-table">
+              <thead>
+                <tr>
+                  <th class="position-col inner-col-switch">
+                    <mfSorter by="position">Pos</mfSorter>
+                  </th>
+                  <th class="player-name-col inner-col-switch">
+                    <mfSorter by="name">Player</mfSorter>
+                  </th>
+                  <th>
+                    <mfSorter by="rating">Rating</mfSorter>
+                  </th>
+                  <th *ngFor="let heading of data[lineupDDs.activeMain + '_headings']">
+                    <mfSorter by="{{lineupDDs.activeMain}}.{{lineupDDs.activeSecondary}}.{{heading.prop}}">{{heading.name}}</mfSorter>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let starter of startersBench.data">
+                  <td scope="row" class="position-col inner-col-switch">{{starter.position}}</td>
+                  <td class="player-name-col inner-col-switch">
+                    <app-player-link [league]="'nba'" [playerName]="starter.name" [playerUrl]="starter.profile_url"></app-player-link>
+                  </td>
+                  <td>
+                    <app-rating *ngIf="starter.rating !== null" [value]="starter.rating"></app-rating>
+                    <span *ngIf="starter.rating === null">N/A</span>
+                  </td>
+                  <td *ngFor="let td of data[lineupDDs.activeMain + '_headings']">
+                    {{starter[lineupDDs.activeMain][lineupDDs.activeSecondary][td.prop]}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Open Bench Table Toggle Button-->
+      <button (click)="benchTableActive = !benchTableActive" class="btn light-gray bullpen bench">
+        <span *ngIf="!benchTableActive" class="btn-open-plus">+</span>
+        <span *ngIf="benchTableActive" class="btn-close-minus">-</span>
+        Bench
+      </button>
+    </div>
+  </div>
+
+  <!--<div *ngIf="isDefaultSeason" class="col-12">-->
+    <!--<app-wp-articles-list [teamName]="data.nav.team_name" [podcasts]="true" [league]="'nba'" [pages]="true"></app-wp-articles-list>-->
+  <!--</div>-->
+  <ng-container *ngIf="data && data.frequent_lineups && data.frequent_lineups.length">
+    <div class="col-12">
+      <h2 class="page-heading-two">
+        {{data.header_two}}
+      </h2>
+    </div>
+    <div class="col-12">
+      <table class="col-table table-text-left most-common-lineups-table stats-col-table">
+        <tr>
+          <td class="col-table-wrapper" *ngFor="let commonLineups of data.frequent_lineups; let first = first; let last = last">
+            <table class="col-table-inner-table col-table-bordered" [ngClass]="{'col-table-first': first, 'col-table-last': last}">
+              <thead>
+              <tr>
+                <td>{{commonLineups.frequency}}</td>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let player of commonLineups.players;">
+                <td>
+                  <span class="player-name">
+                    {{player.position}}:
+                    <!--<app-player-link [league]="'nba'" [playerName]="player.name" [playerUrl]="player.profile_url" [generateShortName]="false"></app-player-link>-->
+                    <app-player-link [league]="'nba'" [playerName]="player.name" [generateShortName]="false"></app-player-link>
+                  </span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table> <!-- END: Most Common Lineups Table -->
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="data && data.past_lineups && data.past_lineups.length">
+    <div class="col-12">
+      <h2 class="page-heading-two">
+        {{data.header_three}}
+      </h2>
+    </div>
+    <div class="col-12">
+      <div class="multi-row-data-table-wrapper recent-lineups">
+        <table class="multi-row-data-table t-stripped">
+          <thead>
+          <tr class="t-sub-header">
+            <th *ngFor="let heading of data.recent_lineups_headings" class="text-center">
+              {{ showRecentLineupsHeadings(heading.name) }}
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="t-content" *ngFor="let lineup of data.past_lineups">
+            <td *ngFor="let heading of data.recent_lineups_headings">
+              <span *ngIf="!lineup[heading.prop]?.profile_url">
+                {{lineup[heading.prop]}}
+              </span>
+              <span *ngIf="lineup[heading.prop]?.profile_url">
+                {{lineup[heading.prop].position}}:
+                <!--<app-player-link [league]="'nba'" [playerName]="lineup[heading.prop].name" [playerUrl]="lineup[heading.prop].profile_url" [generateShortName]="false"></app-player-link>-->
+                <app-player-link [league]="'nba'" [playerName]="lineup[heading.prop].name" [generateShortName]="false"></app-player-link>
+              </span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+
+
+  <div *ngIf="data.bottom_paragraph" class="col-12 bottom-seo-section-iframe-700br flex-last flex-sm-unordered">
+    <h2 *ngIf="data.bottom_header" class="page-heading-two">
+      {{data.bottom_header}}
+    </h2>
+    <p class="site-pages-content" [innerHtml]="data.bottom_paragraph | safeHtml"></p>
+  </div>
+</div>

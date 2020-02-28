@@ -1,0 +1,71 @@
+body {
+	padding-top: 3.75rem;
+  &.wp-nav {
+    padding-top: 89px;
+  }
+}
+
+.close-main-video {
+  cursor: pointer;
+  position: absolute;
+  color: white;
+  bottom: 259px;
+  @media (max-width: 1600px) {
+    bottom: 223px;
+  }
+  @media (max-width: 1250px) {
+    bottom: 168px;
+  }
+  right: 40px;
+  z-index: 2;
+  font-size: 20px;
+}
+
+.s2nPlayerFrame, .s2nContainer, .s2nFloatParams, .s2nFloatBox, .s2nFriendlyFrame, .s2nVideoPlayer, .s2nPlayerFrame iframe {
+  width: 462px !important;
+  max-width: 462px !important;
+  height: 285px !important;
+  @media (max-width: 1600px) {
+    width: 398px !important;
+    max-width: 398px !important;
+    height: 249px !important;
+  }
+  @media (max-width: 1250px) {
+    width: 300px !important;
+    max-width: 300px !important;
+    height: 194px !important;
+  }
+}
+
+.main-video:not(.in-position) {
+  position: relative;
+  z-index: 2;
+
+  .s2nFriendlyFrame, .s2nVideoPlayer {
+    position: fixed !important;
+    bottom: 0 !important;
+    right: 0 !important;
+  }
+  .close-main-video {
+    position: fixed;
+  }
+}
+
+.main-video.in-position {
+  margin: 0 auto;
+  display: block;
+  margin-bottom: 1.175rem;
+  position: relative;
+  @media (min-width: 992px) {
+    margin-bottom: 0;
+  }
+
+  .s2nPlayerFrame, .s2nFriendlyFrame, .s2nVideoPlayer, .s2nPlayerFrame iframe {
+    display: block;
+    margin: 0 auto;
+  }
+  .close-main-video {
+    display: none;
+  }
+}
+

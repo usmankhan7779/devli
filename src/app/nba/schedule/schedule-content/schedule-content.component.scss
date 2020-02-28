@@ -1,0 +1,9 @@
+:host {
+  @import "../../../../scss/custom-components/schedule";
+  .team-date-col {
+    min-width: 150px;
+    @media (max-width: 1530px) {
+      min-width: 120px;
+    }
+  }
+}

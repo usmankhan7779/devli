@@ -1,0 +1,48 @@
+@import "../shared/variables/project";
+
+.rating-formatter {
+  line-height: 20px;
+  text-align: center;
+  height: 20px;
+  width: 60%;
+  border-radius: $psd-rating-border-radius;
+  display: inline-block;
+
+  &.red {
+    color: $psd-rating-red;
+    background: $psd-rating-red-bg;
+  }
+  &.orange {
+    color: $psd-rating-orange;
+    background: $psd-rating-orange-bg;
+  }
+  &.yellow {
+    color: $psd-rating-yellow;
+    background: $psd-rating-yellow-bg;
+  }
+  &.light-green {
+    color: $psd-rating-light-green;
+    background: $psd-rating-light-green-bg;
+  }
+  &.green {
+    color: $psd-rating-green;
+    background: $psd-rating-green-bg;
+  }
+}
+
+.team-swap-btn {
+  padding: 0;
+  width: 42px;
+  height: 25px;
+  border: 1px solid #6d6d86;
+  text-align: center;
+  color: white;
+  background: #8a8a9c;
+  @media (max-width: 1500px) {
+    width: 32px;
+    height: 21px;
+  }
+  i {
+    margin: 0 auto;
+  }
+}

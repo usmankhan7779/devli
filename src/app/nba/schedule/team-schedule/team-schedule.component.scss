@@ -1,0 +1,17 @@
+:host {
+  .team-logo-mini {
+    width: 1.2rem;
+    height: 1.2rem;
+    vertical-align: middle;
+    margin-right: 5px;
+    margin-left: 5px;
+  }
+  @media (max-width: 855px) {
+    .multi-row-data-table-wrapper {
+      overflow-x: auto;
+      table {
+        min-width: 799px;
+      }
+    }
+  }
+}

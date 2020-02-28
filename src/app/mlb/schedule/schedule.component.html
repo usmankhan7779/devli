@@ -1,0 +1,53 @@
+<ng-template #loadingTpl>
+  <div class="starting-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<div [hidden]="pageTitle">
+  <ng-container *ngTemplateOutlet="loadingTpl"></ng-container>
+</div>
+
+<div class="schedule-content content container-fluid pb-5" [hidden]="!pageTitle">
+    <app-breadcrumb></app-breadcrumb>
+
+    <div class="row">
+
+      <div class="col-12 col-lg-8">
+        <div #containerEl class="d-flex flex-wrap after-heading-margin">
+          <div>
+            <h1 #headingEl class="page-heading m-0">
+              {{pageTitle}}
+            </h1>
+          </div>
+          <app-twitter-follow-btn [textElement]="headingEl" [containerElement]="containerEl"></app-twitter-follow-btn>
+        </div>
+        <div *ngIf="introParagraph" class="hidden-md-down">
+          <p class="site-pages-content mb-0" [innerHTML]="introParagraph | safeHtml"></p>
+        </div>
+      </div>
+      <div class="col-12 col-lg-4 gateway-video-container">
+        <app-ad-component [league]="'mlb'"></app-ad-component>
+      </div>
+
+      <div *ngIf="introParagraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+        <p class="site-pages-content" [innerHtml]="introParagraph | safeHtml"></p>
+      </div>
+
+      <div class="col-12">
+        <app-schedule-content
+          [preSelectedDate]="preSelectedDate"
+          (returnData)="onDataReceived($event)"
+        ></app-schedule-content>
+      </div>
+
+      <div *ngIf="bottomParagraph" class="col-12 flex-last flex-sm-unordered">
+        <h2 *ngIf="bottomHeader" class="page-heading-two">
+          {{bottomHeader}}
+        </h2>
+        <p class="site-pages-content" [innerHtml]="bottomParagraph | safeHtml"></p>
+      </div>
+
+    </div>
+
+</div>

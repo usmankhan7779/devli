@@ -1,0 +1,14 @@
+/*
+Import files that overrides bootstrap components/elements styles
+One feature/element/component - one file
+*/
+
+// Additional variables, that is not present on main variables file
+@import "variables";
+@import "mixins";
+
+@import "typography";
+@import "table";
+@import "buttons";
+@import "container";
+@import "navbar";

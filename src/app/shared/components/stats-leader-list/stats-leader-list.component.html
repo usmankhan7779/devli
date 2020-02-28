@@ -1,0 +1,55 @@
+<div class="d-flex stats-leader-list" [ngClass]="{'team-leader-list': isTeamLeaderList}" *ngIf="leadersData && leadersData.leaders?.length">
+  <div class="leader-image-container">
+    <ng-template #teamLogoTpl>
+      <a [routerLink]="teamStatsLink(leadersData.leaders[0])" (click)="onTeamClick()" class="link-black" rel="nofollow">
+        <img [type]="'white'" [appSpriteImg]="league" [src]="leadersData.leaders[0].team_fk__white_logo" class="team-img" alt="{{leadersData.leaders[0].team_fk__full_name}}">
+      </a>
+    </ng-template>
+    <img *ngIf="!isTeamLeaderList; else teamLogoTpl;" class="player-img" [src]="leadersData.leaders[0].player_fk__photo_url" alt="{{leadersData.leaders[0].name}}">
+  </div>
+  <div class="leader-table-container">
+    <h5 class="leader-card-header">
+      <span class="leader-card-header-name">{{cardHeader}}</span>
+      <span class="leader-card-header-sm-name">{{showSmHeaderName(cardHeader)}}</span>
+    </h5>
+    <table>
+      <tbody>
+        <tr class="leader-row" *ngFor="let leader of leadersData.leaders; let index = index;" [ngClass]="{'active': index === 0}">
+          <td class="leader-index text-center" width="">{{index + 1}}.</td>
+          <td *ngIf="!isTeamLeaderList">
+            <span class="leader-name">
+              <app-player-link [league]="league" [playerName]="leader.name" [playerUrl]="leader.player_fk__profile_url" [generateShortName]="false"></app-player-link>
+            </span>
+            <span class="leader-team">
+              <a [routerLink]="teamStatsLink(leader)" (click)="onTeamClick()" class="link-black-underline">{{leader.team}}</a>
+            </span>
+          </td>
+          <td *ngIf="isTeamLeaderList">
+            <span class="leader-name">
+              <a [routerLink]="teamStatsLink(leader)"  (click)="onTeamClick()" class="link-black" rel="nofollow">
+                <img [type]="'white'" [appSpriteImg]="league" [src]="leader.team_fk__white_logo" class="team-img-sm" alt="{{leader.team}}">
+              </a>
+              <a [routerLink]="teamStatsLink(leader)" (click)="onTeamClick()" class="link-black-underline">
+                <span class="team-name-abbr">
+                  {{leader.team || leader.Team}}
+                </span>
+                <span class="short-team-name">
+                  {{leader.team_fk__full_name | lastTeamName}}
+                </span>
+                <span class="normal-team-name">
+                  {{leader.team_fk__full_name}}
+                </span>
+              </a>
+            </span>
+          </td>
+          <td class="leader-stat text-center">
+            {{leader[leadersData.sort_stat] || leader[propStat] | numberWithCommas}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="mt-3">
+      <button (click)="setSortOrderAndNavigate()" class="btn btn-primary h-100 py-1 px-3 see-all-btn">See All</button>
+    </div>
+  </div>
+</div>

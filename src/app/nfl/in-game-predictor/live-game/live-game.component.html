@@ -1,0 +1,451 @@
+<div class="row mt-2">
+  <div class="col-12">
+    <div class="row top-score-section">
+      <div class="px-2">
+        <app-game-score [data]="data.current"></app-game-score>
+      </div>
+      <div class="col-xl-6 ml-auto">
+        <app-next-play
+          [pass]="data.next_play_pass_probability"
+          [rush]="data.next_play_run_probability"
+          [actual]="'Matt Ryan passes 10 yards down middle to Julio Jones.'"
+          [model]="'Matt Ryan passes 10 yards down middle to Julio Jones.'"
+        ></app-next-play>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-12 col-xl-3">
+        <table class="multi-row-data-table t-stripped">
+          <thead>
+          <tr class="t-sub-header">
+            <th class="text-center bigger-th" width="70%">Next Play</th>
+            <th class="text-center bigger-th">Probability</th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr class="t-content">
+              <td class="text-left px-2">Pass to Wide Receiver 1</td>
+              <td>{{data.next_play_pass_wr1_probability || '0'}}%</td>
+            </tr>
+            <tr class="t-content">
+              <td class="text-left px-2">Run with Running Back</td>
+              <td>{{data.next_play_run_rb_probability || '0'}}%</td>
+            </tr>
+            <tr class="t-content">
+              <td class="text-left px-2">Incomplete Pass</td>
+              <td>{{data.next_play_incomplete_pass_probability || '0'}}%</td>
+            </tr>
+            <tr class="t-content">
+              <td class="text-left px-2">Pass to Wide Receiver 2</td>
+              <td>{{data.next_play_pass_wr2_probability || '0'}}%</td>
+            </tr>
+            <tr class="t-content">
+              <td class="text-left px-2">Pass to Tight End</td>
+              <td>{{data.next_play_pass_te_probability || '0'}}%</td>
+            </tr>
+            <tr class="t-content">
+              <td class="text-left px-2">Turnover</td>
+              <td>{{data.next_play_turnover_probability || '0'}}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-12 col-xl-9">
+        <app-win-probability-chart
+          finalScore="true"
+          league="nfl"
+          [homeTeamName]="data.current.home_team"
+          [homeChangeProb]="data.win_probability_change_home"
+          [homeCurrentProb]="data.win_probability_current_home"
+          [homeFinalScorePrediction]="data.final_score_prediction_home"
+          [homeFirstHalfScorePrediction]="data.first_half_score_prediction_home"
+          [homeLogo]="data.current.home_team_logo"
+          [awayTeamName]="data.current.away_team"
+          [awayChangeProb]="data.win_probability_change_away"
+          [awayCurrentProb]="data.win_probability_current_away"
+          [awayFinalScorePrediction]="data.final_score_prediction_away"
+          [awayFirstHalfScorePrediction]="data.first_half_score_prediction_away"
+          [awayLogo]="data.current.away_team_logo"
+          [time]="data.win_probability_chart_time"
+          [homeWinProbability]="data.win_probability_chart_home"
+          [awayWinProbability]="data.win_probability_chart_away"
+        ></app-win-probability-chart>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-12">
+        <h6 class="section-header">Possession Predictions</h6>
+      </div>
+      <div class="col-12">
+        <div class="multi-row-data-table-wrapper">
+          <table class="multi-row-data-table t-stripped">
+            <thead>
+            <tr class="t-sub-header">
+              <th class="text-center">1st Down</th>
+              <th class="text-center">Pass TD</th>
+              <th class="text-center">Rush TD</th>
+              <th class="text-center">FG</th>
+              <th class="text-center">Punt</th>
+              <th class="text-center">INT</th>
+              <th class="text-center">Sack</th>
+              <th class="text-center">Fum</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="t-content">
+              <td>{{data.possession_prediction_first_down || '0'}}%</td>
+              <td>{{data.possession_prediction_pass_td || '0'}}%</td>
+              <td>{{data.possession_prediction_run_td || '0'}}%</td>
+              <td>{{data.possession_prediction_field_goal || '0'}}%</td>
+              <td>{{data.possession_prediction_punt || '0'}}%</td>
+              <td>{{data.possession_prediction_interception || '0'}}%</td>
+              <td>{{data.possession_prediction_sack || '0'}}%</td>
+              <td>{{data.possession_prediction_fumble || '0'}}%</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-12">
+        <h6 class="section-header">Series of Downs Predictions</h6>
+      </div>
+      <div class="col-12">
+        <div class="multi-row-data-table-wrapper">
+          <table class="multi-row-data-table t-stripped">
+            <thead>
+            <tr class="t-sub-header">
+              <th class="text-center">1st Down</th>
+              <th class="text-center">Pass TD</th>
+              <th class="text-center">Rush TD</th>
+              <th class="text-center">FG</th>
+              <th class="text-center">Punt</th>
+              <th class="text-center">INT</th>
+              <th class="text-center">Sack</th>
+              <th class="text-center">Fum</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="t-content">
+              <td>{{data.set_of_downs_prediction_first_down || '0'}}%</td>
+              <td>{{data.set_of_downs_prediction_pass_td || '0'}}%</td>
+              <td>{{data.set_of_downs_prediction_run_td || '0'}}%</td>
+              <td>{{data.set_of_downs_prediction_field_goal || '0'}}%</td>
+              <td>{{data.set_of_downs_prediction_punt || '0'}}%</td>
+              <td>{{data.set_of_downs_prediction_interception || '0'}}%</td>
+              <td>{{data.set_of_downs_prediction_sack || '0'}}%</td>
+              <td>{{data.set_of_downs_prediction_fumble || '0'}}%</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-1">
+      <div class="col-12">
+        <h6 class="section-header">Total Points Predictions</h6>
+      </div>
+      <div class="col-12">
+        <div class="multi-row-data-table-wrapper">
+          <table class="multi-row-data-table t-stripped">
+            <thead>
+            <tr class="t-sub-header">
+              <th class="text-center">Team</th>
+              <th *ngFor="let header of data.first_team_to_reach_points" class="text-center">{{header}} Pts</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="t-content">
+              <td class="team-logo-cell">
+                <img [type]="'white'" [appSpriteImg]="'nfl'" class="table-logo" [src]="data.current.away_team_logo" alt="{{data.current.away_team}}">
+                {{data.current.away_team}}
+              </td>
+              <td *ngFor="let point of data.first_team_to_reach_away_probability">{{point}}%</td>
+            </tr>
+            <tr class="t-content">
+              <td class="team-logo-cell">
+                <img [type]="'white'" [appSpriteImg]="'nfl'" class="table-logo" [src]="data.current.home_team_logo" alt="{{data.current.home_team}}">
+                {{data.current.home_team}}
+              </td>
+              <td *ngFor="let point of data.first_team_to_reach_home_probability">{{point}}%</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-1">
+      <div class="col-12">
+        <div class="multi-row-data-table-wrapper">
+          <table class="multi-row-data-table t-stripped">
+            <colgroup span="4"></colgroup>
+            <colgroup span="4"></colgroup>
+            <tbody>
+            <tr class="t-header">
+              <th colspan="4" scope="colgroup" class="text-center main-border">
+                <img [type]="'white'" [appSpriteImg]="'nfl'" class="table-logo" [src]="data.current.away_team_logo" alt="{{data.current.away_team_full_name}}">
+                {{data.current.away_team_full_name}}
+              </th>
+              <th colspan="4" scope="colgroup" class="text-center">
+                <img [type]="'white'" [appSpriteImg]="'nfl'" class="table-logo" [src]="data.current.home_team_logo" alt="{{data.current.home_team_full_name}}">
+                {{data.current.home_team_full_name}}
+              </th>
+            </tr>
+            <tr class="t-sub-header">
+              <th scope="col" class="text-center">
+                Halftime
+              </th>
+              <th scope="col" class="text-center">
+                Probability
+              </th>
+              <th scope="col" class="text-center">
+                Final
+              </th>
+              <th scope="col" class="text-center main-border">
+                Probability
+              </th>
+              <th scope="col" class="text-center">
+                Halftime
+              </th>
+              <th scope="col" class="text-center">
+                Probability
+              </th>
+              <th scope="col" class="text-center">
+                Final
+              </th>
+              <th scope="col" class="text-center">
+                Probability
+              </th>
+            </tr>
+            <tr *ngFor="let value of data.total_points_halftime_range; let index = index;" class="t-content">
+              <td>{{getValueDependOnDash(value, ' pts')}}</td>
+              <td>{{getValueDependOnDash(value, '%', data.total_points_halftime_away[index] || '0')}}</td>
+              <td>{{getValueDependOnDash(data.total_points_final_range[index], ' pts')}}</td>
+              <td class="main-border">{{getValueDependOnDash(data.total_points_final_range[index], '%', data.total_points_final_away[index] || '0')}}</td>
+              <td>{{getValueDependOnDash(value, ' pts')}}</td>
+              <td>{{getValueDependOnDash(value, '%', data.total_points_halftime_home[index] || '0')}}</td>
+              <td>{{getValueDependOnDash(data.total_points_final_range[index], ' pts')}}</td>
+              <td>{{getValueDependOnDash(data.total_points_final_range[index], '%', data.total_points_final_home[index] || '0')}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-1">
+      <div class="col-12">
+        <h6 class="section-header">Over/Under Predictions</h6>
+      </div>
+      <div class="col-12">
+        <div class="multi-row-data-table-wrapper">
+          <table class="multi-row-data-table t-stripped">
+            <thead>
+              <tr class="t-sub-header">
+                <th class="text-center">
+                  Q1
+                </th>
+                <th class="text-center">
+                  <span class="hidden-md-down">Probability</span>
+                  <span class="hidden-lg-up">Prob</span>
+                </th>
+
+                <th class="text-center">
+                  Q2
+                </th>
+                <th class="text-center">
+                  <span class="hidden-md-down">Probability</span>
+                  <span class="hidden-lg-up">Prob</span>
+                </th>
+
+                <th class="text-center">
+                  Halftime
+                </th>
+                <th class="text-center">
+                  <span class="hidden-md-down">Probability</span>
+                  <span class="hidden-lg-up">Prob</span>
+                </th>
+
+                <th class="text-center">
+                  Q3
+                </th>
+                <th class="text-center">
+                  <span class="hidden-md-down">Probability</span>
+                  <span class="hidden-lg-up">Prob</span>
+                </th>
+
+                <th class="text-center">
+                  Q4
+                </th>
+                <th class="text-center">
+                  <span class="hidden-md-down">Probability</span>
+                  <span class="hidden-lg-up">Prob</span>
+                </th>
+
+                <th class="text-center">
+                  Final
+                </th>
+                <th class="text-center">
+                  <span class="hidden-md-down">Probability</span>
+                  <span class="hidden-lg-up">Prob</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="t-content" *ngFor="let item of data.over_under_halftime_range; let index = index;">
+                <td>
+                  {{getValueDependOnDash(data.over_under_q1_range[index], ' pts')}}
+                </td>
+                <td>
+                  {{getValueDependOnDash(data.over_under_q1_range[index], '%', data.over_under_q1[index])}}
+                </td>
+
+                <td>
+                  {{getValueDependOnDash(data.over_under_q2_range[index], ' pts')}}
+                </td>
+                <td>
+                  {{getValueDependOnDash(data.over_under_q2_range[index], '%', data.over_under_q2[index])}}
+                </td>
+
+                <td>
+                  {{getValueDependOnDash(item, ' pts')}}
+                </td>
+                <td>
+                  {{getValueDependOnDash(item, '%', data.over_under_halftime[index])}}
+                </td>
+
+                <td>
+                  {{getValueDependOnDash(data.over_under_q3_range[index], ' pts')}}
+                </td>
+                <td>
+                  {{getValueDependOnDash(data.over_under_q3_range[index], '%', data.over_under_q3[index])}}
+                </td>
+
+                <td>
+                  {{getValueDependOnDash(data.over_under_q4_range[index], ' pts')}}
+                </td>
+                <td>
+                  {{getValueDependOnDash(data.over_under_q4_range[index], '%', data.over_under_q4[index])}}
+                </td>
+
+                <td>
+                  {{getValueDependOnDash(data.over_under_final_range[index], ' pts')}}
+                </td>
+                <td>
+                  {{getValueDependOnDash(data.over_under_final_range[index], '%', data.over_under_final[index])}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-1">
+      <div class="col-12">
+        <h6 class="section-header">Spread Predictions</h6>
+      </div>
+      <div class="col-12">
+        <div class="multi-row-data-table-wrapper">
+          <table class="multi-row-data-table t-stripped">
+            <thead>
+              <tr class="t-sub-header">
+                <th class="text-center">
+                  Q1
+                </th>
+                <th class="text-center">
+                  <span class="hidden-md-down">Probability</span>
+                  <span class="hidden-lg-up">Prob</span>
+                </th>
+
+                <th class="text-center">
+                  Q2
+                </th>
+                <th class="text-center">
+                  <span class="hidden-md-down">Probability</span>
+                  <span class="hidden-lg-up">Prob</span>
+                </th>
+
+                <th class="text-center">
+                  Halftime
+                </th>
+                <th class="text-center">
+                  <span class="hidden-md-down">Probability</span>
+                  <span class="hidden-lg-up">Prob</span>
+                </th>
+
+                <th class="text-center">
+                  Q3
+                </th>
+                <th class="text-center">
+                  <span class="hidden-md-down">Probability</span>
+                  <span class="hidden-lg-up">Prob</span>
+                </th>
+
+                <th class="text-center">
+                  Q4
+                </th>
+                <th class="text-center">
+                  <span class="hidden-md-down">Probability</span>
+                  <span class="hidden-lg-up">Prob</span>
+                </th>
+
+                <th class="text-center">
+                  Final
+                </th>
+                <th class="text-center">
+                  <span class="hidden-md-down">Probability</span>
+                  <span class="hidden-lg-up">Prob</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="t-content" *ngFor="let item of data.spread_halftime_range; let index = index;">
+                <td>
+                  {{getValueDependOnDash(data.spread_q1_range[index], ' pts')}}
+                </td>
+                <td>
+                  {{getValueDependOnDash(data.spread_q1_range[index], '%', data.spread_q1[index])}}
+                </td>
+
+                <td>
+                  {{getValueDependOnDash(data.spread_q2_range[index], ' pts')}}
+                </td>
+                <td>
+                  {{getValueDependOnDash(data.spread_q2_range[index], '%', data.spread_q2[index])}}
+                </td>
+
+                <td>
+                  {{getValueDependOnDash(item, ' pts')}}
+                </td>
+                <td>
+                  {{getValueDependOnDash(item, '%', data.spread_halftime[index] || '0')}}
+                </td>
+
+                <td>
+                  {{getValueDependOnDash(data.spread_q3_range[index], ' pts')}}
+                </td>
+                <td>
+                  {{getValueDependOnDash(data.spread_q3_range[index], '%', data.spread_q3[index])}}
+                </td>
+
+                <td>
+                  {{getValueDependOnDash(data.spread_q4_range[index], ' pts')}}
+                </td>
+                <td>
+                  {{getValueDependOnDash(data.spread_q4_range[index], '%', data.spread_q4[index])}}
+                </td>
+
+                <td>
+                  {{getValueDependOnDash(data.spread_final_range[index] || '0', ' pts')}}
+                </td>
+                <td>
+                  {{getValueDependOnDash(data.spread_final_range[index] || '0', '%', data.spread_final[index] || '0')}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

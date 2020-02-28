@@ -1,0 +1,52 @@
+.team-lineup-table-editable {
+  ::ng-deep ngui-auto-complete ul li.item {
+    padding: 0;
+  }
+  background-color: #ffffff;
+  border: 1px solid #e1e1e1;
+  border-radius: 3px;
+  .multi-row-data-table-wrapper {
+    width: 100%;
+    width: calc(100% + 1px);
+  }
+  ::ng-deep app-rating > div {
+    @media (max-width: 1500px) {
+      width: 24px;
+      height: 100%;
+    }
+  }
+  ::ng-deep app-rating-ten > span.rating {
+    padding: 2px 9px;
+    @media (max-width: 1500px) {
+      padding: 1px 5px;
+    }
+  }
+  .logo {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    top: 2px;
+  }
+  .gear-icon {
+    padding: 3px 0;
+    width: 15px;
+    cursor: pointer;
+  }
+  app-arrows-up-down {
+    @media (max-width: 1500px) {
+      margin-top: 4px;
+    }
+  }
+  .history-icon {
+    padding: 3px 0;
+    font-size: 15px;
+    color: #ebebec;
+    &.active {
+      &:hover {
+        color: #6f6f6f;
+      }
+      color: #9c9c9c;
+      cursor: pointer;
+    }
+  }
+}

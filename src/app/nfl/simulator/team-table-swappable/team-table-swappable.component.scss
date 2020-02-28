@@ -1,0 +1,88 @@
+:host {
+  .team-table-swappable {
+    background: #fff;
+    padding-top: 1rem;
+  }
+
+  .team-name-short {
+    display: none;
+  }
+  @media (min-width: 992px) and (max-width: 1050px), (max-width: 600px) {
+    .team-name-full {
+      display: none;
+    }
+    .team-name-short {
+      display: inline;
+    }
+  }
+
+  .team-info {
+    table-layout: fixed;
+    width: 100%;
+
+      ::ng-deep .app-status {
+        display: inline-block;
+        margin-left: auto;
+        text-align: left;
+
+        .status-display {
+          display: none !important;
+        }
+      }
+
+      .logo {
+        width: 60px;
+        height: 60px;
+        position: relative;
+        top: -4px;
+      }
+
+    @media only screen and (max-width: 1500px) {
+      td {
+        font-size: 11px;
+      }
+    }
+
+  }
+
+  .sub-table:not(:last-child) {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e1e1e1;
+  }
+
+  ::ng-deep app-swappable-table {
+
+    ngui-auto-complete {
+      ul li.item {
+        padding: 0;
+      }
+      width: auto !important;
+      margin-left: -14.4%;
+      .ngui-auto-complete {
+        max-height: 300px;
+        overflow-y: auto;
+      }
+    }
+  }
+
+  .td-rating-wrapper {
+    margin-bottom: 1rem;
+  }
+  @media only screen and (max-width: 500px) {
+    .team-info {
+      td {
+        display: none;
+      }
+      td.simulator-item {
+        width: 75%;
+        display: table-cell;
+        & + td {
+          width: 25%;
+          display: table-cell;
+        }
+      }
+    }
+
+  }
+}
+

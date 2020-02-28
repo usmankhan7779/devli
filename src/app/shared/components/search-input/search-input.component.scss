@@ -1,0 +1,8 @@
+:host {
+  .input-group {
+    max-width: 250px;
+    &.search-next-to-dd {
+      height: 35px;
+    }
+  }
+}

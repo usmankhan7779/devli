@@ -1,0 +1,25 @@
+<div class="select-quarter">
+  <b>Quarter:</b> <a *ngFor="let quarter of info.quarters; let i = index" (click)="selectedQuarter = i" [ngClass]="{ active: selectedQuarter === i }">{{ i + 1 }}</a>
+</div>
+<div class="plays">
+  <p *ngIf="!info.quarters[selectedQuarter].phases.length">
+    There were no scoring plays this quarter.
+  </p>
+  <table *ngFor="let phase of info.quarters[selectedQuarter].phases">
+    <tr [style.background]="phase.color">
+      <td class="filled-with-bg" colspan="2">
+        {{ phase.header }}
+        <span class="score">{{ phase.score }}</span>
+      </td>
+    </tr>
+    <tr *ngFor="let play of phase.plays">
+      <td class="timestamp">{{ play.timestamp }}</td>
+      <td>{{ play.description }}</td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        {{ phase.footer }}
+      </td>
+    </tr>
+  </table>
+</div>

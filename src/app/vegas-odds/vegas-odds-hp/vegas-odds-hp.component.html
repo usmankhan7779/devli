@@ -1,0 +1,50 @@
+<ng-template #loading>
+  <div class="starting-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<div *ngIf="this.data; else loading" class="container-fluid pb-5">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+
+    <div class="col-12 col-lg-8">
+      <h1 class="page-heading">{{data.heading}}</h1>
+      <div *ngIf="data.intro_paragraph" class="hidden-md-down">
+        <p class="site-pages-content" [innerHTML]="data.intro_paragraph | safeHtml"></p>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component></app-ad-component>
+    </div>
+
+    <div *ngIf="data.intro_paragraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+      <p class="site-pages-content" [innerHtml]="data.intro_paragraph | safeHtml"></p>
+    </div>
+
+    <div class="col-12">
+      <div class="d-flex ball-wrapper">
+        <a class="link-black ball-container nba-ball-container" [routerLink]="[data.results.nba_odds_route]">
+          <img src="/assets/images/NBA_ball.png" alt="NBA Live Odds">
+          <h2>NBA Live Odds</h2>
+        </a>
+        <a class="link-black ball-container nfl-ball-container" [routerLink]="[data.results.nfl_odds_route]">
+          <img src="/assets/images/NFL_ball.png" alt="NFL Live Odds">
+          <h2>NFL Live Odds</h2>
+        </a>
+        <a class="link-black ball-container mlb-ball-container" [routerLink]="[data.results.mlb_odds_route]">
+          <img src="/assets/images/MLB_ball.png" alt="MLB Live Odds">
+          <h2>MLB Live Odds</h2>
+        </a>
+      </div>
+    </div>
+
+    <div *ngIf="data.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="data.bottom_header" class="page-heading-two">
+        {{data.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="data.bottom_paragraph | safeHtml"></p>
+    </div>
+
+  </div>
+</div>

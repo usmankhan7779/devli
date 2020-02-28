@@ -1,0 +1,41 @@
+<div class="team-item-wrapper" [ngClass]="{'cfb-league': league === 'college-football', 'nfl-league': league === 'nfl'}">
+  <div class="team-item-heading">
+    <h4>{{item.heading || item.name}}</h4>
+  </div>
+  <div class="team-info-wrapper">
+    <div *ngFor="let team of item.teams" class="team-info-item d-flex">
+      <div class="team-info-logo">
+        <a class="link-black" rel="nofollow" [routerLink]="team.team_lineup_route || team.team_depth_chart_route || ''">
+          <img [type]="'white'" [appSpriteImg]="league" align="middle" [src]="team.team_logo_white || team.logo" alt="{{team.team_name_full}}"/>
+        </a>
+      </div>
+      <div>
+        <div class="team-info-item-name">
+          <a class="link-black-underline" [routerLink]="team.team_lineup_route || team.team_depth_chart_route || team.roster_route || ''">
+            {{team.team_name_full || team.full_name}}
+          </a>
+        </div>
+        <div class="team-info-item-links">
+          <span *ngIf="team.matchup_route">
+            <a class="link-black-underline" [routerLink]="team.matchup_route">Matchup</a>
+          </span>
+          <span *ngIf="team.team_lineup_route">
+            <a class="link-black-underline" [routerLink]="team.team_lineup_route">Lineup</a>
+          </span>
+          <span *ngIf="team.team_depth_chart_route && league === 'nfl'">
+            <a class="link-black-underline" [routerLink]="team.team_depth_chart_route">Depth Chart</a>
+          </span>
+          <span *ngIf="team.team_roster_route">
+            <a class="link-black-underline" [routerLink]="team.team_roster_route">Roster</a>
+          </span>
+          <span *ngIf="league === 'nfl' && team.team_stats_route">
+            <a class="link-black-underline" [routerLink]="team.team_stats_route">Stats</a>
+          </span>
+          <span *ngIf="team.team_schedule_route">
+            <a class="link-black-underline" [routerLink]="team.team_schedule_route">Schedule</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

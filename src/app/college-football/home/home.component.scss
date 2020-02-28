@@ -1,0 +1,22 @@
+:host {
+  .border-bottom {
+    border-bottom: 1px solid #eaeaea;
+  }
+  .top-targets-links {
+    @media (max-width: 1500px) {
+      & > div {
+        h5 {
+          margin-top: 1rem;
+        }
+      }
+    }
+    @media (min-width: 1200px) and (max-width: 1500px) {
+      & > div {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 50%;
+        flex: 0 0 50%;
+        max-width: 50%;
+      }
+    }
+  }
+}

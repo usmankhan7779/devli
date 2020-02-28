@@ -1,0 +1,267 @@
+@import "../../../../scss/bootstrap-customization/custom-mixins";
+
+@mixin mobile-styles(
+    $team-name-font-size: 20px,
+    $team-details-font-size: 13px,
+    $status-side-font-size: 14px,
+    $updated-text-mobile-font-size: 13px,
+    $matchup-logo-margin-top: 0.25rem,
+    $divider-font-size: 18px,
+    $divider-padding-y: 15px,
+    $divider-margin-top: 8px,
+    $matchup-logo-margin: 8px,
+    $matchup-logo-size: 35px,
+    $team-name-margin-bottom: -2px,
+    $status-side-mobile-width: 700%,
+    $status-side-mobile-margin-left: -310%
+  ) {
+  .updated-text {
+    display: none;
+  }
+  .matchup-heading-wrapper {
+    .status-side-mobile {
+      margin-left: $status-side-mobile-margin-left;
+      text-align: center;
+      width: $status-side-mobile-width;
+      .stadium-name {
+        font-size: $status-side-font-size;
+      }
+      .status-side {
+        p {
+          font-size: $status-side-font-size;
+        }
+        p.updated-text-mobile {
+          font-size: $updated-text-mobile-font-size;
+          font-weight: normal;
+          display: inline-block;
+          margin-left: 0;
+        }
+      }
+    }
+  }
+  .divider {
+    font-size: $divider-font-size;
+    padding: 0 $divider-padding-y;
+    margin-top: $divider-margin-top;
+  }
+  img.matchup-logo {
+    width: $matchup-logo-size;
+    height: $matchup-logo-size;
+    margin-top: $matchup-logo-margin-top;
+    &.matchup-home-logo {
+      margin-right: $matchup-logo-margin;
+    };
+    &.matchup-away-logo {
+      margin-left: $matchup-logo-margin;
+    }
+  }
+  .media-body {
+    h4 {
+      font-size: $team-name-font-size;
+      margin-bottom: $team-name-margin-bottom;
+    }
+    span {
+      font-size: $team-details-font-size;
+    }
+  }
+}
+
+:host {
+  $breakpoint: 1424px;
+  .matchup-heading-component {
+
+    .event-risk {
+      font-size: 13px;
+      .event-wind-content {
+        max-height: 16px;
+        display: inline-block;
+        span.wind-speed {
+          margin-right: 15px;
+          display: block;
+        }
+        img.wind-direction-arrow {
+          width: 10px;
+          position: relative;
+          top: -15px;
+          display: block;
+          float: right;
+        }
+      }
+    }
+
+
+    .media-body {
+      * {
+        font-weight: bold;
+      }
+    }
+    img.matchup-logo {
+      $size: 46px;
+      width: $size;
+      height: $size;
+      margin-top: 0.25rem;
+      &.matchup-home-logo {
+        margin-right: 1rem;
+      };
+      &.matchup-away-logo {
+        margin-left: 1rem;
+      }
+    }
+
+    .team-details {
+      white-space: nowrap;
+    }
+
+    .updated-text-mobile {
+      display: none;
+    }
+
+    .updated-text {
+      position: absolute;
+      bottom: -6px;
+      right: 0;
+      margin: 0;
+      display: none;
+      @media (max-width: $breakpoint) {
+        display: block;
+      }
+    }
+
+    .divider {
+      font-weight: bold;
+      .status-side-mobile {
+        padding-top: 10px;
+        white-space: nowrap;
+        position: absolute;
+        right: 0;
+        left: 0;
+        margin-left: -100%;
+        text-align: center;
+        width: 300%;
+        font-weight: normal;
+      }
+      font-size: 27px;
+      padding: 0 30px;
+      margin-top: 8px;
+      position: relative;
+    }
+    .media-body {
+      span {
+        font-size: 15px;
+        font-weight: normal !important;
+      }
+      h4 {
+        font-size: 27px;
+        margin-bottom: -2px;
+      }
+    }
+    &.mlb, &.nfl {
+      margin-bottom: 3px;
+    }
+    .team-link {
+      color: black;
+    }
+  }
+  @media (max-width: 816px) {
+    .stadium-name {
+      font-size: 15px;
+    }
+  }
+  .status-side p {
+    margin: 0;
+  }
+  .matchup-heading-wrapper {
+    position: relative;
+    .status-side-mobile {
+      .status-side {
+        display: none;
+        p:not(.updated-text-mobile) {
+          display: inline-block;
+        }
+      }
+    }
+    .status-side {
+      font-size: 1rem;
+      margin-left: auto;
+      @media (max-width: $breakpoint) {
+        margin-left: initial;
+        margin-right: auto;
+        margin-top: 10px;
+      }
+    }
+    @media (max-width: $breakpoint) {
+      .status-side {
+        margin-top: 0;
+        visibility: hidden;
+        p:not(.updated-text-mobile) {
+          display: inline-block;
+        }
+      }
+      .status-side-mobile .status-side {
+        visibility: visible;
+        display: block;
+      }
+      @include flex-column-mixin();
+    }
+  }
+  .mlb {
+    .matchup-heading-wrapper.has-weather {
+      @media (max-width: 700px) {
+        .status-side p:not(.updated-text-mobile),
+        .status-side-mobile .status-side p:not(.updated-text-mobile) {
+          display: block !important;
+        }
+      }
+      @media (max-width: 575px) {
+        .status-side-mobile .status-side p.updated-text-mobile {
+          display: block !important;
+        }
+      }
+    }
+  }
+  .matchup-heading-component.mobile-styles {
+    @media (max-width: 575px) {
+      @include mobile-styles();
+      .matchup-heading {
+        -ms-flex-item-align: center;
+        -ms-grid-row-align: center;
+        align-self: center;
+      }
+    }
+    @media (max-width: 520px) {
+      @include mobile-styles(17px, 11px, 13px, 12px, 1px);
+    }
+    @media (max-width: 440px) {
+      @include mobile-styles(16px, 10px, 12px, 11px, 1px);
+    }
+    &:not(.nba) {
+      @media (max-width: 410px) {
+        @include mobile-styles(14px, 9px, 11px, 10px, 1px, 15px, 10px, 7px, 5px);
+      }
+      @media (max-width: 359px) {
+        @include mobile-styles(14px, 9px, 11px, 10px, 1px, 15px, 10px, 7px, 5px);
+      }
+      @media (max-width: 355px) {
+        @include mobile-styles(14px, 8px, 11px, 10px, 1px, 12px, 10px, 4px, 5px, 25px, -10px);
+      }
+      @media (max-width: 320px) {
+        @include mobile-styles(13px, 7px, 10px, 9px, 1px, 11px, 9px, 4px, 5px, 25px, -10px);
+      }
+    }
+    &.nba {
+      @media (max-width: 410px) {
+        @include mobile-styles(14px, 9px, 11px, 10px, 1px, 15px, 10px, 7px, 5px, 35px, -2px, 700%, -382%);
+      }
+      @media (max-width: 359px) {
+        @include mobile-styles(14px, 9px, 11px, 10px, 1px, 15px, 10px, 7px, 5px, 35px, -2px, 700%, -400%);
+      }
+      @media (max-width: 355px) {
+        @include mobile-styles(14px, 8px, 11px, 10px, 1px, 12px, 10px, 4px, 5px, 25px, -10px, 700%, -440%);
+      }
+      @media (max-width: 320px) {
+        @include mobile-styles(13px, 7px, 10px, 9px, 1px, 11px, 9px, 4px, 5px, 25px, -10px, 700%, -440%);
+      }
+    }
+  }
+}
+

@@ -1,0 +1,62 @@
+:host {
+  .depth-charts-content {
+    padding: 0rem 1rem 3rem;
+  }
+
+  $spacing: 15;
+  .alt-depth-charts-wrapper {
+    margin: 0 -#{$spacing}px 0 -#{$spacing}px;
+    .alt-depth-chart-wrapper {
+      margin: 0 #{$spacing}px;
+      display: inline-block;
+      flex-grow: 1;
+      max-width: calc(100% * (1/7) - 1px);
+      @media (max-width: 1310px) {
+        max-width: calc(100% * (1/5) - 1px);
+      }
+      @media (max-width: 1020px) {
+        max-width: calc(100% * (1/3) - 1px);
+      }
+      @media (max-width: 660px) {
+        max-width: calc(100% * (1/2.5) - 1px);
+      }
+      @media (max-width: 530px) {
+        max-width: calc(100% * (1/2.2) - 1px);
+      }
+      @media (max-width: 460px) {
+        max-width: 100%;
+      }
+    }
+    @media (max-width: 530px) {
+      $spacing: 7;
+      margin: 0 -#{$spacing}px 0 -#{$spacing}px;
+      .alt-depth-chart-wrapper {
+        margin: 0 #{$spacing}px;
+      }
+    }
+  }
+
+  @-webkit-keyframes filter-options-fade {
+    0% { opacity: 0.25; }
+    100% { opacity: 1; }
+  }
+  @-moz-keyframes filter-options-fade {
+    0% { opacity: 0.25; }
+    100% { opacity: 1; }
+  }
+
+  /* Action Header Button Groups */
+  .action-btn-group {
+    margin-left: 48px;
+  }
+
+  .action-btn-group.group-1 {
+    margin-left: 0;
+  }
+
+  .depth-charts-results {
+    overflow: hidden;
+    clear: both;
+  }
+}
+

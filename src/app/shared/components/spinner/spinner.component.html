@@ -1,0 +1,9 @@
+<div *ngIf="showSpinner" class="spinner-wrapper">
+  <div class="spinner-content">
+    <div *ngIf="text" class="spinner-text">
+      {{text}}
+    </div>
+    <img *ngIf="imgType === 'dots'" class="spinner-image" alt="spinner" src="/assets/images/loading-dots.svg">
+    <img *ngIf="imgType === 'circle'" alt="spinner" class="loader-image" src="/assets/images/Ripple.svg">
+  </div>
+</div>

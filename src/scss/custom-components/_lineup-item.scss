@@ -1,0 +1,335 @@
+.stand-horizontal-table-wrapper {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.disabled-link {
+  pointer-events: none;
+  cursor: default;
+}
+
+.progress-styles {
+  margin-top: 20px;
+}
+
+@media (max-width: 340px) {
+  .stand-horizontal-table-wrapper:not(.custom-br) {
+    overflow-x: auto;
+  }
+}
+.hitter-table, .pitcher-table {
+  min-width: 302px;
+}
+
+/* Starting Lineups Results */
+.starting-lineup-box {
+  overflow: hidden;
+  width: 49%;
+  float: left;
+  background: #FFF;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.13);
+  transition: ease-in all 0.12s;
+  margin-bottom: 56px;
+  padding-bottom: 30px;
+  border: 1px solid #e1e1e1;
+}
+
+.starting-lineup-box.center {
+  float: none;
+  clear: both;
+  margin: 0 auto;
+  margin-bottom: 56px;
+}
+
+.starting-lineup-box.right {
+  float: right;
+}
+
+.starting-lineup-box:hover {
+  box-shadow: 0 4px 23px rgba(0, 0, 0, 0.22);
+}
+
+.starting-lineup-box-head {
+  width: 100%;
+}
+
+.starting-lineup-box-head .event-top-info {
+  height: 84px;
+  text-align: center;
+  display: block;
+  margin: auto;
+}
+
+.event-top-info .event-time {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 22px;
+  margin-bottom: 8px;
+}
+
+/* Event Wind (MLB) */
+.event-wind.mlb {
+  width: 25%;
+  height: 50px;
+  float: left;
+  position: relative;
+}
+
+.event-wind.mlb .event-wind-content {
+  text-align: center;
+  font-weight: 800;
+  position: relative;
+  top: 15px;
+  font-size: 13px;
+  z-index: 1;
+}
+
+.event-wind-content .wind-speed {
+  display: block;
+}
+
+.event-wind-content .wind-direction-arrow {
+  transform: rotate(0deg);
+  width: 11px;
+  position: relative;
+  top: -4px;
+}
+
+.event-wind.mlb .mlb-diamond-icon {
+  width: 110px;
+  height: 72px;
+  margin: auto;
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -8px;
+  z-index: 0;
+}
+
+.event-participants {
+  font-size: 18px;
+  margin-bottom: 0;
+}
+
+.event-risk {
+  margin-top: 1px;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.event-top-participants {
+  height: 90px;
+}
+
+/* Event Away Participant */
+.event-away-participant {
+  width: 37%;
+  float: left;
+  text-align: right;
+  outline: none;
+}
+
+.away-participant-content {
+  display: inline-block;
+  text-align: right;
+}
+
+.event-top-participant-standing {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.away-participant-logo {
+  display: inline-block;
+}
+
+.event-participant-logo.mlb-gateway {
+  top: -20px;
+}
+
+/* Event Home Participant */
+.event-home-participant {
+  width: 37%;
+  float: left;
+  text-align: left;
+  outline: none;
+}
+
+.event-home-participant, .event-away-participant {
+  max-height: 80px;
+}
+
+.home-participant-content {
+  display: inline-block;
+  padding-left: 8px;
+}
+
+.home-participant-logo {
+  display: inline-block;
+}
+
+.participant-away-state-mobile {
+  display: none;
+}
+
+.lineup-state {
+  font-weight: 800;
+  font-size: 15px;
+  margin-top: 0;
+  margin-bottom: 0;
+  & > span {
+    font-weight: 700;
+  }
+}
+
+.lineup-state img {
+  position: relative;
+  top: -2px;
+  width: 12px;
+}
+
+/* Event (Middle of Event Lineup) Stats */
+.event-mid-stats {
+  overflow: hidden;
+  width: 100%;
+  border-top: 1px solid rgb(51, 51, 51);
+  border-bottom: 1px solid rgb(51, 51, 51);
+}
+
+.away-participant-stats {
+  width: 50%;
+  float: left;
+  border-right: 1px solid rgb(51, 51, 51);
+}
+
+.home-participant-stats {
+  width: 50%;
+  float: right;
+}
+
+thead.stats-head {
+  height: 28px;
+  background: rgb(235, 235, 236);
+}
+
+thead.stats-head tr {
+  max-height: 28px;
+}
+
+thead.stats-head th {
+  padding: 2px 10px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+thead.stats-head th.stat-align-left {
+  text-align: left;
+}
+
+th.hitters-stat-col {
+  width: 40%;
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.lineup-data-btn-wrapper {
+  background: rgb(250, 250, 250);
+  padding: 19px 0;
+  border-bottom: 1px solid rgb(51, 51, 51);
+  text-align: center;
+}
+
+.btn.lineup-data-btn {
+  background: rgb(78, 78, 106);
+  height: 37px;
+  color: #FFF;
+  font-weight: 500;
+  display: inline-block;
+  margin: auto;
+  cursor: pointer;
+  line-height: 36px;
+  border-radius: 0;
+  font-size: 14px;
+  padding: 0 23px;
+}
+
+.btn.lineup-data-btn:hover {
+  background: rgb(68, 68, 96)
+}
+
+.btn.lineup-data-btn img {
+  width: 6px;
+  margin-left: 6px;
+  position: relative;
+  top: -1px;
+}
+
+.event-lineup-footer-row {
+  width: 78%;
+  margin: auto;
+}
+
+.lineup-foot-stat-col {
+  float: left;
+  width: 33.333%;
+  height: 115px;
+  padding-top: 25px;
+}
+
+.lineup-foot-stat-col .foot-stat-title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.lineup-foot-stat-col .foot-stat-value {
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 0;
+}
+
+.btn.match-odds-and-line {
+  border-radius: 0;
+  text-align: center;
+  margin: auto;
+  display: inline-block;
+  background: rgb(102, 102, 102);
+  color: #FFF;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn.match-odds-and-line:hover {
+  background: rgb(89, 92, 95);
+}
+
+.btn.match-odds-and-line img {
+  width: 6px;
+  margin-left: 6px;
+  position: relative;
+  top: -1px;
+}
+
+@media (max-width: 1500px) {
+  .lineups-gateway-table-row td, .lineups-gateway-table-row th, .hitter-data {
+    font-size: 12px;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .starting-lineup-box {
+    width: 100%;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .lineup-foot-stat-col {
+    width: 100%;
+  }
+  .lineup-foot-stat-col.last-col {
+    margin-bottom: 20px;
+  }
+}

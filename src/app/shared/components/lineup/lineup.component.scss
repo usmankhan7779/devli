@@ -1,0 +1,147 @@
+$default-font-size: 14px;
+$md-font-size: 11px;
+:host {
+  .lineup {
+    background-color: #ffffff;
+    border: 1px solid #e1e1e1;
+    border-radius: 2px;
+    .matchup-link-container {
+      text-align: center;
+      margin-top: -3px;
+      padding-bottom: 4px;
+      a {
+        font-size: 12px;
+      }
+    }
+    .lineup-status {
+      //@media (max-width: 1200px) {
+        img {
+          width: 14px;
+        }
+      //}
+    }
+    .lineup-header {
+      padding-top: 15px;
+      padding-bottom: 10px;
+      .lineup-state {
+        font-size: $default-font-size;
+        @media only screen and (max-width: 1560px) {
+          font-size: $md-font-size;
+        }
+      }
+      .lineup-header-info {
+        white-space: nowrap;
+        font-size: $default-font-size;
+        @media only screen and (max-width: 1560px) {
+          font-size: $md-font-size;
+        }
+        padding: 0 10px;
+      }
+    }
+    .lineup-table {
+      tbody {
+        border: none;
+        .t-content {
+          &:nth-child(odd) {
+            height: 25px;
+          }
+          &:nth-child(even) {
+            height: 35px;
+          }
+          text-align: left;
+          td {
+            padding: 0 15px;
+            font-size: 14px;
+            @media only screen and (max-width: 1440px) {
+              font-size: 11px;
+            }
+          }
+          td:last-child {
+            border: none;
+          }
+        }
+      }
+    }
+    .t-content-lineup-bottom {
+      td {
+        height: 40px;
+        text-align: left;
+        padding: 0 15px;
+        border-right: 1px solid #e1e1e1;
+        &.lock-red {
+          background-color: #fbe4e4;
+          color: #e14747;
+        }
+        &.lock-green {
+          background-color: #dff4ea;
+          color: #2bb673;
+        }
+      }
+      td:last-child {
+        border: none;
+      }
+    }
+    .lock-icon {
+      width: 15px;
+    }
+  }
+
+  ::ng-deep .lineup {
+    .matchup-heading-component {
+      .team-details {
+        white-space: normal !important;
+      }
+      .d-flex {
+        div:first-child, div:last-child {
+          width: 100%;
+        }
+      }
+      .media {
+        img {
+          width: 30px !important;
+          height: 30px !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          margin-left: 5px !important;
+        }
+        .media-body {
+          h4 {
+            font-size: $default-font-size !important;
+            @media only screen and (max-width: 1560px) {
+              font-size: $md-font-size !important;
+            }
+          }
+          span {
+            font-size: $default-font-size !important;
+            @media only screen and (max-width: 1560px) {
+              font-size: $md-font-size !important;
+            }
+            @media (max-width: 970px) {
+              font-size: 9px !important;
+            }
+            font-weight: normal !important;
+          }
+          line-height: 1;
+        }
+      }
+      .divider {
+        padding: 0 10px !important;
+        font-weight: normal !important;
+        font-size: $default-font-size !important;
+        @media (max-width: 1560px) {
+          font-size: $md-font-size !important;
+        }
+        & + div .media {
+          img {
+            margin-right: 5px !important;
+            margin-left: 0 !important;
+          }
+          .media-body {
+            text-align: left;
+          }
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,85 @@
+.page-heading-navigation {
+  clear: both;
+  width: 100%;
+  height: 55px;
+  background: #fafafa;
+  border-top: 2px solid #ebebec;
+  margin-top: 26px;
+  margin-bottom: 28px;
+
+
+  //.d-flex
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  //.justify-content-between
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+
+
+  .page-heading-nav-btn {
+    width: 100%;
+    border: none;
+    height: 100%;
+    border-bottom: 2px solid #ebebec;
+    text-align: center;
+    line-height: 46px;
+    margin: 0;
+    background: none;
+    float: left;
+    outline: none;
+    font-size: 15px;
+    color: #333;
+    font-weight: 600;
+    cursor: pointer;
+    &:hover {
+      border-bottom: 2px solid #c5d4d7;
+      text-decoration: none;
+    }
+    &:focus {
+      text-decoration: none;
+    }
+    &.active {
+      border-bottom: 2px solid #00aeef;
+      color: #00aeef;
+      &:hover {
+        color: #058dbf;
+        text-decoration: none;
+      }
+    }
+    &.no-hover {
+      cursor: default;
+      &:hover {
+        border-bottom: 2px solid #ebebec;
+      }
+    }
+  }
+  .tab-btn-wrap {
+    height: 100%;
+    width: 100%;
+    max-width: 210px;
+    //width: 14.2857%;
+    float: left;
+    &.tab-btn-xsm {
+      width: 12%;
+    }
+    &.tab-btn-sm {
+      width: 12.8%;
+    }
+    &.tab-btn-lg {
+      width: 18%;
+    }
+    &.tab-btn-xl {
+      width: 26%;
+    }
+    a {
+      white-space: nowrap;
+      padding: 0 12px;
+      width: 100%;
+      &.long-team-name {
+        font-size: 0.85rem;
+      }
+    }
+  }
+}

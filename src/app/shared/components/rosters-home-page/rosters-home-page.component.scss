@@ -1,0 +1,12 @@
+@import '../../../../scss/bootstrap-customization/custom-mixins';
+:host {
+  .search-input-wrapper {
+    margin-left: auto;
+  }
+  @media (max-width: 400px) {
+    .top-dd-wrapper {
+      @include flex-column-mixin();
+      margin-bottom: 22px;
+    }
+  }
+}

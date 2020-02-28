@@ -1,0 +1,125 @@
+<ng-template #homeLogoNameLink>
+  <div class="nowrap logo-name">
+    <a [routerLink]="depthChart.depth_chart_route" class="link-black" rel="nofollow">
+      <img [type]="'white'" [appSpriteImg]="'nfl'" class="mr-1 logo-sm" [src]="depthChart.white_logo" alt="{{depthChart.team_full}}">
+    </a>
+    <a [routerLink]="depthChart.depth_chart_route" class="link-black-underline">
+      <span>{{depthChart.team_full}}</span>
+    </a>
+  </div>
+</ng-template>
+
+<ng-template #profileUrlTpl let-profile="profile">
+  <span class="profile-url-tpl">
+    <span class="long-player-name">{{profile?.first_dot_last}}</span>
+    <span class="short-player-name">{{profile?.first_dot_last}}</span>
+  </span>
+</ng-template>
+
+
+<div class="multi-row-data-table-wrapper custom-width">
+  <table class="multi-row-data-table t-stripped">
+    <colgroup span="2" align="center">
+      <col span="1" class="pos-col">
+      <col span="1">
+    </colgroup>
+    <tbody>
+    <tr class="t-header" [ngStyle]="{
+    'background-color': depthChart.primary_hex,
+    'border-color': depthChart.primary_hex
+    }">
+      <th [attr.colspan]="2" scope="colgroup" class="text-center">
+        <ng-container *ngTemplateOutlet="homeLogoNameLink"></ng-container>
+      </th>
+    </tr>
+    <tr class="t-sub-header">
+      <th scope="col" class="text-center">POS</th>
+      <th scope="col" class="text-center">Player</th>
+    </tr>
+    <tr class="t-content">
+      <td>QB</td>
+      <td class="nowrap">
+        <app-player-link *ngIf="depthChart.players.qb[0]" [customContent]="true" [league]="'nfl'" [playerUrl]="depthChart.players.qb[0].profile_url">
+          <ng-template [ngTemplateOutlet]="profileUrlTpl" [ngTemplateOutletContext]="{profile: depthChart.players.qb[0]}"></ng-template>
+        </app-player-link>
+
+        <app-rating class="ml-1 player-rating" *ngIf="depthChart.players.qb[0]?.rating" [value]="depthChart.players.qb[0].rating"></app-rating>
+      </td>
+    </tr>
+    <tr class="t-content">
+      <td>RB1</td>
+      <td class="nowrap">
+        <app-player-link *ngIf="depthChart.players.rb[0]" [customContent]="true" [league]="'nfl'" [playerUrl]="depthChart.players.rb[0].profile_url">
+          <ng-template [ngTemplateOutlet]="profileUrlTpl" [ngTemplateOutletContext]="{profile: depthChart.players.rb[0]}"></ng-template>
+        </app-player-link>
+        <app-rating class="ml-1 player-rating" *ngIf="depthChart.players.rb[0]?.rating" [value]="depthChart.players.rb[0].rating"></app-rating>
+      </td>
+    </tr>
+    <tr class="t-content">
+      <td>RB2</td>
+      <td class="nowrap">
+        <app-player-link *ngIf="depthChart.players.rb[1]" [customContent]="true" [league]="'nfl'" [playerUrl]="depthChart.players.rb[1].profile_url">
+          <ng-template [ngTemplateOutlet]="profileUrlTpl" [ngTemplateOutletContext]="{profile: depthChart.players.rb[1]}"></ng-template>
+        </app-player-link>
+        <app-rating class="ml-1 player-rating" *ngIf="depthChart.players.rb[1]?.rating" [value]="depthChart.players.rb[1].rating"></app-rating>
+      </td>
+    </tr>
+    <tr class="t-content">
+      <td>RB3</td>
+      <td class="nowrap">
+        <app-player-link *ngIf="depthChart.players.rb[2]" [customContent]="true" [league]="'nfl'" [playerUrl]="depthChart.players.rb[2].profile_url">
+          <ng-template [ngTemplateOutlet]="profileUrlTpl" [ngTemplateOutletContext]="{profile: depthChart.players.rb[2]}"></ng-template>
+        </app-player-link>
+        <app-rating class="ml-1 player-rating" *ngIf="depthChart.players.rb[2]?.rating" [value]="depthChart.players.rb[2].rating"></app-rating>
+      </td>
+    </tr>
+    <tr class="t-content">
+      <td>WR1</td>
+      <td class="nowrap">
+        <app-player-link *ngIf="depthChart.players.wr[0]" [customContent]="true" [league]="'nfl'" [playerUrl]="depthChart.players.wr[0].profile_url">
+          <ng-template [ngTemplateOutlet]="profileUrlTpl" [ngTemplateOutletContext]="{profile: depthChart.players.wr[0]}"></ng-template>
+        </app-player-link>
+        <app-rating class="ml-1 player-rating" *ngIf="depthChart.players.wr[0]?.rating" [value]="depthChart.players.wr[0].rating"></app-rating>
+      </td>
+    </tr>
+    <tr class="t-content">
+      <td>WR2</td>
+      <td class="nowrap">
+        <app-player-link *ngIf="depthChart.players.wr[1]" [customContent]="true" [league]="'nfl'" [playerUrl]="depthChart.players.wr[1].profile_url">
+          <ng-template [ngTemplateOutlet]="profileUrlTpl" [ngTemplateOutletContext]="{profile: depthChart.players.wr[1]}"></ng-template>
+        </app-player-link>
+        <app-rating class="ml-1 player-rating" *ngIf="depthChart.players.wr[1]?.rating" [value]="depthChart.players.wr[1].rating"></app-rating>
+      </td>
+    </tr>
+    <tr class="t-content">
+      <td>WR3</td>
+      <td class="nowrap">
+        <app-player-link *ngIf="depthChart.players.wr[2]" [customContent]="true" [league]="'nfl'" [playerUrl]="depthChart.players.wr[2].profile_url">
+          <ng-template [ngTemplateOutlet]="profileUrlTpl" [ngTemplateOutletContext]="{profile: depthChart.players.wr[2]}"></ng-template>
+        </app-player-link>
+        <app-rating class="ml-1 player-rating" *ngIf="depthChart.players.wr[2]?.rating" [value]="depthChart.players.wr[2].rating"></app-rating>
+      </td>
+    </tr>
+    <tr class="t-content">
+      <td>TE</td>
+      <td class="nowrap">
+        <app-player-link *ngIf="depthChart.players.te[0]" [customContent]="true" [league]="'nfl'" [playerUrl]="depthChart.players.te[0].profile_url">
+          <ng-template [ngTemplateOutlet]="profileUrlTpl" [ngTemplateOutletContext]="{profile: depthChart.players.te[0]}"></ng-template>
+        </app-player-link>
+        <app-rating class="ml-1 player-rating" *ngIf="depthChart.players.te[0]?.rating" [value]="depthChart.players.te[0].rating"></app-rating>
+      </td>
+    </tr>
+    <tr class="t-content dp-footer">
+      <td colspan="2">
+        <div class="text-center">
+          <a *ngIf="depthChart.matchup_route" [routerLink]="[depthChart.matchup_route]" [appNflMatchupIdPreselect]="depthChart.game_key">
+            See Matchup
+          </a>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+

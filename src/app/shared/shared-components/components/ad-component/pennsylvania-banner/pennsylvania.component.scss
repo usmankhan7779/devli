@@ -1,0 +1,64 @@
+:host {
+  img {
+    width: 100%;
+  }
+  .image-md {
+    display: none;
+    max-width: 336px;
+    margin: 0 auto;
+  }
+  .image-ss {
+    display: none;
+  }
+  .image-xs, .mobile-popup-only {
+    display: none;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 992px) {
+    .image-md {
+      display: block;
+    }
+    position: relative;
+    top: -40px;
+  }
+  @media (max-width: 991px) and (min-width: 501px) {
+    .image-ss {
+      display: block;
+    }
+  }
+  @media (max-width: 500px) {
+    .image-xs {
+      display: block;
+    }
+  }
+}
+
+:host-context(.modal-window) {
+  position: relative;
+  top: 0;
+  .image-ss {
+    display: block;
+  }
+  .image-md {
+    display: none;
+  }
+  @media (max-width: 991px) {
+    .mobile-popup-only {
+      display: block;
+    }
+    .image-ss {
+      display: none;
+    }
+  }
+  @media (max-width: 500px) {
+    .image-ss {
+      display: block;
+    }
+    .mobile-popup-only {
+      display: none;
+    }
+  }
+}
+

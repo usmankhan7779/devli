@@ -1,0 +1,50 @@
+<div *ngFor="let team of info.teams" class="team-box">
+  <div class="team-row" [style.background-color]="team.color">
+    <span>{{ team.teamInfo[0] }}</span>
+    <span>{{ team.teamInfo[1] }}</span>
+  </div>
+
+  <table>
+    <tr>
+      <th>Passing</th>
+      <th>Att</th>
+      <th>Comp</th>
+      <th>Yds</th>
+      <th>TD</th>
+      <th>INT</th>
+      <th>Sacks</th>
+    </tr>
+    <tr *ngFor="let row of team.passing">
+      <td *ngFor="let val of row">{{ val }}</td>
+    </tr>
+  </table>
+
+  <table>
+    <tr>
+      <th>Rushing</th>
+      <th>Att</th>
+      <th>Yds</th>
+      <th>TD</th>
+      <th>Fumble</th>
+      <th>Long</th>
+    </tr>
+    <tr *ngFor="let row of team.rushing">
+      <td *ngFor="let val of row">{{ val }}</td>
+    </tr>
+  </table>
+
+  <table>
+    <tr>
+      <th>Receiving</th>
+      <th>Rec</th>
+      <th>Yds</th>
+      <th>TD</th>
+      <th>Fumble</th>
+      <th>Long</th>
+    </tr>
+    <tr *ngFor="let row of team.receiving">
+      <td *ngFor="let val of row">{{ val }}</td>
+    </tr>
+  </table>
+
+</div>

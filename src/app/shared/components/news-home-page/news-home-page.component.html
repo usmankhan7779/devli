@@ -1,0 +1,108 @@
+<ng-template #loading>
+  <div class="starting-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<ng-template #searchInput>
+  <div >
+    <div class="input-group">
+      <input type="text" class="form-control hide-placeholder" [ngModel]="searchModel" (ngModelChange)="filterByName($event)" placeholder="Search Players" aria-describedby="filter-by-player">
+      <span class="input-group-addon" id="filter-by-player">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </span>
+    </div>
+  </div>
+</ng-template>
+
+<div *ngIf="teamData && this.ddData?.teams; else loading" class="container-fluid pb-5">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+
+    <div class="col-12">
+      <div #containerEl class="d-flex flex-wrap after-heading-margin">
+        <div>
+          <h1 #headingEl class="page-heading mb-0">{{pageTitle}}</h1>
+        </div>
+        <ng-container *ngIf="currentLeague === 'nfl' || currentLeague === 'mlb'">
+          <app-twitter-follow-btn [textElement]="headingEl" [containerElement]="containerEl"></app-twitter-follow-btn>
+        </ng-container>
+      </div>
+    </div>
+
+    <div *ngIf="introParagraph" class="col-12 flex-last flex-sm-unordered">
+      <p class="site-pages-content" [innerHtml]="introParagraph | safeHtml"></p>
+    </div>
+
+    <div class="col-12">
+      <div class="row">
+
+        <div class="col-12">
+          <div class="d-flex filter-container">
+            <div class="grouped-dropdown-wrapper btn-group">
+              <div ngbDropdown class="grouped-dropdown dropdown">
+                <button type="button" class="grouped-dropdown-btn btn btn-secondary first px-3" id="page-select-dropdown" ngbDropdownToggle>
+                  <span class="pr-0 pr-sm-3">{{currentLeague | uppercase}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="page-select-dropdown">
+                  <div>
+                    <a [routerLink]="['/nfl/news']" routerLinkActive="dd-active-btn" class="dropdown-item">NFL</a>
+                  </div>
+                  <div>
+                    <a [routerLink]="['/mlb/news']" routerLinkActive="dd-active-btn" class="dropdown-item">MLB</a>
+                  </div>
+                  <div>
+                    <a [routerLink]="['/nba/news']" routerLinkActive="dd-active-btn" class="dropdown-item">NBA</a>
+                  </div>
+                </div>
+              </div>
+              <app-dropdown
+                [ddData]="ddData"
+                [filterItems]="onDdSelectSelect.bind(this)"
+                [isSingleSelect]="true"
+                prop="teams"
+                name="Team"
+              ></app-dropdown>
+              <app-dropdown
+                [ddData]="ddData"
+                [filterItems]="onDdSelectSelect.bind(this)"
+                [isSingleSelect]="true"
+                prop="perPage"
+                className="last"
+              ></app-dropdown>
+            </div>
+            <div class="search-input-wrapper">
+              <ng-template [ngTemplateOutlet]="searchInput"></ng-template>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="row">
+            <div class="col-md-6 col-12">
+              <div class="team-name-label">
+                <h2>{{teamData.nav.team_name_full}} News</h2>
+              </div>
+              <ng-container *appBrowserIf="true">
+                <ng-container  *ngFor="let newsItem of teamData.news | orderBy: 'updated': false;">
+                  <app-news-item
+                    class="inner-news-item"
+                    [cardLeague]="currentLeague"
+                    [cardTitle]="newsItem.title"
+                    [cardContent]="newsItem.content"
+                    [cardImageRoute]="newsItem.white_logo"
+                    [borderedLogo]="false"
+                    [cardDate]="newsItem.updated"
+                    [fullLogoUrl]="true"
+                  ></app-news-item>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

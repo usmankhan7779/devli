@@ -1,0 +1,169 @@
+//@import "~bootstrap/scss/variables";
+//@import "~bootstrap/scss/mixins/breakpoints";
+//@import "~bootstrap/scss/mixins/border-radius";
+//@import "~bootstrap/scss/utilities/display";
+//@import "~bootstrap/scss/utilities/flex";
+//:host {
+//  .modal-header {
+//    padding: 10px 0 0 0;
+//  }
+//  img {
+//    max-width: 100%;
+//  }
+//  .package-logo {
+//    img {
+//      max-width: 100%;
+//      @include media-breakpoint-up(xl) { max-width: 400px }
+//    }
+//  }
+//  .button {
+//    background-color: #01afed;
+//    border-width: 0;
+//    color: #fff ;
+//    display: inline-block;
+//    font-size: 16px;
+//    font-weight: 600;
+//    height: auto;
+//    line-height: initial;
+//    padding: 3px 60px;
+//    text-decoration: none;
+//    @include border-radius(5px);
+//
+//    &:hover, &:visited {
+//      color: #fff !important;
+//      text-decoration: none!important;
+//    }
+//  }
+//
+//  .package-features {
+//    @extend .d-flex;
+//    @extend .flex-column;
+//    @extend .flex-lg-row;
+//    @extend .justify-content-start;
+//    margin-bottom: 20px;
+//
+//    .package-logo { padding: 0 32px; text-align: center; }
+//    .features {
+//      padding: 0;
+//      @media (min-width: 1560px) { padding-left: 30px; }
+//    }
+//    .pricing {
+//      text-align: center;
+//      @include media-breakpoint-up(lg) { text-align: left; }
+//      @include media-breakpoint-up(xl) { text-align: center; }
+//      .price {
+//        font-weight: bold;
+//        font-size: 42px;
+//        line-height: 1;
+//        @include media-breakpoint-up(md) { font-size: 42px; }
+//        @include media-breakpoint-up(lg) { font-size: 52px; }
+//        @include media-breakpoint-up(xl) { font-size: 62px; }
+//        @media (min-width: 1560px) { font-size: 55px; }
+//        sup {
+//          font-size: 60%;
+//        }
+//      }
+//    }
+//    .savings {
+//      font-size: 18px;
+//      font-weight: bold;
+//      margin-bottom: 10px;
+//      @include media-breakpoint-up(md) { font-size: 18px; }
+//      @include media-breakpoint-up(lg) { font-size: 20px; }
+//      @include media-breakpoint-up(xl) { font-size: 25px; }
+//      @media (min-width: 1560px) { font-size: 30px; }
+//      .save {
+//        @include border-radius(3px);
+//        background-color: #d41c27;
+//        color: $white;
+//        padding: 1px 5px;
+//      }
+//    }
+//    .name {
+//      font-weight: bold;
+//      font-size: 27px;
+//      line-height: 1.2;
+//      margin-bottom: 20px;
+//      text-align: center;
+//      @include media-breakpoint-up(md) { font-size: 25px; }
+//      @include media-breakpoint-up(lg) { font-size: 28px; text-align: left; }
+//      @include media-breakpoint-up(xl) { font-size: 40px; }
+//      @media (min-width: 1560px) { font-size: 40px; text-align: center; }
+//    }
+//    .features-list {
+//      font-size: 18px;
+//      margin: 0 auto 25px;
+//      padding-left: 10px;
+//      @include media-breakpoint-only(sm) { max-width: 430px; }
+//      @include media-breakpoint-only(md) {
+//        -webkit-columns: 2;
+//        -moz-columns: 2;
+//        column-gap: 0.5rem;
+//        -webkit-gap: 0.5rem;
+//        -moz-gap: 0.5rem;
+//      }
+//      @include media-breakpoint-up(xl) { font-size: 16px; }
+//      @media (min-width: 1560px) {
+//        font-size: 18px;
+//        columns: 2;
+//        -webkit-columns: 2;
+//        -moz-columns: 2;
+//        column-gap: 0.5rem;
+//        -webkit-gap: 0.5rem;
+//        -moz-gap: 0.5rem;
+//      }
+//      li {
+//        line-height: 1.2;
+//        margin-bottom: 10px;
+//      }
+//    }
+//    .buy-now {
+//      text-align: center;
+//      @include media-breakpoint-up(lg) { text-align: left; }
+//      @media (min-width: 1560px) { text-align: center; }
+//      .button {
+//        @include border-radius(7px);
+//        background-color: #d41c27;
+//        font-family: "Roboto Black", Arial;
+//        font-size: 25px;
+//        font-weight: 600;
+//        line-height: 1;
+//        padding: 12px 65px;
+//        text-transform: uppercase;
+//        @include media-breakpoint-up(lg) { font-size: 30px; }
+//        @include media-breakpoint-up(xl) { font-size: 32px; }
+//        @media (min-width: 1560px) { font-size: 36px; }
+//      }
+//    }
+//  }
+//
+//  .money-back-guarantee {
+//    @extend .d-flex;
+//    @extend .flex-column;
+//    @extend .flex-md-row;
+//    @extend .justify-content-center;
+//    @extend .align-items-center;
+//    border: 2px dashed #3b3b3b;
+//    margin: 0 auto 10px;
+//    padding: 15px;
+//
+//    @include media-breakpoint-up(md) { width: 80%; }
+//
+//    .image {
+//      margin-bottom: 20px;
+//      padding: 0 36px;
+//      text-align: center;
+//      @include media-breakpoint-up(md) { margin-bottom: 0; }
+//    }
+//    .details {
+//      font-size: 27px;
+//      font-weight: bold;
+//      line-height: 1;
+//      text-align: center;
+//      @include media-breakpoint-up(md) { font-size: 25px; }
+//      @include media-breakpoint-up(lg) { font-size: 28px; }
+//      @include media-breakpoint-up(xl) { font-size: 35px; }
+//      @media (min-width: 1560px) { font-size: 35px; }
+//    }
+//  }
+//}

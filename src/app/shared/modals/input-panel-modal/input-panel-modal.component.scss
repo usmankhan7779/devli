@@ -1,0 +1,146 @@
+:host {
+  input.form-control.timepicker-opt {
+    padding: 0.5rem 0.3rem;
+    padding-left: 0.5rem;
+  }
+  .save-input-icon {
+    width: 16px;
+    height: 16px;
+    margin-bottom: 1px;
+  }
+  .btn-grey-light {
+    box-shadow: 0 5px 9px -5px #b3b3b3;
+  }
+  .range-container {
+    padding-bottom: 20px;
+    .range-legend {
+      cursor: pointer;
+      padding-top: 10px;
+      margin-top: -10px;
+      position: relative;
+      width: 10px;
+      text-align: center;
+      .range-legend-text {
+        position: absolute;
+        width: 42px;
+        left: -14px;
+        margin-top: -25px;
+        padding-top: 25px;
+      }
+    }
+  }
+  .input-panel-modal-wrapper.player-form,
+  .input-panel-modal-wrapper.team-and-player-form {
+    .modal-body {
+      &:not(.single) {
+        $width: 645px + 17px;
+        .top-action-btn-section {
+          @media (min-width: $width) {
+            display: none;
+          }
+        }
+        .inline-action-btn-section {
+          @media (max-width: $width - 1) {
+            display: none;
+          }
+        }
+      }
+      &.single {
+        $width: 496px + 17px;
+        .top-action-btn-section {
+          @media (min-width: $width) {
+            display: none;
+          }
+        }
+        .inline-action-btn-section {
+          @media (max-width: $width - 1) {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  .input-panel-modal-wrapper.matchup-form {
+    .modal-body {
+      $width: 505px + 17px;
+      .top-action-btn-section {
+        @media (min-width: $width) {
+          display: none;
+        }
+      }
+      .inline-action-btn-section {
+        @media (max-width: $width - 1) {
+          display: none;
+        }
+      }
+    }
+    @media (max-width: 575px) {
+      .how-it-works-btn {
+        margin-top: 5px;
+      }
+    }
+    @media (max-width: 992px) {
+      .input-panel-table {
+        min-width: 320px;
+      }
+    }
+  }
+
+  .input-panel-modal-wrapper.team-form:not(.team-and-player-form) {
+    .modal-body {
+      $width: 480px + 17px;
+      .top-action-btn-section {
+        @media (min-width: $width) {
+          display: none;
+        }
+        @media (max-width: 360px) {
+          button {
+            font-size: 14px;
+            .save-input-icon {
+              width: 13px;
+              height: 13px;
+              margin-bottom: 1px;
+            }
+          }
+          button.btn.btn-grey-light, button.btn.btn-orange-deep {
+            i {
+              display: none;
+            }
+          }
+        }
+      }
+      .inline-action-btn-section {
+        @media (max-width: $width - 1) {
+          display: none;
+        }
+      }
+    }
+    @media (max-width: 575px) {
+      .how-it-works-btn {
+        margin-top: 5px;
+      }
+    }
+  }
+  @media (max-width: 360px) {
+    .how-it-works-btn.btn {
+      font-size: 14px;
+      padding: 10px;
+    }
+    .top-action-btn-section {
+      button {
+        font-size: 14px;
+        .save-input-icon {
+          width: 13px;
+          height: 13px;
+          margin-bottom: 1px;
+        }
+      }
+      button.btn.btn-grey-light, button.btn.btn-orange-deep {
+        i {
+          display: none;
+        }
+      }
+    }
+  }
+}

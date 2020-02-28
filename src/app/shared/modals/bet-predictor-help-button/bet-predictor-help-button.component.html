@@ -1,0 +1,93 @@
+<div class="app-bet-predictor-help-button">
+  <div class="modal-header justify-content-end">
+    <div class="header-actions">
+      <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <!--<button type="button" class="close minus-close" aria-label="Close" (click)="activeModal.dismiss()">-->
+        <!--<i class="fa fa-minus-square-o" aria-hidden="true"></i>-->
+      <!--</button>-->
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-sm-6 col-12 pb-3 pb-sm-0">
+        <h5><strong>5 Steps to Create Winning Predictions</strong></h5>
+        <ol>
+          <li><span (click)="onViewChange('video', 1)" [ngClass]="{'active': activeView === 'video_1'}" class="link">Select a Game (0:47)</span></li>
+          <li><span (click)="onViewChange('video', 2)" [ngClass]="{'active': activeView === 'video_2'}" class="link">Select a Model (1:55)</span></li>
+          <li><span (click)="onViewChange('video', 3)" [ngClass]="{'active': activeView === 'video_3'}" class="link">Change Inputs (1:38)</span></li>
+          <li><span (click)="onViewChange('video', 4)" [ngClass]="{'active': activeView === 'video_4'}" class="link">Generate Bets (1:25)</span></li>
+        </ol>
+      </div>
+      <div class="col-sm-6 col-12">
+        <h5><strong>Helpful Links</strong></h5>
+        <ol>
+          <li><a class="link" [routerLink]="['/nfl/prediction-model-accuracy']" target="_blank" rel="noopener">Predictive Model Accuracy</a></li>
+          <li><a class="link" [routerLink]="['/betting-tools-glossary']" target="_blank" rel="noopener">Bet Predictor Glossary</a></li>
+          <li><a class="link" [routerLink]="['/prediction-models-explained']" target="_blank" rel="noopener">Prediction Models Explained</a></li>
+          <!--<li><span class="link" (click)="onViewChange('form')" [ngClass]="{'active': activeView === 'form'}"><i class="fa fa-bug" aria-hidden="true"></i> Bug Report</span></li>-->
+        </ol>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div *ngIf="activeView === 'form'; else videoView" class="col-12">
+      <div class="bug-report">
+        <h4 class="form-header">Report Bug</h4>
+        <form [formGroup]="reportForm" (ngSubmit)="onSubmit()" class="lineup-form">
+          <div class="row">
+            <div class="col-sm-6 col-12">
+              <div class="form-group">
+                <input
+                  id="email"
+                  formControlName="email"
+                  class="form-control"
+                  placeholder="Email Address"
+                  type="text">
+              </div>
+            </div>
+            <div class="col-sm-6 col-12">
+              <div class="form-group">
+                <label class="custom-file w-100">
+                  <input
+                    type="file"
+                    id="file"
+                    formControlName="file"
+                    class="custom-file-input">
+                  <span class="custom-file-control"></span>
+                </label>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <textarea
+                  id="description"
+                  placeholder="Describe a bug"
+                  formControlName="description"
+                  class="form-control"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary float-right" [disabled]="reportForm.invalid">Send</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <ng-template #videoView>
+      <div class="col-12">
+        <div class="video-wrapper">
+          <i class="fa fa-angle-left control-arrow left" (click)="onViewChange('video', currentVideoIndex - 1)" aria-hidden="true"></i>
+          <div class="video">
+            <iframe [src]="activeVideo" frameborder="0" allowfullscreen></iframe>
+          </div>
+          <i class="fa fa-angle-right control-arrow right" (click)="onViewChange('video', currentVideoIndex + 1)" aria-hidden="true"></i>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

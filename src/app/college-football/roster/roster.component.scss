@@ -1,0 +1,45 @@
+:host {
+  table td {
+    vertical-align: middle;
+  }
+  .position-col {
+    border-right: 1px solid #e1e1e1;
+  }
+  @media (min-width: 551px) and (max-width: 1650px) {
+    $static-table-width: 317px;
+    .static-table {
+      max-width: $static-table-width;
+    }
+    .horizontal-table-wrapper {
+      width: calc(100% - #{$static-table-width});
+      //.multi-row-data-table .t-content {
+      //  &:first-child {
+      //    height: 71px;
+      //  }
+      //  height: 70px;
+      //}
+    }
+    //.image-player-name-td .pl-img-wrapper img {
+    //  width: 45px;
+    //  height: 62px;
+    //}
+  }
+  @media (max-width: 1650px) {
+    .horizontal-table-wrapper .multi-row-data-table .t-content td {
+      font-size: 11px;
+    }
+  }
+  @media (max-width: 480px){
+    $static-table-width: 190px;
+    .table-sect-wrap .static-table {
+      width: $static-table-width;
+    }
+    .horizontal-table-wrapper {
+      width: calc(100% - #{$static-table-width});
+      .multi-row-data-table .t-sub-header th {
+        padding-bottom: 10px;
+        padding-top: 11px;
+      }
+    }
+  }
+}

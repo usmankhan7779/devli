@@ -1,0 +1,26 @@
+:host {
+  .logo-container {
+    img {
+      width: 46px;
+      height: 46px;
+    }
+    margin-right: 10px;
+  }
+  .team-txt {
+    font-size: 17px;
+    font-weight: bold;
+  }
+  //border: 1px solid #e1e1e1;
+  @media (max-width: 1500px) {
+    .logo-container {
+      img {
+        width: 38px;
+        height: 38px;
+      }
+      margin-right: 10px;
+    }
+    .team-txt {
+      font-size: 14px;
+    }
+  }
+}

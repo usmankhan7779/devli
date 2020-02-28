@@ -1,0 +1,163 @@
+:host {
+  $breakpoint-1: 1537px;
+  $breakpoint-2: 1310px;
+  $breakpoint-3: 992px;
+  .radio-container {
+    -webkit-flex: 2;
+    -ms-flex: 2;
+    flex: 2;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .search-input-wrapper {
+    width: 215px;
+    .input-group {
+      height: 35px;
+      max-width: 215px;
+      margin-left: auto;
+    }
+  }
+
+  .paragraph-wrapper {
+    overflow: hidden;
+  }
+
+  .mobile-csv-btn-wrapper, .mobile-items-per-page {
+    display: none;
+  }
+  .full-screen-csv-btn-wrapper {
+    display: block;
+  }
+  .header-container {
+    flex-direction: column;
+  }
+  .nav-target-container:not(.main-dds) {
+    .grouped-dropdown-wrapper {
+      display: none;
+    }
+    .toggles-in-page-group {
+      display: block;
+    }
+  }
+  .normal-search-view {
+    margin-top: 1px;
+  }
+
+  .normal-search-view {
+    display: none;
+  }
+  .down-search-view {
+    display: none;
+  }
+
+  .seasons-dd-wrapper {
+    margin: 0px 10px 0 0;
+    @media (max-width: 650px) {
+      margin-bottom: 10px;
+    }
+  }
+
+  @media (min-width: $breakpoint-1) {
+    .normal-search-view {
+      display: none;
+    }
+    .down-search-view {
+      display: block;
+    }
+  }
+
+  @media (min-width: $breakpoint-2 + 1) and (max-width: $breakpoint-1 - 1) {
+    .normal-search-view {
+      display: block;
+    }
+    .down-search-view {
+      display: none;
+    }
+  }
+
+  @media (max-width: $breakpoint-2) {
+    .normal-search-view {
+      display: none;
+    }
+    .down-search-view {
+      display: block;
+    }
+    .nav-target-container:not(.main-dds) {
+      .grouped-dropdown-wrapper {
+        display: inline-flex;
+      }
+      .toggles-in-page-group {
+        display: none;
+      }
+    }
+  }
+
+  @media (max-width: $breakpoint-3) {
+    .normal-search-view, .mobile-items-per-page, .nav-target-container:not(.main-dds) .grouped-dropdown-wrapper {
+      display: block;
+    }
+    .down-search-view {
+      display: none;
+    }
+    .grouped-dropdown-wrapper {
+      display: inline-block;
+      width: 100%;
+    }
+    .seasons-dd-wrapper {
+      margin-bottom: 10px;
+    }
+    .toggles-in-page-wrapper {
+      &.standard-page {
+        .toggles-in-page-group .toggle-in-page {
+          //min-width: 37px;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .mobile-csv-btn-wrapper {
+      display: block;
+    }
+    .full-screen-csv-btn-wrapper {
+      display: none;
+    }
+
+    .seasons-dd-wrapper {
+      margin: 0;
+    }
+
+    ::ng-deep app-dropdown .grouped-dropdown-btn, .grouped-dropdown-btn {
+      border-radius: 0 !important;
+      border-left: 0 !important;
+      border-right: 0 !important;
+    }
+
+    .normal-search-view {
+      display: none;
+    }
+    .down-search-view {
+      & > div:first-child {
+        flex: 1;
+        padding-right: 10px;
+      }
+      display: flex;
+      width: 100%;
+      margin: 0 !important;
+      .search-input-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        .input-group {
+          max-width: 200px;
+          margin-left: initial;
+          width: 100% !important;
+        }
+      }
+    }
+    ::ng-deep {
+      .grouped-dropdown, .dd-wrapper, .dropdown-toggle, .dropdown-menu, .grouped-dropdown-btn, app-dropdown {
+        width: 100%;
+      }
+    }
+  }
+}

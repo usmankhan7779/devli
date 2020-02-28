@@ -1,0 +1,200 @@
+<ng-template #loading>
+  <div class="starting-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<div *ngIf="pageTitle && this.ddData; else loading" class="container-fluid pb-5">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+    <ng-container *ngIf="!hideIframeInfo">
+      <div class="col-12 col-lg-8">
+        <div class="d-flex flex-wrap after-heading-margin">
+          <div>
+            <h1 class="page-heading mb-0">{{pageTitle}}</h1>
+          </div>
+          <div *ngIf="isIframe" class="powered-by-logo" style="margin: 0 15px;">
+            <a [routerLink]="['./']" target="_blank" rel="noopener">
+              <img width="110px" src="assets/images/logo/powered_by.png" alt="powered by lineups">
+            </a>
+          </div>
+        </div>
+        <div *ngIf="introParagraph && !isIframe" class="hidden-md-down">
+          <p class="site-pages-content" [innerHTML]="introParagraph | safeHtml"></p>
+        </div>
+      </div>
+      <div *ngIf="!isIframe" class="col-12 col-lg-4 gateway-video-container">
+        <app-ad-component [league]="league"></app-ad-component>
+      </div>
+    </ng-container>
+
+
+    <div *ngIf="introParagraph && !isIframe" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+      <p class="site-pages-content" [innerHtml]="introParagraph | safeHtml"></p>
+    </div>
+
+    <div *ngIf="showDesktopView" class="col-12 desktop-odds-view">
+      <div class="row">
+
+        <div class="col-12">
+          <div class="d-flex filter-container after-heading-margin">
+            <div class="grouped-dropdown-wrapper btn-group mb-0 mr-4">
+              <app-dropdown
+                [ddData]="ddData"
+                [filterItems]="filterItems.bind(this)"
+                [className]="'first'"
+                [isSingleSelect]="true"
+                [scrollableMenu]="false"
+                prop="books"
+                name="Books"
+              ></app-dropdown>
+              <app-dropdown
+                [ddData]="ddData"
+                [className]="'last'"
+                [scrollableMenu]="false"
+                [isSingleSelect]="true"
+                [filterItems]="filterItems.bind(this)"
+                prop="bets"
+                name="Bets"
+              ></app-dropdown>
+            </div>
+            <div class="align-self-center">
+              <ng-container [ngSwitch]="league">
+                <ng-container *ngSwitchCase="'nba'">
+                  <p class="text-next-to-dds">
+                    Select Individual Book for detailed Open & Current Odds
+                  </p>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  <p class="text-next-to-dds">
+                    Select one Sportsbook to view Open, Current & all Lineups.com Odds
+                  </p>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="row">
+            <ng-container [ngSwitch]="league">
+              <ng-container *ngSwitchCase="'mlb'">
+                <div *ngFor="let matchupsDate of oddsData | orderBy : 'date'" class="col-12">
+                  <div class="team-name-label">
+                    <h2>
+                      <span *ngIf="checkIfToday(matchupsDate.date)">Today: </span>{{matchupsDate.date | amTimeZone | amDateFormat: 'M/D'}}
+                    </h2>
+                  </div>
+                  <app-mlb-live-odds-table
+                    [ddData]="ddData"
+                    [activeLineMove]="activeLineMove"
+                    (onLineMoveClick)="onLineClick($event)"
+                    [matchupsDate]="matchupsDate"
+                    [switchOptionNumber]="getSwitchOptionNumber()"
+                    [switchOptions]="switchOptions"
+                    [allBooksOption]="allBooksOption"
+                    [allAdditionalBooksOption]="allAdditionalBooksOption"
+                    [allBetsOption]="allBetsOption"
+                  ></app-mlb-live-odds-table>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'nfl'">
+                <div *ngFor="let matchupsDate of oddsData | orderBy : 'date'" class="col-12">
+                  <div class="team-name-label">
+                    <h2>
+                      <span *ngIf="checkIfToday(matchupsDate.date)">Today: </span>{{matchupsDate.date | amDateFormat: 'M/D'}}
+                    </h2>
+                  </div>
+                  <app-nfl-live-odds-table
+                    (onLineMoveClick)="onLineClick($event)"
+                    [activeLineMove]="activeLineMove"
+                    [ddData]="ddData"
+                    [matchupsDate]="matchupsDate"
+                    [switchOptionNumber]="getSwitchOptionNumber()"
+                    [switchOptions]="switchOptions"
+                    [allBooksOption]="allBooksOption"
+                    [allAdditionalBooksOption]="allAdditionalBooksOption"
+                    [allBetsOption]="allBetsOption"
+                  ></app-nfl-live-odds-table>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'nba'">
+                <div *ngFor="let matchupsDate of oddsData | orderBy : 'date'" class="col-12">
+                  <div class="team-name-label">
+                    <h2>
+                      <span *ngIf="checkIfToday(matchupsDate.date)">Today: </span>{{matchupsDate.date | amTimeZone | amDateFormat: 'M/D'}}
+                    </h2>
+                  </div>
+                  <app-nba-live-odds-table
+                    (onLineMoveClick)="onLineClick($event)"
+                    [activeLineMove]="activeLineMove"
+                    [ddData]="ddData"
+                    [matchupsDate]="matchupsDate"
+                    [switchOptionNumber]="getSwitchOptionNumber()"
+                    [switchOptions]="switchOptions"
+                    [allBooksOption]="allBooksOption"
+                    [allAdditionalBooksOption]="allAdditionalBooksOption"
+                    [allBetsOption]="allBetsOption"
+                  ></app-nba-live-odds-table>
+                </div>
+              </ng-container>
+            </ng-container>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div *ngIf="showMobileView" class="col-12 mobile-odds-view" >
+      <div class="row">
+        <div *ngFor="let matchupsDate of oddsData | orderBy : 'date'" class="col-12">
+          <div class="row">
+            <div class="col-12">
+              <app-matchup-bets-odds-item
+                *ngFor="let matchup of matchupsDate.games; let i = index;"
+                [index]="i"
+                [league]="league"
+                [activeLineMove]="activeLineMove"
+                (onLineMoveClick)="onLineClick($event)"
+                [matchup]="matchup"
+                [allBetsOption]="allBetsOption"
+                [allBooksOption]="allBooksOption"
+                [allAdditionalBooksOption]="allAdditionalBooksOption"
+                [switchOptions]="switchOptions"
+                [arrLength]="matchupsDate.games.length"
+              ></app-matchup-bets-odds-item>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 mb-3">
+      <div class="row glossary-content-wrapper">
+        <div class="col-12">
+          <h5>
+            Glossary
+          </h5>
+        </div>
+        <ng-container [ngSwitch]="league">
+          <ng-container *ngSwitchCase="'nba'">
+            <div class="col-12 glossary-content">ML = Moneyline
+              ROT = Rotation Number - identification number for each  bets at sportsbooks
+              Line Movement = displays the odds line changes per book and per bet from the opening odds to the live odds.
+              Diff = Change in Sportsbook open & Sportsbook live odds
+            </div>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <div class="col-12 glossary-content">ML = Moneyline
+              ROT = Rotation Number - identification number for each  bets at sportsbooks
+              Line Movement = displays the odds line changes per book and per bet from the opening odds to the live odds.
+              Diff = Change in Sportsbook live odds & Lineups.com live odds
+            </div>
+          </ng-container>
+        </ng-container>
+
+      </div>
+    </div>
+  </div>
+</div>

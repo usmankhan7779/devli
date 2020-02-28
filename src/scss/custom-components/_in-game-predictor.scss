@@ -1,0 +1,149 @@
+.in-game-predictor {
+  $mobile-size: 400px;
+  @import "./_responsive-page-nav.scss";
+  @include mobile-navigation($mobile-size);
+  .page-heading-navigation {
+    margin-top: 20px;
+    margin-bottom: 25px;
+  }
+  @media (min-width: 1200px) and (max-width: 1500px) {
+    .top-score-section {
+      font-size: 13px;
+    }
+  }
+  @media (min-width: $mobile-size + 1) {
+    .nav-section {
+      display: flex;
+      flex-direction: row;
+      .tab-wrapper {
+        margin-right: 20px;
+        &:last-child {
+          margin-right: 0;
+        }
+        .page-heading-nav-btn {
+          padding-right: 30px;
+          padding-left: 30px;
+        }
+      }
+    }
+  }
+  @media (max-width: 844px) {
+    .nav-section {
+      .tab-wrapper {
+        margin-right: 10px;
+        .page-heading-nav-btn {
+          padding-right: 15px;
+          padding-left: 15px;
+        }
+      }
+    }
+  }
+  @media (max-width: 616px) {
+    .nav-section {
+      .tab-wrapper {
+        .page-heading-nav-btn {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+  .section-header {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 21px;
+  }
+  .table-logo {
+    height: 20px;
+    @media (max-width: 1500px) {
+      height: 15px;
+    }
+    vertical-align: text-bottom;
+  }
+}
+.mlb-in-game-predictor {
+  .top-section {
+    & > div:nth-child(2) {
+      min-width: 420px;
+      padding: 0 20px;
+    }
+    @media (max-width: 1960px) {
+      flex-wrap: wrap;
+      justify-content: center;
+      & > div:nth-child(1) {
+        width: 30%;
+        ::ng-deep .team-score-game {
+          margin: 0 auto;
+        }
+      }
+      & > div:nth-child(2) {
+        width: 70%;
+        ::ng-deep .bat-prediction-container {
+          margin: 0 auto;
+        }
+      }
+      & > div:nth-child(3) {
+        margin-top: 20px;
+        width: 100%;
+      }
+    }
+    @media (max-width: 1020px) {
+      & > div:nth-child(1) {
+        width: 100%;
+      }
+      & > div:nth-child(2) {
+        min-width: initial;
+        margin-top: 20px;
+        width: 100%;
+      }
+    }
+  }
+  .table-header-logo {
+    height: 22px;
+  }
+  .table-header-text {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .final-score-prediction-table {
+    td {
+      padding-top: 27px;
+    }
+    .probability {
+      padding-top: 20px;
+      padding-bottom: 26px;
+      font-size: 22px;
+    }
+  }
+  .big-team-name {
+    img {
+      height: 32px;
+    }
+    font-size: 30px;
+    font-weight: bold;
+    &.blue {
+      color: #3b5d98;
+    }
+    &.red {
+      color: #b22028;
+    }
+
+  }
+  @media (max-width: 1790px) {
+    .big-team-name {
+      font-size: 16px;
+      img {
+        height: 19px;
+      }
+    }
+    .final-score-prediction-table {
+      td {
+        padding-top: 41px;
+      }
+      .probability {
+        padding-top: 20px;
+        padding-bottom: 42px;
+        font-size: 16px;
+      }
+    }
+  }
+}

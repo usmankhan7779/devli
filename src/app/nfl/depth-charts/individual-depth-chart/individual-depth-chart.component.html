@@ -1,0 +1,2493 @@
+<ng-template #imageItemTpl let-position="position" let-className="className" let-posType="posType" let-offenseType="offenseType">
+  <div class="image-item" [ngClass]="getActiveImageItemClass(posType, position, className)">
+    <div (mouseover)="onPosMouseOver(posType, position)" class="fake-t-header">
+      <span class="long-depth-pos-name hover-hand">
+        {{posType === 'defense' ? defenseDictionary[position] : offenseDictionary[position]}}
+      </span>
+      <span class="short-depth-pos-name hover-hand">
+        {{position}}
+      </span>
+    </div>
+    <div *ngIf="(posType === 'defense'? defensePlayersData : offensePlayersData);let playersData" class="image-items-wrapper">
+      <div (mouseover)="onPosMouseOver(posType, position, player)" *ngFor="let player of playersData[position] | slice: 0 : 4" [ngClass]="{'active-payer-box': !posType && activeOffense?.player?.id === player.id}">
+        <div class="image-item-pl-name" [ngClass]="{'long-name': defineIfLongName(player)}">
+          <app-player-link *ngIf="player" [customContent]="true" [league]="'nfl'" [playerUrl]="player.profile_url">
+            <span class="long-image-item-pl-name">
+              {{player.name}}
+            </span>
+            <span class="short-image-item-pl-name">
+              {{player.name | shortPlayerName}}
+            </span>
+          </app-player-link>
+          <span>
+            ({{player.fantasy_position_depth_order || player.depth_order}})
+          </span>
+        </div>
+        <div>
+          <app-rating class="mr-2" [value]="player.rating"></app-rating>
+          #{{player.lineups_position_rank}}
+          {{player.position}}
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #offensePlayerCap>
+  <div class="offense-player-cap">
+    <div>Hover over a Player or Position Box to See Detailed Stats</div>
+  </div>
+</ng-template>
+
+
+<div class="container-fluid individual-depth-chart pb-3" *ngIf="depthChart">
+  <app-breadcrumb (performActionOnClick)="performActionOnBreadcrumbClick($event)"></app-breadcrumb>
+  <!-- Starting Lineups Page Title -->
+  <div class="row">
+    <div class="team-lineup-heading-wrap nfl-team-depth-chart-heading col-lg-8 col-12">
+      <!-- Team Lineup Heading Text-->
+      <div class="team-lineup-heading-text">
+        <!-- Team Lineup Heading Left -->
+        <div class="team-lineup-heading-left" [ngClass]="{'no-opponent': !(depthChart.nav.opp_depth_chart_route && isDefaultSeason)}">
+          <div class="team-logo with-status">
+            <img [type]="'white'" [appSpriteImg]="'nfl'" align="middle" [src]="depthChart.nav.team_logo_white" alt="{{depthChart.nav.team_name}}"/>
+          </div>
+          <div class="team-heading-info">
+            <app-status
+              side="right"
+              isHeader="true"
+              mobileTitle="{{depthChart.nav.team_name | lastTeamName}} Depth Chart"
+              [teamName]="pageTitle"
+              [record]="depthChart.nav.team_record + ', ' + depthChart.nav.team_rank + ' ' + depthChart.nav.team_league + ' ' + depthChart.nav.team_division"
+            ></app-status>
+          </div>
+        </div>
+        <!-- Team Lineup Heading Right -->
+        <div *ngIf="depthChart.nav.opp_depth_chart_route && isDefaultSeason" class="team-lineup-heading-right">
+          <div *ngIf="!depthChart.status || (depthChart.status.status !== 'In Progress' && depthChart.status.status !== 'Final')" class="float-right">
+            <h4 class="opponent-team-name">{{depthChart.nav.is_home ? 'vs' : 'at'}} {{depthChart.nav.opp_abbr}}</h4>
+            <h4 class="event-date">
+              <app-general-time-format [time]="depthChart.nav.matchup_time"></app-general-time-format>
+            </h4>
+            <div *ngIf="depthChart.nav.updated" class="updated-block-mobile">
+              Updated: <app-general-time-format [time]="depthChart.nav.updated"></app-general-time-format>
+            </div>
+          </div>
+          <div *ngIf="depthChart.status?.status === 'In Progress'" class="float-right">
+            <span [ngClass]="{'font-bold': depthChart.status.away_has_ball}">{{depthChart.status.away}} {{depthChart.status.away_score}}</span> @ <span [ngClass]="{'font-bold': depthChart.status.home_has_ball}">{{depthChart.status.home}} {{depthChart.status.home_score}}</span>
+            <br>
+            <p class="text-center">
+              {{depthChart.status.down}} & {{depthChart.status.distance}}, Q{{depthChart.status.quarter}} {{depthChart.status.time_remaining}}
+            </p>
+            <div *ngIf="depthChart.nav.updated" class="updated-block-mobile">
+              Updated: <app-general-time-format [time]="depthChart.nav.updated"></app-general-time-format>
+            </div>
+          </div>
+          <div *ngIf="depthChart.status?.status === 'Final'" class="float-right">
+            <span [ngClass]="{'font-bold': depthChart.status.away_score > depthChart.status.home_score}">{{depthChart.status.away}} {{depthChart.status.away_score}}</span> @ <span [ngClass]="{'font-bold': depthChart.status.home_score > depthChart.status.away_score}">{{depthChart.status.home}} {{depthChart.status.home_score}}</span>
+            <br>
+            <p class="text-center">Final</p>
+            <div *ngIf="depthChart.nav.updated" class="updated-block-mobile">
+              Updated: <app-general-time-format [time]="depthChart.nav.updated"></app-general-time-format>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Collapse Menu -->
+      <div class="in-page-collapse-toggle">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="isCollapsed = !isCollapsed"
+                [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+          Menu
+        </button>
+      </div>
+      <div class="in-page-nav-menu" [ngbCollapse]="!isCollapsed" [ngClass]="{'hidden': !isCollapsed}">
+        <!-- Team Lineup Heading Navigation -->
+        <div class="page-heading-navigation">
+          <div *ngIf="depthChart.nav.is_home && depthChart.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[depthChart.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{ depthChart.nav.opp_name}} Depth Chart</a>
+          </div>
+          <div *ngIf="!depthChart.nav.is_home" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="['./']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="page-heading-nav-btn">{{ depthChart.nav.team_name}} Depth Chart</a>
+          </div>
+          <div *ngIf="depthChart.nav.is_home" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="['./']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="page-heading-nav-btn">{{ depthChart.nav.team_name}} Depth Chart</a>
+          </div>
+          <div *ngIf="!depthChart.nav.is_home && depthChart.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[depthChart.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{ depthChart.nav.opp_name}} Depth Chart</a>
+          </div>
+          <div *ngIf="depthChart.nav.matchup_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appNflMatchupIdPreselect]="depthChart.nav.game_key" [routerLink]="[depthChart.nav.matchup_route]" routerLinkActive="active" class="page-heading-nav-btn">Matchups</a>
+          </div>
+          <!--news commented-->
+          <!--<div *ngIf="depthChart.nav.team_news_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">-->
+            <!--<a [appPreselectNflNewsTeamSeason]="params?.year" [routerLink]="[depthChart.nav.team_news_route]" routerLinkActive="active" class="page-heading-nav-btn">News</a>-->
+          <!--</div>-->
+          <div *ngIf="depthChart.nav.team_stats_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appPreselectNflStatsTeamSeason]="params?.year" [routerLink]="[depthChart.nav.team_stats_route]" routerLinkActive="active" class="page-heading-nav-btn">Stats</a>
+          </div>
+          <div *ngIf="depthChart.nav.team_snaps_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appPreselectNflSnapsTeamSeason]="params?.year" [routerLink]="[depthChart.nav.team_snaps_route]" routerLinkActive="active" class="page-heading-nav-btn">Snaps</a>
+          </div>
+          <div class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appPreselectNflRosterTeamSeason]="params?.year" [routerLink]="[depthChart.nav.team_roster_route]" routerLinkActive="active" class="page-heading-nav-btn">Roster</a>
+          </div>
+          <div *ngIf="depthChart.nav.team_injuries_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [routerLink]="[depthChart.nav.team_injuries_route]" class="page-heading-nav-btn">Injuries</a>
+          </div>
+          <div class="tab-btn-xsm tab-btn-wrap depth-chart-opt last">
+            <a [appPreselectNflScheduleTeamSeason]="params?.year" [routerLink]="[depthChart.nav.team_schedule_route]" class="page-heading-nav-btn">Schedule</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 after-heading-margin zero-lg-height smaller-lg-box">
+      <app-ad-component [league]="'nfl'"></app-ad-component>
+    </div>
+  </div>
+  <div class="row">
+    <div *ngIf="depthChart.intro_paragraph" class="col-lg-8 col-12 flex-last flex-sm-unordered">
+      <p class="site-pages-content" [innerHtml]="depthChart.intro_paragraph | safeHtml"></p>
+    </div>
+    <div class="col-12" [ngClass]="{'col-lg-8': !depthChart.intro_paragraph}">
+      <div class="d-flex updated-date-time-block-wrapper">
+        <div>
+          <!-- Grouped Dropdown -->
+          <div class="grouped-dropdown-wrapper not-mobile btn-group my-0">
+
+            <div ngbDropdown class="grouped-dropdown dropdown">
+              <button type="button" class="grouped-dropdown-btn btn btn-secondary single-not-mobile-dd first px-3" id="main-dropdown" ngbDropdownToggle>
+                <span class="pr-0 pr-sm-3">{{params.year | handleLeagueYear : 'nfl'}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+              </button>
+              <div class="dropdown-menu" aria-labelledby="main-dropdown">
+                <div *ngFor="let season of depthChart.seasons_dropdown;">
+                  <button
+                    [ngClass]="{'dd-active-btn': params.year === season.year}"
+                    (click)="onYearDdChange(season)"
+                    class="dropdown-item">
+                    <span>{{season.name}}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+
+            <app-dropdown
+              *ngIf="offenseDictionary && !hide2018Elements"
+              class="page-mobile-main-tabs"
+              [filterItems]="onTabGroupClick.bind(this, 'mainTab')"
+              [ddData]="dropdownValues"
+              prop="mainTab"
+              [className]="'last'"
+              [isSingleSelect]="true"
+            ></app-dropdown>
+          </div>
+
+          <div *ngIf="offenseDictionary && !hide2018Elements" class="toggles-in-page-wrapper page-main-tabs my-0">
+            <div class="toggles-in-page-group btn-group toggles-group">
+              <button *ngFor="let tab of dropdownValues.mainTab; let first = first; let last = last;"
+                      (click)="onTabGroupClick('mainTab', tab);"
+                      class="toggle-in-page" [ngClass]="{'active': tab.selected, 'first': first, 'last': last}">{{tab.name}}</button>
+            </div>
+          </div>
+
+        </div>
+        <div *ngIf="depthChart.nav.updated" class="updated-date-time-block next-to-dd align-self-center">
+          Updated: <app-general-time-format [time]="depthChart.nav.updated"></app-general-time-format>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="row" *ngIf="offenseDictionary">
+        <div class="col-12" *ngIf="dropdownActiveValues.mainTab.name === dropdownValues.mainTab[0].name ||
+        dropdownActiveValues.mainTab.name === dropdownValues.mainTab[1].name">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="page-heading-two">{{depthChart.offense_depth_chart_header}}</h2>
+              <div class="row">
+                <div *ngIf="!hide2018Elements" class="col-12 after-heading-margin">
+                  <div class="toggles-in-page-wrapper page-main-tabs my-0 mr-2 ml-0">
+                    <div class="toggles-in-page-group btn-group toggles-group">
+                      <button *ngFor="let tab of dropdownValues.offenseTabs; let first = first; let last = last;"
+                              (click)="onTabGroupClick('offenseTabs', tab);"
+                              class="toggle-in-page" [ngClass]="{'active': tab.selected, 'first': first, 'last': last}">{{tab.name}}</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div *ngIf="(dropdownActiveValues.offenseTabs.value === 'skill' ? offenseDictionarySkillPos : offenseDictionaryOLine);let activeDictionaryArray;" class="d-flex offense-image-section">
+                    <div class="offense-image-wrapper">
+                      <ng-container [ngSwitch]="dropdownActiveValues.offenseTabs.value">
+                        <ng-container *ngSwitchCase="'skill'">
+                          <div class="inline-image-content">
+                            <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: 'QB'}"></ng-template>
+                            <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: 'RB'}"></ng-template>
+                            <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: 'LWR'}"></ng-template>
+                            <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: 'SWR'}"></ng-template>
+                            <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: 'RWR'}"></ng-template>
+                            <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: 'TE'}"></ng-template>
+                          </div>
+                          <div class="football-field-container">
+                              <div class="football-field-bg">
+                                <div class="row">
+                                  <div class="col-12 text-center">
+                                    <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: 'LWR'}"></ng-template>
+                                    <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: 'TE', className: 'qb-right'}"></ng-template>
+                                    <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: 'SWR', className: 'qb-left'}"></ng-template>
+                                    <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: 'RWR'}"></ng-template>
+                                  </div>
+                                  <div class="col-12 text-center bottom-image-row">
+                                    <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: 'QB', className: 'qb'}"></ng-template>
+                                    <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: 'RB', className: 'rb'}"></ng-template>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngSwitchDefault>
+                          <div class="inline-image-content">
+                            <ng-container *ngFor="let position of offenseDictionaryOLine">
+                              <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: position, offenseType: 'o-line'}"></ng-template>
+                            </ng-container>
+                          </div>
+                          <div class="football-field-container">
+                              <div class="football-field-bg">
+                                <div class="row">
+                                  <div class="col-12 text-center">
+                                    <ng-container *ngFor="let position of offenseDictionaryOLine">
+                                      <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: position, offenseType: 'o-line'}"></ng-template>
+                                    </ng-container>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                        </ng-container>
+                      </ng-container>
+
+                    </div>
+                    <div class="offense-image-table-wrapper">
+                      <div class="football-image-wrapper" [ngClass]="{'display-table-row':  !activeOffense || (!activeOffense.player && !activeOffense.position)}">
+                        <div class="fake-t-header">
+                          {{(dropdownActiveValues.offenseTabs.value === 'skill' ? 'Skill Positions' : 'O-Line')}} Depth Chart
+                        </div>
+                        <div class="table-sect-wrap mb-0">
+
+                          <!-- Static Positioned Tabled -->
+                          <div class="static-table-wrapper">
+                            <table class="static-table stats-table table table-bordered multi-table-static">
+                              <thead>
+                              <tr class="t-sub-header static-sub-header">
+                                <th class="depth-pos-col px-2">
+                                  <span class="long-depth-pos-name">
+                                    Position
+                                  </span>
+                                  <span class="short-depth-pos-name">
+                                    POS
+                                  </span>
+                                </th>
+                              </tr>
+                              </thead>
+                              <tbody class="static-table-body">
+                              <ng-container *ngFor="let position of activeDictionaryArray">
+                                <ng-container *ngIf="offensePlayersData[position]">
+                                  <tr (mouseover)="onPosMouseOver(false, position)" [ngClass]="getActiveImageItemClass(null, position, '', 'static-table-active-pos')">
+                                    <td class="depth-pos-col">
+                                      <span class="long-depth-pos-name hover-hand">
+                                        {{offenseDictionary[position]}}
+                                      </span>
+                                        <span class="short-depth-pos-name hover-hand">
+                                        {{position}}
+                                      </span>
+                                    </td>
+                                  </tr>
+                                </ng-container>
+                              </ng-container>
+                              </tbody>
+                            </table>
+                          </div>
+                          <!-- Horizontal Scrolling-->
+                          <div class="horizontal-table-wrapper no-border">
+                            <table class="multi-row-data-table custom-font t-stripped">
+                              <thead>
+                              <tr class="t-sub-header">
+                                <th class="depth-pos-col inner-col-switch">
+                                  Position
+                                </th>
+                                <th *ngFor="let tableHeader of offensePlayersTableColArr; let index = index;" class="text-center">
+                                  {{index + 1}}
+                                </th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <ng-container *ngFor="let position of activeDictionaryArray">
+                                <ng-container *ngIf="offensePlayersData[position]">
+                                  <tr class="t-content" [ngClass]="getActiveImageItemClass(null, position, '', 'horizontal-table-active-pos')">
+                                    <td (mouseover)="onPosMouseOver(false, position)" class="depth-pos-col inner-col-switch">
+                                      <span class="long-depth-pos-name hover-hand">
+                                        {{offenseDictionary[position]}}
+                                      </span>
+                                      <span class="short-depth-pos-name hover-hand">
+                                        {{position}}
+                                      </span>
+                                    </td>
+                                    <td class="player-td" (mouseover)="onPosMouseOver(false, position, offensePlayersData[position][index])" *ngFor="let tdItem of offensePlayersTableColArr; let index = index; let first = first" [ngClass]="{'first-horizontal-td': first ,'active-player-td': offensePlayersData[position][index]?.id && activeOffense?.player?.id && offensePlayersData[position][index]?.id === activeOffense?.player?.id}">
+                                      <div class="player-td-content" [ngClass]="{'long-table-name': defineIfLongName(offensePlayersData[position][index])}">
+                                        <app-player-link *ngIf="offensePlayersData[position][index]; let player" [customContent]="true" [league]="'nfl'" [playerUrl]="player.profile_url">
+                                          <span class="long-offense-pl-name">
+                                            {{player.name}}
+                                          </span>
+                                          <span class="short-offense-pl-name">
+                                            {{player.name | shortPlayerName}}
+                                          </span>
+                                        </app-player-link>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </ng-container>
+                              </ng-container>
+                              </tbody>
+                            </table>
+                          </div>
+
+                        </div>
+                      </div>
+                      <ng-container *ngIf="allowHoverFunctionality()">
+                        <div *ngIf="activeOffense?.position; else offensePlayerCap;" class="active-offense-section">
+                          <div class="position-badge" [ngClass]="{'is-single-player': activeOffense?.player?.id}">
+                            <div>
+                              {{offenseDictionary[activeOffense.position]}}
+                            </div>
+                          </div>
+                          <div class="d-flex player-list-wrapper">
+                            <ng-container *ngFor="let player of offensePlayersData[activeOffense.position]; let index = index">
+                              <app-offense-payer-box *ngIf="(activeOffense?.player?.id && player?.id === activeOffense?.player?.id) || (!activeOffense?.player?.id && index < 4)" [activeOffense]="activeOffense" [player]="player" [isOLine]="dropdownActiveValues.offenseTabs.value === 'o-line'"></app-offense-payer-box>
+                            </ng-container>
+                            <div class="bar-chart-wrapper" [ngClass]="{'o-line-chart': dropdownActiveValues.offenseTabs.value === 'o-line'}" *ngIf="activeOffense?.dataset">
+                              <app-graph-table
+                                [customTable]="true"
+                                [datasets]="activeOffense.dataset.data"
+                                [labels]="activeOffense.dataset.dates"
+                                [chartType]="'bar'"
+                                [colors]="chartColors"
+                                [legend]="true"
+                                [options]="chartOptions"
+                              ></app-graph-table>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12" *ngIf="dropdownActiveValues.mainTab.name === dropdownValues.mainTab[0].name ||
+        dropdownActiveValues.mainTab.name === dropdownValues.mainTab[2].name">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="page-heading-two">{{depthChart.defense_depth_chart_header}}</h2>
+              <div class="row">
+                <div class="col-12">
+                  <div class="d-flex offense-image-section defense-image-section">
+                    <div class="offense-image-wrapper">
+                      <ng-container *ngIf="isDefenseSchemaFourThree(); else threeFourSchemaTpl">
+                        <div class="inline-image-content">
+                          <ng-template *ngFor="let pos of defenseDictionaryArr"
+                                       [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: pos, posType: 'defense'}"></ng-template>
+                        </div>
+                        <div class="football-field-container">
+                            <div class="football-field-bg">
+                              <div class="row">
+                                <div class="col-12 image-row-four-items">
+                                  <ng-template *ngFor="let pos of defenseDictionaryArr | slice: 0 : 4"
+                                               [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: pos, posType: 'defense'}"></ng-template>
+                                </div>
+                                <div class="col-12 image-row-four-items mid-image-row">
+                                  <ng-template *ngFor="let pos of defenseDictionaryArr | slice: 4 : 7"
+                                               [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: pos, posType: 'defense'}"></ng-template>
+                                </div>
+                                <div class="col-12 image-row-four-items">
+                                  <ng-template *ngFor="let pos of defenseDictionaryArr | slice: 7 : 11"
+                                               [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: pos, posType: 'defense'}"></ng-template>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                      </ng-container>
+                      <ng-template #threeFourSchemaTpl>
+                        <div class="inline-image-content">
+                          <ng-template *ngFor="let pos of defenseDictionaryArr"
+                                       [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: pos, posType: 'defense'}"></ng-template>
+                        </div>
+                        <div class="football-field-container">
+                          <div class="football-field-bg">
+                            <div class="row">
+                              <div class="col-12 image-row-four-items">
+                                <ng-template *ngFor="let pos of defenseDictionaryArr | slice: 0:3"
+                                             [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: pos, posType: 'defense'}"></ng-template>
+                              </div>
+                              <div class="col-12 image-row-four-closer-items mid-image-row">
+                                <ng-template *ngFor="let pos of defenseDictionaryArr | slice: 3:7"
+                                             [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: pos, posType: 'defense'}"></ng-template>
+                              </div>
+                              <div class="col-12 image-row-four-items">
+                                <ng-template *ngFor="let pos of defenseDictionaryArr | slice: 7:11"
+                                             [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: pos, posType: 'defense'}"></ng-template>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-template>
+                    </div>
+                    <div class="offense-image-table-wrapper">
+                      <div class="football-image-wrapper">
+                        <div class="fake-t-header">
+                          Defense Depth Chart ({{isDefenseSchemaFourThree() ? '4-3' : '3-4'}})
+                        </div>
+                        <div class="table-sect-wrap mb-0">
+
+                          <!-- Static Positioned Tabled -->
+                          <div class="static-table-wrapper">
+                            <table class="static-table stats-table table table-bordered multi-table-static">
+                              <thead>
+                              <tr class="t-sub-header static-sub-header">
+                                <th class="depth-pos-col px-2">
+                                  <span class="long-depth-pos-name">
+                                    Position
+                                  </span>
+                                  <span class="short-depth-pos-name">
+                                    POS
+                                  </span>
+                                </th>
+                              </tr>
+                              </thead>
+                              <tbody class="static-table-body">
+                              <ng-container *ngFor="let position of defenseDictionaryArr">
+                                <tr *ngIf="defensePlayersData[position]">
+                                  <td class="depth-pos-col">
+                                    <span class="long-depth-pos-name">
+                                      {{defenseDictionary[position]}}
+                                    </span>
+                                    <span class="short-depth-pos-name">
+                                      {{position}}
+                                    </span>
+                                  </td>
+                                </tr>
+                              </ng-container>
+                              </tbody>
+                            </table>
+                          </div>
+                          <!-- Horizontal Scrolling-->
+                          <div class="horizontal-table-wrapper no-border">
+                            <table class="multi-row-data-table custom-font t-stripped">
+                              <thead>
+                              <tr class="t-sub-header">
+                                <!-- Inner Col Switch QB Data-->
+                                <th class="depth-pos-col inner-col-switch">
+                                  Position
+                                </th>
+                                <th class="text-center">
+                                  1
+                                </th>
+                                <th class="text-center">
+                                  2
+                                </th>
+                                <th class="text-center">
+                                  3
+                                </th>
+                                <th class="text-center">
+                                  4
+                                </th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <ng-container *ngFor="let position of defenseDictionaryArr">
+                                <tr class="t-content" *ngIf="defensePlayersData[position]; let posPlayerArr;">
+                                  <td class="depth-pos-col inner-col-switch">
+                                    <span class="long-depth-pos-name">
+                                      {{defenseDictionary[position]}}
+                                    </span>
+                                    <span class="short-depth-pos-name">
+                                      {{position}}
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <app-player-link *ngIf="posPlayerArr[0]; let player" [customContent]="true" [league]="'nfl'" [playerUrl]="player.profile_url">
+                                      <span class="long-offense-pl-name">
+                                        {{player.name}}
+                                      </span>
+                                      <span class="short-offense-pl-name">
+                                        {{player.name | shortPlayerName}}
+                                      </span>
+                                    </app-player-link>
+                                  </td>
+                                  <td>
+                                    <app-player-link *ngIf="posPlayerArr[1]; let player" [customContent]="true" [league]="'nfl'" [playerUrl]="player.profile_url">
+                                      <span class="long-offense-pl-name">
+                                        {{player.name}}
+                                      </span>
+                                      <span class="short-offense-pl-name">
+                                        {{player.name | shortPlayerName}}
+                                      </span>
+                                    </app-player-link>
+                                  </td>
+                                  <td>
+                                    <app-player-link *ngIf="posPlayerArr[2]; let player" [customContent]="true" [league]="'nfl'" [playerUrl]="player.profile_url">
+                                      <span class="long-offense-pl-name">
+                                        {{player.name}}
+                                      </span>
+                                      <span class="short-offense-pl-name">
+                                        {{player.name | shortPlayerName}}
+                                      </span>
+                                    </app-player-link>
+                                  </td>
+                                  <td>
+                                    <app-player-link *ngIf="posPlayerArr[3]; let player" [customContent]="true" [league]="'nfl'" [playerUrl]="player.profile_url">
+                                      <span class="long-offense-pl-name">
+                                        {{player.name}}
+                                      </span>
+                                      <span class="short-offense-pl-name">
+                                        {{player.name | shortPlayerName}}
+                                      </span>
+                                    </app-player-link>
+                                  </td>
+                                </tr>
+                              </ng-container>
+                              </tbody>
+                            </table>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="isDefaultSeason">
+        <div class="col-12">
+          <app-wp-articles-list [teamName]="depthChart.nav.team_name" [podcasts]="false" [league]="'nfl'"></app-wp-articles-list>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 mt-4">
+          <div class="toggles-in-page-wrapper page-main-tabs my-0 mr-2 ml-0">
+            <div class="toggles-in-page-group btn-group toggles-group">
+              <button *ngFor="let tab of dropdownValues.depthChart; let first = first; let last = last;"
+                      (click)="onTabGroupClick('depthChart', tab);"
+                      class="toggle-in-page" [ngClass]="{'active': tab.selected, 'first': first, 'last': last}">{{tab.name}}</button>
+            </div>
+          </div>
+
+          <!-- Grouped Dropdown -->
+          <div class="grouped-dropdown-wrapper not-mobile btn-group m-0">
+
+            <app-dropdown
+              class="page-mobile-main-tabs"
+              [ddData]="dropdownValues"
+              prop="depthChart"
+              [className]="'first'"
+              [filterItems]="onTabGroupClick.bind(this, 'depthChart')"
+              [isSingleSelect]="true"
+            ></app-dropdown>
+
+            <div ngbDropdown class="grouped-dropdown dropdown">
+              <button type="button" class="grouped-dropdown-btn btn btn-secondary last single-not-mobile-dd px-3" id="season-dropdown" ngbDropdownToggle>
+                <span>{{dropdownActiveValues.season.name}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+              </button>
+              <div class="dropdown-menu" aria-labelledby="season-dropdown">
+                <div class="dropdown-btn-wrap" *ngFor="let seasonDD of dropdownValues.season">
+                  <a (click)="onDropdownItemSelect('season', seasonDD.value)"
+                     [ngClass]="{'dd-active-btn': seasonDD == dropdownActiveValues.season}"
+                     class="dropdown-item"
+                  >{{seasonDD.name}}</a>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="dropdownActiveValues.depthChart.value === dropdownValues.depthChart[0].value ||
+        dropdownActiveValues.depthChart.value === dropdownValues.depthChart[1].value">
+        <div class="col-12" id="offense-depth-chart">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="page-heading-two">Offense Depth Chart Stats</h2>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Quarter Backs -->
+            <div class="col-12 table-sect-wrap" *ngIf="depthChart.offense_depth_chart.quarter_backs[dropdownActiveValues.season.value]">
+
+              <!-- Static Positioned Tabled -->
+              <div class="static-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="depthChart.offense_depth_chart.quarter_backs[dropdownActiveValues.season.value]"
+                  [(mfSortBy)]="offenseSorting.sortByQBs"
+                  [(mfSortOrder)]="offenseSorting.sortOrderQBs"
+                  (mfSortByChange)="onSortOrder('offenseSorting', 'sortByQBs', 'sortOrderQBs', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('offenseSorting', 'sortByQBs', 'sortOrderQBs', 'order', $event)"
+                  #staticOffenseQBs="mfDataTable"
+                  class="static-table stats-table table table-bordered multi-table-static">
+                  <thead>
+                  <tr class="t-header static-row-header">
+                    <th colspan="2" class="text-center main-border static-t-header">QBs</th>
+                  </tr>
+                  <tr class="t-sub-header static-sub-header">
+                    <th class="player-name-col">
+                      <mfSorter by="name">Player</mfSorter>
+                    </th>
+                    <th class="rating position-col">
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody class="static-table-body">
+                  <tr *ngFor="let quarterback of staticOffenseQBs.data">
+                    <td class="player-name-col text-left">
+                      <app-player-link [league]="'nfl'" [playerName]="quarterback.name" [playerUrl]="quarterback.profile_url"></app-player-link>
+                    </td>
+                    <td class="position-col main-border">
+                      <span *ngIf="quarterback.rating !== null"><app-rating [value]="quarterback.rating"></app-rating></span>
+                      <span *ngIf="quarterback.rating === null">N/A</span>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Horizontal Scrolling-->
+              <div class="horizontal-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="depthChart.offense_depth_chart.quarter_backs[dropdownActiveValues.season.value]"
+                  [(mfSortBy)]="offenseSorting.sortByQBs"
+                  [(mfSortOrder)]="offenseSorting.sortOrderQBs"
+                  (mfSortByChange)="onSortOrder('offenseSorting', 'sortByQBs', 'sortOrderQBs', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('offenseSorting', 'sortByQBs', 'sortOrderQBs', 'order', $event)"
+                  #offenseQBs="mfDataTable"
+                  class="multi-row-data-table t-stripped">
+                  <colgroup span="5">
+                    <col span="1" width="17%" class="inner-col-switch">
+                    <col span="4" width="5%" class="inner-col-switch">
+                  </colgroup>
+                  <colgroup span="6"></colgroup>
+                  <colgroup span="4"></colgroup>
+                  <tbody>
+                  <tr class="t-header">
+                    <th colspan="5" scope="colgroup" class="text-center main-border inner-col-switch">Quarterbacks</th>
+                    <th colspan="3" class="text-center inner-col-show">Stats</th>
+                    <th colspan="6" scope="colgroup" class="text-center main-border">Passing</th>
+                    <th colspan="4" scope="colgroup" class="text-center">Rushing</th>
+                  </tr>
+                  <tr class="t-sub-header">
+                    <!-- Inner Col Switch QB Data-->
+                    <th scope="col" class="px-3 inner-col-switch">
+                      <mfSorter by="name">Player</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center inner-col-switch">
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center inner-col-switch">
+                      <mfSorter by="depth">Depth</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center inner-col-switch">
+                      <mfSorter by="played">Games</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center inner-col-switch main-border">
+                      <mfSorter by="passing_sacks">Sacks</mfSorter>
+                    </th>
+                    <!-- END: Inner Col Switch QB Data -->
+                    <!-- Add Inner Col Show QB Data -->
+                    <th scope="col" class="text-center inner-col-show">
+                      <mfSorter by="depth">Depth</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center inner-col-show">
+                      <mfSorter by="played">Games</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center inner-col-show main-border">
+                      <mfSorter by="passing_sacks">Sacks</mfSorter>
+                    </th>
+                    <!-- END: Inner Col Show QB Data-->
+                    <th scope="col" class="text-center">
+                      <mfSorter by="passing_attempts">Attempts</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="passing_completions">Completions</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="completion_percentage">Completion%</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="passing_yards">Passing Yards</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="passing_yards_per_attempt">Yds/Attempt</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center main-border">
+                      <mfSorter by="passing_interceptions">INTs</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="rushing_attempts">Attempts</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="rushing_yards">Yards</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="rushing_yards_per_game">YPG</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="rushing_touchdowns">TD</mfSorter>
+                    </th>
+                  </tr>
+                  <tr class="t-content" *ngFor="let quarterback of offenseQBs.data">
+                    <td class="text-left px-3 inner-col-switch">
+                      <app-player-link [league]="'nfl'" [playerName]="quarterback.name" [playerUrl]="quarterback.profile_url"></app-player-link>
+                    </td>
+                    <td class="inner-col-switch"><app-rating [value]="quarterback.rating"></app-rating></td>
+                    <td>{{quarterback.depth}}</td>
+                    <td>{{quarterback.played}}</td>
+                    <td class="main-border">{{quarterback.passing_sacks}}</td>
+
+                    <td>{{quarterback.passing_attempts}}</td>
+                    <td>{{quarterback.passing_completions}}</td>
+                    <td>{{quarterback.completion_percentage}}</td>
+                    <td>{{quarterback.passing_yards}}</td>
+                    <td>{{quarterback.passing_yards_per_attempt}}</td>
+                    <td class="main-border">{{quarterback.passing_interceptions}}</td>
+
+                    <td>{{quarterback.rushing_attempts}}</td>
+                    <td>{{quarterback.rushing_yards}}</td>
+                    <td>{{quarterback.rushing_yards_per_game}}</td>
+                    <td>{{quarterback.rushing_touchdowns}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+
+
+            </div>
+            <div class="col-12 table-sect-wrap" *ngIf="depthChart.offense_depth_chart.running_backs[dropdownActiveValues.season.value]">
+
+              <!-- Static Positioned Tabled -->
+              <div class="static-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="depthChart.offense_depth_chart.running_backs[dropdownActiveValues.season.value]"
+                  [(mfSortBy)]="offenseSorting.sortByRBs"
+                  [(mfSortOrder)]="offenseSorting.sortOrderRBs"
+                  (mfSortByChange)="onSortOrder('offenseSorting', 'sortByRBs', 'sortOrderRBs', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('offenseSorting', 'sortByRBs', 'sortOrderRBs', 'order', $event)"
+                  #staticOffenseRBs="mfDataTable"
+                  class="static-table stats-table table table-bordered multi-table-static">
+                  <thead>
+                  <tr class="t-header static-row-header">
+                    <th colspan="2" class="text-center main-border static-t-header">RBs</th>
+                  </tr>
+                  <tr class="t-sub-header static-sub-header">
+                    <th class="player-name-col">
+                      <mfSorter by="name">Player</mfSorter>
+                    </th>
+                    <th class="rating position-col">
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody class="static-table-body">
+                  <tr *ngFor="let runningBack of staticOffenseRBs.data">
+                    <td class="player-name-col text-left">
+                      <app-player-link [league]="'nfl'" [playerName]="runningBack.name" [playerUrl]="runningBack.profile_url"></app-player-link>
+                    </td>
+                    <td class="position-col main-border">
+                      <span *ngIf="runningBack.rating !== null"><app-rating [value]="runningBack.rating"></app-rating></span>
+                      <span *ngIf="runningBack.rating === null">N/A</span>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="horizontal-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="depthChart.offense_depth_chart.running_backs[dropdownActiveValues.season.value]"
+                  [(mfSortBy)]="offenseSorting.sortByRBs"
+                  [(mfSortOrder)]="offenseSorting.sortOrderRBs"
+                  (mfSortByChange)="onSortOrder('offenseSorting', 'sortByRBs', 'sortOrderRBs', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('offenseSorting', 'sortByRBs', 'sortOrderRBs', 'order', $event)"
+                  #offenseRBs="mfDataTable"
+                  class="multi-row-data-table t-stripped">
+                  <colgroup span="5">
+                    <col span="1" width="17%" class="inner-col-switch">
+                    <col span="4" width="5%">
+                  </colgroup>
+                  <colgroup span="6"></colgroup>
+                  <colgroup span="6"></colgroup>
+                  <tbody>
+                  <tr class="t-header">
+                    <th colspan="5" scope="colgroup" class="text-center main-border inner-col-switch">Running Backs</th>
+                    <th colspan="3" class="inner-col-show text-center">Stats</th>
+                    <th colspan="6" scope="colgroup" class="text-center main-border">Receiving</th>
+                    <th colspan="6" scope="colgroup" class="text-center">Rushing</th>
+                  </tr>
+                  <tr class="t-sub-header">
+
+                    <th scope="col" class="px-3 inner-col-switch">
+                      <mfSorter by="name">Player</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center inner-col-switch">
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="depth">Depth</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="offensive_snaps_played">Snaps/Game</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center main-border">
+                      <mfSorter by="fumbles_lost">Fumbles</mfSorter>
+                    </th>
+
+                    <th scope="col" class="text-center">
+                      <mfSorter by="receiving_targets">Targets</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="receptions">Receptions</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="receiving_yards">Yards</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="receiving_yards_per_reception">YPC</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="receiving_long">Long</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center main-border">
+                      <mfSorter by="receiving_touchdowns">TD</mfSorter>
+                    </th>
+
+                    <th scope="col" class="text-center">
+                      <mfSorter by="rushing_attempts">Attempts</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="rushing_yards">Yards</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="rushing_long">Long</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="rushing_touchdowns">TD</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="rushing_yards_per_attempt">YPC</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="rushing_yards_per_game">YPG</mfSorter>
+                    </th>
+                  </tr>
+                  <tr class="t-content" *ngFor="let runningBack of offenseRBs.data">
+
+                    <td class="text-left px-3 inner-col-switch">
+                      <app-player-link [league]="'nfl'" [playerName]="runningBack.name" [playerUrl]="runningBack.profile_url"></app-player-link>
+                    </td>
+                    <td class="inner-col-switch"><app-rating [value]="runningBack.rating"></app-rating></td>
+                    <td class="inner-col-switch">{{runningBack.depth}}</td>
+                    <td class="inner-col-switch">{{runningBack.offensive_snaps_played}}</td>
+                    <td class="main-border inner-col-switch">{{runningBack.fumbles_lost}}</td>
+
+                    <td class="inner-col-show">{{runningBack.depth}}</td>
+                    <td class="inner-col-show">{{runningBack.offensive_snaps_played}}</td>
+                    <td class="main-border inner-col-show">{{runningBack.fumbles_lost}}</td>
+
+                    <td>{{runningBack.receiving_targets}}</td>
+                    <td>{{runningBack.receptions}}</td>
+                    <td>{{runningBack.receiving_yards}}</td>
+                    <td>{{runningBack.receiving_yards_per_reception}}</td>
+                    <td>{{runningBack.receiving_long}}</td>
+                    <td class="main-border">{{runningBack.receiving_touchdowns}}</td>
+
+                    <td>{{runningBack.rushing_attempts}}</td>
+                    <td>{{runningBack.rushing_yards}}</td>
+                    <td>{{runningBack.rushing_long}}</td>
+                    <td>{{runningBack.rushing_touchdowns}}</td>
+                    <td>{{runningBack.rushing_yards_per_attempt}}</td>
+                    <td>{{runningBack.rushing_yards_per_game}}</td>
+
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+            <div class="col-12 table-sect-wrap" *ngIf="depthChart.offense_depth_chart.wide_receivers[dropdownActiveValues.season.value]">
+
+              <!-- Static Positioned Tabled -->
+              <div class="static-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="depthChart.offense_depth_chart.wide_receivers[dropdownActiveValues.season.value]"
+                  [(mfSortBy)]="offenseSorting.sortByWRs"
+                  [(mfSortOrder)]="offenseSorting.sortOrderWRs"
+                  (mfSortByChange)="onSortOrder('offenseSorting', 'sortByWRs', 'sortOrderWRs', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('offenseSorting', 'sortByWRs', 'sortOrderWRs', 'order', $event)"
+                  #staticOffenseWRs="mfDataTable"
+                  class="static-table stats-table table table-bordered multi-table-static">
+                  <thead>
+                  <tr class="t-header static-row-header">
+                    <th colspan="2" class="text-center main-border static-t-header">WRs</th>
+                  </tr>
+                  <tr class="t-sub-header static-sub-header">
+                    <th class="player-name-col">
+                      <mfSorter by="name">Player</mfSorter>
+                    </th>
+                    <th class="rating position-col">
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody class="static-table-body">
+                  <tr *ngFor="let wideReceiver of  staticOffenseWRs.data">
+                    <td class="player-name-col text-left">
+                      <app-player-link [league]="'nfl'" [playerName]="wideReceiver.name" [playerUrl]="wideReceiver.profile_url"></app-player-link>
+                    </td>
+                    <td class="position-col main-border">
+                      <span *ngIf="wideReceiver.rating !== null"><app-rating [value]="wideReceiver.rating"></app-rating></span>
+                      <span *ngIf="wideReceiver.rating === null">N/A</span>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="horizontal-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="depthChart.offense_depth_chart.wide_receivers[dropdownActiveValues.season.value]"
+                  [(mfSortBy)]="offenseSorting.sortByWRs"
+                  [(mfSortOrder)]="offenseSorting.sortOrderWRs"
+                  (mfSortByChange)="onSortOrder('offenseSorting', 'sortByWRs', 'sortOrderWRs', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('offenseSorting', 'sortByWRs', 'sortOrderWRs', 'order', $event)"
+                  #offenseWRs="mfDataTable"
+                  class="multi-row-data-table t-stripped">
+                  <colgroup span="4" class="inner-col-switch">
+                    <col span="1" width="17%" class="inner-col-switch">
+                    <col span="3" width="5%" class="inner-col-switch">
+                  </colgroup>
+                  <colgroup span="7" class="inner-col-switch"></colgroup>
+                  <colgroup span="5"></colgroup>
+                  <tbody>
+                  <tr class="t-header">
+                    <th colspan="4" scope="colgroup" class="text-center main-border inner-col-switch">Wide Receivers</th>
+                    <th colspan="2" class="text-center inner-col-show">Stats</th>
+                    <th colspan="7" scope="colgroup" class="text-center main-border">Receiving</th>
+                    <th colspan="5" scope="colgroup" class="text-center">Rushing</th>
+                  </tr>
+                  <tr class="t-sub-header">
+
+                    <th scope="col" class="px-3 inner-col-switch">
+                      <mfSorter by="name">Player</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center inner-col-switch">
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="depth">Depth</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center main-border">
+                      <mfSorter by="offensive_snaps_played">Snaps/Game</mfSorter>
+                    </th>
+
+                    <th scope="col" class="text-center">
+                      <mfSorter by="receiving_targets">Targets</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="receptions">Receptions</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="receiving_yards">Yards</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="catch_pct">Catch%</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="receiving_yards_per_reception">YPC</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="receiving_long">Long</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center main-border">
+                      <mfSorter by="receiving_touchdowns">TD</mfSorter>
+                    </th>
+
+                    <th scope="col" class="text-center">
+                      <mfSorter by="rushing_attempts">Attempts</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="rushing_yards">Yards</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="rushing_touchdowns">TD</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="rushing_yards_per_attempt">YPC</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="rushing_yards_per_game">YPG</mfSorter>
+                    </th>
+
+                  </tr>
+                  <tr class="t-content" *ngFor="let wideReceiver of offenseWRs.data">
+
+                    <td class="text-left px-3 inner-col-switch">
+                      <app-player-link [league]="'nfl'" [playerName]="wideReceiver.name" [playerUrl]="wideReceiver.profile_url"></app-player-link>
+                    </td>
+                    <td class="inner-col-switch"><app-rating [value]="wideReceiver.rating"></app-rating></td>
+                    <td>{{wideReceiver.depth}}</td>
+                    <td class="main-border">{{wideReceiver.offensive_snaps_played}}</td>
+
+                    <td>{{wideReceiver.receiving_targets}}</td>
+                    <td>{{wideReceiver.receptions}}</td>
+                    <td>{{wideReceiver.receiving_yards}}</td>
+                    <td>{{wideReceiver.catch_pct}}</td>
+                    <td>{{wideReceiver.receiving_yards_per_reception}}</td>
+                    <td>{{wideReceiver.receiving_long}}</td>
+                    <td class="main-border">{{wideReceiver.receiving_touchdowns}}</td>
+
+                    <td>{{wideReceiver.rushing_attempts}}</td>
+                    <td>{{wideReceiver.rushing_yards}}</td>
+                    <td>{{wideReceiver.rushing_touchdowns}}</td>
+                    <td>{{wideReceiver.rushing_yards_per_attempt}}</td>
+                    <td>{{wideReceiver.rushing_yards_per_game}}</td>
+
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+            <div class="col-12 table-sect-wrap" *ngIf="depthChart.offense_depth_chart.tight_ends[dropdownActiveValues.season.value]">
+              <!-- Static Positioned Tabled -->
+              <div class="static-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="depthChart.offense_depth_chart.tight_ends[dropdownActiveValues.season.value]"
+                  [(mfSortBy)]="offenseSorting.sortByTEs"
+                  [(mfSortOrder)]="offenseSorting.sortOrderTEs"
+                  (mfSortByChange)="onSortOrder('offenseSorting', 'sortByTEs', 'sortOrderTEs', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('offenseSorting', 'sortByTEs', 'sortOrderTEs', 'order', $event)"
+                  #staticOffenseTEs="mfDataTable"
+                  class="static-table stats-table table table-bordered multi-table-static">
+                  <thead>
+                  <tr class="t-header static-row-header">
+                    <th colspan="2" class="text-center main-border static-t-header">TEs</th>
+                  </tr>
+                  <tr class="t-sub-header static-sub-header">
+                    <th class="player-name-col">
+                      <mfSorter by="name">Player</mfSorter>
+                    </th>
+                    <th class="rating position-col">
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody class="static-table-body">
+                  <tr *ngFor="let tightEnd of staticOffenseTEs.data">
+                    <td class="player-name-col text-left">
+                      <app-player-link [league]="'nfl'" [playerName]="tightEnd.name" [playerUrl]="tightEnd.profile_url"></app-player-link>
+                    </td>
+                    <td class="position-col main-border">
+                      <span *ngIf="tightEnd.rating !== null"><app-rating [value]="tightEnd.rating"></app-rating></span>
+                      <span *ngIf="tightEnd.rating === null">N/A</span>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="horizontal-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="depthChart.offense_depth_chart.tight_ends[dropdownActiveValues.season.value]"
+                  [(mfSortBy)]="offenseSorting.sortByTEs"
+                  [(mfSortOrder)]="offenseSorting.sortOrderTEs"
+                  (mfSortByChange)="onSortOrder('offenseSorting', 'sortByTEs', 'sortOrderTEs', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('offenseSorting', 'sortByTEs', 'sortOrderTEs', 'order', $event)"
+                  #offenseTEs="mfDataTable"
+                  class="multi-row-data-table t-stripped">
+                  <colgroup span="4">
+                    <col span="1" width="17%">
+                    <col span="3" width="5%">
+                  </colgroup>
+                  <colgroup span="7"></colgroup>
+                  <tbody>
+                  <tr class="t-header">
+                    <th colspan="4" scope="colgroup" class="text-center main-border inner-col-switch">Tight Ends</th>
+                    <th colspan="2" class="text-center inner-col-show main-border">Stats</th>
+                    <th colspan="7" scope="colgroup" class="text-center">Receiving</th>
+                  </tr>
+                  <tr class="t-sub-header">
+
+                    <th scope="col" class="px-3 inner-col-switch">
+                      <mfSorter by="name">Player</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center inner-col-switch">
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="depth">Depth</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center main-border">
+                      <mfSorter by="offensive_snaps_played">Snaps/Game</mfSorter>
+                    </th>
+
+                    <th scope="col" class="text-center">
+                      <mfSorter by="receiving_targets">Targets</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="receptions">Receptions</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="receiving_yards">Yards</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="catch_pct">Catch%</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="receiving_yards_per_reception">YPC</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="receiving_long">Long</mfSorter>
+                    </th>
+                    <th scope="col" class="text-center">
+                      <mfSorter by="receiving_touchdowns">TD</mfSorter>
+                    </th>
+
+                  </tr>
+                  <tr class="t-content" *ngFor="let tightEnd of offenseTEs.data">
+
+                    <td class="text-left px-3 inner-col-switch">
+                      <app-player-link [league]="'nfl'" [playerName]="tightEnd.name" [playerUrl]="tightEnd.profile_url"></app-player-link>
+                    </td>
+                    <td class="inner-col-switch"><app-rating [value]="tightEnd.rating"></app-rating></td>
+                    <td>{{tightEnd.depth}}</td>
+                    <td class="main-border">{{tightEnd.offensive_snaps_played}}</td>
+
+                    <td>{{tightEnd.receiving_targets}}</td>
+                    <td>{{tightEnd.receptions}}</td>
+                    <td>{{tightEnd.receiving_yards}}</td>
+                    <td>{{tightEnd.catch_pct}}</td>
+                    <td>{{tightEnd.receiving_yards_per_reception}}</td>
+                    <td>{{tightEnd.receiving_long}}</td>
+                    <td>{{tightEnd.receiving_touchdowns}}</td>
+
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+            <div class="col-6 full-table table-sect-wrap" *ngIf="depthChart.offense_depth_chart.offensive_line[dropdownActiveValues.season.value]">
+              <!-- Static Positioned Tabled -->
+              <div class="static-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="depthChart.offense_depth_chart.offensive_line[dropdownActiveValues.season.value]"
+                  [(mfSortBy)]="offenseSorting.sortByOLs"
+                  [(mfSortOrder)]="offenseSorting.sortOrderOLs"
+                  (mfSortByChange)="onSortOrder('offenseSorting', 'sortByOLs', 'sortOrderOLs', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('offenseSorting', 'sortByOLs', 'sortOrderOLs', 'order', $event)"
+                  #staticOffenseOLs="mfDataTable"
+                  class="static-table stats-table table table-bordered multi-table-static">
+                  <thead>
+                  <tr class="t-header static-row-header">
+                    <th colspan="2" class="text-center main-border static-t-header">OL</th>
+                  </tr>
+                  <tr class="t-sub-header static-sub-header">
+                    <th class="player-name-col">
+                      <mfSorter by="name">Player</mfSorter>
+                    </th>
+                    <th class="rating position-col">
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody class="static-table-body">
+                  <tr *ngFor="let offensiveLine of staticOffenseOLs.data">
+                    <td class="player-name-col text-left">
+                      <app-player-link [league]="'nfl'" [playerName]="offensiveLine.name" [playerUrl]="offensiveLine.profile_url"></app-player-link>
+                    </td>
+                    <td class="position-col main-border">
+                      <span *ngIf="offensiveLine.rating !== null"><app-rating [value]="offensiveLine.rating"></app-rating></span>
+                      <span *ngIf="offensiveLine.rating === null">N/A</span>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Horizontal Table Wrapper -->
+              <div class="horizontal-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="depthChart.offense_depth_chart.offensive_line[dropdownActiveValues.season.value]"
+                  [(mfSortBy)]="offenseSorting.sortByOLs"
+                  [(mfSortOrder)]="offenseSorting.sortOrderOLs"
+                  (mfSortByChange)="onSortOrder('offenseSorting', 'sortByOLs', 'sortOrderOLs', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('offenseSorting', 'sortByOLs', 'sortOrderOLs', 'order', $event)"
+                  #offenseOLs="mfDataTable"
+                  class="multi-row-data-table t-stripped">
+                  <colgroup span="5">
+                    <col span="1" width="34.5%">
+                    <col span="4">
+                  </colgroup>
+                  <tbody>
+                  <tr class="t-header">
+                    <th colspan="5" scope="colgroup" class="text-center inner-col-switch">Offensive Line</th>
+                    <th colspan="3" scope="colgroup" class="text-center inner-col-show">Stats</th>
+                  </tr>
+                  <tr class="t-sub-header">
+                    <th class="px-3 inner-col-switch">
+                      <mfSorter by="name">Player</mfSorter>
+                    </th>
+                    <th class="text-center inner-col-switch" width="10%">
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="depth">Depth Position</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="position">Position</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="offensive_snaps_played">Snaps/Game</mfSorter>
+                    </th>
+                  </tr>
+                  <tr class="t-content" *ngFor="let offensiveLine of offenseOLs.data">
+                    <td class="text-left px-3 inner-col-switch">
+                      <app-player-link [league]="'nfl'" [playerName]="offensiveLine.name" [playerUrl]="offensiveLine.profile_url"></app-player-link>
+                    </td>
+                    <td class="inner-col-switch"><app-rating [value]="offensiveLine.rating"></app-rating></td>
+                    <td>{{offensiveLine.depth}}</td>
+                    <td>{{offensiveLine.position}}</td>
+                    <td>{{offensiveLine.offensive_snaps_played}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="dropdownActiveValues.depthChart.value === dropdownValues.depthChart[0].value ||
+      dropdownActiveValues.depthChart.value === dropdownValues.depthChart[2].value" id="defense-depth-chart">
+        <div class="col-12">
+          <div class="row" >
+            <div class="col-12">
+              <h2 class="page-heading-two">Defense Depth Chart Stats</h2>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 table-sect-wrap" *ngIf="depthChart.defense_depth_chart.defense[dropdownActiveValues.season.value]">
+
+              <!-- Static Positioned Tabled -->
+              <div class="static-table-wrapper">
+                <table class="static-table stats-table table table-bordered multi-table-static">
+                  <thead>
+                  <tr>
+                    <th class="player-name-col">Team Defense</th>
+                    <th class="position-col">Rating</th>
+                  </tr>
+                  </thead>
+                  <tbody class="static-table-body">
+                  <tr *ngFor="let defense of depthChart.defense_depth_chart.defense[dropdownActiveValues.season.value]">
+                    <td class="player-name-col">
+                      <span class="player-name-col-lg">
+                        {{defense.name}}
+                      </span>
+                      <span class="player-name-col-xs">
+                        {{defense.name | lastTeamName}}
+                      </span>
+                    </td>
+                    <td class="position-col">
+                      <app-rating [value]="defense.rating"></app-rating>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="horizontal-table-wrapper">
+                <table class="multi-row-data-table t-stripped">
+                  <thead>
+                  <tr class="t-single-header">
+                    <th class="px-3 inner-col-switch" width="17%">Team Defense</th>
+                    <th class="text-center inner-col-switch" width="5%">Rating</th>
+                    <th class="text-center med-lg-col">Pts Allowed/Game</th>
+                    <th class="text-center med-lg-col">Yards Allowed/Game</th>
+                    <th class="text-center med-lg-col">Pass Yards Allowed/Game</th>
+                    <th class="text-center med-lg-col">Rush Yards Allowed/Game</th>
+                    <th class="text-center med-col">Sacks</th>
+                    <th class="text-center med-col">Fumbles</th>
+                    <th class="text-center med-col">INT</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr class="t-content" *ngFor="let defense of depthChart.defense_depth_chart.defense[dropdownActiveValues.season.value]">
+                    <td class="text-left px-3 inner-col-switch">
+                        {{defense.name}}
+                    </td>
+                    <td class="inner-col-switch"><app-rating [value]="defense.rating"></app-rating></td>
+                    <td>{{defense.pts_allowed}}</td>
+                    <td>{{defense.yards_allowed}}</td>
+                    <td>{{defense.passing_yards_allowed}}</td>
+                    <td>{{defense.rushing_yards_allowed}}</td>
+                    <td>{{defense.sacks}}</td>
+                    <td>{{defense.fumbles}}</td>
+                    <td>{{defense.int}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="col-12 table-sect-wrap" *ngIf="depthChart.defense_depth_chart.special_teams[dropdownActiveValues.season.value]">
+              <!-- Static Positioned Tabled -->
+              <div class="static-table-wrapper">
+                <table class="static-table stats-table table table-bordered multi-table-static">
+                  <thead>
+                  <tr>
+                    <th class="player-name-col">Special Teams</th>
+                    <th class="position-col">Rating</th>
+                  </tr>
+                  </thead>
+                  <tbody class="static-table-body">
+                  <tr *ngFor="let specialTeam of depthChart.defense_depth_chart.special_teams[dropdownActiveValues.season.value]">
+                    <td class="player-name-col">
+                      <span class="player-name-col-lg">
+                        {{specialTeam.name}}
+                      </span>
+                      <span class="player-name-col-xs">
+                        {{specialTeam.name | lastTeamName}}
+                      </span>
+                    </td>
+                    <td class="position-col">
+                      <app-rating [value]="specialTeam.rating"></app-rating>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Horizontal Table Wrapper -->
+              <div class="horizontal-table-wrapper">
+                <table class="multi-row-data-table t-stripped">
+                  <thead>
+                  <tr class="t-single-header">
+                    <th class="inner-col-switch px-3" width="17%">Special Teams</th>
+                    <th class="inner-col-switch text-center" width="5%">Rating</th>
+                    <th class="text-center med-col">Kick Return TDs</th>
+                    <th class="text-center med-col">Punt Return TDs</th>
+                    <th class="text-center med-col">Field Goal Blocked</th>
+                    <th class="text-center med-col">Punt Blocked</th>
+                    <th class="text-center med-col">Extra Point Blocked</th>
+                    <th class="text-center med-col">TDs</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr class="t-content" *ngFor="let specialTeam of depthChart.defense_depth_chart.special_teams[dropdownActiveValues.season.value]">
+                    <td class="text-left px-3 inner-col-switch">
+                      {{specialTeam.name}}
+                    </td>
+                    <td class="inner-col-switch"><app-rating [value]="specialTeam.rating"></app-rating></td>
+                    <td>{{specialTeam.kick_return_touchdowns}}</td>
+                    <td>{{specialTeam.punt_return_touchdowns}}</td>
+                    <td>{{specialTeam.field_goal_blocks}}</td>
+                    <td>{{specialTeam.punt_blocks}}</td>
+                    <td>{{specialTeam.extra_point_blocks}}</td>
+                    <td>{{specialTeam.touchdowns}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+            <div class="col-12 table-sect-wrap" *ngIf="depthChart.defense_depth_chart.defensive_line[dropdownActiveValues.season.value]">
+              <!-- Static Positioned Tabled -->
+              <div class="static-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="depthChart.defense_depth_chart.defensive_line[dropdownActiveValues.season.value]"
+                  [(mfSortBy)]="defenseSorting.sortByDLs"
+                  [(mfSortOrder)]="defenseSorting.sortOrderDLs"
+                  (mfSortByChange)="onSortOrder('defenseSorting', 'sortByDLs', 'sortOrderDLs', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('defenseSorting', 'sortByDLs', 'sortOrderDLs', 'order', $event)"
+                  #staticDefenseDLs="mfDataTable"
+                  class="static-table stats-table table table-bordered multi-table-static">
+                  <thead>
+                  <tr>
+                    <th class="player-name-col">
+                      <mfSorter by="name">Defensive Line</mfSorter>
+                    </th>
+                    <th class="position-col">
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody class="static-table-body">
+                  <tr *ngFor="let defensiveLine of staticDefenseDLs.data">
+                    <td class="player-name-col">
+                      <app-player-link [league]="'nfl'" [playerName]="defensiveLine.name" [playerUrl]="defensiveLine.profile_url"></app-player-link>
+                    </td>
+                    <td class="position-col">
+                      <app-rating [value]="defensiveLine.rating"></app-rating>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Horizontal Table Wrapper -->
+              <div class="horizontal-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="depthChart.defense_depth_chart.defensive_line[dropdownActiveValues.season.value]"
+                  [(mfSortBy)]="defenseSorting.sortByDLs"
+                  [(mfSortOrder)]="defenseSorting.sortOrderDLs"
+                  (mfSortByChange)="onSortOrder('defenseSorting', 'sortByDLs', 'sortOrderDLs', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('defenseSorting', 'sortByDLs', 'sortOrderDLs', 'order', $event)"
+                  #defenseDLs="mfDataTable"
+                  class="multi-row-data-table t-stripped">
+                  <thead>
+                  <tr class="t-single-header">
+                    <th class="px-3 inner-col-switch" width="17%">
+                      <mfSorter by="name">Defensive Line</mfSorter>
+                    </th>
+                    <th class="text-center med-col inner-col-switch" width="5%">
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="depth">Depth Position</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="snaps_per_game">Snaps/Game</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="tackles">Tackles</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="tackles_for_loss">Tackles for Loss</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="fumbles">Fumbles</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="interceptions">INT</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="touchdowns">TDs</mfSorter>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr class="t-content" *ngFor="let defensiveLine of defenseDLs.data">
+                    <td class="text-left px-3 inner-col-switch">
+                      <app-player-link [league]="'nfl'" [playerName]="defensiveLine.name" [playerUrl]="defensiveLine.profile_url"></app-player-link>
+                    </td>
+                    <td class="inner-col-switch"><app-rating [value]="defensiveLine.rating"></app-rating></td>
+                    <td>{{defensiveLine.depth}}</td>
+                    <td>{{defensiveLine.snaps_per_game}}</td>
+                    <td>{{defensiveLine.tackles}}</td>
+                    <td>{{defensiveLine.tackles_for_loss}}</td>
+                    <td>{{defensiveLine.fumbles}}</td>
+                    <td>{{defensiveLine.interceptions}}</td>
+                    <td>{{defensiveLine.touchdowns}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+            <div class="col-12 table-sect-wrap" *ngIf="depthChart.defense_depth_chart.linebackers[dropdownActiveValues.season.value]">
+              <!-- Static Positioned Tabled -->
+              <div class="static-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="depthChart.defense_depth_chart.linebackers[dropdownActiveValues.season.value]"
+                  [(mfSortBy)]="defenseSorting.sortByLBs"
+                  [(mfSortOrder)]="defenseSorting.sortOrderLBs"
+                  (mfSortByChange)="onSortOrder('defenseSorting', 'sortByLBs', 'sortOrderLBs', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('defenseSorting', 'sortByLBs', 'sortOrderLBs', 'order', $event)"
+                  #staticDefenseLBs="mfDataTable"
+                  class="static-table stats-table table table-bordered multi-table-static">
+                  <thead>
+                  <tr>
+                    <th class="player-name-col">
+                      <mfSorter by="name">Linebackers</mfSorter>
+                    </th>
+                    <th class="position-col">
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody class="static-table-body">
+                  <tr *ngFor="let linebacker of staticDefenseLBs.data">
+                    <td class="player-name-col">
+                      <app-player-link [league]="'nfl'" [playerName]="linebacker.name" [playerUrl]="linebacker.profile_url"></app-player-link>
+                    </td>
+                    <td class="position-col">
+                      <app-rating [value]="linebacker.rating"></app-rating>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Horizontal Table Wrapper -->
+              <div class="horizontal-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="depthChart.defense_depth_chart.linebackers[dropdownActiveValues.season.value]"
+                  [(mfSortBy)]="defenseSorting.sortByLBs"
+                  [(mfSortOrder)]="defenseSorting.sortOrderLBs"
+                  (mfSortByChange)="onSortOrder('defenseSorting', 'sortByLBs', 'sortOrderLBs', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('defenseSorting', 'sortByLBs', 'sortOrderLBs', 'order', $event)"
+                  #defenseLBs="mfDataTable"
+                  class="multi-row-data-table t-stripped">
+                  <thead>
+                  <tr class="t-single-header">
+                    <th class="px-3 inner-col-switch" width="17%">
+                      <mfSorter by="name">Linebackers</mfSorter>
+                    </th>
+                    <th class="text-center med-col inner-col-switch" width="5%">
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="depth">Depth Position</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="snaps_per_game">Snaps/Game</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="tackles">Tackles</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="tackles_for_loss">Tackles for Loss</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="fumbles">Fumbles</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="interceptions">INT</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="touchdowns">TDs</mfSorter>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr class="t-content" *ngFor="let linebacker of defenseLBs.data">
+                    <td class="text-left px-3 inner-col-switch">
+                      <app-player-link [league]="'nfl'" [playerName]="linebacker.name" [playerUrl]="linebacker.profile_url"></app-player-link>
+                    </td>
+                    <td class="inner-col-switch"><app-rating [value]="linebacker.rating"></app-rating></td>
+                    <td>{{linebacker.depth}}</td>
+                    <td>{{linebacker.snaps_per_game}}</td>
+                    <td>{{linebacker.tackles}}</td>
+                    <td>{{linebacker.tackles_for_loss}}</td>
+                    <td>{{linebacker.fumbles}}</td>
+                    <td>{{linebacker.interceptions}}</td>
+                    <td>{{linebacker.touchdowns}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+            <div class="col-12 table-sect-wrap" *ngIf="depthChart.defense_depth_chart.defensive_backs[dropdownActiveValues.season.value]">
+              <!-- Static Positioned Tabled -->
+              <div class="static-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="depthChart.defense_depth_chart.defensive_backs[dropdownActiveValues.season.value]"
+                  [(mfSortBy)]="defenseSorting.sortByDBs"
+                  [(mfSortOrder)]="defenseSorting.sortOrderDBs"
+                  (mfSortByChange)="onSortOrder('defenseSorting', 'sortByDBs', 'sortOrderDBs', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('defenseSorting', 'sortByDBs', 'sortOrderDBs', 'order', $event)"
+                  #staticDefenseDBs="mfDataTable"
+                  class="static-table stats-table table table-bordered multi-table-static">
+                  <thead>
+                  <tr>
+                    <th class="player-name-col">
+                      <mfSorter by="name">Defensive Backs</mfSorter>
+                    </th>
+                    <th class="position-col">
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody class="static-table-body">
+                  <tr *ngFor="let defensiveBacks of staticDefenseDBs.data">
+                    <td class="player-name-col">
+                      <app-player-link [league]="'nfl'" [playerName]="defensiveBacks.name" [playerUrl]="defensiveBacks.profile_url"></app-player-link>
+                    </td>
+                    <td class="position-col">
+                      <app-rating [value]="defensiveBacks.rating"></app-rating>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Horizontal Table Wraper -->
+              <div class="horizontal-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="depthChart.defense_depth_chart.defensive_backs[dropdownActiveValues.season.value]"
+                  [(mfSortBy)]="defenseSorting.sortByDBs"
+                  [(mfSortOrder)]="defenseSorting.sortOrderDBs"
+                  (mfSortByChange)="onSortOrder('defenseSorting', 'sortByDBs', 'sortOrderDBs', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('defenseSorting', 'sortByDBs', 'sortOrderDBs', 'order', $event)"
+                  #defenseDBs="mfDataTable"
+                  class="multi-row-data-table t-stripped">
+                  <thead>
+                  <tr class="t-single-header">
+                    <th class="px-3 inner-col-switch" width="17%">
+                      <mfSorter by="name">Defensive Backs</mfSorter>
+                    </th>
+                    <th class="text-center med-col inner-col-switch" width="5%">
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="depth">Depth Position</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="snaps_per_game">Snaps/Game</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="tackles">Tackles</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="tackles_for_loss">Tackles for Loss</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="fumbles">Fumbles</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="interceptions">INT</mfSorter>
+                    </th>
+                    <th class="text-center med-col">
+                      <mfSorter by="touchdowns">TDs</mfSorter>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr class="t-content" *ngFor="let defensiveBacks of defenseDBs.data">
+                    <td class="text-left px-3 inner-col-switch">
+                      <app-player-link [league]="'nfl'" [playerName]="defensiveBacks.name" [playerUrl]="defensiveBacks.profile_url"></app-player-link>
+                    </td>
+                    <td class="inner-col-switch"><app-rating [value]="defensiveBacks.rating"></app-rating></td>
+                    <td>{{defensiveBacks.depth}}</td>
+                    <td>{{defensiveBacks.snaps_per_game}}</td>
+                    <td>{{defensiveBacks.tackles}}</td>
+                    <td>{{defensiveBacks.tackles_for_loss}}</td>
+                    <td>{{defensiveBacks.fumbles}}</td>
+                    <td>{{defensiveBacks.interceptions}}</td>
+                    <td>{{defensiveBacks.touchdowns}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+            <div class="col-12 table-sect-wrap" *ngIf="depthChart.defense_depth_chart.kickers[dropdownActiveValues.season.value]">
+              <!-- Static Positioned Tabled -->
+              <div class="static-table-wrapper">
+                <table class="static-table stats-table table table-bordered multi-table-static">
+                  <thead>
+                  <tr>
+                    <th class="player-name-col">Kickers</th>
+                    <th class="position-col">Rating</th>
+                  </tr>
+                  </thead>
+                  <tbody class="static-table-body">
+                  <tr *ngFor="let kicker of depthChart.defense_depth_chart.kickers[dropdownActiveValues.season.value] | orderBy:'order'">
+                    <td class="player-name-col">
+                      <app-player-link [league]="'nfl'" [playerName]="kicker.name" [playerUrl]="kicker.profile_url"></app-player-link>
+                    </td>
+                    <td class="position-col">
+                      <span *ngIf="kicker.rating !== null"><app-rating [value]="kicker.rating"></app-rating></span>
+                      <span *ngIf="kicker.rating === null">N/A</span>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Horizontal Table Wraper -->
+              <div class="horizontal-table-wrapper">
+                <table class="multi-row-data-table t-stripped">
+                  <thead>
+                  <tr class="t-single-header">
+                    <th class="px-3 inner-col-switch" width="17%">Kickers</th>
+                    <th class="text-center inner-col-switch" width="5%">Rating</th>
+                    <th class="text-center med-col">Depth Position</th>
+                    <th class="text-center med-col">Points</th>
+                    <th class="text-center med-col">Field Goals Made</th>
+                    <th class="text-center med-col">Field Goal % Made</th>
+                    <th class="text-center med-col">Long</th>
+                    <th class="text-center med-col">Extra Points Made</th>
+                    <th class="text-center med-lg-col">0-19 FG Attempted/Made</th>
+                    <th class="text-center med-lg-col">20-29 FG Attempted/Made</th>
+                    <th class="text-center med-lg-col">30-39 FG Attempted/Made</th>
+                    <th class="text-center med-lg-col">40-49 FG Attempted/Made</th>
+                    <th class="text-center med-lg-col">50+ Attempted/Made</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr class="t-content" *ngFor="let kicker of depthChart.defense_depth_chart.kickers[dropdownActiveValues.season.value] | orderBy:'order'">
+                    <td class="text-left px-3 inner-col-switch">
+                      <app-player-link [league]="'nfl'" [playerName]="kicker.name" [playerUrl]="kicker.profile_url"></app-player-link>
+                    </td>
+                    <td class="inner-col-switch"><app-rating [value]="kicker.rating"></app-rating></td>
+                    <td>{{kicker.depth}}</td>
+                    <td>{{kicker.points}}</td>
+                    <td>{{kicker.fg_made}}</td>
+                    <td>{{kicker.field_goal_percentage}}</td>
+                    <td>{{kicker.fg_long}}</td>
+                    <td>{{kicker.xp_made}}</td>
+                    <td>{{kicker.field_goals_made0to19}}</td>
+                    <td>{{kicker.field_goals_made20to29}}</td>
+                    <td>{{kicker.field_goals_made30to39}}</td>
+                    <td>{{kicker.field_goals_made40to49}}</td>
+                    <td>{{kicker.field_goals_made50_plus}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="col-12 table-sect-wrap" *ngIf="depthChart.defense_depth_chart.punters[dropdownActiveValues.season.value]">
+              <!-- Static Positioned Tabled -->
+              <div class="static-table-wrapper">
+                <table class="static-table stats-table table table-bordered multi-table-static">
+                  <thead>
+                  <tr>
+                    <th class="player-name-col">Punters</th>
+                    <th class="position-col">Rating</th>
+                  </tr>
+                  </thead>
+                  <tbody class="static-table-body">
+                  <tr *ngFor="let punter of depthChart.defense_depth_chart.punters[dropdownActiveValues.season.value] | orderBy:'order'">
+                    <td class="player-name-col">
+                      <app-player-link [league]="'nfl'" [playerName]="punter.name" [playerUrl]="punter.profile_url"></app-player-link>
+                    </td>
+                    <td class="position-col">
+                      <span *ngIf="punter.rating !== null"><app-rating [value]="punter.rating"></app-rating></span>
+                      <span *ngIf="punter.rating === null">N/A</span>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Horizontal Table Wraper -->
+              <div class="horizontal-table-wrapper">
+                <table class="multi-row-data-table t-stripped">
+                <thead>
+                <tr class="t-single-header">
+                  <th class="px-3 inner-col-switch" width="52.5%">Punters</th>
+                  <th class="text-center inner-col-switch" width="15.5%">Rating</th>
+                  <th class="text-center">Depth Position</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="t-content" *ngFor="let punter of depthChart.defense_depth_chart.punters[dropdownActiveValues.season.value] | orderBy:'order'">
+                  <td class="text-left inner-col-switch px-3">
+                    <app-player-link [league]="'nfl'" [playerName]="punter.name" [playerUrl]="punter.profile_url"></app-player-link>
+                  </td>
+                  <td class="inner-col-switch">
+                    <span *ngIf="punter.rating !== null"><app-rating [value]="punter.rating"></app-rating></span>
+                    <span *ngIf="punter.rating === null">N/A</span>
+                  </td>
+                  <td>{{punter.depth}}</td>
+                </tr>
+                </tbody>
+              </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="
+      depthChart.last_week?.offensive_line?.length ||
+      depthChart.last_week?.quarter_backs?.length ||
+      depthChart.last_week?.running_backs?.length ||
+      depthChart.last_week?.tight_ends?.length ||
+      depthChart.last_week?.wide_receivers?.length
+        ">
+        <div class="row" id="last-week-lineup">
+          <div class="col-12">
+            <h2 class="page-heading-two">{{depthChart.last_week_header}}</h2>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Startin QB Lineup -->
+          <div *ngIf="depthChart.last_week?.quarter_backs?.length" class="col-12 table-sect-wrap">
+            <!-- Static Positioned Tabled -->
+            <div class="static-table-wrapper">
+              <table
+                [mfRowsOnPage]="10000" [mfData]="depthChart.last_week.quarter_backs"
+                [(mfSortBy)]="lastWeekLineupSorting.sortByQBs"
+                [(mfSortOrder)]="lastWeekLineupSorting.sortOrderQBs"
+                (mfSortByChange)="onSortOrder('lastWeekLineupSorting', 'sortByQBs', 'sortOrderQBs', 'by', $event)"
+                (mfSortOrderChange)="onSortOrder('lastWeekLineupSorting', 'sortByQBs', 'sortOrderQBs', 'order', $event)"
+                #staticLastWeekQBs="mfDataTable"
+                class="static-table stats-table table table-bordered multi-table-static">
+                <thead>
+                <tr class="t-header static-row-header">
+                  <th colspan="2" class="text-center main-border static-t-header main-border">QB</th>
+                </tr>
+                <tr class="t-sub-header static-sub-header">
+                  <th class="player-name-col">
+                    <mfSorter by="name">Player</mfSorter>
+                  </th>
+                  <th class="rating position-col">
+                    <mfSorter by="rating">Rating</mfSorter>
+                  </th>
+                </tr>
+                </thead>
+                <tbody class="static-table-body">
+                <tr *ngFor="let quarterback of staticLastWeekQBs.data">
+                  <td class="player-name-col text-left">
+                    <app-player-link [league]="'nfl'" [playerName]="quarterback.name" [playerUrl]="quarterback.profile_url"></app-player-link>
+                  </td>
+                  <td class="position-col main-border">
+                    <span *ngIf="quarterback.rating !== null"><app-rating [value]="quarterback.rating"></app-rating></span>
+                    <span *ngIf="quarterback.rating === null">N/A</span>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Horizontal Table Wrapper -->
+            <div class="horizontal-table-wrapper">
+              <table
+                [mfRowsOnPage]="10000" [mfData]="depthChart.last_week.quarter_backs"
+                [(mfSortBy)]="lastWeekLineupSorting.sortByQBs"
+                [(mfSortOrder)]="lastWeekLineupSorting.sortOrderQBs"
+                (mfSortByChange)="onSortOrder('lastWeekLineupSorting', 'sortByQBs', 'sortOrderQBs', 'by', $event)"
+                (mfSortOrderChange)="onSortOrder('lastWeekLineupSorting', 'sortByQBs', 'sortOrderQBs', 'order', $event)"
+                #lastWeekQBs="mfDataTable"
+                class="multi-row-data-table t-stripped">
+                <colgroup span="5">
+                  <col span="1" width="17%">
+                  <col span="4" width="5%">
+                </colgroup>
+                <colgroup span="7"></colgroup>
+                <colgroup span="4"></colgroup>
+                <tbody>
+                <tr class="t-header">
+                  <th colspan="5" scope="colgroup" class="text-center main-border inner-col-switch">Quarterbacks</th>
+                  <th colspan="3" scope="colgroup" class="text-center main-border inner-col-show">Stats</th>
+                  <th colspan="7" scope="colgroup" class="text-center main-border">Passing</th>
+                  <th colspan="4" scope="colgroup" class="text-center">Rushing</th>
+                </tr>
+                <tr class="t-sub-header">
+                  <th scope="col" class="px-3 inner-col-switch">
+                    <mfSorter by="name">Player</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center inner-col-switch">
+                    <mfSorter by="rating">Rating</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="depth">Depth</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="played">Games</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col main-border">
+                    <mfSorter by="passing_sacks">Sacks</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="passing_attempts">Attempts</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="passing_completions">Completions</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="completion_percentage">Completion%</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="passing_yards">Passing Yards</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="passing_yards_per_attempt">Yds/Attempt</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="passing_interceptions">INTs</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border med-col">
+                    <mfSorter by="passing_touchdowns">TD</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="rushing_attempts">Attempts</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="rushing_yards">Yards</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="rushing_yards_per_game">YPG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="rushing_touchdowns">TD</mfSorter>
+                  </th>
+                </tr>
+                <tr class="t-content" *ngFor="let quarterback of lastWeekQBs.data">
+                  <td class="text-left px-3 inner-col-switch">
+                    <app-player-link [league]="'nfl'" [playerName]="quarterback.name" [playerUrl]="quarterback.profile_url"></app-player-link>
+                  </td>
+                  <td class="inner-col-switch"><app-rating [value]="quarterback.rating"></app-rating></td>
+                  <td>{{quarterback.depth}}</td>
+                  <td>{{quarterback.played}}</td>
+                  <td class="main-border">{{quarterback.passing_sacks}}</td>
+
+                  <td>{{quarterback.passing_attempts}}</td>
+                  <td>{{quarterback.passing_completions}}</td>
+                  <td>{{quarterback.completion_percentage}}</td>
+                  <td>{{quarterback.passing_yards}}</td>
+                  <td>{{quarterback.passing_yards_per_attempt}}</td>
+                  <td>{{quarterback.passing_interceptions}}</td>
+                  <td class="main-border">{{quarterback.passing_touchdowns}}</td>
+
+                  <td>{{quarterback.rushing_attempts}}</td>
+                  <td>{{quarterback.rushing_yards}}</td>
+                  <td>{{quarterback.rushing_yards_per_game}}</td>
+                  <td>{{quarterback.rushing_touchdowns}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+          </div>
+          <!-- Starting RB Lineup -->
+          <div *ngIf="depthChart.last_week?.running_backs?.length" class="col-12 table-sect-wrap">
+            <!-- Static Positioned Tabled -->
+            <div class="static-table-wrapper">
+              <table
+                [mfRowsOnPage]="10000" [mfData]="depthChart.last_week.running_backs"
+                [(mfSortBy)]="lastWeekLineupSorting.sortByRBs"
+                [(mfSortOrder)]="lastWeekLineupSorting.sortOrderRBs"
+                (mfSortByChange)="onSortOrder('lastWeekLineupSorting', 'sortByRBs', 'sortOrderRBs', 'by', $event)"
+                (mfSortOrderChange)="onSortOrder('lastWeekLineupSorting', 'sortByRBs', 'sortOrderRBs', 'order', $event)"
+                #staticLastWeekRBs="mfDataTable"
+                class="static-table stats-table table table-bordered multi-table-static">
+                <thead>
+                <tr class="t-header static-row-header">
+                  <th colspan="2" class="text-center main-border static-t-header main-border">RB</th>
+                </tr>
+                <tr class="t-sub-header static-sub-header">
+                  <th class="player-name-col">
+                    <mfSorter by="name">Player</mfSorter>
+                  </th>
+                  <th class="rating position-col">
+                    <mfSorter by="rating">Rating</mfSorter>
+                  </th>
+                </tr>
+                </thead>
+                <tbody class="static-table-body">
+                <tr *ngFor="let runningback of staticLastWeekRBs.data">
+                  <td class="player-name-col text-left">
+                    <app-player-link [league]="'nfl'" [playerName]="runningback.name" [playerUrl]="runningback.profile_url"></app-player-link>
+                  </td>
+                  <td class="position-col main-border">
+                    <span *ngIf="runningback.rating !== null"><app-rating [value]="runningback.rating"></app-rating></span>
+                    <span *ngIf="runningback.rating === null">N/A</span>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Horizontal Table Wrapper -->
+            <div class="horizontal-table-wrapper">
+              <table
+                [mfRowsOnPage]="10000" [mfData]="depthChart.last_week.running_backs"
+                [(mfSortBy)]="lastWeekLineupSorting.sortByRBs"
+                [(mfSortOrder)]="lastWeekLineupSorting.sortOrderRBs"
+                (mfSortByChange)="onSortOrder('lastWeekLineupSorting', 'sortByRBs', 'sortOrderRBs', 'by', $event)"
+                (mfSortOrderChange)="onSortOrder('lastWeekLineupSorting', 'sortByRBs', 'sortOrderRBs', 'order', $event)"
+                #lastWeekRBs="mfDataTable"
+                class="multi-row-data-table t-stripped">
+                <colgroup span="5">
+                  <col span="1" width="17%">
+                  <col span="1" width="5%">
+                  <col span="1" width="5%">
+                  <col span="2" width="7%">
+                </colgroup>
+                <colgroup span="6"></colgroup>
+                <colgroup span="6"></colgroup>
+                <tbody>
+                <tr class="t-header">
+                  <th colspan="5" scope="colgroup" class="text-center main-border inner-col-switch">Running Backs</th>
+                  <th colspan="3" scope="colgroup" class="inner-col-show main-border text-center">Stats</th>
+                  <th colspan="6" scope="colgroup" class="text-center main-border">Receiving</th>
+                  <th colspan="6" scope="colgroup" class="text-center">Rushing</th>
+                </tr>
+                <tr class="t-sub-header">
+                  <th scope="col" class="px-3 med-col inner-col-switch">
+                    <mfSorter by="name">Player</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center inner-col-switch">
+                    <mfSorter by="rating">Rating</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="depth">Depth</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="offensive_snaps_played">Snaps</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border med-col">
+                    <mfSorter by="fumbles_lost">Fumbles</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="receiving_targets">Targets</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="receiving_yards">Yards</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="receiving_long">Long</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="receiving_touchdowns">TD</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="receiving_yards_per_reception">YPC</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border med-col">
+                    <mfSorter by="receiving_yards_per_game">YPG</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="rushing_attempts">Attempts</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="receptions">Receptions</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="rushing_yards">Yards</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="rushing_yards_per_attempt">YPC</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="rushing_long">Long</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="rushing_touchdowns">TD</mfSorter>
+                  </th>
+                </tr>
+                <tr class="t-content" *ngFor="let runningback of lastWeekRBs.data">
+                  <td class="text-left px-3 inner-col-switch">
+                    <app-player-link [league]="'nfl'" [playerName]="runningback.name" [playerUrl]="runningback.profile_url"></app-player-link>
+                  </td>
+                  <td class="inner-col-switch"><app-rating [value]="runningback.rating"></app-rating></td>
+                  <td>{{runningback.depth}}</td>
+                  <td>{{runningback.offensive_snaps_played}}</td>
+                  <td class="main-border">{{runningback.fumbles_lost}}</td>
+
+                  <td>{{runningback.receiving_targets}}</td>
+                  <td>{{runningback.receiving_yards}}</td>
+                  <td>{{runningback.receiving_long}}</td>
+                  <td>{{runningback.receiving_touchdowns}}</td>
+                  <td>{{runningback.receiving_yards_per_reception}}</td>
+                  <td class="main-border">{{runningback.receiving_yards_per_game}}</td>
+
+                  <td>{{runningback.rushing_attempts}}</td>
+                  <td>{{runningback.receptions}}</td>
+                  <td>{{runningback.rushing_yards}}</td>
+                  <td>{{runningback.rushing_yards_per_attempt}}</td>
+                  <td>{{runningback.rushing_long}}</td>
+                  <td>{{runningback.rushing_touchdowns}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- Starting WR Lineup -->
+          <div *ngIf="depthChart.last_week?.wide_receivers?.length" class="col-12 table-sect-wrap">
+            <!-- Static Positioned Tabled -->
+            <div class="static-table-wrapper">
+              <table
+                [mfRowsOnPage]="10000" [mfData]="depthChart.last_week.wide_receivers"
+                [(mfSortBy)]="lastWeekLineupSorting.sortByWRs"
+                [(mfSortOrder)]="lastWeekLineupSorting.sortOrderWRs"
+                (mfSortByChange)="onSortOrder('lastWeekLineupSorting', 'sortByWRs', 'sortOrderWRs', 'by', $event)"
+                (mfSortOrderChange)="onSortOrder('lastWeekLineupSorting', 'sortByWRs', 'sortOrderWRs', 'order', $event)"
+                #staticLastWeekWRs="mfDataTable"
+                class="static-table stats-table table table-bordered multi-table-static">
+                <thead>
+                <tr class="t-header static-row-header">
+                  <th colspan="2" class="text-center main-border static-t-header main-border">WR</th>
+                </tr>
+                <tr class="t-sub-header static-sub-header">
+                  <th class="player-name-col">
+                    <mfSorter by="name">Player</mfSorter>
+                  </th>
+                  <th class="rating position-col">
+                    <mfSorter by="rating">Rating</mfSorter>
+                  </th>
+                </tr>
+                </thead>
+                <tbody class="static-table-body">
+                <tr *ngFor="let wideReceiver of staticLastWeekWRs.data">
+                  <td class="player-name-col text-left">
+                    <app-player-link [league]="'nfl'" [playerName]="wideReceiver.name" [playerUrl]="wideReceiver.profile_url"></app-player-link>
+                  </td>
+                  <td class="position-col main-border">
+                    <span *ngIf="wideReceiver.rating !== null"><app-rating [value]="wideReceiver.rating"></app-rating></span>
+                    <span *ngIf="wideReceiver.rating === null">N/A</span>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Horizontal Table Wrapper -->
+            <div class="horizontal-table-wrapper">
+              <table
+                [mfRowsOnPage]="10000" [mfData]="depthChart.last_week.wide_receivers"
+                [(mfSortBy)]="lastWeekLineupSorting.sortByWRs"
+                [(mfSortOrder)]="lastWeekLineupSorting.sortOrderWRs"
+                (mfSortByChange)="onSortOrder('lastWeekLineupSorting', 'sortByWRs', 'sortOrderWRs', 'by', $event)"
+                (mfSortOrderChange)="onSortOrder('lastWeekLineupSorting', 'sortByWRs', 'sortOrderWRs', 'order', $event)"
+                #lastWeekWRs="mfDataTable"
+                class="multi-row-data-table t-stripped">
+                <colgroup span="4">
+                  <col span="1" width="17%">
+                  <col span="1" width="5%">
+                  <col span="1" width="5%">
+                  <col span="1" width="7%">
+                </colgroup>
+                <colgroup span="7"></colgroup>
+                <colgroup span="5"></colgroup>
+                <tbody>
+                <tr class="t-header">
+                  <th colspan="4" scope="colgroup" class="text-center main-border inner-col-switch">Wide Receivers</th>
+                  <th colspan="2" scope="colgroup" class="text-center main-border inner-col-show">Stats</th>
+                  <th colspan="7" scope="colgroup" class="text-center main-border">Receiving</th>
+                  <th colspan="5" scope="colgroup" class="text-center">Rushing</th>
+                </tr>
+                <tr class="t-sub-header">
+                  <th scope="col" class="px-3 inner-col-switch med-col">
+                    <mfSorter by="name">Player</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center inner-col-switch med-col">
+                    <mfSorter by="rating">Rating</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="depth">Depth</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border med-col">
+                    <mfSorter by="offensive_snaps_played">Snaps</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="receiving_targets">Targets</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="receptions">Receptions</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="receiving_yards">Yards</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="catch_pct">Catch%</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="receiving_yards_per_reception">YPC</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="receiving_long">Long</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border med-col">
+                    <mfSorter by="receiving_touchdowns">TD</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="rushing_attempts">Attempts</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="rushing_yards">Yards</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="rushing_touchdowns">TD</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="rushing_yards_per_attempt">YPC</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="rushing_yards_per_game">YPG</mfSorter>
+                  </th>
+                </tr>
+                <tr class="t-content" *ngFor="let wideReceiver of lastWeekWRs.data">
+                  <td class="text-left px-3 inner-col-switch">
+                    <app-player-link [league]="'nfl'" [playerName]="wideReceiver.name" [playerUrl]="wideReceiver.profile_url"></app-player-link>
+                  </td>
+                  <td class="inner-col-switch"><app-rating [value]="wideReceiver.rating"></app-rating></td>
+                  <td>{{wideReceiver.depth}}</td>
+                  <td class="main-border">{{wideReceiver.offensive_snaps_played}}</td>
+
+                  <td>{{wideReceiver.receiving_targets}}</td>
+                  <td>{{wideReceiver.receptions}}</td>
+                  <td>{{wideReceiver.receiving_yards}}</td>
+                  <td>{{wideReceiver.catch_pct}}</td>
+                  <td>{{wideReceiver.receiving_yards_per_reception}}</td>
+                  <td>{{wideReceiver.receiving_long}}</td>
+                  <td class="main-border">{{wideReceiver.receiving_touchdowns}}</td>
+
+                  <td>{{wideReceiver.rushing_attempts}}</td>
+                  <td>{{wideReceiver.rushing_yards}}</td>
+                  <td>{{wideReceiver.rushing_touchdowns}}</td>
+                  <td>{{wideReceiver.rushing_yards_per_attempt}}</td>
+                  <td>{{wideReceiver.rushing_yards_per_game}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div *ngIf="depthChart.last_week?.tight_ends?.length" class="col-12 table-sect-wrap">
+            <!-- Static Positioned Tabled -->
+            <div class="static-table-wrapper">
+              <table
+                [mfRowsOnPage]="10000" [mfData]="depthChart.last_week.tight_ends"
+                [(mfSortBy)]="lastWeekLineupSorting.sortByTEs"
+                [(mfSortOrder)]="lastWeekLineupSorting.sortOrderTEs"
+                (mfSortByChange)="onSortOrder('lastWeekLineupSorting', 'sortByTEs', 'sortOrderTEs', 'by', $event)"
+                (mfSortOrderChange)="onSortOrder('lastWeekLineupSorting', 'sortByTEs', 'sortOrderTEs', 'order', $event)"
+                #staticLastWeekTEs="mfDataTable"
+                class="static-table stats-table table table-bordered multi-table-static">
+                <thead>
+                <tr class="t-header static-row-header">
+                  <th colspan="2" class="text-center main-border static-t-header main-border">TE</th>
+                </tr>
+                <tr class="t-sub-header static-sub-header">
+                  <th class="player-name-col">
+                    <mfSorter by="name">Player</mfSorter>
+                  </th>
+                  <th class="rating position-col">
+                    <mfSorter by="rating">Rating</mfSorter>
+                  </th>
+                </tr>
+                </thead>
+                <tbody class="static-table-body">
+                <tr *ngFor="let tightEnd of staticLastWeekTEs.data">
+                  <td class="player-name-col text-left">
+                    <app-player-link [league]="'nfl'" [playerName]="tightEnd.name" [playerUrl]="tightEnd.profile_url"></app-player-link>
+                  </td>
+                  <td class="position-col main-border">
+                    <span *ngIf="tightEnd.rating !== null"><app-rating [value]="tightEnd.rating"></app-rating></span>
+                    <span *ngIf="tightEnd.rating === null">N/A</span>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Horizontal Table Wrapper -->
+            <div class="horizontal-table-wrapper">
+              <table
+                [mfRowsOnPage]="10000" [mfData]="depthChart.last_week.tight_ends"
+                [(mfSortBy)]="lastWeekLineupSorting.sortByTEs"
+                [(mfSortOrder)]="lastWeekLineupSorting.sortOrderTEs"
+                (mfSortByChange)="onSortOrder('lastWeekLineupSorting', 'sortByTEs', 'sortOrderTEs', 'by', $event)"
+                (mfSortOrderChange)="onSortOrder('lastWeekLineupSorting', 'sortByTEs', 'sortOrderTEs', 'order', $event)"
+                #lastWeekTEs="mfDataTable"
+                class="multi-row-data-table t-stripped">
+                <colgroup span="4">
+                  <col span="1" width="17%">
+                  <col span="1" width="5%">
+                  <col span="1" width="5%">
+                  <col span="1" width="7%">
+                </colgroup>
+                <colgroup span="7"></colgroup>
+                <tbody>
+                <tr class="t-header">
+                  <th colspan="4" scope="colgroup" class="text-center main-border inner-col-switch">Tight Ends</th>
+                  <th colspan="2" scope="colgroup" class="inner-col-show text-center main-border">Stats</th>
+                  <th colspan="7" scope="colgroup" class="text-center">Receiving</th>
+                </tr>
+                <tr class="t-sub-header">
+                  <th scope="col" class="inner-col-switch px-3">
+                    <mfSorter by="name">Player</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center inner-col-switch">
+                    <mfSorter by="rating">Rating</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="depth">Depth Position</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col main-border">
+                    <mfSorter by="offensive_snaps_played">Snaps</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="receiving_targets">Targets</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="receptions">Receptions</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="receiving_yards">Yards</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="catch_pct">Catch%</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="receiving_yards_per_reception">YPC</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="receiving_long">Long</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center med-col">
+                    <mfSorter by="receiving_touchdowns">TD</mfSorter>
+                  </th>
+                </tr>
+                <tr class="t-content" *ngFor="let tightEnd of lastWeekTEs.data">
+                  <td class="text-left px-3 inner-col-switch">
+                    <app-player-link [league]="'nfl'" [playerName]="tightEnd.name" [playerUrl]="tightEnd.profile_url"></app-player-link>
+                  </td>
+                  <td class="inner-col-switch"><app-rating [value]="tightEnd.rating"></app-rating></td>
+                  <td>{{tightEnd.depth}}</td>
+                  <td class="main-border">{{tightEnd.offensive_snaps_played}}</td>
+
+                  <td>{{tightEnd.receiving_targets}}</td>
+                  <td>{{tightEnd.receptions}}</td>
+                  <td>{{tightEnd.receiving_yards}}</td>
+                  <td>{{tightEnd.catch_pct}}</td>
+                  <td>{{tightEnd.receiving_yards_per_reception}}</td>
+                  <td>{{tightEnd.receiving_long}}</td>
+                  <td>{{tightEnd.receiving_touchdowns}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+          <div *ngIf="depthChart.last_week?.offensive_line?.length" class="col-4 table-sect-wrap table-mob-full table-sect-wrap mb-0">
+            <!-- Static Positioned Tabled -->
+            <div class="static-table-wrapper">
+              <table
+                [mfRowsOnPage]="10000" [mfData]="depthChart.last_week.offensive_line"
+                [(mfSortBy)]="lastWeekLineupSorting.sortByOLs"
+                [(mfSortOrder)]="lastWeekLineupSorting.sortOrderOLs"
+                (mfSortByChange)="onSortOrder('lastWeekLineupSorting', 'sortByOLs', 'sortOrderOLs', 'by', $event)"
+                (mfSortOrderChange)="onSortOrder('lastWeekLineupSorting', 'sortByOLs', 'sortOrderOLs', 'order', $event)"
+                #staticLastWeekOLs="mfDataTable"
+                class="static-table stats-table table table-bordered multi-table-static">
+                <thead>
+                <tr class="t-header static-row-header">
+                  <th colspan="2" class="text-center main-border static-t-header">OL</th>
+                </tr>
+                <tr class="t-sub-header static-sub-header">
+                  <th class="player-name-col">
+                    <mfSorter by="name">Player</mfSorter>
+                  </th>
+                  <th class="rating position-col">
+                    <mfSorter by="rating">Rating</mfSorter>
+                  </th>
+                </tr>
+                </thead>
+                <tbody class="static-table-body">
+                <tr *ngFor="let offensiveLine of staticLastWeekOLs.data">
+                  <td class="player-name-col text-left">
+                    <app-player-link [league]="'nfl'" [playerName]="offensiveLine.name" [playerUrl]="offensiveLine.profile_url"></app-player-link>
+                  </td>
+                  <td class="position-col main-border">
+                    <span *ngIf="offensiveLine.rating !== null"><app-rating [value]="offensiveLine.rating"></app-rating></span>
+                    <span *ngIf="offensiveLine.rating === null">N/A</span>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Horizontal Table Wrapper -->
+            <div class="horizontal-table-wrapper">
+              <table
+                [mfRowsOnPage]="10000" [mfData]="depthChart.last_week.offensive_line"
+                [(mfSortBy)]="lastWeekLineupSorting.sortByOLs"
+                [(mfSortOrder)]="lastWeekLineupSorting.sortOrderOLs"
+                (mfSortByChange)="onSortOrder('lastWeekLineupSorting', 'sortByOLs', 'sortOrderOLs', 'by', $event)"
+                (mfSortOrderChange)="onSortOrder('lastWeekLineupSorting', 'sortByOLs', 'sortOrderOLs', 'order', $event)"
+                #lastWeekOLs="mfDataTable"
+                class="multi-row-data-table t-stripped">
+                <colgroup span="4">
+                  <col span="1" width="52.5%">
+                  <col span="1" width="15.5%">
+                  <col span="2">
+                </colgroup>
+                <tbody>
+                <tr class="t-header">
+                  <th colspan="4" scope="colgroup" class="text-center inner-col-switch">Offensive Line</th>
+                  <th colspan="2" scope="colgroup" class="text-center inner-col-show">Stats</th>
+                </tr>
+                <tr class="t-sub-header">
+                  <th class="px-3 inner-col-switch">
+                    <mfSorter by="name">Player</mfSorter>
+                  </th>
+                  <th class="text-center inner-col-switch">
+                    <mfSorter by="rating">Rating</mfSorter>
+                  </th>
+                  <th class="text-center">
+                    <mfSorter by="depth">Depth Position</mfSorter>
+                  </th>
+                  <th class="text-center">
+                    <mfSorter by="offensive_snaps_played">Snaps</mfSorter>
+                  </th>
+                </tr>
+                <tr class="t-content" *ngFor="let offensiveLine of lastWeekOLs.data">
+                  <td class="text-left px-3 inner-col-switch">
+                    <app-player-link [league]="'nfl'" [playerName]="offensiveLine.name" [playerUrl]="offensiveLine.profile_url"></app-player-link>
+                  </td>
+                  <td class="inner-col-switch"><app-rating [value]="offensiveLine.rating"></app-rating></td>
+                  <td>{{offensiveLine.depth}}</td>
+                  <td>{{offensiveLine.offensive_snaps_played}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="depthChart.starting_lineup?.length">
+        <div class="row" id="lineups">
+          <div class="col-12">
+            <h2 class="page-heading-two">{{depthChart.starting_lineups_header}}</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 table-sect-wrap">
+            <!-- Horizontal Table Wrapper -->
+            <div class="stand-horizontal-table-wrapper">
+              <table class="multi-row-data-table t-stripped">
+                <thead>
+                <tr class="t-single-header">
+                  <th class="px-3 inner-col-switch" width="17%">Game</th>
+                  <th class="text-center inner-col-switch" width="7%">Score</th>
+                  <th class="px-3 lg-col inner-col-switch">Starting Lineup</th>
+                  <th class="px-3 med-lg-col inner-col-show">Game</th>
+                  <th class="text-center med-col inner-col-show" >Score</th>
+                  <th class="px-3 lg-col inner-col-show">Starting Lineup</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="t-content" *ngFor="let startingLineup of depthChart.starting_lineup">
+                  <td class="text-left px-3">{{startingLineup.game}}</td>
+                  <td>{{startingLineup.score}}</td>
+                  <td class="text-left px-3">{{startingLineup.starting_lineup}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="depthChart.bottom_paragraph" class="col-12 bottom-seo-section-iframe-700br flex-last flex-sm-unordered">
+      <h2 *ngIf="depthChart.bottom_header" class="page-heading-two">
+        {{depthChart.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="depthChart.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+</div>
+<!--image-cap-->
+<img width="0" height="0" src="https://s3-us-west-2.amazonaws.com/static.fantasydata.com/headshots/nfl/low-res/0.png" alt="">

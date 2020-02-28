@@ -1,0 +1,65 @@
+<ng-template #loadingTpl>
+  <div class="starting-lineup-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<div class="container-fluid" *ngIf="data && !loading; else loadingTpl">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+    <div class="col-12 col-lg-8">
+      <div #containerEl class="d-flex flex-wrap after-heading-margin">
+        <div>
+          <h1 #headingEl class="page-heading m-0">
+            <span class="hidden-xs-down">{{pageHeading}}</span>
+            <span class="hidden-sm-up">NBA Depth Charts</span>
+          </h1>
+        </div>
+        <app-twitter-follow-btn [textElement]="headingEl" [containerElement]="containerEl"></app-twitter-follow-btn>
+      </div>
+      <div *ngIf="data.intro_paragraph" class="hidden-md-down">
+        <p class="site-pages-content" [innerHTML]="data.intro_paragraph | safeHtml"></p>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component [league]="'nba'"></app-ad-component>
+    </div>
+
+    <div *ngIf="data.intro_paragraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+      <p class="site-pages-content" [innerHtml]="data.intro_paragraph | safeHtml"></p>
+    </div>
+
+    <div class="col-12 after-heading-margin">
+      <div class="grouped-dropdown-wrapper btn-group my-0">
+        <div ngbDropdown class="grouped-dropdown dropdown">
+          <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="main-dropdown" ngbDropdownToggle>
+            <span class="pr-0 pr-sm-3">{{showYear(params.year)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+          </button>
+          <div class="dropdown-menu" aria-labelledby="main-dropdown">
+            <div *ngFor="let season of data.seasons_dropdown;">
+              <button
+                [ngClass]="{'dd-active-btn': params.year === season.year}"
+                (click)="onYearDdChange(season)"
+                class="dropdown-item">
+                <span>{{season.name}}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12" *appBrowserIf="true">
+      <div class="d-flex flex-wrap depth-charts-wrapper">
+        <div *ngFor="let teamDepthChart of depthChartsList" class="single-depth-chart-wrapper">
+          <app-depth-chart-single-item [posKeys]="posKeys" [posKeysArr]="posKeysArr" [depthChart]="teamDepthChart"></app-depth-chart-single-item>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="data.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="data.bottom_header" class="page-heading-two">
+        {{data.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="data.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+</div>

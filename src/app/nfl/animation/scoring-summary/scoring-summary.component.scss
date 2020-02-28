@@ -1,0 +1,66 @@
+:host {
+  min-height: 32vw;
+  height: 32vw;
+  position: relative;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}
+
+.plays {
+  flex: 1 1 100%;
+  padding-right: 10px;
+  overflow: auto;
+
+  table {
+    width: 100%;
+  }
+}
+
+.score {
+  float: right;
+}
+
+.select-quarter {
+  margin-bottom: 10px;
+
+  a {
+    cursor: pointer;
+    border-right: solid 1px #fff;
+    padding: 0 5px;
+  }
+
+  a:last-child {
+    border-right: none;
+  }
+
+  a.active {
+    cursor: default;
+    font-weight: bold;
+  }
+}
+
+.timestamp {
+  width: 100px;
+}
+
+table {
+  border-collapse: collapse;
+  margin-bottom: 5px;
+}
+
+td {
+  padding: 5px 10px;
+  &:not(.filled-with-bg) {
+    background: rgba(0, 0, 0, 0.5);
+  }
+}
+
+tr {
+  border-bottom: solid 1px #646464;
+}
+
+tr:last-child {
+  font-weight: 600;
+}

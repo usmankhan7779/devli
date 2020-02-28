@@ -1,0 +1,211 @@
+<div [hidden]="hideScorebar || (!showedScoreItems || !showedScoreItems.length)" class="scorebar-content bar hidden-sm-down">
+  <!-- Scorebar Wrapper -->
+  <div class="scorebar-wrapper container-fluid">
+    <div class="d-flex justify-content-between">
+      <div class="align-self-center px-4" [ngStyle]="{'visibility': (checkIfOnlyOneOptAialable() ? 'hidden' : 'initial')}">
+        <!-- League Drop Down Menu -->
+        <div class="separated-dropdowns-wrapper">
+          <div ngbDropdown class="separated-dropdown-menu dropdown page-heading-right-dropdown first">
+            <button type="button" class="separated-dropdown-btn btn btn-secondary" id="dropDownId" ngbDropdownToggle>
+              <span>{{leagueActiveOpt.label}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropDownId">
+              <ng-container *ngFor="let opt of leagueOpts">
+                <div class="dropdown-btn-wrap" *ngIf="checkIfOptionHasData(opt.propName)">
+                  <a (click)="onChangeLeague(opt)"
+                     [ngClass]="{'dd-active-btn': leagueActiveOpt == opt}"
+                     class="dropdown-item"
+                  >{{opt.label}}</a>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Scorebar List Wrapper -->
+      <div class="scorebar-list-wrapper" [ngClass]="{'nfl-scorebar': leagueActiveOpt.id === 1, 'mlb-scorebar': leagueActiveOpt.id === 0, 'nba-scorebar': leagueActiveOpt.id === 2}">
+        <ng-container *ngIf="showedScoreItems">
+          <div #swiperView class="swiper-container scorebar-swiper" [swiper]="config">
+            <!--[(index)]="index"-->
+            <div class="swiper-wrapper">
+              <a *ngFor="let one of showedScoreItems" (click)="preselectMatchupId(leagueActiveOpt.id, one.game_id || one.game_key)" [routerLink]="[one.matchup_route || '']" routerLinkActive="active" class="swiper-slide score-bar-list-item">
+                <div class="swiper-slide-wrapper">
+                  <div class="hover-el">Matchup</div>
+                  <div class="swiper-slide-content">
+                    <ng-container *ngIf="one.status !== 'In Progress'">
+                      <div class="score-bar-item-date" [ngClass]="{'text-center': one.status === 'Final'}">
+                        <span *ngIf="one.status !== 'Final' && one.status !== 'Delayed'">{{ one.date_time | amTimeZone | amDateFormat:'h:mm a'| lowercase }} {{ timezoneName }}, {{ one.date_time | amTimeZone | amDateFormat:'M/D' }}</span>
+                        <span class="text active final-text" *ngIf="one.status === 'Final'">Final</span>
+                        <span class="text active final-text" *ngIf="one.status === 'Delayed'">Delayed</span>
+                      </div>
+                      <div class="d-flex justify-content-between team-section">
+                        <div>
+                          <div class="small-icon">
+                            <img size="small" [type]="'white'" [appSpriteImg]="" class="{{one.away_logo_white | logoClass}}" [src]="one.away_logo_white" alt="{{one.away_team}}">
+                          </div>
+                          <span
+                            class="text"
+                            [ngClass]="{
+                              'active': one.status === 'Final',
+                              'bold': one.status === 'Final' && ((leagueActiveOpt.id === 0 && one.away_team_runs > one.home_team_runs) || (leagueActiveOpt.id === 1 && one.away_score > one.home_score) || (leagueActiveOpt.id === 2 && one.away_team_score > one.home_team_score))
+                            }">{{one.away_team}}</span>
+                        </div>
+                        <div>
+                          <span class="text text-score muted" *ngIf="one.status !== 'Final'">{{one.away_wins}}-{{one.away_losses}}</span>
+                          <span class="text active" *ngIf="one.status === 'Final' && leagueActiveOpt.id === 0" [ngClass]="{'bold': one.away_team_runs > one.home_team_runs}">{{one.away_team_runs}}</span>
+                          <span class="text active" *ngIf="one.status === 'Final' && leagueActiveOpt.id === 1" [ngClass]="{'bold': one.away_score > one.home_score}">{{one.away_score}}</span>
+                          <span class="text active" *ngIf="one.status === 'Final' && leagueActiveOpt.id === 2" [ngClass]="{'bold': one.away_team_score > one.home_team_score}">{{one.away_team_score}}</span>
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-between team-section">
+                        <div>
+                          <div class="small-icon">
+                            <img size="small" [type]="'white'" [appSpriteImg]="" class="{{one.home_logo_white | logoClass}}" [src]="one.home_logo_white" alt="{{one.home_team}}">
+                          </div>
+                          <span
+                            class="text"
+                            [ngClass]="{
+                              'active': one.status === 'Final',
+                              'bold': one.status === 'Final' && ((leagueActiveOpt.id === 0 && one.home_team_runs > one.away_team_runs) || (leagueActiveOpt.id === 1 && one.home_score > one.away_score) || (leagueActiveOpt.id === 2 && one.home_team_score > one.away_team_score))
+                            }">{{one.home_team}}</span>
+                        </div>
+                        <div>
+                          <span class="text text-score muted" *ngIf="one.status !== 'Final'">{{one.home_wins}}-{{one.home_losses}}</span>
+                          <span class="text active" *ngIf="one.status === 'Final' && leagueActiveOpt.id === 0" [ngClass]="{'bold': one.home_team_runs > one.away_team_runs}">{{one.home_team_runs}}</span>
+                          <span class="text active" *ngIf="one.status === 'Final' && leagueActiveOpt.id === 1" [ngClass]="{'bold': one.home_score > one.away_score}">{{one.home_score}}</span>
+                          <span class="text active" *ngIf="one.status === 'Final' && leagueActiveOpt.id === 2" [ngClass]="{'bold': one.home_team_score > one.away_team_score}">{{one.home_team_score}}</span>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="leagueActiveOpt.id === 2 && one.status === 'In Progress'">
+                      <div class="score-bar-item-date nba-in-progress-header clearfix text-center">
+                        <ng-template #inProgressTpl>
+                          <span class="text active">
+                            Q{{one.quarter_integer}} {{one.minutes}}:{{one.seconds | number : '2.0-0'}}
+                          </span>
+                        </ng-template>
+                        <span class="text active" *ngIf="showNBAHalftime(one); else inProgressTpl">
+                          Halftime
+                        </span>
+                      </div>
+                      <div class="d-flex justify-content-between team-section">
+                        <div>
+                          <div class="small-icon">
+                            <img size="small" [type]="'white'" [appSpriteImg]="'nba'" class="{{one.away_logo_white | logoClass}}" [src]="one.away_logo_white" alt="{{one.away_team}}">
+                          </div>
+                          <span class="text active">{{one.away_team}}</span>
+                        </div>
+                        <div>
+                          <span class="text active">{{one.away_team_score}}</span>
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-between team-section">
+                        <div>
+                          <div class="small-icon">
+                            <img size="small" [type]="'white'" [appSpriteImg]="'nba'" class="{{one.home_logo_white | logoClass}}" [src]="one.home_logo_white" alt="{{one.home_team}}">
+                          </div>
+                          <span class="text active">{{one.home_team}}</span>
+                        </div>
+                        <div>
+                          <span class="text active">{{one.home_team_score}}</span>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="leagueActiveOpt.id === 1 && one.status === 'In Progress'">
+                      <div *ngIf="one.quarter !== 'Halftime'; else halftime" class="score-bar-item-date nfl-in-progress-header clearfix">
+                          <span class="text active float-left">{{one.down | ordinal}} & {{one.yards_to_go}}</span>
+                          <span class="text active float-right">Q{{one.quarter}} {{one.clock}}</span>
+                      </div>
+                      <ng-template #halftime>
+                        <div class="text-center score-bar-item-date nfl-in-progress-header clearfix">
+                            <span class="text active">Halftime</span>
+                        </div>
+                      </ng-template>
+                      <div class="d-flex justify-content-between team-section">
+                        <div>
+                          <div class="small-icon">
+                            <img size="small" [type]="'white'" [appSpriteImg]="'nfl'" class="{{one.away_logo_white | logoClass}}" [src]="one.away_logo_white" alt="{{one.away_team}}">
+                          </div>
+                          <span class="text active">{{one.away_team}} <i *ngIf="one.away_has_ball && one.quarter !== 'Halftime'" class="fa fa-circle pl-1 align-middle ball-icon" aria-hidden="true"></i></span>
+                        </div>
+                        <div>
+                          <span class="text active">{{one.away_score}}</span>
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-between team-section">
+                        <div>
+                          <div class="small-icon">
+                            <img size="small" [type]="'white'" [appSpriteImg]="'nfl'" class="{{one.home_logo_white | logoClass}}" [src]="one.home_logo_white" alt="{{one.home_team}}">
+                          </div>
+                          <span class="text active">{{one.home_team}} <i *ngIf="one.home_has_ball && one.quarter !== 'Halftime'" class="fa fa-circle pl-1 align-middle ball-icon" aria-hidden="true"></i></span>
+                        </div>
+                        <div>
+                          <span class="text active">{{one.home_score}}</span>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="leagueActiveOpt.id === 0 && one.status === 'In Progress'">
+                      <div class="score-bar-item-date">
+                        <div class="d-flex justify-content-between">
+                          <div>
+                            <span class="text active">{{one.inning_half === 'T'? 'Top':'Bot'}} {{one.inning}}</span>
+                          </div>
+                          <div>
+                            <span class="text active">{{one.outs}} {{one.outs === 1 || one.outs === '1' ? 'Out': 'Outs'}} </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-between">
+                        <div>
+                          <div class="team-section">
+                            <div class="small-icon">
+                              <img size="small" [type]="'white'" [appSpriteImg]="'mlb'" class="{{one.away_logo_white | logoClass}}" [src]="one.away_logo_white" alt="{{one.away_team}}">
+                            </div>
+                            <div class="d-inline-flex justify-content-between team-name-score text active" [ngClass]="{'bold': one.inning_half === 'T'}">
+                              <div>{{one.away_team}}</div><div>{{one.away_team_runs}}</div>
+                            </div>
+                          </div>
+                          <div class="team-section">
+                            <div class="small-icon">
+                              <img size="small" [type]="'white'" [appSpriteImg]="'mlb'" class="{{one.home_logo_white | logoClass}}" [src]="one.home_logo_white" alt="{{one.home_team}}">
+                            </div>
+                            <div class="d-inline-flex justify-content-between team-name-score text active" [ngClass]="{'bold': one.inning_half === 'B'}">
+                              <div>{{one.home_team}}</div><div>{{one.home_team_runs}}</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="align-self-center">
+                          <div class="diamond-container d-flex">
+                            <div class="diamond align-self-center" [ngClass]="{active: one.runner_on_third}"></div>
+                            <div class="diamond align-self-start" [ngClass]="{active: one.runner_on_second}"></div>
+                            <div class="diamond align-self-center" [ngClass]="{active: one.runner_on_first}"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <!-- Scorebar Pagination Buttons -->
+            <div class="swiper-button-prev scorebar-left-btn scorebar-btn">
+              <i class="fa fa-angle-left" aria-hidden="true"></i>
+            </div>
+            <div class="swiper-button-next scorebar-right-btn scorebar-btn">
+              <i class="fa fa-angle-right" aria-hidden="true"></i>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <div class="align-self-center px-4">
+        <a *ngIf="leagueActiveOpt.id === 0" [routerLink]="['/mlb/matchups']" class="btn btn-primary h-100 py-1 px-3">See all</a>
+        <a *ngIf="leagueActiveOpt.id === 1" [routerLink]="['/nfl/matchups']" class="btn btn-primary h-100 py-1 px-3">See all</a>
+        <a *ngIf="leagueActiveOpt.id === 2" [routerLink]="['/nba/matchups']" class="btn btn-primary h-100 py-1 px-3">See all</a>
+      </div>
+    </div>
+  </div>
+    <!---->
+</div>

@@ -1,0 +1,91 @@
+@import "../../../../../scss/bootstrap-customization/custom-mixins";
+$spacing: 30px;
+:host {
+  position: relative;
+  max-width: 350px;
+  //.content-wrapper {
+  //  padding-bottom: 34px;
+  //}
+  .image-container img {
+    width: 100%;
+    max-width: 350px;
+  }
+  .wp-title {
+    padding: 5px 0;
+    font-size: 15px;
+    margin-bottom: 5px;
+  }
+  .author {
+    position: absolute;
+    bottom: 0;
+    line-height: 17px;
+    .author-logo {
+      width: 40px;
+      margin-right: 10px;
+      img {
+        width: 40px;
+      }
+    }
+    .author-content {
+      font-size: 13px;
+    }
+  }
+}
+
+:host-context(.short-articles-wrapper) {
+  width: 100%;
+  max-width: 348px;
+  margin: 0 $spacing $spacing * 2 $spacing;
+  @media (max-width: 1200px) {
+    max-width: 270px;
+  }
+}
+:host-context(.short-articles-wrapper.league-page) {
+  @media (max-width: 1400px) {
+    .wp-title {
+      font-size: 14px;
+    }
+    .author .author-content {
+      font-size: 12px;
+    }
+  }
+  @media (max-width: 1300px) and (min-width: 1201px) {
+    .wp-title {
+      font-size: 13px;
+    }
+    .author .author-content {
+      font-size: 10px;
+    }
+  }
+}
+:host-context(.home-articles-wrapper) {
+  width: calc(25% - #{$spacing * 2});
+  margin: 0 $spacing $spacing * 2 $spacing;
+  @media (max-width: 1600px) {
+    .wp-title {
+      font-size: 14px;
+    }
+    .author .author-content {
+      font-size: 12px;
+    }
+  }
+  @media (max-width: 1400px) {
+    $spacing: 20px;
+    width: calc(33% - #{$spacing * 2});
+    margin: 0 $spacing $spacing * 2 $spacing;
+    &:nth-child(7), &:nth-child(8) {
+      display: none;
+    }
+  }
+  @media (max-width: 767px) {
+    $spacing: 20px;
+    width: calc(50% - #{$spacing * 2});
+    &:nth-child(7), &:nth-child(8) {
+      display: block;
+    }
+  }
+  @media (max-width: 700px) {
+    width: 100%;
+    margin: 0 auto $spacing * 2 auto;
+  }
+}

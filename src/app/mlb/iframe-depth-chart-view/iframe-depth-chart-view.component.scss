@@ -1,0 +1,29 @@
+:host {
+  .multi-row-data-table-wrapper.custom-width {
+    @media (max-width: 1275px) {
+      overflow-x: auto;
+      table {
+        min-width: 1226px;
+      }
+    }
+  }
+  .multi-row-data-table {
+    table-layout: auto;
+    .main-border {
+      border-right: 1px solid #d1d1d1 !important;
+    }
+    .t-content td {
+      text-align: left;
+      padding-left: 5px;
+    }
+  }
+  .matchup-col {
+    width: 230px;
+    @media (max-width: 1500px) {
+      width: 170px;
+    }
+    @media (max-width: 480px) {
+      width: 115px;
+    }
+  }
+}

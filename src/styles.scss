@@ -1,0 +1,30 @@
+/* You can add global styles to this file, and also import other style files */
+/*
+Project (only variables)
+*/
+
+// Global project variables
+@import "scss/shared/variables/project";
+
+/*
+	Bootstrap
+*/
+
+// Bootstrap variables override
+@import "scss/shared/variables/bootstrap";
+
+// All Bootstrap styles
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+
+// Bootstrap styles override
+@import "scss/bootstrap-customization/index";
+
+/*
+Project (everything)
+*/
+
+// Global project files imports
+// Example:
+// @import "scss/something";
+@import "scss/custom-components/index";
+@import "scss/global/index";

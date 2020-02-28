@@ -1,0 +1,104 @@
+<div class="container-fluid site-pages-wrapper-container">
+  <!-- Breadcrumbs -->
+  <app-breadcrumb></app-breadcrumb>
+  <div class="site-pages-wrapper">
+    <div class="row">
+      <div class="col-12">
+        <h1 class="site-pages-title">Betting Tools Glossary</h1>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="toggles-in-page-wrapper standard-page d-inline-block mt-0 mb-4">
+          <!-- Action Header Button Group -->
+          <div class="toggles-in-page-group btn-group toggles-group">
+            <button *ngFor="let tab of tabs; let first = first, let last = last" (click)="onTabClick(tab)" class="toggle-in-page" [ngClass]="{
+            'active': tab === activeTab,
+            'first': first,
+            'last': last
+            }">{{tab}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-5">
+      <div class="col-12">
+        <div class="tab-text-wrap" [ngSwitch]="activeTab">
+          <div *ngSwitchCase="tabs[0]"><h3 class="tab-sub-heading"><strong>Bet Predictor</strong></h3>Random Forest: machine learning prediction model. See details.
+            Logistic Regression: machine learning prediction model. See details.
+            Reset button: resets all inputs to state of tool upon opening.
+            Inputs button: opens Input panel to display all player, team and game inputs.
+            Generate bets button: generates predicted bets based on state of inputs.
+            Team Total: projection total points scored by a team
+            Win: will the team win? Yes or No
+            Spread: projected spread (+ is an underdog, - is a favorite)
+            Moneyline: projected juice for a moneyline or straight up bet. If you bet $100 and moneyline is -110, you would be paid $90 if you win the bet.
+            Pos: position button that allows for a player swap. A dropdown will display to swap in a different player.
+            Rating: player or team rating on a weekly basis from 0-100 relative to other players and teams.
+
+            <h3 class="tab-sub-heading"><strong>Quarterback</strong></h3>Snaps:  snaps
+            Comp:  completions
+            Att:  passing attempts
+            Pass Yds:  passing yards
+            TD:  touchdowns rushing or passing
+            INT:  interceptions
+            TOP: time of possession of football
+
+            <h3 class="tab-sub-heading"><strong>Running Back</strong></h3>Depth: depth chart order
+            Rushes:  rush attempts
+            Yds:  rush yards
+            TD:  rush tds
+            Tgts:  receiving targets
+            Rec:  receptions
+            Yds:  receiving yards
+            TD:  receiving touchdowns
+            Fum:  fumbles
+
+            <h3 class="tab-sub-heading"><strong>Wide Receiver & Tight End</strong></h3>Targets:  targets
+            Rec:  receiving targets
+            Rec Yds:  receiving yards
+            Rec TD:  receiving touchdowns
+            Fum:  fumbles
+
+            <h3 class="tab-sub-heading"><strong>Team Defense</strong></h3>Tackles:  tackles
+            TFL:  tackles for loss
+            Sacks:  sacks on opposing QB
+            INT: interceptions
+            FF: forced fumbles
+            TD: touchdowns
+
+            <h3 class="tab-sub-heading"><strong>Kicker</strong></h3>FGM: field goals made
+            FGA: field goals attempted
+            XPM: extra points made
+            XPA: extra points attempted
+
+            <h3 class="tab-sub-heading"><strong>Input Panel</strong></h3>Equals: conditional that sets the simulation to equal the value entered.
+            Does Not Equal: conditional that sets the simulation to not equal the value entered.
+            Greater Than>:  conditional that sets the simulation to be greater than the value entered.
+            Less Than 	&#60;:  conditional that sets the simulation to be less than the value entered.
+            Greater Equal: conditional that sets the simulation to be greater than or equal to the value entered.
+            Less Equal: conditional that sets the simulation to be less than or equal the value entered.
+            Worst: isolates the performances in the bottom 2% of simulations
+            Bad: isolates the performances in the bottom 36% of simulations
+            Current: simulation average
+            Good: isolates the performances in the top 36% of simulations
+            Best: isolates the performances in the top 2% of simulations
+
+            <h3 class="tab-sub-heading"><strong>Predicted Bets</strong></h3>All Books: select the sportsbooks for which you would like to see predicted bets
+            All Bet Types: select the bet types for which you'd like to see predicted bets. These include Game Bets, Prop Bets, etc
+            All Bets: narrow down the actual bets you would like to see.
+            All Probability: filter the results by ranges of Probability %.
+            All EV: filter the results by ranges of EV %.
+            $$$$$: filter the results by % of bet bankroll recommended for the bet. This % of bankroll is not your entire bankroll, but the bankroll you have allocated for this individual bet. IE - if you were planning on a total bankroll for one particular bet of $100, and Lineups.com recommends 20% of your bankroll, we recommend you bet $20 instead.
+            View: You can select a table view or a module view for the bet predictions
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+

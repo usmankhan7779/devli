@@ -1,0 +1,38 @@
+<ng-template #content><ng-content></ng-content></ng-template>
+
+<ng-container *ngIf="!customContent; else cutomContentTpl">
+  <ng-container *ngIf="playerUrl; else noUrlTpl">
+    <a *ngIf="photoUrl" class="link-black pl-img-wrapper" rel="nofollow" [routerLink]="playerUrl">
+      <app-fallback-img [alt]="playerName" [photoUrl]="photoUrl"></app-fallback-img>
+    </a>
+    <a [routerLink]="playerUrl" class="link-black-underline">
+      <span [ngClass]="playerClassName">
+        <span [ngClass]="{'player-name-col-lg': shortName || generateShortName, 'too-long-pl-name': (shortName || generateShortName) && playerName?.length > 23}">{{playerName}}</span>
+        <span *ngIf="shortName" class="player-name-col-xs">{{shortName}}</span>
+        <span *ngIf="!shortName && generateShortName" class="player-name-col-xs">{{playerName | shortPlayerName}}</span>
+        <span *ngIf="additionalText">{{additionalText}}</span>
+      </span>
+    </a>
+  </ng-container>
+</ng-container>
+
+
+<ng-template #cutomContentTpl>
+  <a *ngIf="showCustomContentUrl" [routerLink]="playerUrl" class="link-black-underline">
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </a>
+  <ng-container *ngIf="!showCustomContentUrl">
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #noUrlTpl>
+  <span *ngIf="photoUrl" class="pl-img-wrapper">
+    <app-fallback-img [alt]="playerName" [photoUrl]="photoUrl"></app-fallback-img>
+  </span>
+  <span [ngClass]="playerClassName">
+    <span [ngClass]="{'player-name-col-lg': shortName || generateShortName, 'too-long-pl-name': (shortName || generateShortName) && playerName?.length > 23}">{{playerName}}</span>
+    <span *ngIf="shortName" class="player-name-col-xs">{{shortName}}</span>
+    <span *ngIf="!shortName && generateShortName" class="player-name-col-xs">{{playerName | shortPlayerName}}</span>
+  </span>
+</ng-template>

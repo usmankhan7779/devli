@@ -1,0 +1,274 @@
+<div *ngIf="!teamSchedule" class="starting-loader">
+  <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+</div>
+<div class="container-fluid pb-3" *ngIf="teamSchedule">
+  <app-breadcrumb></app-breadcrumb>
+  <!-- Starting Lineups Page Title -->
+  <div class="row">
+    <div class="team-lineup-heading-wrap nfl-team-depth-chart-heading col-lg-8 col-12 clearfix">
+      <!-- Team Lineup Heading Text-->
+      <div class="team-lineup-heading-text">
+        <!-- Team Lineup Heading Left -->
+        <div class="team-lineup-heading-left" [ngClass]="{'no-opponent': !(teamSchedule.nav.opp_depth_chart_route && isDefaultSeason)}">
+          <div class="team-logo with-status">
+            <img [type]="'white'" [appSpriteImg]="'nfl'" align="middle" [src]="teamSchedule.nav.team_logo_white" alt="{{teamSchedule.nav.team_name}}"/>
+          </div>
+          <div class="team-heading-info">
+            <app-status
+              side="right"
+              isHeader="true"
+              mobileTitle="{{teamSchedule.nav.team_name | lastTeamName}} Schedule"
+              [teamName]="teamSchedule.heading"
+              [record]="teamSchedule.nav.team_record + ', ' + teamSchedule.nav.team_rank + ' ' + teamSchedule.nav.team_league + ' ' + teamSchedule.nav.team_division"
+            ></app-status>
+          </div>
+        </div>
+        <!-- Team Lineup Heading Right -->
+        <div *ngIf="teamSchedule.nav.opp_depth_chart_route && isDefaultSeason" class="team-lineup-heading-right">
+          <div *ngIf="!teamSchedule.status || (teamSchedule.status.status !== 'In Progress' && teamSchedule.status.status !== 'Final')" class="float-right">
+            <h4 class="opponent-team-name">{{teamSchedule.nav.is_home ? 'vs' : 'at'}} {{teamSchedule.nav.opp_abbr}}</h4>
+            <h4 class="event-date">
+              <app-general-time-format [time]="teamSchedule.nav.matchup_time"></app-general-time-format>
+            </h4>
+          </div>
+          <div *ngIf="teamSchedule.status?.status === 'In Progress'" class="float-right">
+            <span [ngClass]="{'font-bold': teamSchedule.status.away_has_ball}">{{teamSchedule.status.away}} {{teamSchedule.status.away_score}}</span> @ <span [ngClass]="{'font-bold': teamSchedule.status.home_has_ball}">{{teamSchedule.status.home}} {{teamSchedule.status.home_score}}</span>
+            <p class="text-center">
+              {{teamSchedule.status.down}} & {{teamSchedule.status.distance}}, Q{{teamSchedule.status.quarter}} {{teamSchedule.status.time_remaining}}
+            </p>
+          </div>
+          <div *ngIf="teamSchedule.status?.status === 'Final'" class="float-right">
+            <span [ngClass]="{'font-bold': teamSchedule.status.away_score > teamSchedule.status.home_score}">{{teamSchedule.status.away}} {{teamSchedule.status.away_score}}</span> @ <span [ngClass]="{'font-bold': teamSchedule.status.home_score > teamSchedule.status.away_score}">{{teamSchedule.status.home}} {{teamSchedule.status.home_score}}</span>
+            <p class="text-center">Final</p>
+          </div>
+        </div>
+      </div>
+      <!-- Collapse Menu -->
+      <div class="in-page-collapse-toggle">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="isCollapsed = !isCollapsed"
+                [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+          Menu
+        </button>
+      </div>
+      <div class="in-page-nav-menu" [ngbCollapse]="!isCollapsed" [ngClass]="{'hidden': !isCollapsed}">
+        <!-- Team Lineup Heading Navigation -->
+        <div class="page-heading-navigation">
+          <div *ngIf="teamSchedule.nav.is_home && teamSchedule.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[teamSchedule.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{ teamSchedule.nav.opp_name }} Depth Chart</a>
+          </div>
+          <div *ngIf="!teamSchedule.nav.is_home && teamSchedule.nav.team_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[teamSchedule.nav.team_depth_chart_route]" class="page-heading-nav-btn">{{ teamSchedule.nav.team_name}} Depth Chart</a>
+          </div>
+          <div *ngIf="teamSchedule.nav.is_home && teamSchedule.nav.team_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[teamSchedule.nav.team_depth_chart_route]" class="page-heading-nav-btn">{{ teamSchedule.nav.team_name}} Depth Chart</a>
+          </div>
+          <div *ngIf="!teamSchedule.nav.is_home && teamSchedule.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[teamSchedule.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{ teamSchedule.nav.opp_name }} Depth Chart</a>
+          </div>
+          <div *ngIf="teamSchedule.nav.matchup_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appNflMatchupIdPreselect]="teamSchedule.nav.game_key" [routerLink]="[teamSchedule.nav.matchup_route]" class="page-heading-nav-btn">Matchups</a>
+          </div>
+          <!--news commented-->
+          <!--<div *ngIf="teamSchedule.nav.team_news_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">-->
+            <!--<a [appPreselectNflNewsTeamSeason]="params?.year" [routerLink]="[teamSchedule.nav.team_news_route]" class="page-heading-nav-btn">News</a>-->
+          <!--</div>-->
+          <div *ngIf="teamSchedule.nav.team_stats_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appPreselectNflStatsTeamSeason]="params?.year" [routerLink]="[teamSchedule.nav.team_stats_route]" routerLinkActive="active" class="page-heading-nav-btn">Stats</a>
+          </div>
+          <div *ngIf="teamSchedule.nav.team_stats_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appPreselectNflSnapsTeamSeason]="params?.year" [routerLink]="[teamSchedule.nav.team_snaps_route]" routerLinkActive="active" class="page-heading-nav-btn">Snaps</a>
+          </div>
+          <div *ngIf="teamSchedule.nav.team_roster_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appPreselectNflRosterTeamSeason]="params?.year" [routerLink]="[teamSchedule.nav.team_roster_route]" class="page-heading-nav-btn">Roster</a>
+          </div>
+          <div *ngIf="teamSchedule.nav.team_injuries_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt last">
+            <a [routerLink]="[teamSchedule.nav.team_injuries_route]" class="page-heading-nav-btn">Injuries</a>
+          </div>
+          <div class="tab-btn-xsm tab-btn-wrap depth-chart-opt last">
+            <a [appPreselectNflScheduleTeamSeason]="params?.year" [routerLink]="['./']" routerLinkActive="active" class="page-heading-nav-btn">Schedule</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 after-heading-margin zero-lg-height smaller-lg-box">
+      <app-ad-component [league]="'nfl'"></app-ad-component>
+    </div>
+  </div>
+  <div>
+    <div class="row">
+      <div *ngIf="teamSchedule.intro_paragraph" class="col-lg-8 col-12 flex-last flex-sm-unordered">
+        <p class="site-pages-content" [innerHtml]="teamSchedule.intro_paragraph | safeHtml"></p>
+      </div>
+      <div class="col-12">
+        <div class="grouped-dropdown-wrapper btn-group">
+
+          <div ngbDropdown class="grouped-dropdown dropdown">
+            <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="season-dd" ngbDropdownToggle>
+              <span class="pr-0 pr-sm-3">{{showYear(params.year)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+            </button>
+            <div class="dropdown-menu" aria-labelledby="season-dd">
+              <div *ngFor="let season of teamSchedule.seasons_dropdown;">
+                <button
+                  [ngClass]="{'dd-active-btn': params.year === season.year}"
+                  (click)="onYearDdChange(season)"
+                  class="dropdown-item">
+                  <span>{{season.name}}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-12" *ngIf="finishedGames?.length">
+        <div class="multi-row-data-table-wrapper">
+          <table
+            [mfRowsOnPage]="10000" [mfData]="finishedGames"
+            mfSortBy="date"
+            mfSortOrder="desc"
+            #finishedGamesTable="mfDataTable"
+            class="multi-row-data-table t-stripped">
+            <thead>
+            <tr class="t-sub-header">
+              <th class="text-center small-header">
+                <mfSorter by="date">Date</mfSorter>
+              </th>
+              <th class="text-center small-header">
+                <mfSorter by="date">Time</mfSorter>
+              </th>
+              <th class="text-center" width="20%">
+                <mfSorter by="opponent">Opponent</mfSorter>
+              </th>
+              <th class="text-center" width="18%">
+                <mfSorter by="stadium_name">Stadium</mfSorter>
+              </th>
+              <th class="text-center small-header">
+                <mfSorter by="score">Score</mfSorter>
+              </th>
+              <th class="text-center small-header">
+                <mfSorter by="team_wins">Record</mfSorter>
+              </th>
+              <th class="text-center" width="21%">
+                <mfSorter [by]="sortMatchups">Matchup</mfSorter>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="t-content" *ngFor="let game of finishedGamesTable.data">
+              <td>{{game.date | amTimeZone | amDateFormat: 'M/D/YY'}}</td>
+              <td>{{game.date | amTimeZone | amDateFormat:'h:mm a' | lowercase}}</td>
+              <td class="text-left px-2">
+                {{game.team_abbr === game.home_team ? 'vs' : 'at'}}
+                <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[game.opponent_depth_chart_route || '']" rel="nofollow" class="link-black">
+                  <img [type]="'white'" [appSpriteImg]="'nfl'" class="team-logo-mini" [src]="game.opponent_logo_white" alt="{{game.opponent}}">
+                </a>
+                <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[game.opponent_depth_chart_route || '']" class="link-black-underline">
+                  {{game.opponent}}
+                </a>
+              </td>
+              <td>{{game.stadium_name}}</td>
+              <td>{{game.score}}</td>
+              <td>{{game.team_wins}} - {{game.team_losses}}</td>
+              <td>
+                <a *ngIf="game.matchup_route" [appNflMatchupIdPreselect]="game.game_key" [routerLink]="[game.matchup_route]">
+                  <span class="hidden-lg-down">{{game.team_depth_chart}}</span>
+                  <span class="hidden-xl-up">{{game.team_depth_chart | lastTeamName}}</span>
+                  {{game.team_abbr === game.home_team ? 'vs' : 'at'}}
+                  <span class="hidden-lg-down">{{game.opponent_depth_chart}}</span>
+                  <span class="hidden-xl-up">{{game.opponent_depth_chart | lastTeamName}}</span>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="col-12" *ngIf="notPlayedGames?.length">
+        <div class="multi-row-data-table-wrapper">
+          <table
+            [mfRowsOnPage]="10000" [mfData]="notPlayedGames"
+            mfSortBy="date"
+            mfSortOrder="asc"
+            #notPlayedGamesTable="mfDataTable"
+            class="multi-row-data-table t-stripped">
+            <thead>
+            <tr class="t-sub-header">
+              <th class="text-center small-header">
+                <mfSorter by="date">Date</mfSorter>
+              </th>
+              <th class="text-center small-header">
+                <mfSorter by="date">Time</mfSorter>
+              </th>
+              <th class="text-center" width="20%">
+                <mfSorter by="opponent">Opponent</mfSorter>
+              </th>
+              <th class="text-center" width="18%">
+                <mfSorter by="stadium_name">Stadium</mfSorter>
+              </th>
+              <th class="text-center small-header">
+                <mfSorter by="team_wins">Record</mfSorter>
+              </th>
+              <th class="text-center" width="12%">
+                <mfSorter by="opponent_depth_chart">Opponent Depth Chart</mfSorter>
+              </th>
+              <th class="text-center" width="12%">
+                {{teamSchedule.nav.team_name}} Depth Chart
+              </th>
+              <th class="text-center" width="21%">
+                <mfSorter [by]="sortMatchups">Matchup</mfSorter>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="t-content" *ngFor="let game of notPlayedGamesTable.data">
+              <td>{{game.date | amTimeZone | amDateFormat: 'M/D/YY'}}</td>
+              <td>{{game.date | amTimeZone | amDateFormat:'h:mm a' | lowercase}}</td>
+              <td class="text-left px-2">
+                {{game.team_abbr === game.home_team ? 'vs' : 'at'}}
+                <a [routerLink]="[game.opponent_depth_chart_route || '']" [appPreselectNflDepthChartTeamSeason]="params?.year" rel="nofollow" class="link-black">
+                  <img [type]="'white'" [appSpriteImg]="'nfl'" class="team-logo-mini" [src]="game.opponent_logo_white" alt="{{game.opponent}}">
+                </a>
+                <a [routerLink]="[game.opponent_depth_chart_route || '']" [appPreselectNflDepthChartTeamSeason]="params?.year" class="link-black-underline">
+                  {{game.opponent}}
+                </a>
+              </td>
+              <td>{{game.stadium_name}}</td>
+              <td>{{game.team_wins}} - {{game.team_losses}}</td>
+              <td>
+                <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[game.opponent_depth_chart_route || '']">
+                  <span class="hidden-lg-down">{{game.opponent_depth_chart}}</span>
+                  <span class="hidden-xl-up">{{game.opponent_depth_chart | lastTeamName}}</span>
+                </a>
+              </td>
+              <td>
+                <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[game.team_depth_chart_route || '']">
+                  <span class="hidden-lg-down">{{game.team_depth_chart}}</span>
+                  <span class="hidden-xl-up">{{game.team_depth_chart | lastTeamName}}</span>
+                </a>
+              </td>
+              <td>
+                <a *ngIf="game.matchup_route" [routerLink]="[game.matchup_route]" [appNflMatchupIdPreselect]="game.game_key">
+                  <span class="hidden-lg-down">{{game.team_depth_chart}}</span>
+                  <span class="hidden-xl-up">{{game.team_depth_chart | lastTeamName}}</span>
+                  {{game.team_abbr === game.home_team ? 'vs' : 'at'}}
+                  <span class="hidden-lg-down">{{game.opponent_depth_chart}}</span>
+                  <span class="hidden-xl-up">{{game.opponent_depth_chart | lastTeamName}}</span>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div *ngIf="teamSchedule.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+        <h2 *ngIf="teamSchedule.bottom_header" class="page-heading-two">
+          {{teamSchedule.bottom_header}}
+        </h2>
+        <p class="site-pages-content" [innerHtml]="teamSchedule.bottom_paragraph | safeHtml"></p>
+      </div>
+    </div>
+  </div>
+</div>

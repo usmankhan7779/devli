@@ -1,0 +1,8 @@
+
+.header {
+  height: 60px;
+}
+
+app-nfl-game {
+  flex: 1 1 100%;
+}

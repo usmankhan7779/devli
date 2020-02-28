@@ -1,0 +1,11 @@
+* {
+  font-family: 'Lato';
+}
+.nfl-mg-content {
+  background-color: #fefefe;
+}
+:host {
+  ::ng-deep div > app-matchup:last-child .matchup {
+    margin-bottom: 0 !important;
+  }
+}

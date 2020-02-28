@@ -1,0 +1,342 @@
+<div *ngIf="!data" class="starting-loader">
+  <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+</div>
+<div *ngIf="data">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex mb-4">
+        <div>
+          <div class="grouped-dropdown-wrapper btn-group mb-0">
+            <div ngbDropdown class="grouped-dropdown dropdown">
+              <button type="button" class="grouped-dropdown-btn btn btn-secondary first px-3" id="books-dropdown" ngbDropdownToggle>
+                <span class="pr-0 pr-sm-3">{{showSelectedValues('Books', data.books)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+              </button>
+              <div class="dropdown-menu scrollable-menu" aria-labelledby="books-dropdown">
+                <div class="dropdown-item" *ngIf="!isSelectedNone(data.books)" (click)="toggleAll($event, data.books, false)">
+                  <div class="form-check pl-1 m-0">
+                    <label class="m-0">
+                      Select None
+                    </label>
+                  </div>
+                </div>
+                <div class="dropdown-item" *ngIf="isSelectedNone(data.books)" (click)="toggleAll($event, data.books, true)">
+                  <div class="form-check pl-1 m-0">
+                    <label class="m-0">
+                      Select All
+                    </label>
+                  </div>
+                </div>
+                <div *ngFor="let book of data.books" (click)="onToggleItem($event, book)" class="dropdown-item">
+                  <div class="form-check pl-1 m-0">
+                    <input [checked]="book.selected" class="form-check-input" type="checkbox">
+                    <label class="m-0">
+                      {{book.name}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div ngbDropdown class="grouped-dropdown dropdown">
+              <button type="button" class="grouped-dropdown-btn btn btn-secondary px-3" id="category-dropdown" ngbDropdownToggle>
+                <span class="pr-0 pr-sm-3">{{showSelectedValues('Bet Types', data.bet_categories)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+              </button>
+              <div class="dropdown-menu scrollable-menu" aria-labelledby="category-dropdown">
+                <div class="dropdown-item" *ngIf="!isSelectedNone(data.bet_categories)" (click)="toggleAll($event, data.bet_categories, false)">
+                  <div class="form-check pl-1 m-0">
+                    <label class="m-0">
+                      Select None
+                    </label>
+                  </div>
+                </div>
+                <div class="dropdown-item" *ngIf="isSelectedNone(data.bet_categories)" (click)="toggleAll($event, data.bet_categories, true)">
+                  <div class="form-check pl-1 m-0">
+                    <label class="m-0">
+                      Select All
+                    </label>
+                  </div>
+                </div>
+                <div *ngFor="let category of data.bet_categories" (click)="onToggleItem($event, category)" class="dropdown-item">
+                  <div class="form-check pl-1 m-0">
+                    <input [checked]="category.selected" class="form-check-input" type="checkbox">
+                    <label class="m-0">
+                      {{category.name}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div ngbDropdown class="grouped-dropdown dropdown">
+              <button type="button" class="grouped-dropdown-btn btn btn-secondary px-3" id="stats-dropdown" ngbDropdownToggle>
+                <span class="pr-0 pr-sm-3">{{showSelectedValues('Bets', data.bet_types)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+              </button>
+              <div class="dropdown-menu scrollable-menu" aria-labelledby="stats-dropdown">
+                <div class="dropdown-item" *ngIf="!isSelectedNone(data.bet_types)" (click)="toggleAll($event, data.bet_types, false)">
+                  <div class="form-check pl-1 m-0">
+                    <label class="m-0">
+                      Select None
+                    </label>
+                  </div>
+                </div>
+                <div class="dropdown-item" *ngIf="isSelectedNone(data.bet_types)" (click)="toggleAll($event, data.bet_types, true)">
+                  <div class="form-check pl-1 m-0">
+                    <label class="m-0">
+                      Select All
+                    </label>
+                  </div>
+                </div>
+                <div *ngFor="let betType of data.bet_types" (click)="onToggleItem($event, betType)" class="dropdown-item">
+                  <div class="form-check pl-1 m-0">
+                    <input [checked]="betType.selected" class="form-check-input" type="checkbox">
+                    <label class="m-0">
+                      {{betType.name}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div ngbDropdown class="grouped-dropdown dropdown">
+              <button type="button" class="grouped-dropdown-btn btn btn-secondary px-3" id="probability-dropdown" ngbDropdownToggle>
+                <span class="pr-0 pr-sm-3">{{showSelectedValues('Probability', data.probabilities)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+              </button>
+              <div class="dropdown-menu scrollable-menu" aria-labelledby="probability-dropdown">
+                <div class="dropdown-item" *ngIf="!isSelectedNone(data.probabilities)" (click)="toggleAll($event, data.probabilities, false)">
+                  <div class="form-check pl-1 m-0">
+                    <label class="m-0">
+                      Select None
+                    </label>
+                  </div>
+                </div>
+                <div class="dropdown-item" *ngIf="isSelectedNone(data.probabilities)" (click)="toggleAll($event, data.probabilities, true)">
+                  <div class="form-check pl-1 m-0">
+                    <label class="m-0">
+                      Select All
+                    </label>
+                  </div>
+                </div>
+                <div *ngFor="let probability of data.probabilities | orderBy: 'name': false" (click)="onToggleItem($event, probability)" class="dropdown-item">
+                  <div class="form-check pl-1 m-0">
+                    <input [checked]="probability.selected" class="form-check-input" type="checkbox">
+                    <label class="m-0">
+                      {{probability.name}} %
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div ngbDropdown class="grouped-dropdown dropdown">
+              <button type="button" class="grouped-dropdown-btn btn btn-secondary px-3" id="ev-dropdown" ngbDropdownToggle>
+                <span class="pr-0 pr-sm-3">{{showSelectedValues('EV', data.ev_ranges)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+              </button>
+              <div class="dropdown-menu scrollable-menu" aria-labelledby="ev-dropdown">
+                <div class="dropdown-item" *ngIf="!isSelectedNone(data.ev_ranges)" (click)="toggleAll($event, data.ev_ranges, false)">
+                  <div class="form-check pl-1 m-0">
+                    <label class="m-0">
+                      Select None
+                    </label>
+                  </div>
+                </div>
+                <div class="dropdown-item" *ngIf="isSelectedNone(data.ev_ranges)" (click)="toggleAll($event, data.ev_ranges, true)">
+                  <div class="form-check pl-1 m-0">
+                    <label class="m-0">
+                      Select All
+                    </label>
+                  </div>
+                </div>
+                <div *ngFor="let range of data.ev_ranges | orderBy: 'name': false" (click)="onToggleItem($event, range)" class="dropdown-item">
+                  <div class="form-check pl-1 m-0">
+                    <input [checked]="range.selected" class="form-check-input" type="checkbox">
+                    <label class="m-0">
+                      {{range.name}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div ngbDropdown class="grouped-dropdown dropdown">
+              <button type="button" class="grouped-dropdown-btn btn btn-secondary last px-3" id="dollar-dropdown" ngbDropdownToggle>
+                <app-dollars
+                  [amount]="getMaxDollarSelected(data)"
+                  [classes]="'teal'"
+                  style="display: inline-block;"
+                  [color]="dollarRangeColors[getMaxDollarSelected(data)]"
+                ></app-dollars>
+                <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+              </button>
+              <div class="dropdown-menu scrollable-menu" aria-labelledby="dollar-dropdown">
+                <div class="dropdown-item" *ngIf="!isSelectedNone(data.dollar_ranges)" (click)="toggleAll($event, data.dollar_ranges, false)">
+                  <div class="form-check pl-1 m-0">
+                    <label class="m-0">
+                      Select None
+                    </label>
+                  </div>
+                </div>
+                <div class="dropdown-item" *ngIf="isSelectedNone(data.dollar_ranges)" (click)="toggleAll($event, data.dollar_ranges, true)">
+                  <div class="form-check pl-1 m-0">
+                    <label class="m-0">
+                      Select All
+                    </label>
+                  </div>
+                </div>
+                <div *ngFor="let dollar of data.dollar_ranges;" (click)="onToggleItem($event, dollar)" class="dropdown-item">
+                  <div class="form-check pl-1 m-0">
+                    <input [checked]="dollar.selected" class="form-check-input" type="checkbox">
+                    <label class="m-0">
+                      <app-dollars [amount]="dollar.name" [classes]="'teal'" [color]="dollarRangeColors[dollar.name]" style="display: inline-block;"></app-dollars>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ml-4 align-self-center">
+          View
+          <i class="view-option-container mx-2" [ngClass]="{'active': activeMode === viewModes[0]}" (click)="activeMode = viewModes[0]">
+            <img src="/assets/images/list-view.png" alt="">
+          </i>
+          <i class="view-option-container" [ngClass]="{'active': activeMode === viewModes[1]}" (click)="activeMode = viewModes[1]">
+            <img src="/assets/images/th.png" alt="">
+          </i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="games-tab d-flex flex-wrap">
+
+        <div *ngFor="let game of data.tabs | orderBy: 'order'; let i = index" (click)="onGameSelect(i)" class="game-container" [ngClass]="{'active': game.active}">
+          <i class="icon-x" aria-hidden="true" (click)="onTabDelete(game)">✕</i>
+          <div class="top-info">
+            {{game.title}}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4" *ngIf="selectedTab && selectedTab.cards">
+    <ng-container *ngIf="activeMode === viewModes[1]; else tableView">
+      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 pb-3" *ngFor="let card of selectedTab.cards">
+        <app-betting-card
+          [topLeftHeading]="predictiveModel.label"
+          [title]="card.title"
+          [cardType]="card.bet_type"
+          [additionalInfo]=""
+          [awayProbability]="card.away_probability"
+          [homeProbability]="card.home_probability"
+          [bets]="card.predicted_bets"
+          (cardSaved)="onCardSaved($event)"
+        ></app-betting-card>
+      </div>
+    </ng-container>
+    <ng-template #tableView>
+      <div class="col-12">
+        <div class="multi-row-data-table-wrapper">
+          <table
+            [mfData]="selectedTab.tableCards"
+            [mfRowsOnPage]="10000"
+            [mfSortBy]="sortByBettingUnits"
+            [mfSortOrder]="'desc'"
+            #selectedTabsData="mfDataTable"
+            class="multi-row-data-table t-stripped">
+            <thead>
+              <tr class="t-sub-header">
+                <th class="text-center">
+                  Model
+                </th>
+                <th class="text-center">
+                  <mfSorter by="matchup">Game</mfSorter>
+                </th>
+                <th class="text-center">
+                  <mfSorter [by]="sortBetType">Bet Type</mfSorter>
+                </th>
+                <th class="text-center probability-col" width="138px">
+                  <mfSorter by="probability">Probability%</mfSorter>
+                </th>
+                <th class="text-center" width="18%">
+                  <mfSorter [by]="customTableSort.bind(this, 'vegas_moneyline', 'main')">{{getSelectedBookForTableHeader()}}</mfSorter>
+                </th>
+                <th class="text-center" width="13%">
+                  <mfSorter [by]="customTableSort.bind(this, 'vegas_moneyline', 'lineups')">Lineups.com</mfSorter>
+                </th>
+                <th class="text-center">
+                  <mfSorter [by]="customTableSort.bind(this, 'expected_value', 'main')">EV</mfSorter>
+                </th>
+                <th class="text-center">
+                  <mfSorter [by]="customTableSort.bind(this, 'difference', 'main')">Differential</mfSorter>
+                </th>
+                <th class="text-center" width="138px">
+                  <mfSorter [by]="sortByBettingUnits">Bet Units</mfSorter>
+                </th>
+                <th class="text-center" width="80px">
+                  Save Bet
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr class="t-content" *ngFor="let card of selectedTabsData.data; let i = index;">
+              <td>
+                <span>{{predictiveModel.label}}</span>
+              </td>
+              <td>
+                <span>{{card.matchup}}</span>
+              </td>
+              <td>
+                <span>{{card.betTypeName}}</span>
+              </td>
+              <td
+                class="probability-cell"
+                [ngClass]="{'good': card.probability >= 50, 'poor': card.probability < 50}"
+              >
+                <span>{{card.probability}}%</span>
+              </td>
+              <td>
+                <span [hidden]="getSelectedBookForTableHeader() !== 'Sportsbook'">{{card.predicted_bets.main.bookmaker_name}}:</span>
+                <span>{{card.predicted_bets.main.description}} </span>
+                <span *ngIf="card.bet_type === 1">{{card.predicted_bets.main.spread | plus }} </span>
+                <span *ngIf="card.bet_type === 2">{{card.predicted_bets.main.total}} </span>
+                <span>({{card.predicted_bets.main.vegas_moneyline | plus }})
+                  <!--<span class="public-money" *ngIf="card.predicted_bets.main.public_money">PM</span>-->
+                </span>
+              </td>
+              <td>
+                <span>{{card.predicted_bets.lineups.description}} </span>
+                <span *ngIf="card.bet_type === 1">{{card.predicted_bets.lineups.spread | plus }} </span>
+                <span *ngIf="card.bet_type === 2">{{card.predicted_bets.lineups.total}} </span>
+                <span>({{card.predicted_bets.lineups.vegas_moneyline | plus }}) 
+                  <!--<span class="public-money" *ngIf="card.predicted_bets.lineups.public_money">PM</span>-->
+                </span>
+              </td>
+              <td>
+                <span *ngIf="card.predicted_bets.main.expected_value > 0">+{{card.predicted_bets.main.expected_value}}</span>
+                <span *ngIf="card.predicted_bets.main.expected_value <= 0">{{card.predicted_bets.main.expected_value}}</span>
+              </td>
+              <td>
+                <span>{{card.predicted_bets.main.difference}}</span>
+              </td>
+              <td>
+                <div class="popover-container popover-nowrap">
+                  <app-dollars
+                    triggers="mouseenter:mouseleave"
+                    [ngbPopover]="card.predicted_bets.main.kelly"
+                    [amount]="card.predicted_bets.main.dollar_signs"
+                    [classes]="'teal'" style="display: inline-block;"
+                    [color]="card.predicted_bets.main.hex">
+                  </app-dollars>
+                </div>
+              </td>
+              <td>
+                <div (click)="card.predicted_bets.main.saved = !card.predicted_bets.main.saved; onCardSaved(card.predicted_bets.main)" class="save-icon-container" [ngClass]="{'saved': card.predicted_bets.main.saved}">
+                  <i aria-hidden="true" class="fa fa-floppy-o"></i>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>
+

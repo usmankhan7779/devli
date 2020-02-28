@@ -1,0 +1,57 @@
+<div class="player-box-item" [ngClass]="{'active-player': player.id === activeOffense?.player?.id}">
+  <div class="player-box-item-content">
+    <div class="top-section">
+      <div class="player-image-wrapper">
+        <img [hidden]="imageLoaded" class="player-image-cap" [src]="imageCap" alt="{{player.name}}">
+        <img [hidden]="!imageLoaded" (load)="onImageLoad()" [src]="player.photo_url || imageCap" alt="{{player.name}}">
+      </div>
+      <div class="player-name-wrapper">
+        <span class="player-name player-name-long">{{player.name}}</span>
+        <span class="player-name player-name-short">{{player.name | shortPlayerName}}</span>
+      </div>
+    </div>
+    <div class="bottom-section text-center">
+      <div class="text-left d-inline-block">
+        <div>
+          <span class="player-info-title">Position:</span> <span>{{player.depth_chart_position}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">Depth:</span> <span>{{player.depth_chart_order}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">Jersey:</span> <span>#{{player.jersey}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">Age:</span> <span>{{player.age}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">EXP:</span> <span>{{player.experience}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">MPG:</span> <span>{{player.minutes_per_game}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">PPG:</span> <span>{{player.points_per_game}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">RPG:</span> <span>{{player.rebounds_per_game}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">APG:</span> <span>{{player.assists_per_game}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">BPG:</span> <span>{{player.blocked_shots_per_game}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">PER:</span> <span>{{player.player_efficiency_rating}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">+/-:</span> <span>{{player.plus_minus}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">USG%:</span> <span>{{player.usage_rate_percentage}}%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

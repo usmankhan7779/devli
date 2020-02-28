@@ -1,0 +1,84 @@
+@import "../../../../scss/shared/variables/project";
+@import "../../../../scss/bootstrap-customization/custom-mixins";
+:host {
+  $first-breakpoint: 1340px;
+  $second-breakpoint: 761px;
+  $third-breakpoint: 650px;
+
+  .top-dd-wrapper {
+    @include flex-row-mixin();
+    .pagination-wrapper {
+      margin-left: auto;
+    }
+    @media (max-width: $first-breakpoint) {
+      @include flex-column-mixin();
+      .pagination-wrapper {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .search-input-wrapper {
+    &.normal-view {
+      display: block;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+    &.mobile-view {
+      display: none;
+    }
+    @media (max-width: $third-breakpoint) {
+      &.normal-view {
+        display: none;
+      }
+      &.mobile-view {
+        display: block;
+      }
+    }
+  }
+  .top-search-wrapper {
+    @media (max-width: $second-breakpoint) {
+      @include flex-column-mixin();
+      .search-input-wrapper {
+        margin: 0 0 1rem 0;
+      }
+    }
+  }
+
+  .pagination-wrapper {
+    @include flex-row-mixin();
+    @media (max-width: $third-breakpoint) {
+      @include flex-column-mixin();
+      .per-page-section-wrapper > div {
+        width: 100%;
+      }
+      .search-input-wrapper.mobile-view {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  @media (max-width: $third-breakpoint) {
+    .pagination-wrapper ::ng-deep .ngx-pagination {
+      padding: 0 !important;
+      text-align: center;
+    }
+  }
+  @media (max-width: 380px) {
+    .pagination-controls-wrapper {
+      font-size: 11px;
+    }
+  }
+
+
+  @media (max-width: 800px) {
+    .multi-row-data-table-wrapper {
+      overflow-x: auto;
+      table {
+       min-width: 900px;
+      }
+    }
+  }
+}
+
+

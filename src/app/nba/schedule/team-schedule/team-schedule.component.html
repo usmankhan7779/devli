@@ -1,0 +1,196 @@
+<div class="row">
+  <div *ngIf="teamSchedule.intro_paragraph" class="col-12 col-lg-8 flex-last flex-sm-unordered">
+    <p class="site-pages-content" [innerHtml]="teamSchedule.intro_paragraph | safeHtml"></p>
+  </div>
+  <div class="col-12 hidden-sm-up">
+    <div class="grouped-dropdown-wrapper my-0 btn-group">
+
+      <div ngbDropdown class="grouped-dropdown dropdown">
+        <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="season-dd" ngbDropdownToggle>
+          <span class="pr-0 pr-sm-3">{{handleYear(params.year)}}</span> <img class="down-arrow" alt="down-arrow" src="/assets/images/arrow-down.png" />
+        </button>
+        <div class="dropdown-menu" aria-labelledby="season-dd">
+          <div *ngFor="let season of teamSchedule.seasons_dropdown;">
+            <button
+              [ngClass]="{'dd-active-btn': params.year === season.year}"
+              (click)="onYearDdChange(season)"
+              class="dropdown-item">
+              <span>{{season.name}}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <app-dropdown
+        [ddData]="ddData"
+        [filterItems]="onDropdownChange.bind(this)"
+        prop="tabs"
+        className="first last"
+        isSingleSelect="true"
+      ></app-dropdown>
+    </div>
+  </div>
+  <div class="col-12 hidden-xs-down">
+    <div class="d-flex">
+      <div class="grouped-dropdown-wrapper my-0 not-mobile btn-group mr-3">
+
+        <div ngbDropdown class="grouped-dropdown dropdown">
+          <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="season-dd-mobile" ngbDropdownToggle>
+            <span class="pr-0 pr-sm-3">{{handleYear(params.year)}}</span> <img class="down-arrow" alt="down-arrow" src="/assets/images/arrow-down.png" />
+          </button>
+          <div class="dropdown-menu" aria-labelledby="season-dd-mobile">
+            <div *ngFor="let season of teamSchedule.seasons_dropdown;">
+              <button
+                [ngClass]="{'dd-active-btn': params.year === season.year}"
+                (click)="onYearDdChange(season)"
+                class="dropdown-item">
+                <span>{{season.name}}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="toggles-in-page-wrapper my-0">
+        <div class="toggles-in-page-group btn-group toggles-group">
+          <button *ngFor="let tab of ddData.tabs; let first = first; let last = last;"
+                  (click)="onButtonGroupClick(tab.prop);"
+                  class="toggle-in-page" [ngClass]="{'active': tab.selected, 'first': first, 'last': last}">{{tab.name}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12" *ngIf="ddData.activeTab === 'all' || ddData.activeTab === 'upcoming'">
+    <h2 class="page-heading-two">Upcoming Games</h2>
+    <div class="row" *ngIf="notPlayedGames?.length; else noUpcomingGames">
+      <div class="col-12 multi-row-data-table-wrapper">
+        <table class="multi-row-data-table t-stripped" [mfRowsOnPage]="10000" [mfData]="notPlayedGames" mfSortBy="date_time" mfSortOrder="asc" #notPlayedGamesMF="mfDataTable">
+          <thead>
+          <tr class="t-sub-header">
+            <th scope="col" class="text-center" width="9%">
+              <mfSorter by="date_time">Date</mfSorter>
+            </th>
+            <th scope="col" class="text-center" width="9%">
+              <mfSorter by="date_time">Time</mfSorter>
+            </th>
+            <th scope="col" class="text-center" width="25%">
+              <mfSorter [by]="sortLineup.bind(this, 'opponent_abbr', 'home_team', 'home_name', 'away_name')">Opponent</mfSorter>
+            </th>
+            <th scope="col" class="text-center" width="9%">
+              <mfSorter [by]="sortRecord.bind(this)">Record</mfSorter>
+            </th>
+            <th scope="col" class="text-center" width="*">
+              <mfSorter [by]="sortLineup.bind(this, 'opponent_abbr', 'home_team', 'away_lineup_route', 'home_lineup_route')">Lineup</mfSorter>
+            </th>
+            <th scope="col" class="text-center" width="*">
+              <mfSorter [by]="sortLineup.bind(this, 'opponent_abbr', 'home_team', 'home_lineup_route', 'away_lineup_route')">Opponent Lineup</mfSorter>
+            </th>
+            <th scope="col" class="text-center" width="*">
+              <mfSorter [by]="getMatchupName">Matchup</mfSorter>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="t-content" *ngFor="let game of notPlayedGamesMF.data">
+            <td>{{game.date_time | amTimeZone | amDateFormat: 'M/D/YY'}}</td>
+            <td>{{game.date_time | amTimeZone | amDateFormat:'h:mm a' | lowercase}} {{timeZone}}</td>
+            <td class="text-left px-2">
+              {{teamSchedule.nav.team_abbr === game.home_team ? 'vs' : 'at'}}
+              <a [routerLink]="[(teamSchedule.nav.team_abbr !== game.home_team ? game.nav.home_lineup_route : game.nav.away_lineup_route) || '']" [appPreselectNbaLineupTeamSeason]="params?.year" rel="nofollow" class="link-black">
+                <img [type]="'white'" [appSpriteImg]="'nba'" class="team-logo-mini" [src]="teamSchedule.nav.team_abbr !== game.home_team ? game.nav.home_logo_white : game.nav.away_logo_white" alt="{{teamSchedule.nav.team_abbr !== game.home_team ? game.nav.home_name_full : game.nav.away_name_full}}">
+              </a>
+              <a [routerLink]="[(teamSchedule.nav.team_abbr !== game.home_team ? game.nav.home_lineup_route : game.nav.away_lineup_route) || '']" [appPreselectNbaLineupTeamSeason]="params?.year" class="link-black-underline">
+                {{teamSchedule.nav.team_abbr !== game.home_team ? game.nav.home_name_full : game.nav.away_name_full}}
+              </a>
+            </td>
+            <td>{{teamSchedule.nav.team_abbr !== game.home_team ? game.away_wins + '-' + game.away_losses : game.home_wins + '-' + game.home_losses}}</td>
+            <td>
+              <a [appPreselectNbaLineupTeamSeason]="params?.year" [routerLink]="[teamSchedule.nav.team_abbr === game.home_team ? game.nav.home_lineup_route : game.nav.away_lineup_route]">
+                <span class="hidden-lg-down">{{teamSchedule.nav.team_abbr === game.home_team ? game.nav.home_name_full : game.nav.away_name_full}}</span>
+                <span class="hidden-xl-up">{{(teamSchedule.nav.team_abbr === game.home_team ? game.nav.home_name_full : game.nav.away_name_full) | lastTeamName}}</span>
+              </a>
+            </td>
+            <td>
+              <a [appPreselectNbaLineupTeamSeason]="params?.year" [routerLink]="[teamSchedule.nav.team_abbr !== game.home_team ? game.nav.home_lineup_route : game.nav.away_lineup_route]">
+                <span class="hidden-lg-down">{{teamSchedule.nav.team_abbr !== game.home_team ? game.nav.home_name_full : game.nav.away_name_full}}</span>
+                <span class="hidden-xl-up">{{(teamSchedule.nav.team_abbr !== game.home_team ? game.nav.home_name_full : game.nav.away_name_full) | lastTeamName}}</span>
+              </a>
+            </td>
+            <td>
+              <ng-container *ngIf="game.nav.matchup_route">
+                <a [appNbaMatchupIdPreselect]="game.nav.game_id" [routerLink]="[game.nav.matchup_route || '']">{{getMatchupName(game)}}</a>
+              </ng-container>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <ng-template #noUpcomingGames>
+      <h4>No Upcoming Games</h4>
+    </ng-template>
+  </div>
+  <div class="col-12" *ngIf="ddData.activeTab === 'all' || ddData.activeTab === 'completed'">
+      <h2 class="page-heading-two">Completed Games</h2>
+      <div class="row" *ngIf="finishedGames?.length; else noCompletedGames">
+        <div class="col-12 multi-row-data-table-wrapper">
+          <table class="multi-row-data-table t-stripped" [mfRowsOnPage]="10000" [mfData]="finishedGames" mfSortBy="date_time" mfSortOrder="desc" #finishedGamesMF="mfDataTable">
+            <thead>
+            <tr class="t-sub-header">
+              <th scope="col" class="text-center" width="9%">
+                <mfSorter by="date_time">Date</mfSorter>
+              </th>
+              <th scope="col" class="text-center" width="9%">
+                <mfSorter by="date_time">Time</mfSorter>
+              </th>
+              <th scope="col" class="text-center" width="25%">
+                <mfSorter [by]="sortLineup.bind(this, 'opponent_abbr', 'home_team', 'home_name', 'away_name')">Opponent</mfSorter>
+              </th>
+              <th scope="col" class="text-center" width="9%">
+                <mfSorter [by]="sortScore.bind(this)">Score</mfSorter>
+              </th>
+              <th scope="col" class="text-center" width="9%">
+                <mfSorter [by]="sortRecord.bind(this)">Record</mfSorter>
+              </th>
+              <th scope="col" class="text-center">
+                <mfSorter [by]="getMatchupName">Matchup</mfSorter>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="t-content" *ngFor="let game of finishedGamesMF.data">
+              <td>{{game.date_time | amTimeZone |amDateFormat: 'M/D/YY'}}</td>
+              <td>{{game.date_time | amTimeZone | amDateFormat:'h:mm a' | lowercase}} {{timeZone}}</td>
+              <td class="text-left px-2">
+                {{teamSchedule.nav.team_abbr === game.home_team ? 'vs' : 'at'}}
+                <a [routerLink]="[(teamSchedule.nav.team_abbr !== game.home_team ? game.nav.home_lineup_route : game.nav.away_lineup_route) || '']" [appPreselectNbaLineupTeamSeason]="params?.year" rel="nofollow" class="link-black">
+                  <img [type]="'white'" [appSpriteImg]="'nba'" class="team-logo-mini" [src]="teamSchedule.nav.team_abbr !== game.home_team ? game.nav.home_logo_white : game.nav.away_logo_white" alt="{{teamSchedule.nav.team_abbr !== game.home_team ? game.nav.home_name_full : game.nav.away_name_full}}">
+                </a>
+                <a [routerLink]="[(teamSchedule.nav.team_abbr !== game.home_team ? game.nav.home_lineup_route : game.nav.away_lineup_route) || '']" [appPreselectNbaLineupTeamSeason]="params?.year" class="link-black-underline">
+                  {{teamSchedule.nav.team_abbr !== game.home_team ? game.nav.home_name_full : game.nav.away_name_full}}
+                </a>
+              </td>
+              <td>{{teamSchedule.nav.team_abbr !== game.home_team ? (game.away_team_score || 0) + '-' + (game.home_team_score || 0) : (game.home_team_score || 0) + '-' + (game.away_team_score || 0)}}</td>
+              <td>{{teamSchedule.nav.team_abbr !== game.home_team ? (game.away_wins || 0) + '-' + (game.away_losses || 0) : (game.home_wins || 0) + '-' + (game.home_losses || 0)}}</td>
+              <td>
+                <ng-container *ngIf="game.nav.matchup_route">
+                  <a [appNbaMatchupIdPreselect]="game.nav.game_id" [routerLink]="[game.nav.matchup_route || '']">{{getMatchupName(game)}}</a>
+                </ng-container>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <ng-template #noCompletedGames>
+        <h4>No Completed Games</h4>
+      </ng-template>
+    </div>
+
+  <div *ngIf="teamSchedule.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+    <h2 *ngIf="teamSchedule.bottom_header" class="page-heading-two">
+      {{teamSchedule.bottom_header}}
+    </h2>
+    <p class="site-pages-content" [innerHtml]="teamSchedule.bottom_paragraph | safeHtml"></p>
+  </div>
+</div>

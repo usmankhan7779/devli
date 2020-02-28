@@ -1,0 +1,514 @@
+.content {
+  &.lineups-gateway-content {
+    overflow: hidden;
+  }
+  &.depth-charts-content {
+    overflow: hidden;
+  }
+}
+
+.stat-head-participant {
+  outline: none;
+}
+
+.depth-chart-box {
+  width: 49%;
+  height: auto;
+  float: left;
+  background: #FFF;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.13);
+  transition: ease-in all 0.12s;
+  margin-bottom: 56px;
+  border: 1px solid #e1e1e1;
+}
+
+.depth-chart-box.center {
+  float: none;
+  clear: both;
+  margin: 0 auto;
+  margin-bottom: 56px;
+}
+
+.depth-chart-wrapper .depth-chart-box.right {
+  float: right;
+}
+
+.event-lineup-footer-row {
+  overflow: hidden;
+}
+
+.depth-chart-box:hover {
+  box-shadow: 0 4px 23px rgba(0, 0, 0, 0.22);
+}
+
+.depth-chart-box-head {
+  width: 100%;
+  .event-mid-row {
+    margin-top: 0;
+  }
+}
+
+.event-home-participant .event-top-logo {
+  width: inherit;
+  height: inherit;
+}
+
+.away-participant-logo, .home-participant-logo {
+  & > a, .event-top-logo {
+    width: inherit;
+    height: inherit;
+  }
+}
+
+.depth-chart-box-head .event-top-info {
+  height: 105px;
+  text-align: center;
+  display: block;
+  margin: auto;
+  .event-mid-row {
+    margin-top: 0;
+  }
+}
+
+.event-date-mid {
+  display: block;
+  float: left;
+  text-align: center;
+}
+
+.event-date-mid h4 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+
+.table {
+  margin-bottom: 0;
+  td {
+    padding: 8px 0;
+    height: 35px;
+    &.stat-align-left {
+      padding-left: 10px;
+    }
+    &.player-number {
+      width: 40px;
+      text-align: center;
+      padding-left: 0;
+    }
+    &.position-and-name {
+      width: 140px;
+    }
+  }
+  .rating-wrap {
+    max-width: 50px;
+  }
+}
+
+.away-participant-stats {
+  width: 50%;
+  float: left;
+  border-right: 1px solid rgb(51, 51, 51);
+}
+
+.home-participant-stats {
+  width: 50%;
+  float: right;
+}
+
+.event-top-participants {
+  height: 125px;
+  &.depth-chart-box-top {
+    height: 92px;
+    padding: 25px 0;
+    .event-date-mid {
+      margin-top: 0;
+    }
+    .event-participant-logo {
+      top: -16px;
+      &.away-participant-logo {
+        margin-left: 0;
+      }
+    }
+    .event-top-participant-standing {
+      font-weight: 700;
+      font-size: 17px;
+    }
+  }
+}
+
+.event-participant-logo {
+  position: relative;
+  top: -18px;
+  &.away-participant-logo {
+    display: inline-block;
+  }
+  &.team-logo-preload {
+    background: linear-gradient(90deg, #EEE, #EEE, #e2e6e6, #EEE);
+    background-size: 600% 100%;
+    -webkit-animation: Gradient 15s ease infinite;
+    animation: Gradient 3s ease infinite;
+    border-radius: 6px;
+    top: 1px;
+  }
+}
+
+.event-mid-stats {
+  height: auto;
+}
+
+.event-time {
+  padding-right: 10px;
+}
+
+.event-mid-row {
+  margin-top: 6px;
+}
+
+.event-date-clock-time {
+  width: 50%;
+  display: inline-block;
+  float: left;
+  height: 16px;
+  text-align: left;
+  padding-left: 6px;
+}
+
+.event-participant-logo {
+  width: 42px;
+  height: 42px;
+}
+
+.event-participant-logo.team-logo-preload {
+  background: linear-gradient(90deg, #EEE, #EEE, #e2e6e6, #EEE);
+  background-size: 600% 100%;
+  -webkit-animation: Gradient 15s ease infinite;
+  animation: Gradient 3s ease infinite;
+  border-radius: 6px;
+  top: 1px;
+}
+
+.depth-chart-box-top {
+  height: 92px;
+  padding: 21px 0;
+}
+
+.away-participant-content {
+  display: inline-block;
+  text-align: right;
+  padding-right: 8px;
+}
+
+.home-participant-logo {
+  display: inline-block;
+}
+
+.home-participant-content {
+  display: inline-block;
+}
+
+.depth-charts-tr {
+  font-size: 14px;
+}
+
+.depth-charts-tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.border-right {
+  border-right: 1px solid #eceeef;
+}
+
+.lineups-gateway-table-row {
+  th, td {
+    padding: 8px 0;
+    height: 35px;
+    &.hitter-data,
+    &.pitcher-data {
+      padding-left: 10px;
+    }
+  }
+}
+
+//.lineups-gateway-table-row {
+//  td {
+//    padding: 2px;
+//  }
+//  th {
+//    padding: 2px;
+//  }
+//}
+
+.quick-stats {
+  width: 43%;
+  min-width: 170px;
+  span {
+    text-align: center;
+    margin: 0 auto;
+    display: block;
+  }
+}
+
+.depth-chart-footer {
+  padding-bottom: 25px;
+}
+
+.depth-charts-foot-col {
+  width: 25%;
+  float: left;
+  height: 100px;
+  padding-top: 0;
+  text-align: center;
+  padding-bottom: 25px;
+  min-height: 100px;
+}
+
+.match-odds-and-line {
+  font-size: 14px;
+}
+
+.foot-stat-title {
+  font-weight: 800;
+  text-align: center;
+  font-size: 14px;
+}
+
+.foot-stat-value {
+  margin-bottom: 0;
+  font-size: 14px;
+
+  span {
+    height: 10px;
+  }
+}
+
+.stat-align-center {
+  text-align: center;
+}
+
+.quick-stats {
+  width: 43%;
+}
+
+.event-away-participant {
+  width: 37%;
+  float: left;
+  text-align: right;
+}
+
+.event-home-participant {
+  width: 37%;
+  float: left;
+  text-align: left;
+}
+
+.event-date-mid {
+  width: 25%;
+  float: left;
+  margin-top: 6px;
+}
+
+.event-date-cal-date {
+  width: 100%;
+  display: inline-block;
+  height: 16px;
+  text-align: right;
+  padding-right: 8px;
+  h4 {
+    text-align: center;
+  }
+}
+
+.event-rain-percentage {
+  text-align: center;
+  display: block;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.page-heading {
+  font-weight: 700;
+  font-size: 28px;
+  margin-bottom: 1.375rem;
+}
+
+.page-bottom-content {
+  .site-pages-content {
+    margin-top: 1.125rem;
+  }
+  .page-heading-two + .site-pages-content {
+    margin-top: 0;
+  }
+}
+
+.ownage-percent span {
+  text-align: center;
+  display: block;
+  margin: auto;
+}
+
+// Stat Rating
+span.rating {
+  padding: 4px 9px;
+  background-color: #e2e5e8;
+  font-weight: 500;
+  border-radius: 2px;
+  color: #5b5f63;
+  &.yellow {
+    background-color: rgba(237, 190, 1, 0.15);
+    color: #cfa602;
+  }
+  &.green {
+    color: #2bb673;
+    background-color: rgba(43, 182, 115, 0.15);
+  }
+  &.red {
+    color: #b31842;
+    background-color: rgba(206, 152, 150, 0.49);
+  }
+}
+
+.btn {
+  &.match-odds-and-line {
+    border-radius: 0;
+    text-align: center;
+    margin: auto;
+    display: inline-block;
+    background: rgb(102, 102, 102);
+    color: #FFF;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 12px 26px;
+  }
+  &.match-odds-and-line:hover {
+    background: rgb(89, 92, 95);
+  }
+  &.match-odds-and-line img {
+    width: 6px;
+    margin-left: 6px;
+    position: relative;
+    top: -1px;
+  }
+}
+
+.event-top-participant-name {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+
+.event-top-participant-standing {
+  font-size: 14px;
+}
+
+.stat-align-center {
+  text-align: center;
+}
+
+.page-heading-two {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 24px 0;
+}
+
+.event-mid-stats .table.pitcher-table {
+  margin-top: 0;
+}
+
+.horizontal-table-wrapper {
+  overflow: hidden;
+}
+
+.table-injuries {
+  font-size: 14px;
+  background: #fafafa;
+  padding: 15px 12px 0;
+}
+
+.bold-label {
+  font-weight: 700;
+}
+
+@-moz-keyframes Gradient {
+  0% {
+    background-position: 0 50%
+  }
+  50% {
+    background-position: 100% 50%
+  }
+  100% {
+    background-position: 0 50%
+  }
+}
+
+@keyframes Gradient {
+  0% {
+    background-position: 0% 50%
+  }
+  50% {
+    background-position: 100% 50%
+  }
+  100% {
+    background-position: 0% 50%
+  }
+}
+
+
+@media only screen and (max-width: 1920px) {
+  span.rating {
+    padding: 3px 7px;
+  }
+
+  .quick-stats {
+    width: 46%;
+  }
+
+  .depth-charts-tr {
+    font-size: 14px;
+  }
+
+  thead.stats-head th {
+    font-size: 11px;
+  }
+
+  span.rating {
+    padding: 3px 7px;
+  }
+
+  .quick-stats {
+    width: 46%;
+    min-width: 157px;
+  }
+
+  .position-and-name {
+    min-width: 140px;
+  }
+
+  .event-top-participant-standing {
+    font-size: 15px;
+  }
+}
+
+@media only screen and (max-width: 1650px) {
+
+}
+
+@media only screen and (max-width: 1440px) {
+  .event-top-participant-name.long-name {
+    font-size: 17px;
+  }
+
+  .event-mid-row h4 {
+    font-size: 0.9rem;
+  }
+} // END: < 1440px Media Query
+
+@media only screen and (max-width: 991px) {
+  .depth-chart-box {
+    width: 100%;
+  }
+  .event-home-participant,
+  .event-away-participant {
+    width: 37%;
+    float: left;
+  }
+}

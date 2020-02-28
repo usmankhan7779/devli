@@ -1,0 +1,316 @@
+<ng-template #loadingTpl>
+  <div class="starting-lineup-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<div *ngIf="parksData; else loadingTpl" class="container-fluid">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+
+    <div class="col-12 col-lg-8">
+      <h1 class="page-heading">MLB Park Factors</h1>
+      <div *ngIf="introParagraph" class="hidden-md-down">
+        <p class="site-pages-content" [innerHTML]="introParagraph | safeHtml"></p>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component [league]="'mlb'"></app-ad-component>
+    </div>
+
+    <div *ngIf="introParagraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+      <p class="site-pages-content" [innerHtml]="introParagraph | safeHtml"></p>
+    </div>
+
+
+    <div class="col-12">
+      <div class="d-flex justify-content-start">
+        <div class="toggle-to-hide">
+          <div class="toggles-in-page-wrapper d-inline-block mt-0 mb-4">
+            <div class="toggles-in-page-group btn-group toggles-group mr-3">
+              <button
+                *ngFor="let radio of ddData.views; let first = first; let last = last;"
+                (click)="onRadioUpdate(radio.prop)"
+                class="toggle-in-page"
+                [ngClass]="{
+                'active': radio.prop === ddData.activeView.prop,
+                'first': first,
+                'last': last
+              }">
+                {{radio.name}}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="mobile-dd-only mr-3">
+          <div class="grouped-dropdown-wrapper btn-group">
+            <app-dropdown
+              [ddData]="ddData"
+              [filterItems]="updateDDdata.bind(this)"
+              prop="views"
+              name="Positions"
+              [isSingleSelect]="true"
+              className="first last"
+            ></app-dropdown>
+          </div>
+        </div>
+        <div>
+          <div class="grouped-dropdown-wrapper btn-group">
+            <app-dropdown
+              *ngIf="ddData.activeView.prop !== 'all'"
+              [ddData]="ddData"
+              [filterItems]="updateDDdata.bind(this)"
+              prop="parks"
+              [isSingleSelect]="true"
+              name="Park"
+              className="first last"
+            ></app-dropdown>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div *ngIf="ddData.activeView.prop === 'all'" class="col-12">
+          <div class="multi-row-data-table-wrapper custom-width mb-0">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="parksData"
+              [(mfSortBy)]="sortBy"
+              [(mfSortOrder)]="sortOrder"
+              (mfSortByChange)="onSortBy($event)"
+              (mfSortOrderChange)="onSortOrder($event)"
+              #mfDataTable="mfDataTable"
+              class="multi-row-data-table">
+              <thead>
+              <tr class="t-sub-header">
+                <th class="always-view text-center park-col">
+                  <mfSorter by="park_name">Park</mfSorter>
+                </th>
+                <th class="always-view hide-xs-mobile text-center">
+                  <mfSorter by="park_city">City</mfSorter>
+                </th>
+                <th class="always-view text-center">
+                  <mfSorter by="away_team">Game</mfSorter>
+                </th>
+                <th class="text-center always-view hide-xs-mobile">
+                  <mfSorter by="game_time">Time (ET)</mfSorter>
+                </th>
+                <th class="text-center">
+                  <mfSorter by="wind_speed">Wind</mfSorter>
+                </th>
+                <th class="text-center">
+                  <mfSorter by="chance_of_rain">Chance of Rain</mfSorter>
+                </th>
+                <th class="text-center">
+                  <mfSorter by="park_factor">Park Factor</mfSorter>
+                </th>
+                <th class="text-center">
+                  <mfSorter by="lhb_hr">LHB (HR)</mfSorter>
+                </th>
+                <th class="text-center">
+                  <mfSorter by="lhb_r">LHB (R)</mfSorter>
+                </th>
+                <th class="text-center">
+                  <mfSorter by="lhb_2b_3b">LHB (2B/3B)</mfSorter>
+                </th>
+                <th class="text-center">
+                  <mfSorter by="rhb_hr">RHB (HR)</mfSorter>
+                </th>
+                <th class="text-center">
+                  <mfSorter by="rhb_r">RHB (R)</mfSorter>
+                </th>
+                <th class="text-center">
+                  <mfSorter by="rhb_2b_3b">RHB (2B/3B)</mfSorter>
+                </th>
+                <th class="text-center">
+                  <mfSorter by="pitchers">Pitchers</mfSorter>
+                </th>
+                <th class="text-center">
+                  <mfSorter by="hitters">Hitters</mfSorter>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let park of mfDataTable.data">
+                  <tr  class="t-content">
+                    <td class="always-view park-name text-left px-2">
+                      <a [routerLink]="[park.homeTeamUrl || '']" rel="nofollow" class="link-black logo-link-container">
+                        <img [type]="'white'" [appSpriteImg]="'mlb'" class="mr-1 logo-sm" [src]="park.logo" alt="{{park.home_team}}"/>
+                      </a>
+                      {{park.park_name}} (
+                      <a [routerLink]="[park.homeTeamUrl || '']" class="link-black-underline">
+                        {{park.home_team}}
+                      </a>)
+                      <div class="plus-minus-sign">
+                        <i *ngIf="park.opened" aria-hidden="true" class="fa fa-minus" (click)="park.opened = false"></i>
+                        <i *ngIf="!park.opened" aria-hidden="true" class="fa fa-plus" (click)="park.opened = true"></i>
+                      </div>
+                    </td>
+                    <td class="always-view hide-xs-mobile">
+                      {{park.park_city}}
+                    </td>
+                    <td class="always-view nowrap">
+                      <a [routerLink]="[park.awayTeamUrl || '']" class="link-black-underline">
+                        {{park.away_team}}
+                      </a>
+                      @
+                      <a [routerLink]="[park.homeTeamUrl || '']" class="link-black-underline">
+                        {{park.home_team}}
+                      </a>
+                    </td>
+                    <td class="always-view hide-xs-mobile">
+                      {{park.game_time}}
+                    </td>
+                    <td>
+                      {{park.wind_speed}} mph
+                      <img *ngIf="park.wind_speed" class="wind-direction-arrow"
+                           [style.transform]="'rotate(' + park.wind_angle + 'deg)'"
+                           src="/assets/images/arrow.png" />
+                    </td>
+                    <td [ngStyle]="{backgroundColor: getRainColor(park.chance_of_rain)}">
+                      {{park.chance_of_rain}}%
+                    </td>
+                    <td>
+                      {{park.park_factor}}
+                    </td>
+                    <td>
+                      {{park.lhb_hr}}
+                    </td>
+                    <td>
+                      {{park.lhb_r}}
+                    </td>
+                    <td>
+                      {{park.lhb_2b_3b}}
+                    </td>
+                    <td>
+                      {{park.rhb_hr}}
+                    </td>
+                    <td>
+                      {{park.rhb_r}}
+                    </td>
+                    <td>
+                      {{park.rhb_2b_3b}}
+                    </td>
+                    <td [ngStyle]="{backgroundColor: getTdColor(park.pitchers)}">
+                      {{park.pitchers}}
+                    </td>
+                    <td [ngStyle]="{backgroundColor: getTdColor(park.hitters)}">
+                      {{park.hitters}}
+                    </td>
+                  </tr>
+                  <tr class="opened-park-row" *ngIf="park.opened">
+                    <td class="always-view" colspan="4">
+                      <div class="d-flex">
+                        <div class="w-50">
+                          <p>
+                            <b>Park:</b> {{park.park_name}}
+                          </p>
+                          <p>
+                            <b>Team:</b> <a [routerLink]="[park.homeTeamUrl || '']" class="link-black-underline">
+                            {{park.home_team}}
+                          </a>
+                          </p>
+                          <p>
+                            <b>City:</b> {{park.park_city}}
+                          </p>
+                          <p>
+                            <b>Game:</b> <a [routerLink]="[park.awayTeamUrl || '']" class="link-black-underline">
+                            {{park.away_team}}
+                          </a>
+                            @
+                            <a [routerLink]="[park.homeTeamUrl || '']" class="link-black-underline">
+                              {{park.home_team}}
+                            </a>
+                          </p>
+                          <p>
+                            <b>Time:</b> {{park.game_time}} ET
+                          </p>
+                          <p>
+                            <b>Wind:</b> {{park.wind_speed}} mph
+                            <img *ngIf="park.wind_speed" class="wind-direction-arrow"
+                                 [style.transform]="'rotate(' + park.wind_angle + 'deg)'"
+                                 src="/assets/images/arrow.png" />
+                          </p>
+                          <p>
+                            <b>Chance of Rain:</b> {{park.chance_of_rain}}%
+                          </p>
+                          <p>
+                            <b>Park Factor:</b> {{park.park_factor}}
+                          </p>
+                        </div>
+                        <div class="w-50">
+                          <p>
+                            <b>LHB (HR):</b> {{park.lhb_hr}}
+                          </p>
+                          <p>
+                            <b>LHB (R):</b> {{park.lhb_r}}
+                          </p>
+                          <p>
+                            <b>LHB (2B/3B):</b> {{park.lhb_2b_3b}}
+                          </p>
+                          <p>
+                            <b>RHB (HR):</b> {{park.rhb_hr}}
+                          </p>
+                          <p>
+                            <b>RHB (R):</b> {{park.rhb_r}}
+                          </p>
+                          <p>
+                            <b>RHB (2B/3B):</b> {{park.rhb_2b_3b}}
+                          </p>
+                          <p>
+                            <b>Pitchers:</b> {{park.pitchers}}
+                          </p>
+                          <p>
+                            <b>Hitters:</b> {{park.hitters}}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div *ngIf="ddData.activeView.prop !== 'all'" class="col-12">
+          <ng-container *ngIf="ddData.activePark.prop === 'all'; else singleParkTpl">
+            <div class="d-flex justify-content-center flex-wrap alt-view-wrapper">
+              <div class="single-item-wrapper" *ngFor="let park of parksData">
+                <app-park-factor-item [parkData]="park"></app-park-factor-item>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #singleParkTpl>
+            <div class="d-flex justify-content-center flex-wrap alt-view-wrapper">
+              <div class="single-item-wrapper">
+                <app-park-factor-item [parkData]="indParkData"></app-park-factor-item>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <h2 class="page-heading-two">
+        How To Use Park Factors In Daily Fantasy?
+      </h2>
+      <p>
+        Park factors has now become an added on task for your daily fantasy research. A pitcher can receive an upgrade or downgrade depending on which park they are pitching in. If they allow a lot of flyballs, a small ballpark could be trouble as they would be more prone to allowing home runs. A spacious ballpark like the one down in Miami has limited home runs and runs, giving a bump to a pitcher that allows flyballs. Pitchers stepping into places like Coors Field, Yankee Stadium, and Citizens Bank Park have to be aware of the long ball, because over the last three seasons these stadiums rank inside the top five in home run park factors.
+      </p>
+      <p class="mb-0">
+        Often we want to target our daily fantasy hitters in favorable ballparks. Coors Field is of course the elite hitter’s park, and it has a lot to do with the high altitude and the effect it has on the baseball. Either way it has enhanced every aspect of hitting stats, making it a hitter’s paradise, and a pitcher’s nightmare. Global Life Park in Arlington, Fenway Park, Progressive Field, Yankee Stadium, and Great American Ballpark are some of the top hitter’s parks in baseball. You often find favorable run totals and great odds at hitting on a team stack in these ballparks. There are a few stadiums that really limit runs like Citi Field, Marlins Park, and Dodgers Stadium. They can play a little smaller in warmer weather or day games, but for the most part they take runs away.
+      </p>
+    </div>
+
+    <div class="col-12 mb-4">
+      <h2 class="page-heading-two">
+        How to Utilize Handedness & Splits?
+      </h2>
+      <p>
+        Parks will play different to both lefties and righties. Fenway Park is one that stands out for the very unique dimensions. Left-handers have below average park factors for home runs at Fenway Park. They still have above average extra base-hit potential, but it is tough to drive one out at Fenway if you are left-handed. Right-handers have better home run park factors at Fenway, even with the Green Monster. Wrigley Field was another one that played really well for right-handed home runs, being very above average. But for left-handed home runs, it was 7% below the league average.
+      </p>
+      <p class="mb-0">
+        Being conscious of how a park plays for a specific handedness is very important. This is also a reason why some players or teams hit better at home compared to on the road. Yankee Stadium has been a favorable ballpark for left-handed hitters, even going back to the old Yankee Stadium. It leads all stadiums in park factors for left-handed hitters. When we look at some splits for their players, it isn’t shocking to see their power numbers taper off when they go on the road. This can also work the other way, where a hitter hits in a big ballpark for half of his game, and then visits more favorable hitter’s parks and thrives. Pitchers can have the same type of splits. Pitchers that throw in larger ballparks tend to have a better ERA, and then once they get on the road they start to struggle.
+      </p>
+    </div>
+  </div>
+</div>

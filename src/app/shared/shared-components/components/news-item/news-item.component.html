@@ -1,0 +1,21 @@
+<div class="news-card">
+  <ngb-accordion #acc="ngbAccordion" [activeIds]="cardPreOpened ? 'newsItem' : ''">
+    <ngb-panel [id]="id">
+      <ng-template ngbPanelTitle>
+        <div class="d-flex justify-content-start align-items-center" style="white-space: normal;">
+          <div>
+            <img alt="team-logo" [type]="'bordered'" [appSpriteImg]="cardLeague" *ngIf="fullLogoUrl === false && cardImageRoute" class="team-logo-image" [src]="'/assets/images/' + cardLeague + '/logos/bordered/' + cardImageRoute + '-largest.svg'" />
+            <img alt="team-logo" [type]="borderedLogo ? 'bordered' : 'white'" [appSpriteImg]="cardLeague" *ngIf="fullLogoUrl === true && cardImageRoute" class="team-logo-image" [src]="cardImageRoute" />
+          </div>
+          <div class="card-title-text">
+            {{cardTitle}}
+          </div>
+          <div *ngIf="cardDate" class="news-item-date ml-auto text-right">
+            <span>{{cardDate | amTimeZone | amDateFormat:'M/D/YY, h:mm a' | lowercase}} {{timeZone}}</span>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template ngbPanelContent>{{cardContent}}</ng-template>
+    </ngb-panel>
+  </ngb-accordion>
+</div>

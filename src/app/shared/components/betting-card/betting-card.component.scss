@@ -1,0 +1,271 @@
+@import "../../../../scss/shared/variables/project";
+:host {
+  $default-probability: #dcdcdc;
+  .bet-team {
+    text-align: center;
+  }
+  .dollar-container {
+    padding-left: 10px;
+  }
+  .predictor-btn {
+    padding: 2px 5px;
+    font-size: 15px;
+    margin-left: 5px;
+    @media (max-width: 1468px) {
+      padding: 2px 3px;
+      font-size: 13px;
+      margin-left: 5px;
+    }
+    @media (max-width: 1100px) {
+      padding: 2px 2px;
+      font-size: 11px;
+    }
+  }
+  .card {
+    max-width: 500px;
+    margin: 0 auto;
+    border-color: rgb(224, 225, 226);
+    box-shadow: -2px 4px 20px 1px rgba(0, 0, 0, 0.06);
+    .card-table-content {
+      overflow: hidden;
+      .card-table-wrapper {
+        width: 100%;
+        width: calc(100% + 1px);
+        display: table;
+      }
+    }
+
+    .card-block {
+      padding: 0.82rem 1.25rem;
+      min-height: 3.13rem;
+      display: flex;
+      align-items: center;
+      &.lu-card-default-footer {
+        font-weight: bold;
+        justify-content: center;
+      }
+      &.lu-card-active-footer {
+        justify-content: flex-start;
+        color: white;
+        font-weight: 400;
+        padding-top: 0;
+        padding-bottom: 0;
+
+
+        & > span:first-of-type {
+          min-width: 9.25rem;
+          max-width: 9.25rem;
+          flex-basis: 9.25rem;
+          text-align: left;
+          & > span {
+            padding-left: 1rem;
+            padding-right: 1rem;
+          }
+        }
+        & > div {
+          flex-basis: 100%;
+          text-align: left;
+          line-height: 1;
+        }
+      }
+    }
+    .card-title {
+      font-size: 1em;
+      margin-bottom: 0;
+      font-weight: bold;
+    }
+    table {
+      border-top: none;
+      border-right: none;
+      border-left: none;
+      margin-bottom: 0;
+
+      &.table-bordered th, &.table-bordered td {
+        border-top: none;
+        border-bottom: none;
+        border-color: $psd-light-gray;
+
+      }
+
+      tr {
+
+        // th
+        th {
+          border: none;
+          padding: 0.4rem;
+        }
+        th:first-of-type {
+          padding-left: 1.25rem;
+          border-right: 1px solid white;
+        }
+        th:nth-of-type(2), th:nth-of-type(3) {
+          vertical-align: middle;
+          color: white;
+          font-weight: 400;
+          &.probability {
+            @media (max-width: 1500px) {
+              padding: 5px 3px 5px 5px !important;
+            }
+          }
+        }
+        th:nth-of-type(2) {
+          &.probability {
+            border-right: 1px solid $default-probability;
+          }
+          &.probability.green {
+            border-right: 1px solid $psd-teal;
+          }
+          &.probability.red {
+            border-right: 1px solid $psd-red;
+          }
+        }
+        th.probability {
+          background-color: $default-probability;
+          color: black;
+          text-align: center;
+          @media (max-width: 1500px) {
+            font-size: 13px;
+          }
+        }
+        th.probability.green {
+          background-color: $psd-teal;
+          color: white;
+        }
+        th.probability.red {
+          background-color: $psd-red;
+          color: white;
+        }
+
+        // td
+        td {
+          padding: 0.4rem;
+          vertical-align: middle;
+        }
+        td:first-of-type {
+          padding-left: 1.25rem;
+          @media (min-width: 1520px) and (max-width: 1840px) {
+            font-size: 14px;
+          }
+          @for $i from 1 through 4 {
+            @media (min-width: 992px) and (max-width: #{1620 - $i * 100}px) {
+              font-size: #{14 - $i}px;
+            }
+          }
+        }
+        td:nth-of-type(2), td:nth-of-type(3) {
+          padding-right: 12px;
+          cursor: pointer;
+          &:hover {
+            background-color: $psd-light-gray;
+          }
+          &.active {
+            color: white;
+          }
+          &.lineups-bet {
+            cursor: default;
+            &:hover {
+              background-color: transparent !important;
+            }
+          }
+          span {
+            position: relative;
+          }
+          .public-money {
+            position: absolute;
+            right: -18px;
+            font-size: 10px;
+            bottom: 0;
+            font-weight: 600;
+          }
+          @media (min-width: 1520px) and (max-width: 1840px) {
+            font-size: 14px;
+            .public-money {
+              right: -15px;
+              font-size: 8px;
+            }
+          }
+          @for $i from 1 through 4 {
+            @media (min-width: 992px) and (max-width: #{1620 - $i * 100}px) {
+              font-size: #{14 - $i}px;
+              .public-money {
+                font-size: #{10 - $i}px;
+                right: -#{18 - $i * 2}px;
+              }
+            }
+          }
+        }
+
+        td:first-of-type {
+          border-left: none;
+        }
+        td:last-of-type {
+          border-right: none;
+        }
+      }
+    }
+  }
+  .btn-save {
+    height: 30px;
+    width: 30px;
+    background-color: transparent !important;
+    color: white;
+    font-size: 1.3em;
+    padding: 0;
+    cursor: pointer;
+    &.saved {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    &:focus {
+      box-shadow: none;
+    }
+    &:hover {
+      color: transparentize(white, 0.5);
+    }
+  }
+  @media (max-width: 1468px) {
+    .lu-card-active-footer {
+      & > span:first-of-type {
+        min-width: 120px !important;
+        & > span {
+          padding-left: 6px;
+          padding-right: 6px;
+        }
+      }
+      font-size: 12px;
+      .dollar-container {
+        padding-left: 0px;
+        .filled > div {
+          width: 17px;
+          height: 17px;
+          font-size: 10px;
+        }
+      }
+    }
+  }
+}
+:host-context(.betting-card-with-controls) {
+  .card .card-block {
+    padding: 10px 1.25rem;
+    min-height: initial;
+    font-size: 15px;
+    &.lu-card-default-footer, &.lu-card-active-footer {
+      font-size: 14px;
+    }
+  }
+  .card-table-wrapper {
+    font-size: 15px;
+  }
+  @media (max-width: 1100px) {
+    .card .card-block.lu-card-active-footer > span:first-of-type {
+      min-width: 100px !important;
+      font-size: 12px;
+      & > span {
+        padding: 0 5px;
+      }
+    }
+  }
+}
+
+
+
+

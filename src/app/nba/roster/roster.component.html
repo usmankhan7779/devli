@@ -1,0 +1,138 @@
+<div class="row">
+  <div *ngIf="rosterData.intro_paragraph" class="col-12 col-lg-8 flex-last flex-sm-unordered">
+    <p class="site-pages-content" [innerHtml]="rosterData.intro_paragraph | safeHtml"></p>
+  </div>
+  <div class="col-12" [ngClass]="{'pt-0 pb-0 pt-lg-2 pb-lg-3 pt-xl-3 pb-xl-4 mb-xl-2': !rosterData.intro_paragraph}">
+    <div class="grouped-dropdown-wrapper btn-group">
+
+      <div ngbDropdown class="grouped-dropdown dropdown">
+        <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="main-dropdown" ngbDropdownToggle>
+          <span class="pr-0 pr-sm-3">{{handleYear(activeYear)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down"/>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="main-dropdown">
+          <div *ngFor="let season of rosterData.seasons_dropdown;">
+            <button
+              [ngClass]="{'dd-active-btn': activeYear === season.year}"
+              (click)="onYearDdChange(season)"
+              class="dropdown-item">
+              <span>{{season.name}}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="col-12 table-sect-wrap">
+    <!-- Static Positioned Tabled -->
+    <div class="static-table-wrapper">
+      <table
+        [mfRowsOnPage]="10000" [mfData]="rosterData.roster"
+        [(mfSortBy)]="sortBy"
+        [(mfSortOrder)]="sortOrder"
+        (mfSortByChange)="onSortBy($event)"
+        (mfSortOrderChange)="onSortOrder($event)"
+        #staticPlayers="mfDataTable"
+        class="static-table stats-table table table-bordered multi-table-static">
+        <thead>
+          <tr class="t-sub-header static-sub-header">
+            <th class="position-col" >
+              <mfSorter [by]="sortByPosition">Pos</mfSorter>
+            </th>
+            <th class="player-name-col image-player-name-th custom-responsive">
+              <mfSorter by="full_name">Name</mfSorter>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="static-table-body">
+          <tr *ngFor="let player of staticPlayers.data">
+            <td class="position-col position-column text-left px-3 ">
+              {{player.position}}
+            </td>
+            <td class="player-name-col image-player-name-td">
+              <app-player-link [league]="'nba'" [photoUrl]="player.photo_url" [playerName]="player.full_name" [playerUrl]="player.profile_url"></app-player-link>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Horizontal Scrolling-->
+    <div class="horizontal-table-wrapper">
+      <table
+        [mfRowsOnPage]="10000" [mfData]="rosterData.roster"
+        [(mfSortBy)]="sortBy"
+        [(mfSortOrder)]="sortOrder"
+        (mfSortByChange)="onSortBy($event)"
+        (mfSortOrderChange)="onSortOrder($event)"
+        #players="mfDataTable"
+        class="multi-row-data-table t-stripped">
+        <thead>
+          <tr class="t-sub-header">
+            <th class="text-left px-3 position-column inner-col-switch">
+              <mfSorter [by]="sortByPosition">Pos</mfSorter>
+            </th>
+            <th class="text-center image-player-name-th custom-responsive inner-col-switch">
+              <mfSorter by="full_name">Name</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="jersey">Jersey</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="lineups_rating">Rating</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="lineups_position_rank">Ranking</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="depth_chart_order">Depth</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="height">Height</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="weight">Weight</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="age">Age</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="birth_date">Birthday</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="experience">Exp.</mfSorter>
+            </th>
+            <th class="text-center" width="13%">
+              <mfSorter by="college">College</mfSorter>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="t-content" *ngFor="let player of players.data">
+            <td class="inner-col-switch text-left px-3">{{player.position}}</td>
+            <td class="image-player-name-td inner-col-switch">
+              <app-player-link [league]="'nba'" [photoUrl]="player.photo_url" [playerName]="player.full_name" [playerUrl]="player.profile_url"></app-player-link>
+            </td>
+            <td>{{player.jersey}}</td>
+            <td>
+              <app-rating [value]="player.lineups_rating"></app-rating>
+            </td>
+            <td><ng-container *ngIf="player.lineups_position_rank">#{{player.lineups_position_rank}} {{player.position}}</ng-container></td>
+            <td>{{player.depth_chart_order}}</td>
+            <td>{{player.height}}</td>
+            <td>{{player.weight}}</td>
+            <td>{{player.age}}</td>
+            <td>{{player.birth_date | amTimeZone | amDateFormat: 'M/D/YY'}}</td>
+            <td>{{player.experience}}</td>
+            <td class="text-left px-3">{{player.college}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div *ngIf="rosterData.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+    <h2 *ngIf="rosterData.bottom_header" class="page-heading-two">
+      {{rosterData.bottom_header}}
+    </h2>
+    <p class="site-pages-content" [innerHtml]="rosterData.bottom_paragraph | safeHtml"></p>
+  </div>
+</div>

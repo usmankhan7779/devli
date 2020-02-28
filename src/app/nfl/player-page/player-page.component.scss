@@ -1,0 +1,10 @@
+:host {
+  @import "../../../scss/custom-components/player-page.component";
+
+  .unavailable-stats {
+    text-align: center;
+    margin-top: 20px;
+    padding-bottom: 50px;
+    font-size: 23px;
+  }
+}

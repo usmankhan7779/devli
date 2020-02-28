@@ -1,0 +1,116 @@
+@import "../../../../scss/bootstrap-customization/custom-mixins";
+:host {
+  @import "../../../../scss/custom-components/fixed-table";
+  .updated-date-time-block-wrapper {
+    @include flex-row-mixin();
+    .updated-date-time-block {
+      margin-left: auto;
+    }
+    @media (min-width: 992px) and (max-width: 1100px), (max-width: 775px) {
+      .updated-date-time-block {
+        display: none;
+      }
+      @include flex-column-mixin();
+    }
+  }
+
+  .btn.bullpen {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 10px;
+    height: 28px;
+    width: 108px;
+    margin-top: 10px;
+  }
+  .table-sect-wrap {
+    .static-table th, .static-table th.player-name-col, .static-table th.position-col {
+      padding: 6px 7px 4px 7px !important;
+      font-size: 14px;
+      @media (max-width: 550px) {
+        padding: 6px 7px 4px 7px !important;
+        font-size: 13px !important;
+      }
+      @media (max-width: 480px) {
+        padding: 6px 7px 4px 7px !important;
+        font-size: 11px !important;
+      }
+    }
+    .static-table td, .static-table td.player-name-col, .static-table td.position-col {
+      padding: 8px 7px 8px 7px !important;
+      font-size: 14px;
+      @media (max-width: 550px) {
+        padding: 8px 7px 8px 7px !important;
+        font-size: 13px !important;
+      }
+      @media (max-width: 480px) {
+        padding: 8px 7px 7px 7px !important;
+        font-size: 13px !important;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 1500px) {
+    .multi-row-data-table .t-sub-header *, .multi-row-data-table .t-single-header * {
+      font-size: 13px;
+    }
+    .multi-row-data-table .t-content *, .multi-row-data-table .t-content th[scope="row"] {
+      font-size: 13px;
+    }
+  }
+
+  @media (max-width: 985px) {
+    .multi-row-data-table-wrapper.recent-lineups {
+      overflow-x: auto;
+      table {
+        min-width: 985px;
+      }
+    }
+  }
+
+  @media (max-width: 550px){
+    .multi-row-data-table td, .multi-row-data-table th {
+      font-size: 13px;
+      padding: 8px 10px;
+    }
+  }
+
+  @media only screen and (max-width: 1400px) {
+    .page-actions-wrapper {
+      min-width: 100%;
+    }
+  }
+
+  @media only screen and (max-width: 1100px) {
+    .col-table .col-table-wrapper {
+      width: 32.8%;
+    }
+  }
+
+  @media only screen and (max-width: 800px) {
+    .col-table .col-table-wrapper {
+      width: 49%;
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    .heading-action-cta-wrapper {
+      display: block;
+      margin: auto;
+      float: none;
+    }
+  }
+
+  @media only screen and (max-width: 420px) {
+    .col-table .col-table-wrapper {
+      width: 100%;
+    }
+  }
+  @media (max-width: 550px) {
+    .horizontal-table-wrapper {
+      width: calc(100% - 220px);
+    }
+  }
+  @media (max-width: 480px) {
+    @import "../../../../scss/custom-components/fixed-table-mobile";
+  }
+}

@@ -1,0 +1,390 @@
+@mixin matchup-mobile-styles(
+  $is-individual: false,
+  $table-name-breakpoint: 1305px,
+  $breakpoint-1: 1620px,
+  $status-breakpoint: 1330px,
+  $small-team-name-md-br: 1150px,
+  $small-team-name-md-br-1: 845px,
+  $small-breakpoint: 926px,
+  $hide-logo-breakpoint: 758px,
+  $xs-breakpoint: 670px,
+  $true-mobile-breakpoint: 575px) {
+  border: 1px solid #cfcfd5;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  .team-section {
+    width: 50%;
+  }
+  .time-section {
+    min-width: 225px;
+  }
+  .mobile-status {
+    display: none;
+  }
+  .event-wind-content .wind-direction-arrow {
+    width: 9px;
+    position: relative;
+    top: -2px;
+  }
+
+  .win-prob-wrapper {
+    display: block;
+    position: relative;
+    .away-mob-win-prob {
+      position: absolute;
+      left: -15px;
+      top: -15px;
+    }
+    .home-mob-win-prob {
+      position: absolute;
+      right: -15px;
+      top: -15px;
+    }
+  }
+
+  .matchup-header {
+    padding: 24px;
+    .logo {
+      width: 55px;
+      height: 52px;
+      margin-top: 4px;
+      @media (max-width: 0px) {
+
+      }
+      &.away-logo {
+        margin-left: 1rem;
+      }
+      &.home-logo {
+        margin-right: 1rem;
+      }
+    }
+    h5 {
+      font-size: 18px;
+      margin: 0;
+      font-weight: bold;
+    }
+    p {
+      margin: 0;
+      font-weight: normal;
+      font-size: 13px;
+    }
+  }
+  .t-sub-header + .t-content {
+    border-bottom: 1px solid #e1e1e1;
+  }
+  .t-content {
+    background-color: #ffffff;
+  }
+
+  @if $is-individual == false {
+    @media (max-width: $small-breakpoint),  (min-width: 992px) and (max-width: $breakpoint-1) {
+      .spread-col span {
+        display: block;
+      }
+      .matchup-header .logo {
+        width: 50px;
+        height: 46px;
+        margin-top: 3px;
+        &.away-logo {
+          margin-left: 8px;
+        }
+        &.home-logo {
+          margin-right: 8px;
+        }
+      }
+    }
+    @media (min-width: 992px) and (max-width: 1055px) {
+      .logo {
+        display: none !important;
+      }
+    }
+  } @else {
+    @media (max-width: $small-breakpoint) {
+      .spread-col span {
+        display: block;
+      }
+      .matchup-header .logo {
+        width: 50px;
+        height: 50px;
+        &.away-logo {
+          margin-left: 8px;
+        }
+        &.home-logo {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+
+  .short-matchup-team-name {
+    display: none;
+  }
+  @media (max-width: $table-name-breakpoint) {
+    .origin-matchup-team-name {
+      display: none;
+    }
+    .short-matchup-team-name {
+      display: inline;
+    }
+  }
+
+  @media (max-width: $hide-logo-breakpoint) {
+    .logo {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: $xs-breakpoint) {
+    .matchup-header {
+      p {
+        font-size: 11px;
+      }
+      h5 {
+        font-size: 15px;
+      }
+    }
+    .time-section {
+      min-width: 200px;
+    }
+  }
+
+  @media (max-width: $true-mobile-breakpoint) {
+    .win-prob-wrapper {
+      .away-mob-win-prob {
+        left: -1px;
+        top: 0;
+      }
+      .home-mob-win-prob {
+        right: -1px;
+        top: 0;
+      }
+    }
+    .matchup-header p {
+      font-size: 10px;
+    }
+    .matchup-header p.heading-p {
+      font-size: 12px;
+    }
+
+    .mobile-status {
+      display: inline;
+    }
+    ::ng-deep app-status-only .status {
+      font-size: 11px;
+      margin: 0 5px;
+      .short-status-name {
+        display: none !important;
+      }
+      .status-name {
+        display: inline !important;
+      }
+    }
+    .hide-on-mobile {
+      display: none;
+    }
+    .matchup-header {
+      padding: 8px;
+    }
+  }
+
+
+  .close-chart-btn {
+    height: 30px;
+    width: 40px;
+    padding: 1px 12px;
+    margin-bottom: 5px;
+    //color: white;
+  }
+
+
+  ::ng-deep app-status {
+    @media (max-width: $status-breakpoint) {
+      .media-body.details.flex-first .heading-content {
+        span.left-side-name.hidden-xl-up {
+          display: block !important;
+        }
+        span.left-side-name.hidden-lg-down {
+          display: none !important;
+        }
+      }
+
+      .status-display.hidden-lg-down {
+        display: none !important;
+      }
+      .status-display.hidden-xl-up {
+        display: block !important;
+      }
+    }
+
+    @if $is-individual == false {
+      @media (max-width: $small-team-name-md-br-1), (min-width: 992px) and (max-width: $small-team-name-md-br) {
+        .details .heading-content {
+          font-size: 16px !important;
+        }
+      }
+      @media (max-width: $small-breakpoint),  (min-width: 992px) and (max-width: $breakpoint-1) {
+        .app-status .status {
+          font-size: 12px !important;
+        }
+        .app-status .details p, .app-status .details p.normal-text {
+          font-size: 12px !important;
+        }
+        .app-status .details h5 {
+          font-size: 19px !important;
+          line-height: 18px !important;
+          margin-bottom: 3px !important;
+        }
+      }
+    } @else {
+      @media (max-width: $small-team-name-md-br-1) {
+        .details .heading-content {
+          font-size: 16px !important;
+        }
+      }
+      @media (max-width: $small-breakpoint) {
+        .app-status .status {
+          font-size: 12px !important;
+        }
+        .app-status .details p, .app-status .details p.normal-text {
+          font-size: 12px !important;
+        }
+        .app-status .details h5 {
+          font-size: 19px !important;
+          line-height: 18px !important;
+          margin-bottom: 3px !important;
+        }
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .app-status .details h5 {
+        margin-bottom: -4px !important;
+      }
+    }
+    .normal-team-name {
+      display: inline !important;
+    }
+    .mobile-team-name {
+      display: none !important;
+    }
+    @if $is-individual == false {
+      @media (max-width: 1555px)  {
+        .normal-team-name {
+          display: none !important;
+        }
+        .mobile-team-name {
+          display: inline !important;
+        }
+      }
+    } @else {
+      @media (max-width: $small-breakpoint)  {
+        .normal-team-name {
+          display: none !important;
+        }
+        .mobile-team-name {
+          display: inline !important;
+        }
+      }
+    }
+    @media (max-width: $xs-breakpoint) {
+      .app-status .details p, .app-status .details p.normal-text {
+        font-size: 9px !important;
+      }
+      .app-status .details h5 {
+        font-size: 16px !important;
+        margin-bottom: -4px !important;
+      }
+    }
+
+  }
+  .in-table-status-wrapper {
+    position: relative;
+    .in-table-status {
+      position: absolute;
+      right: 5px;
+      line-height: 23px;
+      @media (max-width: 1500px) {
+        line-height: 21px;
+      }
+    }
+  }
+
+
+  .matchup-col {
+    width: 233px;
+    @media (max-width: 1500px) {
+      width: 180px;
+    }
+    @media (max-width: $table-name-breakpoint) {
+      width: 140px;
+    }
+  }
+  &.ind-page .matchup-col {
+    width: 330px;
+    @media (max-width: 1500px) {
+      width: 250px;
+    }
+    @media (max-width: $table-name-breakpoint) {
+      width: 215px;
+    }
+  }
+}
+
+:host {
+  .matchup {
+    &.in-individual-matchup-wrapper {
+      @include matchup-mobile-styles(true, 983px, 0, 1180px, 0, 800px, 980px);
+    }
+    &:not(.in-individual-matchup-wrapper) {
+      @include matchup-mobile-styles();
+      @media (min-width: 992px) and (max-width: 1122px) {
+        .multi-row-data-table-wrapper.custom-width {
+          overflow-x: auto;
+          table {
+            min-width: 769px;
+          }
+        }
+      }
+    }
+    &.ind-page {
+      border-radius: 0;
+      border: none;
+      .multi-row-data-table tbody {
+        border: 1px solid #e1e1e1;
+        border-top: none;
+      }
+    }
+    &:not(.ind-page) {
+      .multi-row-data-table tbody {
+        border: none;
+      }
+    }
+    @media (max-width: 845px) {
+      .multi-row-data-table-wrapper.custom-width {
+        overflow-x: auto;
+        table {
+          min-width: 811px;
+        }
+      }
+    }
+    @media (max-width: 355px) {
+      &.show-prob {
+        ::ng-deep app-status-only .status {
+          .status-name {
+            display: none !important;
+          }
+          .short-status-name {
+            display: inline !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+

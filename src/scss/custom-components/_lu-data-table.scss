@@ -1,0 +1,144 @@
+table.lu-data-table {
+	&.table-bordered th, &.table-bordered td {
+		border-top: none;
+		border-bottom: none;
+		border-color: $psd-light-gray;
+	}
+	thead {
+		background-color: $psd-light-gray;
+		th {
+			font-size: 0.8em;
+			font-weight: 600;
+			padding-top: 4px;
+		}
+	}
+
+	th, td {
+		padding: 0.4rem;
+		text-align: center;
+	}
+}
+
+.invisible-border-bottom {
+  border-bottom: 1px solid transparent;
+}
+
+.stats-table {
+  thead {
+    background: $psd-light-gray;
+  }
+  th, td {
+    font-size: 14px;
+    text-align: center;
+  }
+  td {
+    padding: 6px 7px;
+  }
+  .player-name-col {
+    text-align: left;
+    width: 16%;
+    padding-left: 16px;
+  }
+  tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+  thead th, thead td {
+    padding: 5px 2px;
+  }
+}
+
+.col-table {
+  th, td {
+    font-size: 14px;
+    text-align: center;
+  }
+  .col-table-inner-table {
+    display: inline-table;
+    tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+  }
+  .col-table-wrapper {
+    display: inline-table;
+    width: 16.60%;
+  }
+}
+
+.col-table-inner-table {
+  width: 100%;
+}
+
+.col-table-bordered {
+  border-left: 1px solid #ebebec;
+  border-bottom: 1px solid #ebebec;
+  &.col-table-last {
+    border-right: 1px solid #ebebec;
+  }
+  tr, td {
+    border-bottom: 1px solid $psd-light-gray;
+  }
+}
+
+.stats-col-table {
+  .col-table-inner-table td,
+  .col-table-inner-table th {
+    padding: 6px 25px 6px;
+  }
+}
+
+.col-table-first {
+  border-right: 0;
+}
+
+.stats-col-table {
+  width: 100%;
+  thead {
+    background-color: $psd-light-gray;
+  }
+}
+
+.lineups-gateway-table-row td,
+.lineups-gateway-table-row th,
+.hitter-data {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.lineups-gateway-table-row:nth-child(even) {
+  background: #fafafa;
+}
+
+.hitter-data,
+.pitcher-data {
+  min-width: 170px;
+}
+
+.points-stat-wrapper {
+  min-width: 75px;
+  text-align: center;
+}
+
+.pitcher-text {
+  font-weight: 400;
+}
+
+
+.event-top-participant-name {
+  font-size: 22px;
+  font-weight: 700;
+  &.long-team-name {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 1600px) {
+  .event-top-participant-name.long-team-name {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 1340px) {
+  .event-top-participant-name.long-team-name {
+    font-size: 18px;
+  }
+}

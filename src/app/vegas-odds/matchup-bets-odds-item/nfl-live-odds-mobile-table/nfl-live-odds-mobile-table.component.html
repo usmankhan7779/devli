@@ -1,0 +1,240 @@
+<ng-template #tdCapTpl>
+  <td></td>
+  <td></td>
+  <!--<td class="lineups-td"></td>-->
+  <td></td>
+</ng-template>
+<ng-template #zeroTpl>
+  <span>0</span>
+</ng-template>
+<div class="event-mid-stats">
+  <!-- Away Hitters Stats (Left) -->
+  <div class="away-participant-stats">
+    <div class="multi-row-data-table-wrapper custom-width">
+      <ng-container *ngFor="let book of ddData.activeBooks">
+        <table *ngFor="let bet of ddData.activeBets" class="multi-row-data-table">
+          <colgroup span="3"></colgroup>
+          <tbody>
+          <tr class="t-header">
+            <th colspan="3" scope="colgroup" class="text-center">
+              <div class="logo-container">
+                <ng-container *ngTemplateOutlet="awayTeamLogoTpl"></ng-container>
+              </div>
+              <span *ngIf="ddData.activeBooks.length > 1">{{book}}</span> {{bet}}
+            </th>
+          </tr>
+          <tr class="t-sub-header">
+            <th scope="col" class="text-center">Open</th>
+            <th scope="col" class="text-center">Live</th>
+            <!--<th scope="col" class="text-center lineups-th">Lineups<span class="hidden-xs-down">.com</span></th>-->
+            <th scope="col" class="text-center">Diff</th>
+          </tr>
+          <tr class="t-content">
+            <ng-container *ngIf="liveOddsService.handleBetNameForTeam(bet, 'away'); let awayTeamBetName">
+              <ng-container *ngIf="matchup.away.bets[book] && matchup.away.bets[book][awayTeamBetName]; else tdCapTpl; let prefix">
+                <td>
+                  <ng-container [ngSwitch]="awayTeamBetName">
+                    <ng-container *ngSwitchCase="'over'">
+                      {{'o' + prefix[awayTeamBetName + '_open'] | pointZero}}
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'total'">
+                      {{prefix[awayTeamBetName + '_open'] | pointZero}}
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                      {{prefix[awayTeamBetName + '_open'] | plus | pointZero}}
+                    </ng-container>
+                  </ng-container>
+                  <span *ngIf="liveOddsService.checkIfExists(prefix[awayTeamBetName + '_open_odds']); let openOdds">({{openOdds | plus | pointZero}})</span>
+                </td>
+                <td>
+                  <ng-container [ngSwitch]="awayTeamBetName">
+                    <ng-container *ngSwitchCase="'over'">
+                      {{'o' + prefix[awayTeamBetName + '_current'] | pointZero}}
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'total'">
+                      {{prefix[awayTeamBetName + '_current'] | pointZero}}
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                      {{prefix[awayTeamBetName + '_current'] | plus | pointZero}}
+                    </ng-container>
+                  </ng-container>
+                  <span *ngIf="liveOddsService.checkIfExists(prefix[awayTeamBetName + '_current_odds']); let currentOdds">({{currentOdds | plus | pointZero}})</span>
+                </td>
+                <!--<td class="lineups-td">-->
+                  <!--<ng-container *ngIf="matchup.away.bets['Lineups.com']['lineups.com']; let lineupsPrefix">-->
+                    <!--<ng-container [ngSwitch]="awayTeamBetName">-->
+                      <!--<ng-container *ngSwitchCase="'over'">-->
+                        <!--<span *ngIf="lineupsPrefix[awayTeamBetName + '_current']; let lineupsCurrent">-->
+                          <!--{{'o' + lineupsCurrent | pointZero}}-->
+                        <!--</span>-->
+                      <!--</ng-container>-->
+                      <!--<ng-container *ngSwitchCase="'moneyline'">-->
+                        <!--<span *ngIf="lineupsPrefix[awayTeamBetName + '_current']; let lineupsCurrent">-->
+                          <!--{{lineupsCurrent | pointZero}}-->
+                        <!--</span>-->
+                      <!--</ng-container>-->
+                      <!--<ng-container *ngSwitchDefault>-->
+                        <!--<span *ngIf="lineupsPrefix[awayTeamBetName + '_current']; let lineupsCurrent">-->
+                          <!--{{lineupsCurrent | plus | pointZero}}-->
+                        <!--</span>-->
+                      <!--</ng-container>-->
+                    <!--</ng-container>-->
+                    <!--<span *ngIf="liveOddsService.checkIfExists(lineupsPrefix[awayTeamBetName + '_current_odds']); let currentOdds">({{currentOdds | plus | pointZero}})</span>-->
+                  <!--</ng-container>-->
+                <!--</td>-->
+                <td>
+                  <ng-container [ngSwitch]="awayTeamBetName">
+                    <ng-container *ngSwitchCase="'moneyline'">
+                      <span *ngIf="prefix['moneyline_difference']; let diff; else zeroTpl;">
+                        {{diff | plus | pointZero}}
+                      </span>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'over'">
+                      <span>{{liveOddsService.checkIfExists(prefix['over_difference']) || 0}}</span>
+                      <span>({{liveOddsService.checkIfExists(prefix['over_difference_odds']) || 0}})</span>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'spread'">
+                      <span *ngIf="liveOddsService.checkIfExists(prefix['spread_difference']);let spreadDiff">{{spreadDiff}}</span>
+                      <span *ngIf="liveOddsService.checkIfExists(prefix['spread_difference_odds']);let spreadDiffOdds">({{spreadDiffOdds | plus | pointZero}})</span>
+                    </ng-container>
+                  </ng-container>
+                </td>
+              </ng-container>
+            </ng-container>
+          </tr>
+          </tbody>
+        </table>
+      </ng-container>
+    </div>
+
+    <!-- Away Team Lineup Data-->
+    <div class="lineup-data-btn-wrapper">
+      <a [routerLink]="['/' + matchup.away.depth_chart_route]" class="btn lineup-data-btn">
+        <span class="footer-short-team-name">{{matchup.away.team_name | lastTeamName}}</span>
+        <span class="footer-team-name">{{matchup.away.team_name}}</span>
+        Lineup
+        <img src="/assets/images/white-right-arrow.png" alt="Lineup"/>
+      </a>
+    </div>
+  </div>
+  <!-- Home Participant Stats (Right)-->
+  <div class="home-participant-stats">
+    <div class="multi-row-data-table-wrapper custom-width">
+      <ng-container *ngFor="let book of ddData.activeBooks">
+        <table *ngFor="let bet of ddData.activeBets" class="multi-row-data-table">
+          <colgroup span="3"></colgroup>
+          <tbody>
+          <tr class="t-header">
+            <th colspan="3" scope="colgroup" class="text-center">
+              <div class="logo-container">
+                <ng-container *ngTemplateOutlet="homeTeamLogoTpl"></ng-container>
+              </div>
+              <span *ngIf="ddData.activeBooks.length > 1">{{book}}</span> {{bet}}</th>
+          </tr>
+          <tr class="t-sub-header">
+            <th scope="col" class="text-center">Open</th>
+            <th scope="col" class="text-center">Live</th>
+            <!--<th scope="col" class="text-center lineups-th">Lineups<span class="hidden-xs-down">.com</span></th>-->
+            <th scope="col" class="text-center">Diff</th>
+          </tr>
+          <tr class="t-content">
+            <ng-container *ngIf="liveOddsService.handleBetNameForTeam(bet, 'home'); let homeTeamBetName">
+              <ng-container *ngIf="matchup.home.bets[book] && matchup.home.bets[book][homeTeamBetName]; else tdCapTpl; let prefix">
+                <td>
+                  <ng-container [ngSwitch]="homeTeamBetName">
+                    <ng-container *ngSwitchCase="'under'">
+                        <span>
+                          {{'u' + prefix[homeTeamBetName + '_open'] | pointZero}}
+                        </span>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'moneyline'">
+                        <span>
+                          {{prefix[homeTeamBetName + '_open'] | plus}}
+                        </span>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                        <span>
+                          {{prefix[homeTeamBetName + '_open'] | plus | pointZero}}
+                        </span>
+                    </ng-container>
+                  </ng-container>
+                  <span *ngIf="liveOddsService.checkIfExists(prefix[homeTeamBetName + '_open_odds']); let openOdds">({{openOdds | plus | pointZero}})</span>
+                </td>
+                <td>
+                  <ng-container [ngSwitch]="homeTeamBetName">
+                    <ng-container *ngSwitchCase="'under'">
+                        <span>
+                          {{'u' + prefix[homeTeamBetName + '_current'] | pointZero}}
+                        </span>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'moneyline'">
+                        <span>
+                          {{prefix[homeTeamBetName + '_current'] | plus}}
+                        </span>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                        <span>
+                          {{prefix[homeTeamBetName + '_current'] | plus | pointZero}}
+                        </span>
+                    </ng-container>
+                  </ng-container>
+                  <span *ngIf="liveOddsService.checkIfExists(prefix[homeTeamBetName + '_current_odds']); let openOdds">({{openOdds | plus | pointZero}})</span>
+                </td>
+                <!--<td class="lineups-td">-->
+                  <!--<ng-container *ngIf="matchup.home.bets['Lineups.com']['lineups.com']; let lineupsPrefix">-->
+                    <!--<ng-container [ngSwitch]="homeTeamBetName">-->
+                      <!--<ng-container *ngSwitchCase="'under'">-->
+                        <!--<span *ngIf="lineupsPrefix[homeTeamBetName + '_current']; let lineupsCurrent">-->
+                          <!--{{'u' + lineupsCurrent | pointZero}}-->
+                        <!--</span>-->
+                      <!--</ng-container>-->
+                      <!--<ng-container *ngSwitchCase="'moneyline'">-->
+                        <!--<span *ngIf="lineupsPrefix[homeTeamBetName + '_current']; let lineupsCurrent">-->
+                          <!--{{lineupsCurrent | plus}}-->
+                        <!--</span>-->
+                      <!--</ng-container>-->
+                      <!--<ng-container *ngSwitchDefault>-->
+                         <!--<span *ngIf="lineupsPrefix[homeTeamBetName + '_current']; let lineupsCurrent">-->
+                          <!--{{lineupsCurrent | plus | pointZero}}-->
+                        <!--</span>-->
+                      <!--</ng-container>-->
+                    <!--</ng-container>-->
+                    <!--<span *ngIf="liveOddsService.checkIfExists(lineupsPrefix[homeTeamBetName + '_current_odds']); let openOdds">({{openOdds | plus | pointZero}})</span>-->
+                  <!--</ng-container>-->
+                <!--</td>-->
+                <td >
+                  <ng-container [ngSwitch]="homeTeamBetName">
+                    <ng-container *ngSwitchCase="'moneyline'">
+                      <span *ngIf="prefix['moneyline_difference']; let diff; else zeroTpl;">
+                        {{diff | plus | pointZero}}
+                      </span>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'under'">
+                      <span>{{liveOddsService.checkIfExists(prefix['under_difference']) || 0}}</span>
+                      <span>({{liveOddsService.checkIfExists(prefix['under_difference_odds']) || 0}})</span>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'spread'">
+                      <span *ngIf="liveOddsService.checkIfExists(prefix['spread_difference']);let spreadDiff">{{spreadDiff}}</span>
+                      <span *ngIf="liveOddsService.checkIfExists(prefix['spread_difference_odds']);let spreadDiffOdds">({{spreadDiffOdds | plus | pointZero}})</span>
+                    </ng-container>
+                  </ng-container>
+                </td>
+              </ng-container>
+            </ng-container>
+          </tr>
+          </tbody>
+        </table>
+      </ng-container>
+    </div>
+
+    <!-- Home Team Lineup Data-->
+    <div class="lineup-data-btn-wrapper">
+      <a [routerLink]="['/' + matchup.home.depth_chart_route]" class="btn lineup-data-btn">
+        <span class="footer-short-team-name">{{matchup.home.team_name | lastTeamName}}</span>
+        <span class="footer-team-name">{{matchup.home.team_name}}</span>
+        Lineup
+        <img src="/assets/images/white-right-arrow.png" alt="Lineup"/>
+      </a>
+    </div>
+  </div>
+</div>

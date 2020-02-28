@@ -1,0 +1,71 @@
+.schedule-content {
+  padding: 0 1rem 3rem;
+}
+
+.schedule-actions-wrap {
+  margin-top: 0;
+}
+
+.table-title {
+  margin: 30px 0;
+}
+
+.table-container {
+  overflow: auto;
+  overflow-y: hidden;
+}
+
+.team-logo-mini {
+  width: 1.2rem;
+  height: 1.2rem;
+  vertical-align: middle;
+  margin-right: 3px;
+}
+
+table {
+  width: 100%;
+  min-width: 1200px;
+  border: 1px solid #eceeef;
+  thead {
+    background-color: #ebebec;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 30px;
+
+    th {
+      vertical-align: middle;
+      text-align: center;
+      padding: 0;
+    }
+  }
+
+  tbody {
+    tr {
+      &:odd {
+        background-color: #fafafa;
+      }
+
+      &:even {
+        background-color: #fff;
+      }
+    }
+
+    td {
+      padding: 0 1rem;
+      border-top: none;
+      border-left: 1px solid #eceeef;
+      text-align: center;
+      font-size: 16px;
+      @for $i from 1 through 5 {
+        @media (max-width: #{1770 - $i * 80}px) {
+          font-size: #{16 - $i}px;
+        }
+      }
+      line-height: 35px;
+
+      &.left-align {
+        text-align: left;
+      }
+    }
+  }
+}

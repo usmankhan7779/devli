@@ -1,0 +1,75 @@
+<div class="footer-content">
+  <img class="footer-brand" src="/assets/images/logo/lineups-logo-white-blue.svg" alt="footer-brand">
+  <div class="d-flex flex-wrap contain">
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a [routerLink]="['/about']">About</a></li>
+        <li><a [routerLink]="['/contact']">Contact</a></li>
+        <li><a [routerLink]="['/sports-scholarship']">Scholarship</a></li>
+        <li><a href="https://www.lineups.com/articles/sports-writing-jobs-internships/">Sports Writing Jobs</a></li>
+        <li><a [routerLink]="['/faq']">FAQ</a></li>
+        <li><a [routerLink]="['/friends']">Friends</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Terms</h4>
+      <ul>
+        <li><a [routerLink]="['/terms']">Terms of Use</a></li>
+        <li><a [routerLink]="['/privacy-policy']">Privacy Policy</a></li>
+        <li><a [routerLink]="['/license']">License</a></li>
+        <li><a [routerLink]="['/billing-terms']">Billing Terms</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>NFL</h4>
+      <ul>
+        <li><a [routerLink]="['/fantasy-football-projections']">Fantasy Football Projections</a></li>
+        <li><a [routerLink]="['/nfl/betting-system']">NFL Bet Predictor</a></li>
+        <li><a [routerLink]="['/nfl-daily-fantasy-dfs-projections']">NFL Daily Fantasy Projections</a></li>
+        <li><a [routerLink]="['/nfl/prediction-model-accuracy']">NFL Accuracy</a></li>
+        <li><a [routerLink]="['/nfl/simulator']">NFL Simulator</a></li>
+        <li><a [routerLink]="['/nfl/news']">NFL News</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>NBA</h4>
+      <ul>
+        <li><a [routerLink]="['/nba/news']">NBA News</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>MLB</h4>
+      <ul>
+        <li><a [routerLink]="['/mlb/prediction-model-accuracy']">MLB Accuracy</a></li>
+        <li><a [routerLink]="['/mlb/news']">MLB News</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>NHL</h4>
+      <ul>
+        <li><a [routerLink]="['/nhl/teams/line-combinations']">Team Line Combinations</a></li>
+        <li><a [routerLink]="['/nhl/starting-goalies']">Starting Goalies</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>CFB</h4>
+      <ul>
+        <li><a [routerLink]="['/college-football/players']">CFB Players</a></li>
+        <li><a [routerLink]="['/college-football/teams']">CFB Teams</a></li>
+        <li><a [routerLink]="['/college-football/rosters']">CFB Rosters</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4><a [routerLink]="['/vegas-odds']">Vegas Odds</a></h4>
+      <ul>
+        <li><a [routerLink]="['/vegas-odds/nfl-live-vegas-odds']">NFL Vegas Odds</a></li>
+        <li><a [routerLink]="['/vegas-odds/nba-live-vegas-odds']">NBA Vegas Odds</a></li>
+        <li><a [routerLink]="['/vegas-odds/mlb-live-vegas-odds']">MLB Vegas Odds</a></li>
+      </ul>
+    </div>
+  </div>
+  <span>Copyright &copy; {{ today | amTimeZone | amDateFormat: 'YYYY' }} Lineups</span>
+</div>
+
+

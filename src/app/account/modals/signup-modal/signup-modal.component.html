@@ -1,0 +1,53 @@
+<div class="auth-signup-modal lu-modal">
+  <div class="modal-header no-border">
+    <div *ngIf="!blockUserActivity" class="header-actions">
+      <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+  <!--<a *ngIf="!blockUserActivity" class="close" href="javascript:void(0);" (click)="activeModal.close('Close click')" aria-label="Close">-->
+    <!--<i class="fa fa-close"></i>-->
+  <!--</a>-->
+
+  <h1 class="page-heading">Sign Up</h1>
+  <form [formGroup]="signupForm" (ngSubmit)="submit()" name="signup">
+    <div class="modal-controls">
+      <div class="alert alert-danger" role="alert" [hidden]="!errorMessage">
+        {{ errorMessage }}
+      </div>
+      <div class="form-field" [ngClass]="{'has-danger': !username.valid && !username.untouched}">
+        <input type="text" class="form-control form-control-lg"
+          [formControl]="username"
+          [ngClass]="{'form-control-danger': username.hasError('required')}"
+          placeholder="Username" />
+      </div>
+      <div class="form-field" [ngClass]="{'has-danger': !email.valid && !email.untouched}">
+        <input type="email" class="form-control form-control-lg"
+          [formControl]="email"
+          [ngClass]="{'form-control-danger': email.hasError('required')}"
+          placeholder="Email address" />
+        <div class="form-control-feedback text-left" [hidden]="email.valid || email.untouched || !email.hasError('pattern')">Please enter valid email address.</div>
+      </div>
+      <div class="form-field" [ngClass]="{'has-danger': !password.valid && !password.untouched}">
+        <input type="password" class="form-control form-control-lg"
+          [formControl]="password"
+          [ngClass]="{'form-control-danger': password.hasError('required') || password.hasError('minLength')}"
+          placeholder="Password" />
+        <div class="form-control-feedback text-left" [hidden]="password.valid || password.untouched || !password.hasError('minlength')">Sorry, password shouldn't be shorter than 6 characters.</div>
+      </div>
+      <div class="form-field" [ngClass]="{'has-danger': !confirm_password.valid && !confirm_password.untouched}">
+        <input type="password" class="form-control form-control-lg"
+          [formControl]="confirm_password"
+          [ngClass]="{'form-control-danger': confirm_password.hasError('required')}"
+          placeholder="Password confirmation" />
+      </div>
+    </div>
+    <div class="modal-buttons">
+      <button type="submit" class="btn btn-lu-blue btn-big btn-full-width">Sign Up</button>
+    </div>
+  </form>
+  <div class="modal-link">
+    Have an Account? <a href="javascript:void(0);" (click)="openLoginModal()">Login</a>
+  </div>
+</div>

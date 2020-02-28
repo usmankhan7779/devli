@@ -1,0 +1,229 @@
+<ng-template #NaTpl><span>N/A</span></ng-template>
+<ng-template #loadingTpl>
+  <div class="starting-lineup-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<div *ngIf="playersData; else loadingTpl" class="container-fluid players-ratings-wrapper">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+    <div class="col-12 col-lg-8">
+      <div #containerEl class="d-flex flex-wrap after-heading-margin">
+        <div>
+          <h1 #headingEl class="page-heading m-0">
+            {{pageHeader}}
+          </h1>
+        </div>
+        <app-twitter-follow-btn [textElement]="headingEl" [containerElement]="containerEl"></app-twitter-follow-btn>
+      </div>
+      <div *ngIf="introParagraph" class="hidden-md-down">
+        <p class="site-pages-content" [innerHTML]="introParagraph | safeHtml"></p>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component [league]="league"></app-ad-component>
+    </div>
+
+    <div *ngIf="introParagraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+      <p class="site-pages-content" [innerHtml]="introParagraph | safeHtml"></p>
+    </div>
+
+    <div class="mb-4 col-12" *ngIf="ddData">
+      <div class="d-flex justify-content-start top-dd-wrapper">
+        <!-- Grouped Dropdown -->
+        <div class="d-flex justify-content-start top-search-wrapper">
+          <div>
+            <div class="grouped-dropdown-wrapper btn-group">
+
+              <app-dropdown
+                [ddData]="ddData"
+                [filterItems]="filterItems.bind(this, true)"
+                prop="teams"
+                name="Teams"
+                className="first"
+                [showTeamLogo]="true"
+                [teamLogoType]="'white'"
+                [league]="league"
+                [isSingleSelect]="false"
+                [lastTeamNameMinWidth]="786"
+                [lastTeamNameMaxWidth]="980"
+              ></app-dropdown>
+
+              <app-dropdown
+                *ngIf="league !== 'nba'"
+                [ddData]="ddData"
+                [filterItems]="filterItems.bind(this, true)"
+                prop="positions"
+                name="Positions"
+                className="last"
+              ></app-dropdown>
+
+              <div *ngIf="league === 'nba'" class="show-dd-radios">
+                <div ngbDropdown class="grouped-dropdown dropdown ">
+                  <button type="button" class="grouped-dropdown-btn btn btn-secondary last px-3" id="secondary-dropdown" ngbDropdownToggle>
+                    <span class="pr-0 pr-sm-3">{{activeRadio + (activeRadio === 'All' ? ' Positions' : '')}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="secondary-dropdown">
+                    <div *ngFor="let radio of radios;">
+                      <button
+                        [ngClass]="{'dd-active-btn': isTabActive(radio)}"
+                        (click)="onRadioClick(radio)"
+                        class="dropdown-item">
+                        <span>{{radio + (radio === 'All' ? ' Positions' : '')}}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="league === 'nba'" class="toggles-in-page-wrapper ml-2 my-0 show-radios">
+            <div class="toggles-in-page-group btn-group toggles-group float-left">
+              <ng-container
+                *ngFor="let radio of radios; let first = first; let last = last;"
+              >
+                <button
+                  type="button"
+                  class="toggle-in-page"
+                  (click)="onRadioClick(radio)"
+                  [ngClass]="{'active': isTabActive(radio), 'first': first, 'last': last}">
+                  <span>{{radio}}</span>
+                </button>
+              </ng-container>
+            </div>
+          </div>
+          <div class="search-input-wrapper normal-view">
+            <app-search-input [className]="'search-next-to-dd'" (onDataFiltered)="filterByName($event)"></app-search-input>
+          </div>
+        </div>
+        <div class="d-flex justify-content-start pagination-wrapper">
+          <div class="d-flex per-page-section-wrapper">
+            <div class="search-input-wrapper mobile-view">
+              <app-search-input [className]="'search-next-to-dd'" (onDataFiltered)="filterByName($event)"></app-search-input>
+            </div>
+          </div>
+          <div class="pagination-controls-wrapper ml-auto">
+            <pagination-controls [maxSize]="5" (pageChange)="onPageChange($event)" id="server"></pagination-controls>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="multi-row-data-table-wrapper custom-width">
+            <table
+              [mfRowsOnPage]="10000" [mfDataApi]="playersData.results"
+              [(mfSortBy)]="sortBy"
+              [(mfSortOrder)]="sortOrder"
+              (mfSortByChange)="onSortOrder('by', $event)"
+              (mfSortOrderChange)="onSortOrder('order', $event)"
+              #playersTable="mfDataApiTable"
+              class="multi-row-data-table t-stripped custom-font">
+              <thead>
+              <tr class="t-sub-header">
+                <th class="text-center player-name-col">
+                  <mfSorterApi [by]="props.full_name">Name</mfSorterApi>
+                </th>
+                <th class="text-center rating-col">
+                  <mfSorterApi by="lineups_rating">Rating</mfSorterApi>
+                </th>
+                <th class="text-center pos-col">
+                  <mfSorterApi by="position">Pos</mfSorterApi>
+                </th>
+                <th class="text-center pos-col">
+                  <mfSorterApi by="jersey">Jersey</mfSorterApi>
+                </th>
+                <th *ngIf="league !== 'nfl'" class="text-center">
+                  <mfSorterApi by="team">Team Lineup</mfSorterApi>
+                </th>
+                <th *ngIf="league !== 'mlb'" class="text-center">
+                  Team Depth Chart
+                </th>
+                <th class="text-center">
+                  <mfSorterApi by="team_roster_route">Team Roster</mfSorterApi>
+                </th>
+                <th *ngIf="league === 'nfl'" class="text-center">
+                  Team Snap Counts
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr class="t-content" *ngFor="let player of playersTable.data | paginate: { id: 'server', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
+                <td class="text-left px-3">
+                  <app-player-link [league]="league" [playerName]="player[props.full_name]" [playerUrl]="(player.team && player.team_lineup_route) ? player.profile_url : null" [generateShortName]="false"></app-player-link>
+                </td>
+                <td>
+                  <app-rating *ngIf="player.lineups_rating != null; else NaTpl" [value]="player.lineups_rating"></app-rating>
+                </td>
+                <td>{{player.position}}</td>
+                <td>{{player.jersey}}</td>
+                <td *ngIf="league !== 'nfl'" class="text-left px-3">
+                  <div *ngIf="player.team && player.team_lineup_route" class="nowrap">
+                    <a class="link-black" rel="nofollow" [routerLink]="player.team_lineup_route">
+                      <img [type]="'white'" [appSpriteImg]="league" class="mr-1 logo-sm" [src]="player.white_logo" alt="{{player.team}}">
+                    </a>
+                    <a class="link-black-underline" [routerLink]="player.team_lineup_route">
+                      <ng-container *ngIf="league !== 'mlb'">
+                        <span class="team-long-name">{{player.team}}</span>
+                        <span class="team-short-name">{{player.team | lastTeamName}}</span>
+                      </ng-container>
+                      <ng-container *ngIf="league === 'mlb'">
+                        <span>{{player.team}}</span>
+                      </ng-container>
+                      <span>Lineup</span>
+                    </a>
+                  </div>
+                </td>
+                <td *ngIf="league !== 'mlb'" class="text-left px-3">
+                  <div *ngIf="player.team && player.team_depth_chart_route" class="nowrap">
+                    <a class="link-black" rel="nofollow" [routerLink]="player.team_depth_chart_route">
+                      <img [type]="'white'" [appSpriteImg]="league" class="mr-1 logo-sm" [src]="player.white_logo || player.team_logo" alt="{{player.team}}">
+                    </a>
+                    <a class="link-black-underline" [routerLink]="player.team_depth_chart_route">
+                      <ng-container *ngIf="league === 'nfl'">
+                        <span class="team-long-name">{{player.team}}</span>
+                        <span class="team-short-name">{{player.team | lastTeamName}}</span>
+                      </ng-container>
+                      <ng-container *ngIf="league !== 'nfl'">
+                        <span>{{player.team | lastTeamName}}</span>
+                      </ng-container>
+                      <span>Depth Chart</span>
+                    </a>
+                  </div>
+                </td>
+                <td class="text-left px-3">
+                  <div *ngIf="player.team && player.team_roster_route" class="nowrap">
+                    <a class="link-black" rel="nofollow" [routerLink]="player.team_roster_route">
+                      <img [type]="'white'" [appSpriteImg]="league" class="mr-1 logo-sm" [src]="player.white_logo || player.team_logo" alt="{{player.team}}">
+                    </a>
+                    <a class="link-black-underline" [routerLink]="player.team_roster_route">
+                      {{player.team | lastTeamName : ' ' : league !== 'mlb'}} Roster
+                    </a>
+                  </div>
+                </td>
+                <td *ngIf="league === 'nfl'" class="text-left px-3">
+                  <div *ngIf="player.team && player.team_snap_conts_route" class="nowrap">
+                    <a class="link-black" rel="nofollow" [routerLink]="player.team_snap_conts_route">
+                      <img [type]="'white'" [appSpriteImg]="league" class="mr-1 logo-sm" [src]="player.white_logo || player.team_logo" alt="{{player.team}}">
+                    </a>
+                    <a class="link-black-underline" [routerLink]="player.team_snap_conts_route">
+                      {{player.team | lastTeamName : ' ' : true}} Snap Counts
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="bottomParagraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="bottomHeader" class="page-heading-two">
+        {{bottomHeader}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="bottomParagraph | safeHtml"></p>
+    </div>
+  </div>
+</div>

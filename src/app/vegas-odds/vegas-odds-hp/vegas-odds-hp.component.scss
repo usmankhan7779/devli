@@ -1,0 +1,89 @@
+@import "../../../scss/shared/variables/project";
+@import "../../../scss/bootstrap-customization/custom-mixins";
+:host {
+  $margin-val: 25px;
+  $sm-margin-val: 15px;
+  .ball-wrapper {
+    margin-left: $margin-val * -1;
+    margin-right: $margin-val * -1;
+  }
+  .ball-container {
+    margin: 0 $margin-val;
+    width: 280px;
+    height: 280px;
+    background-color: $psd-primary;
+    border: 1px solid $psd-primary;
+    color: #ffffff;
+    text-align: center;
+    position: relative;
+    h2 {
+      font-size: 30px;
+      margin: 0;
+      position: absolute;
+      bottom: 25px;
+      left: 0;
+      right: 0;
+    }
+    &:hover {
+      background-color: #ffffff;
+      color: $psd-primary;
+    }
+    &.nba-ball-container {
+      img {
+        margin: 30px auto;
+      }
+    }
+    &.mlb-ball-container {
+      img {
+        margin: 33px auto;
+      }
+    }
+    &.nfl-ball-container {
+      img {
+        margin: 50px auto;
+      }
+    }
+  }
+  @media (max-width: 991px) {
+    .ball-wrapper {
+      margin-left: $sm-margin-val * -1;
+      margin-right: $sm-margin-val * -1;
+    }
+    .ball-container {
+      margin: 0 $sm-margin-val;
+      width: 220px;
+      height: 220px;
+      h2 {
+        font-size: 20px;
+        bottom: 15px;
+      }
+      &.nba-ball-container {
+        img {
+          margin: 9px auto;
+          transform: scale(0.7);
+        }
+      }
+      &.mlb-ball-container {
+        img {
+          margin: 9px auto;
+          transform: scale(0.7);
+        }
+      }
+      &.nfl-ball-container {
+        img {
+          margin: 30px auto;
+          transform: scale(0.7);
+        }
+      }
+    }
+  }
+  @media (max-width: 767px) {
+    .ball-wrapper {
+      @include flex-column-mixin();
+      align-items: center;
+      .ball-container {
+        margin: $sm-margin-val;
+      }
+    }
+  }
+}

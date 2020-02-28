@@ -1,0 +1,135 @@
+<div class="container-fluid site-pages-wrapper-container">
+  <div class="row">
+    <div class="col-12">
+      <app-breadcrumb></app-breadcrumb>
+    </div>
+  </div>
+  <div class="site-pages-wrapper">
+    <div class="row">
+      <div class="col-12">
+        <h1 class="site-pages-title">Contact Us</h1>
+        <p class="site-pages-content">
+          Have a question?&nbsp;&nbsp;
+          Want to partner with Lineups.com?&nbsp;&nbsp;
+          Want to work for Lineups.com?&nbsp;&nbsp;
+          Whatever you'd like to chat about, please don't hesitate to reach out.
+          <!--Fill out the form below and we'll be in touch shortly.-->
+        </p>
+      </div>
+    </div>
+    <div class="row after-heading-margin">
+      <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-4">
+
+        <div>
+          Address:  6789 Quail Hill Pkwy #701
+        </div>
+        <div>
+          Irvine, CA 92603
+        </div>
+
+        <div>
+          Email: <a href="mailto:info@lineups.com">info@lineups.com</a>
+        </div>
+
+        <div>
+          Telephone Number: <a href="tel://310-906-0648">(310) 906-0648</a>
+        </div>
+
+      </div>
+    </div>
+    <!--HIDDEN-->
+    <div *ngIf="false" class="row">
+      <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-4 mb-5">
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label class="required-label" for="name">Name</label>
+                <input
+                  id="name"
+                  formControlName="name"
+                  class="form-control show-invalid"
+                  placeholder="Enter Name"
+                  type="text">
+                <div class="error-container"
+                     *ngIf="contactForm.get('name').dirty &&
+                     contactForm.get('name').errors?.required">
+                  This field is required!
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label class="required-label" for="name">Email Address</label>
+                <input
+                  id="email"
+                  formControlName="email"
+                  class="form-control show-invalid"
+                  placeholder="Enter Email Address"
+                  type="text">
+                <div class="error-container"
+                     *ngIf="contactForm.get('email').dirty &&
+                     contactForm.get('email').errors?.required">
+                  This field is required!
+                </div>
+                <div class="error-container"
+                     *ngIf="contactForm.get('email').dirty &&
+                     !contactForm.get('email').errors?.required &&
+                     contactForm.get('email').errors?.email">
+                  Fill in a valid email address!
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="name">Website</label>
+                <input
+                  id="website"
+                  formControlName="website"
+                  class="form-control show-invalid"
+                  placeholder="Enter Website"
+                  type="text">
+                <div class="error-container"
+                     *ngIf="contactForm.get('website').dirty &&
+                    contactForm.get('website').errors?.validUrl">
+                  Invalid url!
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label class="required-label" for="name">Comment</label>
+                <textarea
+                    id="comment"
+                    formControlName="comment"
+                    class="form-control show-invalid"
+                    placeholder="Questions/Comments"
+                  ></textarea>
+                <div class="error-container"
+                     *ngIf="contactForm.get('comment').dirty &&
+                     contactForm.get('comment').errors?.required">
+                  This field is required!
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary float-right" [disabled]="contactForm.invalid">Submit</button>
+            </div>
+          </div>
+          <div *ngIf="apiRequestError" class="row my-3">
+            <div class="col-12">
+              <strong>Sorry message wasn't sent, we have a problem on our end...</strong>
+            </div>
+          </div>
+          <div *ngIf="formHasBeenSent && contactForm.pristine" class="row my-3">
+            <div class="col-12">
+              <strong>Thank you for your message. We will be in touch shortly.</strong>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

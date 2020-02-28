@@ -1,0 +1,20 @@
+<div *ngIf="loading" class="starting-loader">
+  <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+</div>
+<div *ngIf="!loading" class="container-fluid pb-3">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+    <div class="col-12">
+      <h1 class="page-heading">{{data.heading}}</h1>
+    </div>
+    <div *ngIf="data.intro_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <p class="site-pages-content match-styling mb-0" [innerHtml]="data.intro_paragraph | safeHtml"></p>
+    </div>
+    <div *ngIf="data.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="data.bottom_header" class="page-heading-two">
+        {{data.bottom_header}}
+      </h2>
+      <p class="site-pages-content match-styling" [innerHtml]="data.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+</div>

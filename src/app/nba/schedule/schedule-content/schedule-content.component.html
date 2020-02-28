@@ -1,0 +1,153 @@
+<div class="schedule-actions-wrap">
+  <app-day-selector
+    [minDate]="startDate"
+    [preSelectedDate]="preSelectedDate"
+    (dateChanged)="updateDate($event)">
+  </app-day-selector>
+</div>
+
+<div class="row">
+  <div *ngIf="loading" class="starting-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+  <div class="col-12">
+    <div class="schedule-entities-wrap" *ngIf="!loading">
+      <ng-container *ngIf="scheduleItems.length; else noGames;">
+        <ng-container *ngFor="let day of scheduleItems">
+          <h4 class="table-title">{{ day.day }}, {{ day.date | amTimeZone | amDateFormat: 'M/D/YY'}}</h4>
+          <div *ngIf="day.completedGames.length" class="table-container">
+            <table
+              #completedGames="mfDataTable"
+              [mfRowsOnPage]="10000"
+              [mfData]="day.completedGames"
+              mfSortBy="date_time"
+              mfSortOrder="desc"
+              class="table table-striped"
+            >
+              <thead>
+              <tr class="table-head">
+                <th class="team-date-col" width="8%">
+                  <mfSorter by="date_time">Time</mfSorter>
+                </th>
+                <th width="18.4%;">
+                  <mfSorter by="nav.away_name_full">Away Team</mfSorter>
+                </th>
+                <th width="18.4%;">
+                  <mfSorter by="nav.home_name_full">Home Team</mfSorter>
+                </th>
+                <th>
+                  <mfSorter [by]="sortScoreOrStatus">Score</mfSorter>
+                </th>
+                <th>
+                  <mfSorter by="points_leader">Points Leader</mfSorter>
+                </th>
+                <th>
+                  <mfSorter by="rebounds_leader">Rebounds Leader</mfSorter>
+                </th>
+                <th>
+                  <mfSorter by="assists_leader">Assists Leader</mfSorter>
+                </th>
+                <th>
+                  <mfSorter by="nav.matchup_route">Matchup</mfSorter>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let game of completedGames.data;">
+                <td>{{game.date_time | amTimeZone | amDateFormat:'h:mm a' | lowercase}} {{timeZone}}</td>
+                <td class="left-align">
+                  <a rel="nofollow" class="link-black" [routerLink]="[game.nav.away_lineup_route || '']" [appPreselectNbaLineupTeamSeason]="game.season">
+                    <img [type]="'white'" [appSpriteImg]="'nba'" class="team-logo-mini" src="{{game.nav.away_logo_white}}" alt="{{game.nav.away_name_full}}"/>
+                  </a>
+                  <a class="link-black-underline" [routerLink]="[game.nav.away_lineup_route || '']" [appPreselectNbaLineupTeamSeason]="game.season">
+                    {{game.nav.away_name_full}}
+                  </a> ({{game.nav.away_record}})
+                </td>
+                <td class="left-align">
+                  <a rel="nofollow" class="link-black" [routerLink]="[game.nav.home_lineup_route || '']" [appPreselectNbaLineupTeamSeason]="game.season">
+                    <img [type]="'white'" [appSpriteImg]="'nba'" class="team-logo-mini" src="{{game.nav.home_logo_white}}" alt="{{game.nav.home_name_full}}"/>
+                  </a>
+                  <a class="link-black-underline" [routerLink]="[game.nav.home_lineup_route || '']" [appPreselectNbaLineupTeamSeason]="game.season">
+                    {{game.nav.home_name_full}}
+                  </a> ({{game.nav.home_record}})
+                </td>
+                <td>{{game.status === 'Final' ? game.away_team_score + '-' + game.home_team_score : game.status}}</td>
+                <td [ngClass]="{'no-data': !game.points_leader_name}">{{game.points_leader_name ? game.points_leader_name + " ("+game.points_leader+")" : ""}}</td>
+                <td [ngClass]="{'no-data': !game.rebounds_leader_name}">{{game.rebounds_leader_name ? game.rebounds_leader_name + " ("+game.rebounds_leader+")" : ""}}</td>
+                <td [ngClass]="{'no-data': !game.assists_leader_name}">{{game.assists_leader_name ? game.assists_leader_name + " ("+game.assists_leader+")" : ""}}</td>
+                <td>
+                  <ng-container *ngIf="game.nav.matchup_route">
+                    <a [appNbaMatchupIdPreselect]="game.nav.game_id" (click)="onMatchupLinkClick()" [routerLink]="[game.nav.matchup_route || '']">{{game.nav.away_name}} @ {{game.nav.home_name}}</a>
+                  </ng-container>
+                </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="day.pendingGames.length" class="table-container">
+            <table class="table table-striped" [mfRowsOnPage]="10000" [mfData]="day.pendingGames" mfSortBy="date_time" mfSortOrder="desc" #pendingGames="mfDataTable">
+              <thead>
+              <tr class="table-head">
+                <th class="team-date-col" width="8%">
+                  <mfSorter by="date_time">Time</mfSorter>
+                </th>
+                <th width="18.4%;">
+                  <mfSorter by="nav.away_name_full">Away Team</mfSorter>
+                </th>
+                <th width="18.4%;">
+                  <mfSorter by="nav.home_name_full">Home Team</mfSorter>
+                </th>
+                <th>
+                  <mfSorter by="nav.away_lineup_route">Away Lineup</mfSorter>
+                </th>
+                <th>
+                  <mfSorter by="nav.home_lineup_route">Home Lineup</mfSorter>
+                </th>
+                <th>
+                  <mfSorter by="nav.matchup_route">Matchup</mfSorter>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let game of pendingGames.data">
+                <td>{{game.date_time | amTimeZone | amDateFormat:'h:mm a' | lowercase}} {{timeZone}}</td>
+                <td class="left-align">
+                  <a rel="nofollow" class="link-black" [routerLink]="[game.nav.away_lineup_route || '']" [appPreselectNbaLineupTeamSeason]="game.season">
+                    <img [type]="'white'" [appSpriteImg]="'nba'" class="team-logo-mini" src="{{game.nav.away_logo_white}}" alt="{{game.nav.away_name_full}}"/>
+                  </a>
+                  <a class="link-black-underline" [routerLink]="[game.nav.away_lineup_route || '']" [appPreselectNbaLineupTeamSeason]="game.season">
+                    {{game.nav.away_name_full}}
+                  </a> ({{game.nav.away_record}})
+                </td>
+                <td class="left-align">
+                  <a rel="nofollow" class="link-black" [routerLink]="[game.nav.home_lineup_route || '']" [appPreselectNbaLineupTeamSeason]="game.season">
+                    <img [type]="'white'" [appSpriteImg]="'nba'" class="team-logo-mini" src="{{game.nav.home_logo_white}}" alt="{{game.nav.home_name_full}}"/>
+                  </a>
+                  <a class="link-black-underline" [routerLink]="[game.nav.home_lineup_route || '']" [appPreselectNbaLineupTeamSeason]="game.season">
+                    {{game.nav.home_name_full}}
+                  </a> ({{game.nav.home_record}})
+                </td>
+                <td><a href="{{game.nav.away_lineup_route || ''}}">{{game.nav.away_name}} Lineup</a></td>
+                <td><a href="{{game.nav.home_lineup_route || ''}}">{{game.nav.home_name}} Lineup</a></td>
+
+                <td>
+                  <ng-container *ngIf="game.nav.matchup_route">
+                    <a [appNbaMatchupIdPreselect]="game.nav.game_id" (click)="onMatchupLinkClick()" [routerLink]="[game.nav.matchup_route || '']">{{game.nav.away_name}} @ {{game.nav.home_name}}</a>
+                  </ng-container>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </ng-container>
+      </ng-container>
+      <ng-template #noGames>
+        <h4 class="text-center mt-4">No Games Today</h4>
+      </ng-template>
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-12">
+    <!-- Some reserve space -->
+    <div class="reserve-wrap"></div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+<ng-template #loadingTpl>
+  <div class="starting-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<div class="modal-header flex-column box-shadow">
+  <div class="header-actions ml-auto">
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="w-100 pt-1 clearfix d-flex justify-content-start">
+    <div class="separated-dropdowns-wrapper">
+      <div ngbDropdown class="ml-0 my-1 my-sm-0 mr-sm-1 separated-dropdown-menu dropdown page-heading-right-dropdown first">
+        <button type="button" class="separated-dropdown-btn btn btn-secondary w-100 text-left" id="playerDD" ngbDropdownToggle>
+          <span>{{activeDDs.player.name}} <span *ngIf="activeDDs.player.type">({{activeDDs.player.type}})</span> <span *ngIf="!data.matchup">{{activeDDs.player.team | lastTeamName}}</span> <span *ngIf="data.matchup">{{activeDDs.player.is_home ? data.matchup.homeName : data.matchup.awayName }} {{data.matchup.time}}</span></span> <img class="down-arrow float-right pt-2 ml-2" src="/assets/images/arrow-down.png" alt="arrow-down" />
+        </button>
+        <div class="dropdown-menu w-100 scrollable-menu" aria-labelledby="playerDD">
+          <div *ngFor="let player of data.players" class="dropdown-btn-wrap">
+            <button (click)="selectPlayer(player.player_id)" class="pl-1 dropdown-item" [ngClass]="{'dd-opt-active': player.player_id === activeDDs.player.player_id}">{{player.name}} <span *ngIf="player.type">({{player.type}})</span> <span *ngIf="!data.matchup">{{player.team | lastTeamName}}</span> <span *ngIf="data.matchup">{{player.is_home ? data.matchup.homeName : data.matchup.awayName }} {{data.matchup.time}}</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-body">
+  <div class="row" *ngIf="news; else loadingTpl">
+    <div *ngFor="let card of news | orderBy: 'updated' : false" class="col-12 card-wrapper">
+      <app-news-item
+        [cardLeague]="data.league"
+        [cardTitle]="card.title"
+        [cardContent]="card.content"
+        [cardPreOpened]="true"
+        [cardDate]="card.updated"
+        [cardImageRoute]="data.matchup ? (activeDDs.player.is_home ? data.matchup.homeLogo : data.matchup.awayLogo) : card.logo"
+        [fullLogoUrl]="true"
+        [borderedLogo]="!data.whiteLogos"
+      ></app-news-item>
+    </div>
+  </div>
+</div>

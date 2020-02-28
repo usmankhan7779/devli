@@ -1,0 +1,63 @@
+<ng-template #bodyContent let-item="item">
+  <tr class="t-content" *ngIf="swappingPK !== item[primaryField] && showRow(item)">
+    <ng-template [ngTemplateOutlet]="rowTemplate" [ngTemplateOutletContext]="{item: item, swap: swapInit}"></ng-template>
+  </tr>
+  <tr class="t-content" *ngIf="swappingPK === item[primaryField] && showRow(item)">
+    <ng-container *ngIf="buttonOnFirstColumn">
+      <td>
+        <button class="{{buttonClass}}" (click)="closeSwapper()"><i class="fa fa-close"></i></button>
+      </td>
+    </ng-container>
+    <td [attr.colspan]="columnCount-1" class="left-align swapper-wrap">
+      <input id="input-swapper" ngui-auto-complete appAutofocus
+             [(ngModel)]="swapTarget"
+             [source]="searchFunction ? searchFunction.bind(null, data, item) : data"
+             [list-formatter]="dropdownFormatterInternal"
+             [display-property-name]="displayField"
+             (valueChanged)="swapWith($event)"
+             [auto-select-first-item]="true"
+             (blur)="onBlur()"
+             [placeholder]="placeholder"/>
+    </td>
+    <ng-container *ngIf="!buttonOnFirstColumn">
+      <td class="swap-action">
+        <button class="swap-btn" (click)="closeSwapper()"><i class="fa fa-close"></i></button>
+      </td>
+    </ng-container>
+  </tr>
+</ng-template>
+
+<ng-template #tableContent let-mfDataTable="mfDataTable">
+  <thead>
+  <tr *ngIf="!allowSorting" class="t-single-header">
+    <ng-template [ngTemplateOutlet]="theadTemplate"></ng-template>
+  </tr>
+  <tr *ngIf="allowSorting" class="t-single-header">
+    <ng-template [ngTemplateOutlet]="theadTemplate" [ngTemplateOutletContext]="{mfDataTable: mfDataTable}"></ng-template>
+  </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngIf="!allowSorting">
+      <ng-container *ngFor="let item of data">
+        <ng-template [ngTemplateOutlet]="bodyContent" [ngTemplateOutletContext]="{item: item}"></ng-template>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="allowSorting">
+      <ng-container *ngFor="let item of mfDataTable.data">
+        <ng-template [ngTemplateOutlet]="bodyContent" [ngTemplateOutletContext]="{item: item}"></ng-template>
+      </ng-container>
+    </ng-container>
+    <tr class="empty-row" *ngFor="let row of showEmptyRows">
+      <td></td>
+    </tr>
+  </tbody>
+</ng-template>
+
+<div class="swappeble-table">
+  <table *ngIf="!allowSorting" class="multi-row-data-table t-stripped" [ngClass]="{'no-border': noBorder, 'm-0': noMargin, 'border-bottom-only': borderBottom}">
+    <ng-template [ngTemplateOutlet]="tableContent"></ng-template>
+  </table>
+  <table *ngIf="allowSorting" [mfRowsOnPage]="10000" [mfData]="data" #mfDataTable="mfDataTable" class="multi-row-data-table t-stripped" [ngClass]="{'no-border': noBorder, 'm-0': noMargin, 'border-bottom-only': borderBottom}">
+    <ng-template [ngTemplateOutlet]="tableContent" [ngTemplateOutletContext]="{mfDataTable: mfDataTable}"></ng-template>
+  </table>
+</div>

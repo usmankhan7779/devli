@@ -1,0 +1,473 @@
+<ng-template #boxCap>
+  <div class="box-cap"></div>
+</ng-template>
+
+<ng-template #imageItemTpl let-position="position" let-className="className" let-posType="posType" let-offenseType="offenseType">
+  <ng-container *ngIf="(posType === 'defense'? defensePlayersData : offensePlayersData);let playersData;">
+    <div *ngIf="playersData[position]?.length; else boxCap" class="image-item" [ngClass]="getActiveImageItemClass(posType, position, className)">
+    <div (mouseover)="onPosMouseOver(posType, position)" class="fake-t-header" [ngStyle]="{
+    'background-color': '#' + depthChart.team_fk.primary_hex,
+    'border-color': '#' + depthChart.team_fk.primary_hex
+    }">
+      <span class="long-depth-pos-name hover-hand">
+        {{posType === 'defense' ? defenseDictionary[position] : offenseDictionary[position]}}
+      </span>
+      <span class="short-depth-pos-name hover-hand">
+        {{position}}
+      </span>
+    </div>
+    <div class="image-item-leader-image" (mouseover)="onPosMouseOver(posType, position, playersData[position][0])">
+      <img [src]="playersData[position][0].photo_url || 'https://s3-us-west-2.amazonaws.com/static.fantasydata.com/headshots/nfl/low-res/0.png'" alt="">
+    </div>
+    <div class="image-items-wrapper">
+      <div (mouseover)="onPosMouseOver(posType, position, player)" *ngFor="let player of playersData[position] | slice: 0 : 3" [ngClass]="{'active-payer-box': !posType && activeOffense?.player?.player_id === player.player_id}">
+        <div class="image-item-pl-name" [ngClass]="{'long-name': defineIfLongName(player)}">
+          <app-player-link *ngIf="player" [customContent]="true" [league]="'nba'" [playerUrl]="player.profile_url">
+            <span class="long-image-item-pl-name">
+              {{player.name}}
+            </span>
+            <span class="short-image-item-pl-name">
+              {{player.name | shortPlayerName}}
+            </span>
+          </app-player-link>
+          <span>
+            ({{player.depth_chart_order}})
+          </span>
+        </div>
+        <div>
+          <app-rating class="mr-2" [value]="player.lineups_rating"></app-rating>
+          #{{player.lineups_position_rank}}
+          {{player.depth_chart_position}}
+        </div>
+      </div>
+    </div>
+  </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #offensePlayerCap>
+  <div class="offense-player-cap">
+    <div>Hover over a Player or Position Box to See Detailed Stats</div>
+  </div>
+</ng-template>
+
+<div class="row">
+    <div *ngIf="depthChart.page_data.intro_paragraph" class="col-12 col-lg-8 flex-last flex-sm-unordered">
+      <p class="site-pages-content" [innerHtml]="depthChart.page_data.intro_paragraph | safeHtml"></p>
+    </div>
+    <div class="col-12">
+      <div class="grouped-dropdown-wrapper btn-group my-0">
+
+        <div ngbDropdown class="grouped-dropdown dropdown">
+          <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="main-dropdown" ngbDropdownToggle>
+            <span class="pr-0 pr-sm-3">{{showYear(params.year)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+          </button>
+          <div class="dropdown-menu" aria-labelledby="main-dropdown">
+            <div *ngFor="let season of dropdownValues.seasons;">
+              <button
+                [ngClass]="{'dd-active-btn': params.year === season.year}"
+                (click)="onYearDdChange(season)"
+                class="dropdown-item">
+                <span>{{season.name}}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!--<app-dropdown-->
+        <!--*ngIf="offenseDictionary"-->
+        <!--class="page-mobile-main-tabs"-->
+        <!--[filterItems]="onTabGroupClick.bind(this, 'mainTab')"-->
+        <!--[ddData]="dropdownValues"-->
+        <!--prop="mainTab"-->
+        <!--[className]="'last'"-->
+        <!--[isSingleSelect]="true"-->
+        <!--&gt;</app-dropdown>-->
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="page-heading-two">Offense Depth Chart</h2>
+              <div class="row">
+                <div class="col-12 after-heading-margin">
+                  <div class="d-flex offense-image-section">
+                    <div class="offense-image-wrapper">
+                      <div class="inline-image-content">
+                        <ng-template *ngFor="let position of offenseDictionaryArr" [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: position}"></ng-template>
+                      </div>
+                      <div class="football-field-container">
+                        <div class="football-field-bg">
+                          <div class="row">
+                            <div class="col-12 text-center image-row">
+                              <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: 'SF', className: 'left'}"></ng-template>
+                              <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: 'C', className: 'center'}"></ng-template>
+                              <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: 'PF', className: 'right'}"></ng-template>
+                            </div>
+                            <div class="col-12 text-center image-row bottom-image-row">
+                              <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: 'PG', className: 'left'}"></ng-template>
+                              <ng-template [ngTemplateOutlet]="imageItemTpl" [ngTemplateOutletContext]="{position: 'SG', className: 'right'}"></ng-template>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="offense-image-table-wrapper">
+                      <div class="football-image-wrapper" [ngClass]="{'display-table-row':  !activeOffense || (!activeOffense.player && !activeOffense.depth_chart_position)}">
+                        <div class="table-sect-wrap mb-0">
+                          <!-- Static Positioned Tabled -->
+                          <div class="static-table-wrapper">
+                            <table class="static-table stats-table table table-bordered multi-table-static">
+                              <thead>
+                              <tr class="t-sub-header static-sub-header">
+                                <th class="depth-pos-col px-2">
+                                  <span class="long-depth-pos-name">
+                                    Position
+                                  </span>
+                                  <span class="short-depth-pos-name">
+                                    POS
+                                  </span>
+                                </th>
+                              </tr>
+                              </thead>
+                              <tbody class="static-table-body">
+                              <ng-container *ngFor="let position of offenseDictionaryArr">
+                                <ng-container *ngIf="offensePlayersData[position]">
+                                  <tr (mouseover)="onPosMouseOver(false, position)" [ngClass]="getActiveImageItemClass(null, position, '', 'static-table-active-pos')">
+                                    <td class="depth-pos-col">
+                                      <span class="long-depth-pos-name hover-hand">
+                                        {{offenseDictionary[position]}}
+                                      </span>
+                                      <span class="short-depth-pos-name hover-hand">
+                                        {{position}}
+                                      </span>
+                                    </td>
+                                  </tr>
+                                </ng-container>
+                              </ng-container>
+                              </tbody>
+                            </table>
+                          </div>
+                          <!-- Horizontal Scrolling-->
+                          <div class="horizontal-table-wrapper no-border">
+                            <table class="multi-row-data-table custom-font t-stripped">
+                              <thead>
+                              <tr class="t-sub-header">
+                                <th class="depth-pos-col inner-col-switch">
+                                  Position
+                                </th>
+                                <th *ngFor="let tableHeader of offensePlayersTableColArr; let index = index;" class="text-center">
+                                  {{index + 1}}
+                                </th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <ng-container *ngFor="let position of offenseDictionaryArr">
+                                <ng-container *ngIf="offensePlayersData[position]">
+                                  <tr class="t-content" [ngClass]="getActiveImageItemClass(null, position, '', 'horizontal-table-active-pos')">
+                                    <td (mouseover)="onPosMouseOver(false, position)" class="depth-pos-col inner-col-switch">
+                                      <span class="long-depth-pos-name hover-hand">
+                                        {{offenseDictionary[position]}}
+                                      </span>
+                                      <span class="short-depth-pos-name hover-hand">
+                                        {{position}}
+                                      </span>
+                                    </td>
+                                    <td class="player-td" (mouseover)="onPosMouseOver(false, position, offensePlayersData[position][index])" *ngFor="let tdItem of offensePlayersTableColArr; let index = index; let first = first" [ngClass]="{'first-horizontal-td': first ,'active-player-td': offensePlayersData[position][index]?.player_id && activeOffense?.player?.player_id && offensePlayersData[position][index]?.player_id === activeOffense?.player?.player_id}">
+                                      <div class="player-td-content" [ngClass]="{'long-table-name': defineIfLongName(offensePlayersData[position][index])}">
+                                        <app-player-link *ngIf="offensePlayersData[position][index]; let player" [customContent]="true" [league]="'nba'" [playerUrl]="player.profile_url">
+                                          <span class="long-image-item-pl-name">
+                                            {{player.name}}
+                                          </span>
+                                          <span class="short-image-item-pl-name">
+                                            {{player.name | shortPlayerName}}
+                                          </span>
+                                        </app-player-link>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </ng-container>
+                              </ng-container>
+                              </tbody>
+                            </table>
+                          </div>
+
+                        </div>
+                      </div>
+                      <ng-container *ngIf="allowHoverFunctionality()">
+                        <div *ngIf="activeOffense?.depth_chart_position; else offensePlayerCap;" class="active-offense-section">
+                          <div class="position-badge" [ngClass]="{'is-single-player': activeOffense?.player?.player_id}">
+                            <div [ngStyle]="{
+                            'background-color': '#' + depthChart.team_fk.primary_hex
+                            }">
+                              {{offenseDictionary[activeOffense.depth_chart_position]}}
+                            </div>
+                          </div>
+                          <div class="d-flex player-list-wrapper">
+                            <ng-container *ngFor="let player of offensePlayersData[activeOffense.depth_chart_position]; let index = index">
+                              <app-offense-payer-box *ngIf="(activeOffense?.player?.player_id && player?.player_id === activeOffense?.player?.player_id) || (!activeOffense?.player?.player_id && index < 4)" [activeOffense]="activeOffense" [player]="player" [isOLine]="dropdownActiveValues.offenseTabs.value === 'o-line'"></app-offense-payer-box>
+                            </ng-container>
+                            <div style="width: 75%" *ngIf="activeOffense?.dataset">
+                              <div>
+                                <div class="bar-chart-wrapper">
+                                  <app-graph-table
+                                    [customTable]="true"
+                                    [datasets]="activeOffense.dataset.data.chart1"
+                                    [labels]="activeOffense.dataset.dates"
+                                    [chartType]="'bar'"
+                                    [colors]="chartColors.chart1"
+                                    [legend]="true"
+                                    [options]="chartOptions"
+                                  ></app-graph-table>
+                                </div>
+                              </div>
+                              <div>
+                                <div class="bar-chart-wrapper">
+                                  <app-graph-table
+                                    [customTable]="true"
+                                    [datasets]="activeOffense.dataset.data.chart2"
+                                    [labels]="activeOffense.dataset.dates"
+                                    [chartType]="'bar'"
+                                    [colors]="chartColors.chart2"
+                                    [legend]="true"
+                                    [options]="chartOptions"
+                                  ></app-graph-table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row table-sect-tables-wrapper" *appBrowserIf="true">
+        <div class="col-12 table-sect-wrap" *ngFor="let position of offenseDictionaryArr; let index = index">
+          <!-- Static Positioned Tabled -->
+          <div class="static-table-wrapper">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="depthChart[posKeys[index]]"
+              [(mfSortBy)]="offenseSorting['sortBy' + position + 's']"
+              [(mfSortOrder)]="offenseSorting['sortOrder' + SG + 's']"
+              (mfSortByChange)="onSortOrder('offenseSorting', 'sortBy' + position + 's', 'sortOrder' + SG + 's', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('offenseSorting', 'sortBy' + position + 's', 'sortOrder' + SG + 's', 'order', $event)"
+              #staticMfTable="mfDataTable"
+              class="static-table stats-table table table-bordered multi-table-static">
+              <thead>
+              <tr class="t-header static-row-header">
+                <th colspan="2" class="text-center main-border static-t-header">{{offenseDictionary[position]}}</th>
+              </tr>
+              <tr class="t-sub-header static-sub-header">
+                <th class="player-name-col">
+                  <mfSorter by="name">NAME</mfSorter>
+                </th>
+                <th class="position-col">
+                  <mfSorter by="position">POS</mfSorter>
+                </th>
+              </tr>
+              </thead>
+              <tbody class="static-table-body">
+              <tr *ngFor="let player of staticMfTable.data">
+                <td class="player-name-col text-left">
+                  <app-player-link [league]="'nba'" [playerName]="player.name" [playerUrl]="player.profile_url"></app-player-link>
+                </td>
+                <td class="position-col main-border">
+                  <span *ngIf="player.depth_chart_position != null">{{player.depth_chart_position}}</span>
+                  <span *ngIf="player.depth_chart_position == null"></span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Horizontal Scrolling-->
+          <div class="horizontal-table-wrapper">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="depthChart[posKeys[index]]"
+              [(mfSortBy)]="offenseSorting['sortBy' + position + 's']"
+              [(mfSortOrder)]="offenseSorting['sortOrder' + SG + 's']"
+              (mfSortByChange)="onSortOrder('offenseSorting', 'sortBy' + position + 's', 'sortOrder' + SG + 's', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('offenseSorting', 'sortBy' + position + 's', 'sortOrder' + SG + 's', 'order', $event)"
+              #mfTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="9">
+                <col span="1" width="17%" class="inner-col-switch">
+                <col span="8" class="inner-col-switch">
+              </colgroup>
+              <colgroup span="8"></colgroup>
+              <colgroup span="2"></colgroup>
+              <colgroup span="2"></colgroup>
+              <tbody>
+              <tr class="t-header">
+                <th colspan="9" scope="colgroup" class="text-center main-border inner-col-switch">{{offenseDictionary[position]}}</th>
+                <th colspan="7" class="text-center inner-col-show main-border"></th>
+                <th colspan="8" scope="colgroup" class="text-center main-border">Stats</th>
+                <th colspan="2" scope="colgroup" class="text-center main-border">Draftkings</th>
+                <th colspan="2" scope="colgroup" class="text-center">FanDuel</th>
+              </tr>
+              <tr class="t-sub-header">
+                <!-- Inner Col Switch QB Data-->
+                <th scope="col" class="px-3 inner-col-switch">
+                  <mfSorter by="name">NAME</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch">
+                  <mfSorter by="position">POS</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch">
+                  <mfSorter by="depth_chart_order">DEPTH</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch">
+                  <mfSorter by="lineups_rating">RATING</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch">
+                  <mfSorter by="passing_sacks">RANK</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch">
+                  <mfSorter by="games">GP</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch">
+                  <mfSorter by="jersey">#</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch">
+                  <mfSorter by="age">AGE</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch main-border">
+                  <mfSorter by="experience">EXP</mfSorter>
+                </th>
+                <!-- END: Inner Col Switch QB Data -->
+                <!-- Add Inner Col Show QB Data -->
+                <th scope="col" class="text-center inner-col-show">
+                  <mfSorter by="depth_chart_order">DEPTH</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-show">
+                  <mfSorter by="lineups_rating">RATING</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-show">
+                  <mfSorter by="lineups_position_rank">RANK</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-show">
+                  <mfSorter by="games">GP</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-show">
+                  <mfSorter by="jersey">#</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-show">
+                  <mfSorter by="age">AGE</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-show main-border">
+                  <mfSorter by="experience">EXP</mfSorter>
+                </th>
+                <!-- END: Inner Col Show QB Data-->
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="minutes_per_game">MPG</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="points_per_game">PPG</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="rebounds_per_game">RPG</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="assists_per_game">APG</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="blocked_shots_per_game">BPG</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="player_efficiency_rating">PER</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="plus_minus">+/-</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="usage_rate_percentage">USG%</mfSorter>
+                </th>
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="fantasy_points_per_game_draft_kings">FFPG</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="fantasy_points_per_minute_draft_kings">FPPM</mfSorter>
+                </th>
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="fantasy_points_per_game_fan_duel">FFPG</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="fantasy_points_per_minute_fan_duel">FPPM</mfSorter>
+                </th>
+              </tr>
+              <tr class="t-content" *ngFor="let player of mfTable.data">
+                <td class="text-left px-3 inner-col-switch">
+                  <app-player-link [league]="'nba'" [playerName]="player.name" [playerUrl]="player.profile_url"></app-player-link>
+                </td>
+                <td class="inner-col-switch">{{player.depth_chart_position}}</td>
+                <td>{{player.depth_chart_order}}</td>
+                <td><app-rating [value]="player.lineups_rating"></app-rating></td>
+                <td>{{player.lineups_position_rank}}</td>
+                <td>{{player.games}}</td>
+                <td>{{player.jersey}}</td>
+                <td>{{player.age}}</td>
+                <td class="main-border">{{player.experience}}</td>
+
+                <td>
+                  {{player.minutes_per_game}}
+                </td>
+                <td>
+                  {{player.points_per_game}}
+                </td>
+                <td>
+                  {{player.rebounds_per_game}}
+                </td>
+                <td>
+                  {{player.assists_per_game}}
+                </td>
+                <td>
+                  {{player.blocked_shots_per_game}}
+                </td>
+                <td>
+                  {{player.player_efficiency_rating}}
+                </td>
+                <td>
+                  {{player.plus_minus}}
+                </td>
+                <td class="main-border">
+                  {{player.usage_rate_percentage}}
+                </td>
+
+                <td>
+                  {{player.fantasy_points_per_game_draft_kings}}
+                </td>
+                <td class="main-border">
+                  {{player.fantasy_points_per_minute_draft_kings}}
+                </td>
+
+                <td>
+                  {{player.fantasy_points_per_game_fan_duel}}
+                </td>
+                <td>
+                  {{player.fantasy_points_per_minute_fan_duel}}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="depthChart.page_data.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="depthChart.page_data.bottom_heading" class="page-heading-two">
+        {{depthChart.page_data.bottom_heading}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="depthChart.page_data.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+<!--image-preload-cap-->
+<img width="0" height="0" src="https://s3-us-west-2.amazonaws.com/static.fantasydata.com/headshots/nfl/low-res/0.png" alt="">

@@ -1,0 +1,176 @@
+<ng-template #loadingTpl>
+  <div class="starting-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<div class="schedule-actions-wrap">
+  <app-day-selector
+    [minDate]="startDate"
+    [preSelectedDate]="preSelectedDate"
+    (dateChanged)="updateDate($event)">
+  </app-day-selector>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <div class="schedule-entities-wrap" *ngIf="!loading; else loadingTpl">
+      <ng-container *ngIf="scheduleItems.length; else noGames;">
+        <ng-container *ngFor="let day of scheduleItems">
+          <h4 class="table-title">{{ day.day }}, {{ day.date | amTimeZone | amDateFormat: 'M/D/YY'}}</h4>
+          <div *ngIf="day.completedGames.length" class="table-container">
+            <table
+              #completedGames="mfDataTable"
+              [mfRowsOnPage]="10000"
+              [mfData]="day.completedGames"
+              mfSortBy="date_time"
+              mfSortOrder="desc"
+              class="table table-striped"
+            >
+              <thead>
+              <tr class="table-head">
+                <th width="18.4%;">
+                  <mfSorter by="away_team_full_name">Away Team</mfSorter>
+                </th>
+                <th width="18.4%;">
+                  <mfSorter by="home_team_full_name">Home Team</mfSorter>
+                </th>
+                <th>
+                  <mfSorter [by]="sortScoreOrStatus">Score</mfSorter>
+                </th>
+                <th>
+                  <mfSorter by="winning_pitcher_name">Winning Pitcher</mfSorter>
+                </th>
+                <th>
+                  <mfSorter by="losing_pitcher_name">Losing Pitcher</mfSorter>
+                </th>
+                <th>
+                  <mfSorter by="saving_pitcher_name">Save</mfSorter>
+                </th>
+                <th>
+                  <mfSorter by="matchup">Matchup</mfSorter>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let game of completedGames.data;">
+                <td class="left-align">
+                  <a [routerLink]="[game.away_lineups_route || '']" [appPreselectMlbLineupTeamSeason]="activeYear" rel="nofollow" class="link-black">
+                    <img [type]="'white'" [appSpriteImg]="'mlb'" class="team-logo-mini" [src]="game.away_team_logo_white" alt="{{game.away_team_full_name}}"/>
+                  </a>
+                  <a [routerLink]="[game.away_lineups_route || '']" [appPreselectMlbLineupTeamSeason]="activeYear" class="link-black-underline">
+                    {{game.away_team_full_name}}
+                  </a> ({{game.away_record}})
+                </td>
+                <td class="left-align">
+                  <a [routerLink]="[game.home_lineups_route || '']" [appPreselectMlbLineupTeamSeason]="activeYear" rel="nofollow" class="link-black">
+                    <img [type]="'white'" [appSpriteImg]="'mlb'" class="team-logo-mini" [src]="game.home_team_logo_white" alt="{{game.home_team_full_name}}"/>
+                  </a>
+                  <a [routerLink]="[game.home_lineups_route || '']" [appPreselectMlbLineupTeamSeason]="activeYear" class="link-black-underline">
+                    {{game.home_team_full_name}}
+                  </a> ({{game.home_record}})
+                </td>
+                <td>{{game.status === 'Final' ? game.score : game.status}}</td>
+                <td [ngClass]="{'no-data': !game.winning_pitcher_profile_url || !game.winning_pitcher_name}">
+                  <ng-container *ngIf="game.winning_pitcher_profile_url && game.winning_pitcher_name">
+                    <app-player-link [league]="'mlb'" [playerName]="game.winning_pitcher_name" [playerUrl]="game.winning_pitcher_profile_url"></app-player-link>
+                    {{' (' + game.winning_pitcher_hand + '), ' + game.winning_pitcher_wins + '-' + game.winning_pitcher_losses }}
+                  </ng-container>
+                </td>
+                <td [ngClass]="{'no-data': !game.losing_pitcher_profile_url || !game.losing_pitcher_name}">
+                  <ng-container *ngIf="game.losing_pitcher_profile_url && game.losing_pitcher_name">
+                    <app-player-link [league]="'mlb'" [playerName]="game.losing_pitcher_name" [playerUrl]="game.losing_pitcher_profile_url"></app-player-link>
+                    {{' (' + game.losing_pitcher_hand + '), ' + game.losing_pitcher_wins + '-' + game.losing_pitcher_losses }}
+                  </ng-container>
+                </td>
+                <td [ngClass]="{'no-data': !game.saving_pitcher_profile_url || !game.saving_pitcher_name}">
+                  <ng-container *ngIf="game.saving_pitcher_profile_url && game.saving_pitcher_name">
+                    <app-player-link [league]="'mlb'" [playerName]="game.saving_pitcher_name" [playerUrl]="game.saving_pitcher_profile_url"></app-player-link>
+                    {{' (' + game.saving_pitcher_hand + '), ' + game.saving_pitcher_wins + '-' + game.saving_pitcher_losses }}
+                  </ng-container>
+                </td>
+                <td><a *ngIf="game.matchup_route" (click)="onMatchupLinkClick()" [routerLink]="[game.matchup_route]" [appMlbMatchupIdPreselect]="game.game_id">{{game.away_team_full_name | lastTeamName}} at {{game.home_team_full_name | lastTeamName}}</a></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="day.pendingGames.length" class="table-container">
+            <table class="table table-striped" [mfRowsOnPage]="10000" [mfData]="day.pendingGames" mfSortBy="date_time" mfSortOrder="desc" #pendingGames="mfDataTable">
+              <thead>
+              <tr class="table-head">
+                <th width="18.4%;">
+                  <mfSorter by="away_team_full_name">Away Team</mfSorter>
+                </th>
+                <th width="18.4%;">
+                  <mfSorter by="home_team_full_name">Home Team</mfSorter>
+                </th>
+                <th>
+                  <mfSorter by="date_time">Time</mfSorter>
+                </th>
+                <th>
+                  <mfSorter by="away_team_starting_pitcher_name">Away Starting Pitcher</mfSorter>
+                </th>
+                <th>
+                  <mfSorter by="home_team_starting_pitcher_name">Home Starting Pitcher</mfSorter>
+                </th>
+                <th>
+                  <mfSorter by="away_lineup">Starting Lineup</mfSorter>
+                </th>
+                <th>
+                  <mfSorter by="home_lineup">Starting Lineup</mfSorter>
+                </th>
+                <th>
+                  <mfSorter by="matchup">Matchup</mfSorter>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let game of pendingGames.data">
+                <td class="left-align">
+                  <a [routerLink]="[game.away_lineups_route || '']" [appPreselectMlbLineupTeamSeason]="activeYear" rel="nofollow" class="link-black">
+                    <img [type]="'white'" [appSpriteImg]="'mlb'" class="team-logo-mini" [src]="game.away_team_logo_white" alt="{{game.away_team_full_name}}"/>
+                  </a>
+                  <a [routerLink]="[game.away_lineups_route || '']" [appPreselectMlbLineupTeamSeason]="activeYear" class="link-black-underline">
+                    {{game.away_team_full_name}}
+                  </a> ({{game.away_record}})
+                </td>
+                <td class="left-align">
+                  <a [routerLink]="[game.home_lineups_route || '']" [appPreselectMlbLineupTeamSeason]="activeYear" rel="nofollow" class="link-black">
+                    <img [type]="'white'" [appSpriteImg]="'mlb'" class="team-logo-mini" [src]="game.home_team_logo_white" alt="{{game.home_team_full_name}}"/>
+                  </a>
+                  <a [routerLink]="[game.home_lineups_route || '']" [appPreselectMlbLineupTeamSeason]="activeYear" class="link-black-underline">
+                    {{game.home_team_full_name}}
+                  </a> ({{game.home_record}})
+                </td>
+                <td>{{game.date_time | amTimeZone | amDateFormat:'h:mm a' | lowercase}} {{timeZone}}</td>
+                <td [ngClass]="{'no-data': !game.away_team_starting_pitcher_profile_url || !game.away_team_starting_pitcher_name}">
+                  <ng-container *ngIf="game.away_team_starting_pitcher_profile_url && game.away_team_starting_pitcher_name">
+                    <app-player-link [league]="'mlb'" [playerName]="game.away_team_starting_pitcher_name" [playerUrl]="game.away_team_starting_pitcher_profile_url"></app-player-link>
+                    {{' (' + game.away_team_starting_pitcher_hand + '), ' + game.away_team_starting_pitcher_wins + '-' + game.away_team_starting_pitcher_losses }}
+                  </ng-container>
+                </td>
+                <td [ngClass]="{'no-data': !game.home_team_starting_pitcher_profile_url || !game.home_team_starting_pitcher_name}">
+                  <ng-container *ngIf="game.home_team_starting_pitcher_profile_url && game.home_team_starting_pitcher_name">
+                    <app-player-link [league]="'mlb'" [playerName]="game.home_team_starting_pitcher_name" [playerUrl]="game.home_team_starting_pitcher_profile_url"></app-player-link>
+                    {{' (' + game.home_team_starting_pitcher_hand + '), ' + game.home_team_starting_pitcher_wins + '-' + game.home_team_starting_pitcher_losses }}
+                  </ng-container>
+                </td>
+                <td><a href="{{game.away_lineups_route || ''}}">{{game.away_lineup | lastTeamName}}</a></td>
+                <td><a href="{{game.home_lineups_route || ''}}">{{game.home_lineup | lastTeamName}}</a></td>
+                <td><a *ngIf="game.matchup_route" (click)="onMatchupLinkClick()" [routerLink]="[game.matchup_route]" [appMlbMatchupIdPreselect]="game.game_id">{{game.away_lineup | lastTeamName}} at {{game.home_lineup | lastTeamName}}</a></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </ng-container>
+      </ng-container>
+      <ng-template #noGames>
+        <h4 class="text-center mt-4">No Games Today</h4>
+      </ng-template>
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-12">
+    <!-- Some reserve space -->
+    <div class="reserve-wrap"></div>
+  </div>
+</div>

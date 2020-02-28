@@ -1,0 +1,21 @@
+:host {
+  .search-input-wrapper {
+    margin-left: 20px;
+    .input-group {
+      height: 35px;
+    }
+  }
+  @media (max-width: 650px) {
+    .search-input-wrapper {
+      width: 100%;
+      margin: 0;
+      margin-bottom: 20px;
+    }
+    .filter-container {
+      -webkit-box-orient: vertical !important;
+      -webkit-box-direction: normal !important;
+      -ms-flex-direction: column !important;
+      flex-direction: column !important;
+    }
+  }
+}

@@ -1,0 +1,65 @@
+:host {
+  min-height: 32vw;
+  height: 32vw;
+  position: relative;
+  color: #fff;
+  display: flex;
+  overflow-y: auto;
+  font-size: 0.8rem;
+}
+
+.team-box {
+  flex: 0 0 50%;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+table {
+  margin: 0 0 10px 0;
+  border-collapse: collapse;
+  width: 100%;
+  color: #373737;
+}
+
+tr {
+  background: #fff;
+}
+
+tr:nth-child(2n+1) {
+  background: #fafafa;
+}
+
+th:first-child, td:first-child {
+  text-align: left;
+}
+
+th {
+  background: #ebebec;
+  text-align: center;
+  padding: 5px 10px;
+}
+
+td {
+  border-right: solid 1px #ebebec;
+  text-align: center;
+  padding: 5px 10px;
+}
+
+td:last-child {
+  border-right: none;
+}
+
+tr:last-child {
+  font-weight: 600;
+}
+
+.team-row {
+  padding: 5px 10px;
+  display: flex;
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  span:first-child {
+    flex: 1 1 100%;
+  }
+}

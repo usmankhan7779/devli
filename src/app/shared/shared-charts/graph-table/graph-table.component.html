@@ -1,0 +1,78 @@
+<div class="graph-table-wrapper" [ngClass]="{'individual-matchup': isIndividualMatchup}">
+  <div class="row">
+    <ng-container *ngIf="customTable">
+      <ng-content></ng-content>
+    </ng-container>
+    <div class="col-md-8 col-12" *ngIf="!customTable">
+      <table class="multi-row-data-table t-stripped">
+        <colgroup span="1">
+          <col span="1" class="team-name-colspan"/>
+        </colgroup>
+        <colgroup span="3"></colgroup>
+        <tbody>
+        <tr class="t-header">
+          <th colspan="4" scope="colgroup" class="text-center">{{tableName}}</th>
+        </tr>
+        <tr class="t-sub-header">
+          <th scope="col" class="text-center">Teams</th>
+          <th scope="col" class="text-center">Open</th>
+          <th scope="col" class="text-center">Current</th>
+          <th scope="col" class="text-center">Change</th>
+        </tr>
+        <tr *ngIf="awayTeamName" class="t-content">
+          <th scope="row">
+            <div class="nowrap">
+              <img [type]="bordered ? 'bordered' : 'white'" [appSpriteImg]="league" class="mr-1 logo-sm" [src]="awayLogo" alt="{{awayTeamName}}">
+              <span class="team-name-short">{{awayTeamName | lastTeamName}}</span>
+              <span class="team-name-normal">{{awayTeamName}}</span>
+            </div>
+          </th>
+          <td>{{awayOpen}}</td>
+          <td>{{awayCurrent}}</td>
+          <td>{{awayChange}}</td>
+        </tr>
+        <tr *ngIf="homeTeamName" class="t-content">
+          <th scope="row">
+            <div class="nowrap">
+              <img [type]="bordered ? 'bordered' : 'white'" [appSpriteImg]="league" class="mr-1 logo-sm" [src]="homeLogo" alt="{{homeTeamName}}">
+              <span class="team-name-short">{{homeTeamName | lastTeamName}}</span>
+              <span class="team-name-normal">{{homeTeamName}}</span>
+            </div>
+          </th>
+          <td>{{homeOpen}}</td>
+          <td>{{homeCurrent}}</td>
+          <td>{{homeChange}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div [ngClass]="chartClassWrapper">
+      <div class="row">
+        <div *ngIf="awayTeamName" class="p-2 col-md-12" [ngClass]="{'col-6 text-center text-md-left': homeTeamName}">
+          <div class="legend" [ngStyle]="{backgroundColor: colors[0].borderColor}"></div>
+          <span class="hidden-xs-down">{{awayTeamName}}</span>
+          <span class="hidden-sm-up">{{awayTeamName | lastTeamName}}</span>
+        </div>
+        <div *ngIf="homeTeamName" class="p-2 col-md-12" [ngClass]="{'col-6 text-center text-md-left': awayTeamName}">
+          <div class="legend" [ngStyle]="{backgroundColor: colors[1] ? colors[1].borderColor : colors[0].borderColor}"></div>
+          <span class="hidden-xs-down">{{homeTeamName}}</span>
+          <span class="hidden-sm-up">{{homeTeamName | lastTeamName}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="chart-wrapper">
+        <canvas baseChart height="300"
+                [datasets]="datasets"
+                [labels]="_labels"
+                [options]="options"
+                [colors]="colors"
+                [legend]="legend"
+                [chartType]="chartType">
+        </canvas>
+      </div>
+    </div>
+  </div>
+</div>

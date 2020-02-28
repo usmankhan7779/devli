@@ -1,0 +1,277 @@
+<div class="row" *ngIf="ddData?.seasons">
+  <div class="col-12">
+    <div class="d-flex">
+      <div class="grouped-dropdown-wrapper btn-group mb-0">
+        <app-dropdown
+          *ngIf="isSchedulePage"
+          [ddData]="ddData"
+          prop="seasons"
+          [className]="'first last'"
+          [linksOnly]="true"
+        ></app-dropdown>
+        <app-dropdown
+          *ngIf="!isSchedulePage"
+          [ddData]="ddData"
+          [className]="'first last'"
+          [filterItems]="onDropdownChange.bind(this)"
+          prop="seasons"
+          [isSingleSelect]="true"
+        ></app-dropdown>
+        <app-dropdown
+          class="mobile-tab-selector"
+          [ddData]="ddData"
+          [className]="(ddData.activeTab !== 1 ? 'last' : '')"
+          [filterItems]="onDropdownChange.bind(this)"
+          prop="tabs"
+          [isSingleSelect]="true"
+        ></app-dropdown>
+        <app-week-selector-mobile
+          [hidden]="ddData.activeTab !== 1"
+          [className]="'last'"
+          class="mobile-week-selector"
+          [weekCount]="availableWeeks"
+          [selectedWeek]="_params?.week"
+          (weekChanged)="updateWeek($event)">
+        </app-week-selector-mobile>
+      </div>
+      <div class="toggles-in-page-wrapper my-0 normal-tab-selector">
+        <div class="toggles-in-page-group btn-group toggles-group">
+          <ng-container *ngIf="isSchedulePage">
+            <a (click)="showSpinner(tab.selected)" [routerLink]="['/nfl/schedule' + (tab.url ? '/' + tab.url : '') + (_params.year && _params.year !== 'current' ? '/' + this._params.year : '')]" *ngFor="let tab of ddData.tabs; let first = first; let last = last;"
+                    class="toggle-in-page" [ngClass]="{'active': tab.selected, 'first': first, 'last': last}">
+              {{tab.name}}
+            </a>
+          </ng-container>
+          <ng-container *ngIf="!isSchedulePage">
+            <button *ngFor="let tab of ddData.tabs; let first = first; let last = last;"
+                    (click)="onTabClick(tab.prop);"
+                    class="toggle-in-page" [ngClass]="{'active': tab.selected, 'first': first, 'last': last}">
+              {{tab.name}}
+            </button>
+          </ng-container>
+        </div>
+      </div>
+      <div *ngIf="ddData.activeTab === 1" class="toggles-in-page-wrapper normal-tab-selector ml-2 my-0">
+        <div class="toggles-in-page-group btn-group toggles-group week-toggles">
+          <!--<ng-container *ngIf="isSchedulePage && _params.year === 'current'">-->
+            <!--<a-->
+              <!--*ngFor="let tab of weeksArray; let first = first; let last = last;"-->
+              <!--(click)="showSpinner(_params.week == tab)"-->
+              <!--[routerLinkActive]="'active'"-->
+              <!--[routerLink]="[generateUrlForSeasonsDd(tab, ddData.unFormattedSeasons, {year: _params.year})]"-->
+               <!--class="toggle-in-page" [ngClass]="{'first': first, 'last': last}">-->
+              <!--Wk {{tab}}-->
+            <!--</a>-->
+          <!--</ng-container>-->
+          <!--<ng-container *ngIf="!isSchedulePage || _params.year !== 'current'">-->
+            <button
+              *ngFor="let tab of weeksArray; let first = first; let last = last;"
+              (click)="updateWeek({week: tab, initial: false})"
+              class="toggle-in-page" [ngClass]="{'active': _params.week == tab, 'first': first, 'last': last}">
+              Wk {{tab}}
+            </button>
+          <!--</ng-container>-->
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <div class="schedule-entities-wrap" *ngIf="scheduledItems && scheduledItems.length > 0">
+      <ng-container *ngFor="let week of scheduledItems; let offset = index">
+        <h4 *ngIf="week.length && week[0].week_heading" class="table-title">
+          {{week[0].week_heading}}
+        </h4>
+        <ng-container *ngFor="let day of week | orderBy: 'date'">
+          <div *ngIf="day.pendingGames.length" class="multi-row-data-table-wrapper pending-games">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="day.pendingGames"
+              mfSortBy="date"
+              mfSortOrder="asc"
+              #pendingGames="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <thead>
+              <tr class="t-sub-header">
+                <th class="text-center small-header">
+                  <mfSorter by="date">Date</mfSorter>
+                </th>
+                <th class="text-center date-header">
+                  <mfSorter by="date">Time</mfSorter>
+                </th>
+                <th class="text-center" width="15%">
+                  <mfSorter by="away_team_full_name">Away Team</mfSorter>
+                </th>
+                <th class="text-center" width="15%">
+                  <mfSorter by="home_team_full_name">Home Team</mfSorter>
+                </th>
+                <th class="text-center stadium-col">
+                  <mfSorter by="stadium_name">Stadium</mfSorter>
+                </th>
+                <th class="text-center depth-chart-col">
+                  <mfSorter by="away_depth_chart">Depth Chart</mfSorter>
+                </th>
+                <th class="text-center depth-chart-col">
+                  <mfSorter by="home_depth_chart">Depth Chart</mfSorter>
+                </th>
+                <th *ngIf="ddData.activeTab !== 2" class="text-center matchup-col">
+                  <mfSorter [by]="sortByMatchup">Matchup</mfSorter>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr class="t-content" *ngFor="let game of pendingGames.data">
+                <td>{{day.date | amTimeZone | amDateFormat: 'ddd, M/D'}}</td>
+                <td>{{ (game.date_time || game.date) | amTimeZone | amDateFormat:'h:mm a' | lowercase}} {{timeZoneName}}</td>
+                <td class="text-left">
+                  <a [appPreselectNflDepthChartTeamSeason]="_params?.year" [routerLink]="[game.away_depth_chart_route || '']" rel="nofollow" class="link-black">
+                    <img [type]="'white'" [appSpriteImg]="'nfl'" class="team-logo-mini" [src]="game.away_white_logo" alt="{{game.away_team_full_name}}"/>
+                  </a>
+                  <a [appPreselectNflDepthChartTeamSeason]="_params?.year" [routerLink]="[game.away_depth_chart_route || '']" class="link-black-underline">
+                    <span class="team-name-short">
+                      {{game.away_team_full_name | lastTeamName}}
+                    </span>
+                    <span class="team-name-full">
+                      {{game.away_team_full_name}}
+                    </span>
+                  </a> ({{(game.away_wins + ' - ' + game.away_losses)}})
+                </td>
+                <td class="text-left">
+                  <a [appPreselectNflDepthChartTeamSeason]="_params?.year" [routerLink]="[game.home_depth_chart_route || '']" rel="nofollow" class="link-black-underline">
+                    <img [type]="'white'" [appSpriteImg]="'nfl'" class="team-logo-mini" [src]="game.home_white_logo" alt="{{game.home_team_full_name}}"/>
+                  </a>
+                  <a [appPreselectNflDepthChartTeamSeason]="_params?.year" [routerLink]="[game.home_depth_chart_route || '']" class="link-black-underline">
+                    <span class="team-name-short">
+                      {{game.home_team_full_name | lastTeamName}}
+                    </span>
+                    <span class="team-name-full">
+                      {{game.home_team_full_name}}
+                    </span>
+                  </a> ({{(game.home_wins + ' - ' + game.home_losses)}})
+                </td>
+                <td>{{game.stadium_name}}</td>
+                <td>
+                  <a [appPreselectNflDepthChartTeamSeason]="_params?.year" [routerLink]="[game.away_depth_chart_route || '']">
+                    <span class="team-name-short">
+                      {{game.away_depth_chart | lastTeamName}}
+                    </span>
+                    <span class="team-name-full">
+                      {{game.away_depth_chart}}
+                    </span>
+                  </a>
+                </td>
+                <td>
+                  <a [appPreselectNflDepthChartTeamSeason]="_params?.year" [routerLink]="[game.home_depth_chart_route || '']">
+                    <span class="team-name-short">
+                      {{game.home_depth_chart | lastTeamName}}
+                    </span>
+                    <span class="team-name-full">
+                      {{game.home_depth_chart}}
+                    </span>
+                  </a>
+                </td>
+                <td *ngIf="ddData.activeTab !== 2">
+                  <a *ngIf="game.matchup_route" (click)="onMatchupLinkClick()" [routerLink]="[game.matchup_route]" [appNflMatchupIdPreselect]="game.game_key">
+                    {{ game.away_team_full_name | lastTeamName}} at {{ game.home_team_full_name | lastTeamName}}
+                  </a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="day.completedGames.length" class="multi-row-data-table-wrapper completed-games">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="day.completedGames"
+              mfSortBy="date"
+              mfSortOrder="asc"
+              #completedGames="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <thead>
+              <tr class="t-sub-header">
+                <th class="text-center small-header">
+                  <mfSorter by="date">Date</mfSorter>
+                </th>
+                <th class="text-center date-header">
+                  <mfSorter by="date">Time</mfSorter>
+                </th>
+                <th class="text-center" width="15%">
+                  <mfSorter by="away_team_full_name">Away Team</mfSorter>
+                </th>
+                <th class="text-center" width="15%">
+                  <mfSorter by="home_team_full_name">Home Team</mfSorter>
+                </th>
+                <th class="text-center stadium-col">
+                  <mfSorter by="stadium_name">Stadium</mfSorter>
+                </th>
+                <th class="text-center" width="5%">
+                  <mfSorter [by]="sortByScore">Score</mfSorter>
+                </th>
+                <th class="text-center leader-col">
+                  <mfSorter by="passing_leader_name">Passing Leader</mfSorter>
+                </th>
+                <th class="text-center leader-col">
+                  <mfSorter by="receiving_leader_name">Receiving Leader</mfSorter>
+                </th>
+                <th class="text-center leader-col">
+                  <mfSorter by="rushing_leader_name">Rushing Leader</mfSorter>
+                </th>
+                <th *ngIf="ddData.activeTab !== 2" class="text-center matchup-col">
+                  <mfSorter [by]="sortByMatchup">Matchup</mfSorter>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr class="t-content" *ngFor="let game of completedGames.data">
+                <td>{{day.date | amTimeZone | amDateFormat: 'ddd, M/D'}}</td>
+                <td>{{ (game.date_time || game.date) | amTimeZone | amDateFormat:'h:mm a' | lowercase}} {{timeZoneName}}</td>
+                <td class="text-left">
+                  <a [appPreselectNflDepthChartTeamSeason]="_params?.year" [routerLink]="[game.away_depth_chart_route || '']" rel="nofollow" class="link-black-underline">
+                    <img [type]="'white'" [appSpriteImg]="'nfl'" class="team-logo-mini" [src]="game.away_white_logo" alt="{{game.away_team_full_name}}"/>
+                  </a>
+                  <a [appPreselectNflDepthChartTeamSeason]="_params?.year" [routerLink]="[game.away_depth_chart_route || '']" class="link-black-underline">
+                    <span class="team-name-short">
+                      {{game.away_team_full_name | lastTeamName}}
+                    </span>
+                    <span class="team-name-full">
+                      {{game.away_team_full_name}}
+                    </span>
+                  </a> ({{(game.away_wins + ' - ' + game.away_losses)}})
+                </td>
+                <td class="text-left">
+                  <a [appPreselectNflDepthChartTeamSeason]="_params?.year" [routerLink]="[game.home_depth_chart_route || '']" rel="nofollow" class="link-black">
+                    <img [type]="'white'" [appSpriteImg]="'nfl'" class="team-logo-mini" [src]="game.home_white_logo" alt="{{game.home_team_full_name}}"/>
+                  </a>
+                  <a [appPreselectNflDepthChartTeamSeason]="_params?.year" [routerLink]="[game.home_depth_chart_route || '']" class="link-black-underline">
+                    <span class="team-name-short">
+                      {{game.home_team_full_name | lastTeamName}}
+                    </span>
+                    <span class="team-name-full">
+                      {{game.home_team_full_name}}
+                    </span>
+                  </a> ({{(game.home_wins + ' - ' + game.home_losses)}})
+                </td>
+                <td>{{game.stadium_name}}</td>
+                <td>{{game.away_score != null && game.home_score != null ? game.away_score + '-' + game.home_score : 'N/A'}}</td>
+                <td>
+                  {{game.passing_leader_name ? (game.passing_leader_name | shortPlayerName) + ', ' + (game.passing_leader_yards || '0') + ' yds ' + (game.passing_leader_touchdowns || '0') + ' TD' : ''}}
+                </td>
+                <td>
+                  {{game.receiving_leader_name ? (game.receiving_leader_name | shortPlayerName) + ', ' + (game.receiving_leader_yards || '0') + ' yds ' + (game.receiving_leader_touchdowns || '0') + ' TD' : ''}}
+                </td>
+                <td>
+                  {{game.rushing_leader_name ? (game.rushing_leader_name | shortPlayerName) + ', ' + (game.rushing_leader_yards || '0') + ' yds ' + (game.rushing_leader_touchdowns || '0') + ' TD' : ''}}
+                </td>
+                <td *ngIf="ddData.activeTab !== 2">
+                  <a *ngIf="game.matchup_route" (click)="onMatchupLinkClick()" [routerLink]="[game.matchup_route]" [appNflMatchupIdPreselect]="game.game_key">{{ game.away_team_full_name | lastTeamName}} at {{ game.home_team_full_name | lastTeamName}}</a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</div>

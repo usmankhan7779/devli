@@ -1,0 +1,224 @@
+<ng-template #loading>
+  <div class="starting-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+<div class="container-fluid pb-4" *ngIf="rosterData; else loading">
+  <app-breadcrumb (performActionOnClick)="performActionOnBreadcrumbClick($event)"></app-breadcrumb>
+  <div>
+    <div class="row">
+      <div class="team-lineup-heading-wrap nfl-team-depth-chart-heading col-lg-8 col-12 clearfix">
+        <!-- Team Lineup Heading Text-->
+        <div class="team-lineup-heading-text">
+          <!-- Team Lineup Heading Left -->
+          <div class="team-lineup-heading-left" [ngClass]="{'no-opponent': !(rosterData.nav.opp_depth_chart_route && isDefaultYear)}">
+            <div class="team-logo with-status">
+              <img [type]="'white'" [appSpriteImg]="'nfl'" align="middle" [src]="rosterData.nav.team_logo_white" alt="{{rosterData.nav.team_name}}"/>
+            </div>
+            <div class="team-heading-info">
+              <app-status
+                side="right"
+                isHeader="true"
+                mobileTitle="{{rosterData.nav.team_name | lastTeamName}} Roster"
+                [teamName]="pageTitle"
+                [record]="rosterData.nav.team_record + ', ' + rosterData.nav.team_rank + ' ' + rosterData.nav.team_league + ' ' + rosterData.nav.team_division"
+              >
+              </app-status>
+            </div>
+          </div>
+          <!-- Team Lineup Heading Right -->
+          <div *ngIf="rosterData?.nav.opp_depth_chart_route && isDefaultYear" class="team-lineup-heading-right">
+            <div *ngIf="!rosterData.status || (rosterData.status.status !== 'In Progress' && rosterData.status.status !== 'Final')" class="float-right">
+              <h4 class="opponent-team-name">{{rosterData.nav.is_home ? 'vs' : 'at'}} {{rosterData.nav.opp_abbr}}</h4>
+              <h4 class="event-date">
+                <app-general-time-format [time]="rosterData.nav.matchup_time"></app-general-time-format>
+              </h4>
+            </div>
+            <div *ngIf="rosterData.status?.status === 'In Progress'" class="float-right">
+              <span [ngClass]="{'font-bold': rosterData.status.away_has_ball}">{{rosterData.status.away}} {{rosterData.status.away_score}}</span> @ <span [ngClass]="{'font-bold': rosterData.status.home_has_ball}">{{rosterData.status.home}} {{rosterData.status.home_score}}</span>
+              <br>
+              <p class="text-center">
+                {{rosterData.status.down}} & {{rosterData.status.distance}}, Q{{rosterData.status.quarter}} {{rosterData.status.time_remaining}}
+              </p>
+            </div>
+            <div *ngIf="rosterData.status?.status === 'Final'" class="float-right">
+              <span [ngClass]="{'font-bold': rosterData.status.away_score > rosterData.status.home_score}">{{rosterData.status.away}} {{rosterData.status.away_score}}</span> @ <span [ngClass]="{'font-bold': rosterData.status.home_score > rosterData.status.away_score}">{{rosterData.status.home}} {{rosterData.status.home_score}}</span>
+              <br>
+              <p class="text-center">Final</p>
+            </div>
+          </div>
+        </div>
+        <!-- Collapse Menu -->
+        <div class="in-page-collapse-toggle">
+          <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="isCollapsed = !isCollapsed"
+                  [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+            Menu
+          </button>
+        </div>
+        <div class="in-page-nav-menu" [ngbCollapse]="!isCollapsed" [ngClass]="{'hidden': !isCollapsed}">
+          <!-- Team Lineup Heading Navigation -->
+          <div class="page-heading-navigation">
+            <div *ngIf="rosterData.nav.is_home && rosterData?.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+              <a [appPreselectNflDepthChartTeamSeason]="activeYear" [routerLink]="[rosterData?.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{rosterData?.nav.opp_name}} Depth Chart</a>
+            </div>
+            <div *ngIf="!rosterData.nav.is_home && rosterData?.nav.team_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+              <a [appPreselectNflDepthChartTeamSeason]="activeYear" [routerLink]="[rosterData?.nav.team_depth_chart_route]" class="page-heading-nav-btn">{{rosterData?.nav.team_name}} Depth Chart</a>
+            </div>
+            <div *ngIf="!rosterData.nav.is_home && rosterData?.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+              <a [appPreselectNflDepthChartTeamSeason]="activeYear" [routerLink]="[rosterData?.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{rosterData?.nav.opp_name}} Depth Chart</a>
+            </div>
+            <div *ngIf="rosterData.nav.is_home && rosterData?.nav.team_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+              <a [appPreselectNflDepthChartTeamSeason]="activeYear" [routerLink]="[rosterData?.nav.team_depth_chart_route]" class="page-heading-nav-btn">{{rosterData?.nav.team_name}} Depth Chart</a>
+            </div>
+            <div *ngIf="rosterData.nav.matchup_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+              <a [appNflMatchupIdPreselect]="rosterData.nav.game_key" [routerLink]="rosterData.nav.matchup_route" class="page-heading-nav-btn">Matchups</a>
+            </div>
+            <!--news commented-->
+            <!--<div *ngIf="rosterData.nav.team_news_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">-->
+              <!--<a [appPreselectNflNewsTeamSeason]="activeYear" [routerLink]="[rosterData.nav.team_news_route]" class="page-heading-nav-btn">News</a>-->
+            <!--</div>-->
+            <div *ngIf="rosterData.nav.team_stats_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+              <a [appPreselectNflStatsTeamSeason]="activeYear" [routerLink]="[rosterData.nav.team_stats_route]" routerLinkActive="active" class="page-heading-nav-btn">Stats</a>
+            </div>
+            <div *ngIf="rosterData.nav.team_snaps_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+              <a [appPreselectNflSnapsTeamSeason]="activeYear" [routerLink]="[rosterData.nav.team_snaps_route]" routerLinkActive="active" class="page-heading-nav-btn">Snaps</a>
+            </div>
+            <div *ngIf="rosterData.nav.team_roster_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+              <a [appPreselectNflRosterTeamSeason]="activeYear" [routerLink]="[rosterData.nav.team_roster_route]" routerLinkActive="active" class="page-heading-nav-btn">Roster</a>
+            </div>
+            <div *ngIf="rosterData.nav.team_injuries_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt last">
+              <a [routerLink]="[rosterData.nav.team_injuries_route]" class="page-heading-nav-btn">Injuries</a>
+            </div>
+            <div *ngIf="rosterData.nav.team_schedule_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt last">
+              <a [appPreselectNflScheduleTeamSeason]="activeYear" [routerLink]="[rosterData.nav.team_schedule_route]" class="page-heading-nav-btn">Schedule</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-4 after-heading-margin zero-lg-height smaller-lg-box">
+        <app-ad-component [league]="'nfl'"></app-ad-component>
+      </div>
+    </div>
+    <div class="row">
+      <div *ngIf="rosterData.intro_paragraph" class="col-lg-8 col-12 flex-last flex-sm-unordered">
+        <p class="site-pages-content" [innerHtml]="rosterData.intro_paragraph | safeHtml"></p>
+      </div>
+      <div class="col-12" [ngClass]="{'no-intro-paragraph': !rosterData?.intro_paragraph}">
+        <div class="row">
+          <div class="col-12">
+            <div class="grouped-dropdown-wrapper btn-group">
+
+              <div ngbDropdown class="grouped-dropdown dropdown">
+                <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="main-dropdown" ngbDropdownToggle>
+                  <span class="pr-0 pr-sm-3">{{handleYear(activeYear)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="main-dropdown">
+                  <div *ngFor="let season of rosterData.seasons_dropdown;">
+                    <button
+                      [ngClass]="{'dd-active-btn': activeYear === season.year}"
+                      (click)="onYearDdChange(season)"
+                      class="dropdown-item">
+                      <span>{{season.name}}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="roster-entities-wrap">
+              <div class="multi-row-data-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="rosterData.data"
+                  #players="mfDataTable"
+                  [(mfSortBy)]="sortBy"
+                  [(mfSortOrder)]="sortOrder"
+                  class="multi-row-data-table t-stripped">
+                  <thead>
+                  <tr class="t-sub-header">
+                    <th class="text-left position-column px-3">
+                      <mfSorter [by]="sortByPosition">Pos</mfSorter>
+                    </th>
+                    <th class="text-center image-player-name-th">
+                      <mfSorter by="name">Name</mfSorter>
+                    </th>
+                    <th class="text-center">
+                      <mfSorter by="number">Number</mfSorter>
+                    </th>
+                    <th class="text-center">
+                      <mfSorter by="lineups_rating">Rating</mfSorter>
+                    </th>
+                    <th class="text-center">
+                      <mfSorter by="lineups_position_rank">Ranking</mfSorter>
+                    </th>
+                    <th class="text-center">
+                      <mfSorter by="depth_order">Depth</mfSorter>
+                    </th>
+                    <th class="text-center">
+                      <mfSorter by="height">Height</mfSorter>
+                    </th>
+                    <th class="text-center">
+                      <mfSorter by="weight">Weight</mfSorter>
+                    </th>
+                    <th class="text-center">
+                      <mfSorter by="age">Age</mfSorter>
+                    </th>
+                    <th class="text-center">
+                      <mfSorter by="birth_date">Birthday</mfSorter>
+                    </th>
+                    <th class="text-center">
+                      <mfSorter by="experience">Exp.</mfSorter>
+                    </th>
+                    <th class="text-center">
+                      <mfSorter by="college_draft_year">Drafted</mfSorter>
+                    </th>
+                    <th class="text-center">
+                      <mfSorter by="college_draft_round">Draft Round</mfSorter>
+                    </th>
+                    <th class="text-center">
+                      <mfSorter by="college_draft_pick">Draft Pick</mfSorter>
+                    </th>
+                    <th class="text-center" width="13%">
+                      <mfSorter by="college">College</mfSorter>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr class="t-content" *ngFor="let player of players.data">
+                    <td class="text-left px-3">{{player.position}}</td>
+                    <td class="image-player-name-td">
+                      <app-player-link [league]="'nfl'" [photoUrl]="player.photo_url" [playerName]="player.name" [playerUrl]="player.profile_url"></app-player-link>
+                    </td>
+                    <td>{{player.number}}</td>
+                    <td>
+                      <app-rating [value]="player.lineups_rating"></app-rating>
+                    </td>
+                    <td><ng-container *ngIf="player.lineups_position_rank">#{{player.lineups_position_rank}} {{player.position}}</ng-container></td>
+                    <td>{{player.depth_order}}</td>
+                    <td>{{player.height}}</td>
+                    <td>{{player.weight}}</td>
+                    <td>{{player.age}}</td>
+                    <td>{{player.birth_date | amTimeZone | amDateFormat: 'M/D/YY'}}</td>
+                    <td>{{player.experience}}</td>
+                    <td>{{player.college_draft_year}}</td>
+                    <td>{{player.college_draft_round}}</td>
+                    <td>{{player.college_draft_pick}}</td>
+                    <td class="text-left px-3">{{player.college}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="rosterData.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+        <h2 *ngIf="rosterData.bottom_header" class="page-heading-two">
+          {{rosterData.bottom_header}}
+        </h2>
+        <p class="site-pages-content" [innerHtml]="rosterData.bottom_paragraph | safeHtml"></p>
+      </div>
+    </div>
+  </div>
+</div>

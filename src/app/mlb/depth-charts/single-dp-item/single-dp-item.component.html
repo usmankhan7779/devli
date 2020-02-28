@@ -1,0 +1,16 @@
+<div class="multi-row-data-table-wrapper custom-width">
+  <div class="nowrap logo-name" [ngStyle]="{
+    'background-color': tableData.color,
+    'border-color': tableData.color
+    }">
+    <!--<a [routerLink]="'/'" class="link-black" rel="nofollow">-->
+      <!--<img [type]="'white'" [appSpriteImg]="'mlb'" class="mr-1 logo-sm" [src]="'assets/images/mlb/logos/white/' + teamName + '-white.svg'" alt="{{tableData.name}}">-->
+    <!--</a>-->
+    <a [routerLink]="[tableData.lineup_url]" class="link-black-underline">
+      <span class="hidden-lg-down">{{tableData.name}}</span>
+      <span class="hidden-xl-up">{{tableData.name | lastTeamName}}</span>
+    </a>
+  </div>
+  <div #tableContent>
+  </div>
+</div>

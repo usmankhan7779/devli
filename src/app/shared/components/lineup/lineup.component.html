@@ -1,0 +1,158 @@
+<div class="lineup">
+  <div *ngIf="mode === 'mlb'" class="d-flex justify-content-center lineup-header">
+    <div class="lineup-status align-self-center w-100 text-right">
+      <div *ngIf="lineupData.away_team.lineup_confirmed" class="confirmed-lineup">
+        <p class="lineup-state confirmed m-0">Confirmed <img src="/assets/images/green-check.png" alt="green-check" /></p>
+      </div>
+      <div *ngIf="!lineupData.away_team.lineup_confirmed" class="projected-lineup">
+        <p class="lineup-state projected m-0">Projected <img src="/assets/images/red-x.png" alt="red-x" /></p>
+      </div>
+    </div>
+    <div class="lineup-header-info text-center">
+      <div>
+        <p class="m-0">
+          <strong>
+            <app-general-time-format [time]="lineupData.date_time"></app-general-time-format>
+          </strong>
+        </p>
+        <p class="m-0">{{lineupData.risk}}</p>
+      </div>
+    </div>
+    <div class="lineup-status align-self-center w-100 text-left">
+      <div *ngIf="lineupData.home_team.lineup_confirmed" class="confirmed-lineup">
+        <p class="lineup-state confirmed m-0"><img src="/assets/images/green-check.png" alt="green-check" /> Confirmed</p>
+      </div>
+      <div *ngIf="!lineupData.home_team.lineup_confirmed" class="projected-lineup">
+        <p class="lineup-state projected m-0"><img src="/assets/images/red-x.png" alt="red-x" /> Projected</p>
+      </div>
+    </div>
+  </div>
+  <div *ngIf=" mode === 'nba'" class="d-flex justify-content-center lineup-header">
+    <div class="lineup-status align-self-center w-100 text-right">
+      <div *ngIf="lineupData.away.team_lineup_confirmed" class="confirmed-lineup">
+        <p class="lineup-state confirmed m-0">Confirmed <img src="/assets/images/green-check.png" alt="green-check" /></p>
+      </div>
+      <div *ngIf="!lineupData.away.team_lineup_confirmed" class="projected-lineup">
+        <p class="lineup-state projected m-0">Projected <img src="/assets/images/red-x.png" alt="red-x" /></p>
+      </div>
+    </div>
+    <div class="lineup-header-info text-center">
+      <div>
+        <p class="m-0">
+          <strong *ngIf="showDT()">
+            <app-general-time-format [time]="lineupData.game_time_dt"></app-general-time-format>
+          </strong>
+        </p>
+      </div>
+    </div>
+    <div class="lineup-status align-self-center w-100 text-left">
+      <div *ngIf="lineupData.home.team_lineup_confirmed" class="confirmed-lineup">
+        <p class="lineup-state confirmed m-0"><img src="/assets/images/green-check.png" alt="green-check" /> Confirmed</p>
+      </div>
+      <div *ngIf="!lineupData.home.team_lineup_confirmed" class="projected-lineup">
+        <p class="lineup-state projected m-0"><img src="/assets/images/red-x.png" alt="red-x" /> Projected</p>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="mode === 'nfl'" class="lineup-header">
+    <div class="lineup-header-info text-center">
+      <p class="m-0">
+        <strong *ngIf="showDT()">
+          <app-general-time-format [time]="lineupData.game_time_dt"></app-general-time-format>
+        </strong>
+      </p>
+    </div>
+  </div>
+  <app-matchup-heading
+    [league]="mode"
+    [awayTeamUrl]="getTeamUrl('away')"
+    [homeTeamUrl]="getTeamUrl('home')"
+    [homeTeamName]="getTeamName('home')"
+    [homeTeamDetails]="getTeamDetails('home')"
+    [homeTeamLogoSrc]="getTeamLogo('home')"
+    [awayTeamName]="getTeamName('away')"
+    [awayTeamDetails]="getTeamDetails('away')"
+    [awayTeamLogoSrc]="getTeamLogo('away')"
+    [allowShortNames]="allowShortNames()"
+    align="center"
+  ></app-matchup-heading>
+  <div class="row">
+    <div class="col-12">
+      <div class="matchup-link-container">
+        <a *ngIf="mode === 'nfl' && lineupData.matchup_route" [appNflMatchupIdPreselect]="lineupData?.game_key" [routerLink]="[lineupData.matchup_route]">See Matchup</a>
+        <a *ngIf="mode === 'nba' && lineupData.matchup_route" [appNbaMatchupIdPreselect]="lineupData.game_id" [routerLink]="[lineupData.matchup_route]">See Matchup</a>
+        <a *ngIf="mode === 'mlb' && lineupData.matchup_route" [appMlbMatchupIdPreselect]="lineupData.game_id" [routerLink]="[lineupData.matchup_route]">See Matchup</a>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <table class="multi-row-data-table t-stripped-reverse lineup-table mb-0">
+        <tbody>
+          <ng-container *ngIf="mode === 'mlb'">
+            <tr class="t-content" *ngFor="let hitter of hitters; let i = index;">
+              <td>
+                {{i + 1}}.
+                <ng-container *ngIf="hitter.away_player.first_dot_last">
+                  <app-player-link [league]="mode" [playerName]="hitter.away_player.first_dot_last" [playerUrl]="hitter.away_player.profile_url" [generateShortName]="false"></app-player-link>, {{hitter.home_player.position}}, {{hitter.away_player.position}}
+                </ng-container>
+              </td>
+              <td>
+                {{i + 1}}.
+                <ng-container *ngIf="hitter.home_player.first_dot_last">
+                  <app-player-link [league]="mode" [playerName]="hitter.home_player.first_dot_last" [playerUrl]="hitter.home_player.profile_url" [generateShortName]="false"></app-player-link>, {{hitter.home_player.position}}
+                </ng-container>
+              </td>
+            </tr>
+          </ng-container>
+          <ng-container *ngIf="mode === 'nfl'">
+            <tr class="t-content" *ngFor="let player of players">
+              <td>
+                {{player.away_player.position || ''}}
+                <app-player-link [league]="mode" [playerName]="player.away_player.player" [playerUrl]="player.away_player.profile_url" [generateShortName]="false"></app-player-link>
+              </td>
+              <td>
+                {{player.home_player.position || ''}}
+                <app-player-link [league]="mode" [playerName]="player.home_player.player" [playerUrl]="player.home_player.profile_url" [generateShortName]="false"></app-player-link>
+              </td>
+            </tr>
+          </ng-container>
+          <ng-container *ngIf="mode === 'nba'">
+            <tr class="t-content" *ngFor="let player of players">
+              <td>
+                {{player.away_player.position}}
+                <app-player-link [league]="mode" [playerName]="player.away_player.full_name || player.away_player.name" [playerUrl]="player.away_player.profile_url" [generateShortName]="false"></app-player-link>
+              </td>
+              <td>
+                {{player.home_player.position}}
+                <app-player-link [league]="mode" [playerName]="player.home_player.full_name || player.home_player.name" [playerUrl]="player.home_player.profile_url" [generateShortName]="false"></app-player-link>
+              </td>
+            </tr>
+          </ng-container>
+         <tr class="t-content" *ngIf="mode === 'mlb'">
+           <td>
+             <app-player-link [league]="mode" [playerName]="lineupData.away_team.pitcher.first_dot_last" [playerUrl]="lineupData.away_team.pitcher.profile_url" [generateShortName]="false"></app-player-link>
+             ({{lineupData.away_team.pitcher.hand}}) {{lineupData.away_team.pitcher.era}} ERA
+           </td>
+           <td>
+             <app-player-link [league]="mode" [playerName]="lineupData.home_team.pitcher.first_dot_last" [playerUrl]="lineupData.home_team.pitcher.profile_url" [generateShortName]="false"></app-player-link>
+             ({{lineupData.home_team.pitcher.hand}}) {{lineupData.home_team.pitcher.era}} ERA
+           </td>
+         </tr>
+         <!--<tr class="t-content-lineup-bottom">-->
+           <!--<td>-->
+           <!--&lt;!&ndash;<td class="lock-red">&ndash;&gt;-->
+             <!--&lt;!&ndash;<img class="lock-icon mr-1" src="/assets/images/lock-red.png" alt="">&ndash;&gt;-->
+             <!--{{(mode === 'mlb' ? lineupData.away_team.full_name : lineupData.away.name) | lastTeamName}} {{mode === 'mlb' ? lineupData.away_team.probability : lineupData.away.win_prob}}% Win-->
+           <!--</td>-->
+           <!--<td>-->
+           <!--&lt;!&ndash;<td class="lock-green">&ndash;&gt;-->
+             <!--&lt;!&ndash;<img class="lock-icon mr-1" src="/assets/images/lock-green.png" alt="">&ndash;&gt;-->
+             <!--{{(mode === 'mlb' ? lineupData.home_team.full_name : lineupData.home.name) | lastTeamName}} {{mode === 'mlb' ? lineupData.home_team.probability : lineupData.home.win_prob}}% Win-->
+           <!--</td>-->
+         <!--</tr>-->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+<section id="selected-team-news" class="team-news" *ngIf="newsData">
+  <div class="row">
+    <div *ngIf="newsData?.intro_paragraph" class="col-12 col-lg-8 flex-last flex-sm-unordered">
+      <p class="site-pages-content" [innerHtml]="newsData.intro_paragraph | safeHtml"></p>
+    </div>
+    <div class="col-md-6 col-12">
+
+      <div class="d-flex flex-wrap justify-content-between">
+        <div class="team-name-label mt-2 mr-3">
+          <h2 class="mb-0">{{newsData.nav.team_name}} News</h2>
+        </div>
+        <div class="align-self-center mt-1 mb-4">
+          <app-search-input [searchFn]="filterByName.bind(this)" (onDataFiltered)="updateNews($event)"></app-search-input>
+        </div>
+      </div>
+
+      <ng-container  *ngFor="let newsItem of newsItems | orderBy: 'updated': false;">
+        <app-news-item
+          class="inner-news-item"
+          cardLeague="nba"
+          [cardTitle]="newsItem.title"
+          [cardContent]="newsItem.content"
+          [cardImageRoute]="newsData.nav.team_logo_white"
+          [cardDate]="newsItem.updated"
+          [fullLogoUrl]="true"
+          [borderedLogo]="false"
+        ></app-news-item>
+      </ng-container>
+    </div>
+    <div *ngIf="newsData?.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="newsData.bottom_header" class="page-heading-two">
+        {{newsData.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="newsData.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+</section>

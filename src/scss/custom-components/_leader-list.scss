@@ -1,0 +1,267 @@
+$breakpoint-1: 1369px;
+$no-logo-br: 1039px;
+$short-name-br: 859px;
+
+$team-br-1: 859px;
+$team-br-2: 541px;
+$team-br-3: 445px;
+$player-br-1: 769px;
+
+$team-br-mobile: 337px;
+$player-br-mobile: 447px;
+
+
+.stats-leader-list {
+  .leader-card-header {
+    font-weight: bold;
+    font-size: 20px;
+  }
+  .team-img-sm {
+    width: 20px;
+    margin: 0 0 3px 0;
+  }
+  .leader-image-container {
+    width: 80px;
+    margin-right: 20px;
+    img {
+      width: 100%;
+      &.player-img {
+        border: 1px solid darkgrey;
+      }
+    }
+  }
+  .leader-table-container {
+    flex: 1;
+    table {
+      width: 100%;
+      .leader-name {
+        font-weight: bold;
+      }
+      .leader-team {
+        opacity: 0.5;
+        font-size: 12px;
+      }
+    }
+  }
+  .leader-row {
+    &.active {
+      background-color: #02afee;
+      color: white;
+      a {
+        color: white;
+      }
+    }
+  }
+  .short-team-name, .team-name-abbr, .leader-card-header-sm-name {
+    display: none;
+  }
+  .short-team-name, .team-name-abbr, .normal-team-name {
+    margin-left: 5px;
+  }
+}
+
+.leader-list-wrapper {
+  margin: 0 40px 30px 40px;
+  justify-content: space-around;
+  @media (max-width: 1500px) {
+    margin: 0 0 30px 0;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+  }
+  .leader-list-item-container {
+    min-width: 380px;
+    margin: 0 30px 30px 30px;
+    @media (max-width: $breakpoint-1) {
+      min-width: 300px;
+      margin: 0 15px 30px 15px;
+      .stats-leader-list .team-img-sm {
+        margin: 2px 0 2px 0;
+      }
+    }
+    @media (max-width: $no-logo-br) {
+      min-width: 240px;
+    }
+    &.team-leader-list-wrapper {
+      @media (max-width: $short-name-br) {
+        min-width: 165px;
+      }
+      @media (max-width: $team-br-1) {
+        min-width: 150px;
+        margin: 0 7px 20px 7px;
+      }
+      @media (max-width: $team-br-2) {
+        min-width: 122px;
+        margin: 0 5px 20px 5px;
+      }
+      @media (max-width: $team-br-3) {
+        min-width: 90px;
+        width: 30%;
+        margin: 0 3px 20px 3px;
+      }
+      @media (max-width: $team-br-mobile) {
+        min-width: 60px;
+      }
+    }
+    &:not(.team-leader-list-wrapper) {
+      @media (max-width: $short-name-br) {
+        min-width: 210px;
+      }
+      @media (max-width: $player-br-1) {
+        min-width: 185px;
+        margin: 0 7px 20px 7px;
+      }
+      @media (max-width: $player-br-mobile) {
+        margin: 0 0 20px 0;
+        min-width: 100%;
+      }
+    }
+  }
+  .stats-leader-list {
+    @media (max-width: $breakpoint-1) {
+      .leader-image-container {
+        width: 60px;
+        margin-right: 10px;
+      }
+      .leader-card-header {
+        font-size: 18px;
+      }
+      .leader-table-container table {
+        font-size: 14px;
+      }
+    }
+    @media (max-width: $no-logo-br) {
+      .leader-image-container {
+        display: none;
+      }
+      .leader-card-header {
+        font-size: 16px;
+      }
+    }
+    &.team-leader-list {
+      @media (max-width: $short-name-br) {
+        .normal-team-name {
+          display: none;
+        }
+        .short-team-name {
+          display: inline;
+        }
+        .leader-card-header {
+          font-size: 15px;
+        }
+      }
+      @media (max-width: $team-br-1) {
+        .leader-table-container table {
+          font-size: 12px;
+        }
+      }
+      @media (max-width: $team-br-2) {
+        .leader-table-container table {
+          font-size: 10px;
+        }
+        .leader-card-header {
+          font-size: 14px;
+        }
+        .leader-card-header-sm-name {
+          display: inline;
+        }
+        .leader-card-header-name {
+          display: none;
+        }
+      }
+      @media (max-width: $team-br-3) {
+        .short-team-name {
+          display: none;
+        }
+        .team-name-abbr {
+          display: inline;
+        }
+        .leader-table-container table {
+          font-size: 10px;
+        }
+      }
+      @media (max-width: $team-br-mobile) {
+        .team-img-sm {
+          display: none;
+        }
+        button.see-all-btn {
+          font-size: 12px;
+        }
+      }
+    }
+    &:not(.team-leader-list) {
+      @media (max-width: $player-br-1) {
+        .leader-table-container table {
+          font-size: 12px;
+        }
+        .leader-team {
+          font-size: 10px;
+        }
+      }
+      @media (max-width: $player-br-mobile) {
+        .leader-table-container table {
+          font-size: 14px;
+        }
+        .leader-team {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
+
+
+.lineup-player-image-list {
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  .player-image-wrapper {
+    text-align: center;
+    margin: 0 5px;
+    img {
+      width: 65px;
+      height: 90px;
+      border-radius: 40%;
+    }
+    .player-under-image-details {
+      font-size: 14px;
+    }
+  }
+  &.mlb-lineup-player-list {
+    @media (max-width: 1200px) {
+      .player-image-wrapper {
+        margin: 0 5px;
+        .player-under-image-details {
+          font-size: 12px;
+        }
+      }
+    }
+    @media (max-width: 1030px) {
+      -ms-flex-pack: start;
+      justify-content: flex-start;
+    }
+    @media (max-width: 600px) {
+      -ms-flex-pack: center;
+      justify-content: center;
+      .player-image-wrapper {
+        min-width: 89px;
+      }
+    }
+  }
+  &.nba-lineup-player-list {
+    @media (max-width: 740px) {
+      .player-image-wrapper {
+        margin: 0 5px;
+        .player-under-image-details {
+          font-size: 12px;
+        }
+      }
+    }
+    @media (max-width: 600px) {
+      -ms-flex-pack: center;
+      justify-content: center;
+      .player-image-wrapper {
+        min-width: 89px;
+      }
+    }
+  }
+}

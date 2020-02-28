@@ -1,0 +1,223 @@
+<div class="container-fluid pb-3">
+  <app-breadcrumb></app-breadcrumb>
+  <!-- Starting Lineups Page Title -->
+  <div class="row">
+    <div class="team-lineup-heading-wrap nfl-team-depth-chart-heading col-lg-8 col-12">
+      <!-- Team Lineup Heading Text-->
+      <div class="team-lineup-heading-text">
+        <!-- Team Lineup Heading Left -->
+        <div class="team-lineup-heading-left" [ngClass]="{'no-opponent': !(data.nav.opp_depth_chart_route && isDefaultSeason)}">
+          <div class="team-logo with-status">
+            <img [type]="'white'" [appSpriteImg]="'nfl'" align="middle" [src]="data.nav.team_logo_white" alt="{{data.nav.team_name}}"/>
+          </div>
+          <div class="team-heading-info">
+            <app-status
+              side="right"
+              [isHeader]="true"
+              mobileTitle="{{data.nav.team_name | lastTeamName}} Snaps"
+              [teamName]="data.heading"
+              [record]="data.nav.team_record + ', ' + data.nav.team_rank + ' ' + data.nav.team_league + ' ' + data.nav.team_division"
+            ></app-status>
+          </div>
+        </div>
+        <!-- Team Lineup Heading Right -->
+        <div *ngIf="data.nav.opp_depth_chart_route && isDefaultSeason" class="team-lineup-heading-right">
+          <div *ngIf="!data.nav.status || (data.nav.status.status !== 'In Progress' && data.nav.status.status !== 'Final')" class="float-right">
+            <h4 class="opponent-team-name">{{data.nav.is_home ? 'vs' : 'at'}} {{data.nav.opp_abbr}}</h4>
+            <h4 class="event-date">
+              <app-general-time-format [time]="data.nav.matchup_time"></app-general-time-format>
+            </h4>
+          </div>
+          <div *ngIf="data.nav.status?.status === 'In Progress'" class="float-right">
+            <span [ngClass]="{'font-bold': data.nav.status.away_has_ball}">{{data.nav.status.away}} {{data.nav.status.away_score}}</span> @ <span [ngClass]="{'font-bold': data.nav.status.home_has_ball}">{{data.nav.status.home}} {{data.nav.status.home_score}}</span>
+            <br>
+            <p class="text-center">
+              {{data.nav.status.down}} & {{data.nav.status.distance}}, Q{{data.nav.status.quarter}} {{data.nav.status.time_remaining}}
+            </p>
+          </div>
+          <div *ngIf="data.nav.status?.status === 'Final'" class="float-right">
+            <span [ngClass]="{'font-bold': data.nav.status.away_score > data.nav.status.home_score}">{{data.nav.status.away}} {{data.nav.status.away_score}}</span> @ <span [ngClass]="{'font-bold': data.nav.status.home_score > data.nav.status.away_score}">{{data.nav.status.home}} {{data.nav.status.home_score}}</span>
+            <br>
+            <p class="text-center">Final</p>
+          </div>
+        </div>
+      </div>
+      <!-- Collapse Menu -->
+      <div class="in-page-collapse-toggle">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="isCollapsed = !isCollapsed"
+                [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+          Menu
+        </button>
+      </div>
+      <div class="in-page-nav-menu" [ngbCollapse]="!isCollapsed" [ngClass]="{'hidden': !isCollapsed}">
+        <!-- Team Lineup Heading Navigation -->
+        <div class="page-heading-navigation">
+          <div *ngIf="data.nav.is_home && data.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{ data.nav.opp_name | lastTeamName}} Depth Chart</a>
+          </div>
+          <div *ngIf="!data.nav.is_home" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.team_depth_chart_route]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="page-heading-nav-btn">{{ data.nav.team_name | lastTeamName}} Depth Chart</a>
+          </div>
+          <div *ngIf="data.nav.is_home" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.team_depth_chart_route]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="page-heading-nav-btn">{{ data.nav.team_name | lastTeamName}} Depth Chart</a>
+          </div>
+          <div *ngIf="!data.nav.is_home && data.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{ data.nav.opp_name | lastTeamName}} Depth Chart</a>
+          </div>
+          <div *ngIf="data.nav.matchup_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appNflMatchupIdPreselect]="data.nav.game_key" [routerLink]="[data.nav.matchup_route]" routerLinkActive="active" class="page-heading-nav-btn">Matchups</a>
+          </div>
+          <!--news commented-->
+          <!--<div *ngIf="data.nav.team_news_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">-->
+            <!--<a [appPreselectNflNewsTeamSeason]="params?.year" [routerLink]="[data.nav.team_news_route]" routerLinkActive="active" class="page-heading-nav-btn">News</a>-->
+          <!--</div>-->
+          <div *ngIf="data.nav.team_stats_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appPreselectNflStatsTeamSeason]="params?.year" [routerLink]="[data.nav.team_stats_route]" routerLinkActive="active" class="page-heading-nav-btn">Stats</a>
+          </div>
+          <div class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [routerLink]="['./']" routerLinkActive="active" class="page-heading-nav-btn">Snaps</a>
+          </div>
+          <div *ngIf="data.nav.team_roster_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appPreselectNflRosterTeamSeason]="params?.year" [routerLink]="[data.nav.team_roster_route]" routerLinkActive="active" class="page-heading-nav-btn">Roster</a>
+          </div>
+          <div *ngIf="data.nav.team_injuries_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [routerLink]="[data.nav.team_injuries_route]" routerLinkActive="active" class="page-heading-nav-btn">Injuries</a>
+          </div>
+          <div *ngIf="data.nav.team_schedule_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt last">
+            <a [appPreselectNflScheduleTeamSeason]="params?.year" [routerLink]="[data.nav.team_schedule_route]" class="page-heading-nav-btn">Schedule</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 after-heading-margin zero-lg-height smaller-lg-box">
+      <app-ad-component [league]="'nfl'"></app-ad-component>
+    </div>
+  </div>
+  <div class="row">
+    <div *ngIf="data.intro_paragraph" class="col-lg-8 col-12 flex-last flex-sm-unordered">
+      <p class="site-pages-content" [innerHtml]="data.intro_paragraph | safeHtml"></p>
+    </div>
+    <div class="col-12" [ngClass]="{'no-intro-paragraph': !data.intro_paragraph}">
+      <div class="row">
+        <div class="col-12 after-text-margin">
+          <div class="in-page-dropdown-toggle" [ngClass]="{'no-dropdown': !dropdownCollapsed}">
+            <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="dropdownCollapsed = !dropdownCollapsed"
+                    [attr.aria-expanded]="!dropdownCollapsed" aria-controls="collapseExample">
+              <i class="fa fa-bars dropdown-icon" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="d-flex top-action-section">
+            <div class="d-flex action-section">
+              <div class="in-page-dropdown-menu" [ngbCollapse]="!dropdownCollapsed" [ngClass]="{'hidden-dropdown': !dropdownCollapsed}">
+                <!-- Grouped Dropdown -->
+                <div class="grouped-dropdown-wrapper btn-group my-0">
+
+                  <div ngbDropdown class="grouped-dropdown dropdown">
+                    <button type="button" class="grouped-dropdown-btn btn btn-secondary first px-3" id="main-dropdown" ngbDropdownToggle>
+                      <span class="pr-0 pr-sm-3">{{handleYear(params.year)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down"/>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="main-dropdown">
+                      <div *ngFor="let season of ddData.seasons;">
+                        <button
+                          [ngClass]="{'dd-active-btn': params.year === season.year}"
+                          (click)="onYearDdChange(season)"
+                          class="dropdown-item">
+                          <span>{{season.name}}</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <app-dropdown
+                    [ddData]="ddData"
+                    [className]="'last'"
+                    [filterItems]="onDdChange.bind(this)"
+                    [isSingleSelect]="true"
+                    prop="seasonTypeDropdown"
+                  ></app-dropdown>
+
+                  <div ngbDropdown class="grouped-dropdown dropdown position-dd">
+                    <button type="button" class="grouped-dropdown-btn btn btn-secondary px-3" id="secondary-dropdown" ngbDropdownToggle>
+                      <span class="pr-0 pr-sm-3">{{getActiveTab(true)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down"/>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="secondary-dropdown">
+                      <button (click)="onSnapCountBtnClick('offense')" class="dropdown-item" [ngClass]="{'dd-active-btn': ddData.tabs.offense}">Offense</button>
+                      <button (click)="onSnapCountBtnClick('qb')" class="dropdown-item" [ngClass]="{'dd-active-btn': ddData.tabs.qb}">QB</button>
+                      <button (click)="onSnapCountBtnClick('rb')" class="dropdown-item" [ngClass]="{'dd-active-btn': ddData.tabs.rb}">RB</button>
+                      <button (click)="onSnapCountBtnClick('wr')" class="dropdown-item" [ngClass]="{'dd-active-btn': ddData.tabs.wr}">WR</button>
+                      <button (click)="onSnapCountBtnClick('te')" class="dropdown-item" [ngClass]="{'dd-active-btn': ddData.tabs.te}">TE</button>
+                      <button (click)="onSnapCountBtnClick('k')" class="dropdown-item" [ngClass]="{'dd-active-btn': ddData.tabs.k}">Kickers</button>
+                      <button (click)="onSnapCountBtnClick('ol')" class="dropdown-item" [ngClass]="{'dd-active-btn': ddData.tabs.ol}">Offensive Line</button>
+                      <button (click)="onSnapCountBtnClick('def')" class="dropdown-item" [ngClass]="{'dd-active-btn': ddData.tabs.def}">Defense</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div class="toggles-in-page-wrapper standard-page d-inline-block mt-0 position-tab-bar">
+                <!-- Action Header Button Group -->
+                <div class="toggles-in-page-group btn-group toggles-group">
+                  <button (click)="onSnapCountBtnClick('offense')" class="toggle-in-page first" [ngClass]="{'active': ddData.tabs.offense}">Offense</button>
+                  <button (click)="onSnapCountBtnClick('qb')" class="toggle-in-page" [ngClass]="{'active': ddData.tabs.qb}">QB</button>
+                  <button (click)="onSnapCountBtnClick('rb')" class="toggle-in-page" [ngClass]="{'active': ddData.tabs.rb}">RB</button>
+                  <button (click)="onSnapCountBtnClick('wr')" class="toggle-in-page" [ngClass]="{'active': ddData.tabs.wr}">WR</button>
+                  <button (click)="onSnapCountBtnClick('te')" class="toggle-in-page" [ngClass]="{'active': ddData.tabs.te}">TE</button>
+                  <button (click)="onSnapCountBtnClick('k')" class="toggle-in-page" [ngClass]="{'active': ddData.tabs.k}">
+                    <span class="inner-col-switch">Kickers</span>
+                    <span class="inner-col-show">K</span>
+                  </button>
+                  <button (click)="onSnapCountBtnClick('ol')" class="toggle-in-page" [ngClass]="{'active': ddData.tabs.ol}">
+                    <span class="inner-col-switch">Offensive Line</span>
+                    <span class="inner-col-show">OL</span>
+                  </button>
+                  <button (click)="onSnapCountBtnClick('def')" class="toggle-in-page last" [ngClass]="{'active': ddData.tabs.def}">
+                    <span class="inner-col-switch">Defense</span>
+                    <span class="inner-col-show">DEF</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!--<div class="pagination-wrapper">-->
+            <!--<pagination-controls [maxSize]="5" (pageChange)="onPageChange($event)" id="server"></pagination-controls>-->
+            <!--</div>-->
+          </div>
+        </div>
+        <div class="col-12" *appBrowserIf="!data.data ||!data.data.length">
+          <div class="no-snaps-cap">
+            {{handleYear(params?.year)}} Regular Season Hasn't Started. Select Last Year for Snaps.
+          </div>
+        </div>
+        <div *ngIf="data?.data?.length" class="col-12">
+          <!--<app-targets-->
+          <!--[showTeam]="false"-->
+          <!--[sortWeek]="data.sort_week - 1"-->
+          <!--[showPos]="true"-->
+          <!--[tableType]="'running-back-rb-rush-attempts'"-->
+          <!--[showGP]="true"-->
+          <!--[data]="playersData"-->
+          <!--[originData]="data.data"-->
+          <!--[isNewApiFormat]="true"-->
+          <!--[showGame]="false"-->
+          <!--[allowPagination]="true"-->
+          <!--[itemsPerPage]="20"-->
+          <!--[currentPage]="currentPage"-->
+          <!--[weekCount]="(ddData.activeSeasonType === 1 ? 17 : 4)"></app-targets>-->
+          <app-targets
+            [showTeam]="false"
+            [sortWeek]="data.sort_week"
+            [showPos]="true"
+            [tableType]="'running-back-rb-rush-attempts'"
+            [showGP]="true"
+            [data]="playersData"
+            [originData]="data.data"
+            [isNewApiFormat]="true"
+            [showGame]="false"
+            [weekCount]="(ddData.activeSeasonType === 1 ? 17 : 4)"></app-targets>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

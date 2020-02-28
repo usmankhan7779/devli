@@ -1,0 +1,230 @@
+@mixin matchup-mobile-styles(
+  $is-individual: false,
+  $table-name-breakpoint: 1199px,
+  $table-min-width: 680px,
+  $table-breakpoint-width: 714px,
+  $small-breakpoint: 771px,
+  $hide-logo-breakpoint: 676px,
+  $xs-breakpoint: 566px,
+  $true-mobile-breakpoint: 524px) {
+  border: 1px solid #e1e1e1;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  .logo {
+    width: 60px;
+    height: 60px;
+    &.away-logo {
+      margin-left: 1rem;
+    }
+    &.home-logo {
+      margin-right: 1rem;
+    }
+  }
+  .mobile-stats {
+    display: none;
+  }
+  .content-border {
+    white-space: nowrap;
+  }
+  .team-section {
+    width: 50%;
+  }
+  .time-section {
+    min-width: 225px;
+  }
+  .matchup-header {
+    padding: 24px;
+    p {
+      margin: 0;
+      font-weight: normal;
+      font-size: 13px;
+    }
+    h5 {
+      font-size: 18px;
+      margin: 0;
+      font-weight: bold;
+    }
+
+    .media {
+      margin-top: 7px;
+    }
+  }
+  .table-wrapper {
+    width: calc(100% + 2px);
+  }
+
+  @media (max-width: $small-breakpoint) {
+    .logo {
+      width: 50px;
+      height: 50px;
+      &.away-logo {
+        margin-left: 8px;
+      }
+      &.home-logo {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  @media (max-width: $hide-logo-breakpoint) {
+    .logo {
+      display: none !important;
+    }
+  }
+
+  .short-matchup-team-name {
+    display: none;
+  }
+  @media (max-width: $table-name-breakpoint) {
+    .origin-matchup-team-name {
+      display: none;
+    }
+    .short-matchup-team-name {
+      display: inline;
+    }
+    .spread-col span {
+      display: block;
+    }
+  }
+
+  @media (max-width: $xs-breakpoint) {
+    .matchup-header {
+      p {
+        font-size: 13px;
+        margin-top: 1px;
+      }
+      h5 {
+        font-size: 15px;
+      }
+    }
+    .time-section {
+      min-width: 200px;
+    }
+  }
+
+  @media (max-width: $true-mobile-breakpoint) {
+    .mobile-stats {
+      display: inline;
+      &.stats-left {
+        margin-right: 5px;
+      }
+      &.stats-right {
+        margin-left: 5px;
+      }
+    }
+    .matchup-header {
+      padding: 8px;
+    }
+    .hide-on-mobile {
+      display: none;
+    }
+  }
+
+  .close-chart-btn {
+    height: 30px;
+    width: 40px;
+    padding: 1px 12px;
+    margin-bottom: 5px;
+    //color: white;
+  }
+
+
+  ::ng-deep app-status {
+    @media (max-width: $small-breakpoint) {
+      .app-status .details p, .app-status .details p.normal-text {
+        font-size: 12px !important;
+      }
+      .app-status .details h5 {
+        font-size: 19px !important;
+        line-height: 18px !important;
+        margin-bottom: 3px !important;
+      }
+    }
+    .normal-team-name {
+      display: inline !important;
+    }
+    .mobile-team-name {
+      display: none !important;
+    }
+    @media (max-width: 1180px)  {
+      .normal-team-name {
+        display: none !important;
+      }
+      .mobile-team-name {
+        display: inline !important;
+      }
+    }
+    @media (max-width: $xs-breakpoint) {
+      .app-status .details p, .app-status .details p.normal-text {
+        font-size: 11px !important;
+      }
+      .app-status .details h5 {
+        font-size: 16px !important;
+      }
+    }
+  }
+
+  @media (max-width: $table-breakpoint-width) {
+    .multi-row-data-table-wrapper {
+      overflow-x: auto;
+      table {
+        min-width: $table-min-width;
+      }
+    }
+  }
+}
+
+:host {
+  $table-name-breakpoint: 983px;
+  .matchup {
+    &.in-individual-matchup-wrapper {
+      @include matchup-mobile-styles(true, $table-name-breakpoint, 816px, 850px);
+    }
+    &:not(.in-individual-matchup-wrapper) {
+      @include matchup-mobile-styles();
+    }
+    &.ind-page {
+      border-radius: 0;
+      border: none;
+      .multi-row-data-table tbody {
+        border: 1px solid #e1e1e1;
+        border-top: none;
+      }
+      .matchup-col {
+        width: 335px;
+        @media (max-width: 1500px) {
+          width: 250px;
+        }
+        @media (max-width: $table-name-breakpoint) {
+          width: 200px;
+        }
+      }
+    }
+    &:not(.ind-page) {
+      .multi-row-data-table tbody {
+        border: none;
+      }
+      .matchup-col {
+        width: 233px;
+        @media (max-width: 1500px) {
+          width: 180px;
+        }
+        @media (max-width: $table-name-breakpoint) {
+          width: 140px;
+        }
+      }
+    }
+  }
+  .in-table-status-wrapper {
+    position: relative;
+    .in-table-status {
+      position: absolute;
+      right: 5px;
+      line-height: 23px;
+      @media (max-width: 1500px) {
+        line-height: 21px;
+      }
+    }
+  }
+}

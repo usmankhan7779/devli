@@ -1,0 +1,53 @@
+:host {
+  .graph-table-wrapper {
+    .chart-wrapper {
+      display: block;
+      margin-top: 20px;
+    }
+    .legend {
+      height: 10px;
+      width: 20px;
+      display: inline-flex;
+      margin-right: 5px;
+    }
+    .team-name-short {
+      display: none;
+    }
+    .team-name-colspan {
+      width: 29%;
+    }
+    @media (max-width: 500px) {
+      .legend + span {
+        font-size: 12px;
+      }
+    }
+    &:not(.individual-matchup) {
+      @media (min-width: 992px) and (max-width: 1273px), (max-width: 947px) {
+        .team-name-short {
+          display: inline;
+        }
+        .team-name-normal {
+          display: none;
+        }
+        .team-name-colspan {
+          width: 140px;
+        }
+      }
+    }
+    &.individual-matchup {
+      @media (min-width: 768px) and (max-width: 952px), (max-width: 657px) {
+        .team-name-short {
+          display: inline;
+        }
+        .team-name-normal {
+          display: none;
+        }
+        .team-name-colspan {
+          width: 139px;
+        }
+      }
+    }
+  }
+}
+
+

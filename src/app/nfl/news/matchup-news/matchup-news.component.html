@@ -1,0 +1,56 @@
+<ng-template #loadingTpl>
+  <div class="starting-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+<div *ngIf="matchup; else loadingTpl">
+  <div class="row" >
+    <div class="col-12 col-lg-8">
+      <div class="d-flex flex-wrap justify-content-between">
+        <div class="team-name-label mt-4 mr-3">
+          <h2 class="mb-0">Matchup News</h2>
+        </div>
+        <div class="align-self-center mt-3 mb-4">
+          <app-search-input [searchFn]="filterByName.bind(this)" (onDataFiltered)="updateNews($event)"></app-search-input>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 col-12">
+      <div class="team-name-label">
+        <h3 class="mt-2">{{matchup.away.full_name}} News</h3>
+      </div>
+      <ng-container  *ngFor="let newsItem of awayNewsItems | orderBy:'updated': false;">
+        <app-news-item
+          class="inner-news-item"
+          cardLeague="nfl"
+          [cardTitle]="newsItem.title"
+          [cardContent]="newsItem.content"
+          [cardImageRoute]="newsItem.white_logo"
+          [cardDate]="newsItem.updated"
+          [fullLogoUrl]="true"
+          [borderedLogo]="false"
+        ></app-news-item>
+      </ng-container>
+    </div>
+    <div class="col-md-6 col-12">
+      <div class="team-name-label">
+        <h3 class="mt-2">{{matchup.home.full_name}} News</h3>
+      </div>
+      <ng-container  *ngFor="let newsItem of homeNewsItems | orderBy:'updated': false;">
+        <app-news-item
+          class="inner-news-item"
+          cardLeague="nfl"
+          [cardTitle]="newsItem.title"
+          [cardContent]="newsItem.content"
+          [cardImageRoute]="newsItem.white_logo"
+          [cardDate]="newsItem.updated"
+          [fullLogoUrl]="true"
+          [borderedLogo]="false"
+        ></app-news-item>
+      </ng-container>
+    </div>
+  </div>
+</div>
+

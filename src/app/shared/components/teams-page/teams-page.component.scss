@@ -1,0 +1,208 @@
+@import '../../../../scss/bootstrap-customization/custom-mixins';
+
+@mixin mobile-view() {
+  .league-items-wrapper {
+    margin-left: -10px;
+    margin-right: -10px;
+  }
+  .app-team-list-item-container-wrapper {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .app-team-list-item-container {
+    width: 361px;
+  }
+  ::ng-deep app-team-list-item {
+    .team-info-item-name {
+      font-size: 18px !important;
+    }
+    .team-info-wrapper .team-info-item {
+      padding: 16px 15px !important;
+    }
+    .team-info-item-links {
+      font-size: 13px !important;
+      & > span {
+        &:before {
+          font-size: 8px !important;
+          margin: 0 2px !important;
+        }
+      }
+    }
+  }
+}
+
+:host {
+  .league-items-top-level-wrapper {
+    overflow: hidden;
+  }
+  .league-logo {
+    width: 36px;
+    height: 36px;
+  }
+  .search-input-wrapper {
+    margin-left: auto;
+  }
+  @media (max-width: 470px) {
+    .top-dd-wrapper {
+      @include flex-column-mixin();
+      margin-bottom: 22px;
+    }
+  }
+  .league-name {
+    font-size: 24px;
+    margin: 0;
+    font-weight: bold;
+  }
+  .league-items-wrapper {
+    margin-left: -20px;
+    margin-right: -20px;
+  }
+  .app-team-list-item-container-wrapper {
+    margin-left: 20px;
+    margin-right: 20px;
+    .app-team-list-item-container {
+      max-width: 435px;
+      width: 435px;
+      @media (max-width: 500px) {
+        width: 100%;
+      }
+    }
+    &:last-child .app-team-list-item-container {
+      margin-right: 0;
+      @media (max-width: 991px) {
+        margin: 0 auto;
+      }
+    }
+    @media (max-width: 991px) {
+      width: 100%;
+      .app-team-list-item-container {
+        margin: 0 auto;
+      }
+    }
+  }
+  & > div.mlb, & > div.nba {
+    .league-items-wrapper {
+      justify-content: space-around;
+      @media (max-width: 1500px) {
+        margin: 0 0 30px 0;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+      }
+    }
+    @media (max-width: 1475px) {
+      .app-team-list-item-container {
+        max-width: 390px;
+        width: 390px;
+      }
+    }
+    @media (max-width: 1339px) {
+      @include mobile-view();
+      .app-team-list-item-container {
+        max-width: 361px;
+        width: 361px;
+      }
+    }
+    @media (max-width: 1172px) {
+      @include mobile-view();
+      .app-team-list-item-container {
+        max-width: 327px;
+        width: 327px;
+      }
+    }
+    @media (max-width: 1070px) and (min-width: 992px) {
+      .app-team-list-item-container {
+        max-width: 298px;
+        width: 298px;
+      }
+      ::ng-deep app-team-list-item .team-info-item-links {
+         span:nth-child(3) {
+          display: none;
+        }
+      }
+    }
+    @media (max-width: 991px) {
+      .app-team-list-item-container {
+        max-width: 435px;
+        width: 435px;
+      }
+    }
+
+    @media (max-width: 470px) {
+      .app-team-list-item-container {
+        max-width: 361px;
+        width: 100%;
+      }
+    }
+  }
+  & > div.nfl {
+    .league-items-wrapper {
+      justify-content: space-between;
+      //@media (max-width: 1250px) {
+      //  justify-content: start;
+      //}
+    }
+    @media (max-width: 1908px) {
+      @include mobile-view();
+      ::ng-deep app-team-list-item {
+        .team-info-wrapper .team-info-item {
+          padding: 16px 6px !important;
+        }
+        .team-info-item-links {
+          font-size: 12px !important;
+          & > span {
+            &:before {
+              font-size: 5px !important;
+              margin: 0 1px !important;
+            }
+          }
+        }
+      }
+    }
+    @media (max-width: 1553px) and (min-width: 992px) {
+      .app-team-list-item-container {
+        max-width: 330px;
+        width: 330px;
+      }
+      ::ng-deep app-team-list-item .team-info-item-links {
+        span:nth-child(3) {
+          display: none;
+        }
+      }
+    }
+    @media (max-width: 1429px) and (min-width: 992px) {
+      ::ng-deep app-team-list-item {
+        .team-info-item-links {
+          font-size: 11px !important;
+        }
+      }
+      .app-team-list-item-container {
+        max-width: 301px;
+        width: 301px;
+      }
+    }
+    @media (min-width: 992px) and (max-width: 1314px) {
+      ::ng-deep app-team-list-item {
+        .team-info-wrapper .team-info-item .team-info-logo img {
+          margin-right: 9px !important;
+        }
+      }
+      .app-team-list-item-container {
+        max-width: 285px;
+        width: 285px;
+      }
+    }
+    @media (max-width: 991px) {
+      .app-team-list-item-container {
+        max-width: 435px;
+        width: 435px;
+      }
+    }
+    @media (max-width: 470px) {
+      .app-team-list-item-container {
+        max-width: 361px;
+        width: 100%;
+      }
+    }
+  }
+}

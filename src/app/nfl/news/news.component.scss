@@ -1,0 +1,5 @@
+@import "../../../scss/custom-components/responsive-page-nav";
+@import '../../../scss/shared/variables/project';
+:host {
+  @include mobile-navigation($nfl-nav-breakdown-1, $nfl-nav-breakdown-2, $nfl-nav-breakdown-3);
+}

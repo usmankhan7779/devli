@@ -1,0 +1,32 @@
+export interface ParkFactor {
+  park_name: string,
+  logo?: string;
+  opened?: boolean,
+  homeTeamUrl?: string;
+  awayTeamUrl?: string;
+  park_location: string,
+  park_city: string,
+  park_image: string,
+  game_time: string,
+  away_team: string,
+  home_team: string,
+  home_team_pitcher: string,
+  away_team_pitcher: string,
+  in_dome: boolean,
+  wind_speed: number,
+  wind_angle: number,
+  chance_of_rain: number,
+  temp: number,
+  weather_text: string,
+  weather_icon: string,
+  home_plate_dir: number,
+  park_factor: number,
+  pitchers: number,
+  hitters: number,
+  rhb_2b_3b: number,
+  lhb_2b_3b: number,
+  lhb_hr: number,
+  lhb_r: number,
+  rhb_hr: number,
+  rhb_r: number
+}

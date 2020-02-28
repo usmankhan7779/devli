@@ -1,0 +1,21 @@
+<ng-template #winProbBoxTpl>
+  <div
+    *ngIf="singleTeam ? singleTeam : isWinner(); let winnerTeam"
+    [ngClass]="[
+    getColor(status[winnerTeam + '_win_probability']),
+    status[winnerTeam + '_win_probability'] === 50 ? '' : 'winner-' + winnerTeam,
+    (singleTeam ? 'single-team' : '')
+   ]"
+    class="probability-box">
+    <div class="box-header">
+      Win <span class="probability-name">Probability</span>
+    </div>
+    <div class="box-probability">
+      {{status[winnerTeam + '_win_probability']}}%
+    </div>
+  </div>
+</ng-template>
+
+<ng-container *ngIf="likeRating; else winProbBoxTpl">
+  <div class="like-rating-win-prob" [ngClass]="[getColor(likeRating)]">{{likeRating}}%</div>
+</ng-container>

@@ -1,0 +1,168 @@
+<div class="container-fluid in-game-predictor">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="d-flex flex-column flex-md-row">
+    <div class="pr-0 pr-md-2">
+      <h1 style="padding-top: 3px" class="page-heading">NFL Live Betting System</h1>
+    </div>
+    <div class="pr-0 pr-md-2">
+      <div class="separated-dropdowns-wrapper" *ngIf="allModels && allGames">
+        <div ngbDropdown class="ml-0 my-1 my-sm-0 mr-sm-1 separated-dropdown-menu dropdown page-heading-right-dropdown first">
+          <button type="button" class="separated-dropdown-btn btn btn-secondary" id="leagueDD" ngbDropdownToggle>
+            <span>
+              <span class="hidden-lg-down" >{{selectedGame.game_info.away_team_full}}</span>
+              <span class="hidden-xl-up">{{selectedGame.game_info.away_team_full | lastTeamName}}</span>
+              at
+              <span class="hidden-lg-down" >{{selectedGame.game_info.home_team_full}}</span>
+              <span class="hidden-xl-up">{{selectedGame.game_info.home_team_full | lastTeamName}}</span>
+              <span class="game-date">
+                (<app-general-time-format [time]="selectedGame.game_info.game_time_dt"></app-general-time-format>)
+              </span>
+              <div
+                class="live-icon"
+                *ngIf="selectedGame.status && selectedGame.status.status === 'In Progress'">
+                <img src="/assets/images/logo-live.svg" alt="live-icon">
+              </div>
+              <div
+                *ngIf="selectedGame.status && selectedGame.status.status === 'Final'"
+                class="check-mark red"
+              >
+                <img src="assets/images/White_X_in_red_background.svg" alt="x">
+              </div>
+            </span>
+            <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+          </button>
+          <div class="dropdown-menu" aria-labelledby="leagueDD">
+            <div class="dropdown-btn-wrap">
+              <button
+                *ngFor="let game of allGames"
+                type="button"
+                class="dropdown-item text-normal px-1"
+                (click)="selectGame(game, selectedModel)"
+                [ngClass]="{'dd-opt-active': selectedGame.game_key === game.game_key}"
+              >
+                <span class="hidden-lg-down" >{{game.game_info.away_team_full}}</span>
+                <span class="hidden-xl-up">{{game.game_info.away_team_full | lastTeamName}}</span>
+                at
+                <span class="hidden-lg-down" >{{game.game_info.home_team_full}}</span>
+                <span class="hidden-xl-up">{{game.game_info.home_team_full | lastTeamName}}</span>
+                <span class="game-date">
+                  (<app-general-time-format [time]="game.game_info.game_time_dt"></app-general-time-format>)
+                </span>
+                <div
+                  class="live-icon"
+                  *ngIf="game.status && game.status.status === 'In Progress'">
+                  <img src="/assets/images/logo-live.svg" alt="live-icon">
+                </div>
+                <div
+                  *ngIf="game.status && game.status.status === 'Final'"
+                  class="check-mark red"
+                >
+                  <img src="assets/images/White_X_in_red_background.svg" alt="x">
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div ngbDropdown class="ml-0 my-1 my-sm-0 mr-sm-1 separated-dropdown-menu dropdown page-heading-right-dropdown last">
+          <button type="button" class="separated-dropdown-btn btn btn-secondary" id="modelDD" ngbDropdownToggle>
+            <span>{{selectedModel.label}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+          </button>
+          <div class="dropdown-menu" aria-labelledby="modelDD">
+            <button
+              *ngFor="let model of allModels"
+              type="button"
+              class="dropdown-item text-normal px-1"
+              (click)="selectGame(selectedGame, model)"
+              [ngClass]="{'dd-opt-active': model.value === selectedModel.value}"
+            >
+              {{model.label}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #spinner class="starting-loader">
+    <div class="row">
+      <div class="col-12 text-center my-5">
+        <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+      </div>
+    </div>
+  </ng-template>
+  <div class="row">
+    <div class="col-12 col-md-8">
+      <div class="in-page-collapse-toggle alt-page pb-4">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="pageNavOpen = !pageNavOpen"
+                [attr.aria-expanded]="!pageNavOpen" aria-controls="collapseExample">
+          Menu
+        </button>
+      </div>
+      <div class="in-page-nav-menu" [ngbCollapse]="!pageNavOpen" [ngClass]="{'hidden': !pageNavOpen}">
+        <div class="page-heading-navigation border-bottom">
+          <div class="nav-section">
+            <div class="tab-wrapper" *ngFor="let tabName of availableTabs; let i = index">
+              <a class="page-heading-nav-btn" (click)="onTabClick(tabName)" [ngClass]="{'active': activeTab === availableTabs[i]}">{{tabName}}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="data; else spinner">
+    <div class="col-12 col-md-8" [ngSwitch]="activeTab">
+      <div *ngSwitchCase="availableTabs[0]">
+        <app-live-game [data]="data"></app-live-game>
+      </div>
+      <div *ngSwitchCase="availableTabs[1]">
+        <app-pregame [data]="data"></app-pregame>
+      </div>
+      <div *ngSwitchCase="availableTabs[2]">
+        <app-in-game-bets [data]="data"></app-in-game-bets>
+      </div>
+      <div *ngSwitchCase="availableTabs[3]">
+        <app-box-score [data]="data"></app-box-score>
+      </div>
+    </div>
+    <div *ngIf="betsToShow" class="hidden-sm-down col-md-4">
+      <div class="row">
+        <div class="col-12">
+          <div class="w-100 mx-auto" style="max-width: 500px;">
+            <h2><strong>In-Game Bets</strong></h2>
+            <div class="grouped-dropdown-wrapper btn-group mb-1">
+              <app-dropdown
+                [ddData]="betDDsData"
+                [filterItems]="filterBets.bind(this)"
+                prop="books"
+                name="Books"
+                isSingleSelect="true"
+                className="first"
+              ></app-dropdown>
+              <app-dropdown
+                [ddData]="betDDsData"
+                [filterItems]="filterBets.bind(this)"
+                prop="bet_categories"
+                name="Bet Categories"
+                isSingleSelect="true"
+                className="last"
+              ></app-dropdown>
+            </div>
+          </div>
+        </div>
+        <div class="col-12" *ngFor="let card of betsToShow; let first = first;" [ngClass]="{'my-3': !first, 'mb-3': first}">
+          <app-betting-card
+            [topLeftHeading]="selectedModel.label"
+            [title]="card.title"
+            [cardType]="card.bet_type"
+            [additionalInfo]=""
+            [awayProbability]="card.away_probability"
+            [homeProbability]="card.home_probability"
+            [bets]="card.predicted_bets"
+            [hidePM]="true"
+          ></app-betting-card>
+          <!--(cardSaved)="onCardSaved($event)"-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,90 @@
+:host {
+  $mobile-resolution: 475px;
+  $short-name-br-1: 693px;
+  $short-name-br: 700px;
+  $footer-short-name-br: 720px;
+  $separate-tables-breakpoint: 445px;
+  $btn-mobile-br: 545px;
+  @import '../../../scss/custom-components/lineup-item';
+  .multi-row-data-table-wrapper {
+    margin-bottom: 0;
+  }
+  .logo-container {
+    display: none;
+    position: relative;
+    img {
+      width: 25px;
+      height: 25px;
+      position: absolute;
+      left: 3px;
+      top: -1px
+    }
+  }
+  .event-mid-stats {
+    overflow: hidden;
+    border-bottom: none;
+  }
+  .multi-row-data-table .t-sub-header th {
+    border-right: 1px solid #e1e1e1;
+  }
+  .btn.lineup-data-btn {
+    background: #4e4e6a;
+    height: 37px;
+    color: #FFF;
+    font-weight: 500;
+    display: inline-block;
+    line-height: 36px;
+    border-radius: 0;
+    font-size: 14px;
+    padding: 0 23px;
+  }
+  .footer-short-team-name {
+    display: none;
+  }
+  @media (max-width: $footer-short-name-br) {
+    .footer-short-team-name {
+      display: inline;
+    }
+    .footer-team-name {
+      display: none;
+    }
+  }
+  @media (max-width: $short-name-br) {
+    .event-mid-row h4, .event-mid-row {
+      font-size: 13px;
+    }
+  }
+  @media (max-width: $mobile-resolution) {
+    .event-mid-row h4, .event-mid-row {
+      font-size: 14px;
+    }
+    .event-date-mid {
+      width: 60%;
+    }
+  }
+  @media (max-width: 430px) {
+    .event-mid-row h4, .event-mid-row {
+      font-size: 13px;
+    }
+    ::ng-deep .grouped-dropdown-wrapper .grouped-dropdown .grouped-dropdown-btn {
+      font-size: 12px;
+    }
+  }
+  @media (min-width: $separate-tables-breakpoint + 1) and (max-width: $btn-mobile-br) {
+    a.btn.lineup-data-btn {
+      font-size: 11px;
+      img {
+        width: 4px;
+      }
+    }
+    .multi-row-data-table .t-header {
+      font-size: 13px;
+    }
+    .logo-container img {
+      width: 20px;
+      height: 20px;
+      left: 0;
+      top: -1px;
+    }
+  }
+}

@@ -1,0 +1,105 @@
+<ng-template #noDataTpl>
+  <div class="col-12">
+    <app-no-stats></app-no-stats>
+  </div>
+</ng-template>
+
+<div class="container-fluid  pb-5">
+  <app-breadcrumb></app-breadcrumb>
+
+  <div class="row">
+    <div class="col-12 col-lg-8">
+      <div #containerEl class="d-flex flex-wrap after-heading-margin">
+        <div>
+          <h1 #headingEl class="page-heading m-0">
+            {{pageTitle}}
+          </h1>
+        </div>
+        <app-twitter-follow-btn [textElement]="headingEl" [containerElement]="containerEl"></app-twitter-follow-btn>
+      </div>
+      <div *ngIf="data.intro_paragraph" class="hidden-md-down">
+        <p class="site-pages-content" [innerHTML]="data.intro_paragraph | safeHtml"></p>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component [league]="'nfl'"></app-ad-component>
+    </div>
+
+    <div *ngIf="data.intro_paragraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+      <p class="site-pages-content" [innerHtml]="data.intro_paragraph | safeHtml"></p>
+    </div>
+
+    <div class="col-12">
+      <div class="in-page-dropdown-toggle">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="dropdownCollapsed = !dropdownCollapsed"
+                [attr.aria-expanded]="!dropdownCollapsed" aria-controls="collapseExample">
+          <i class="fa fa-bars dropdown-icon" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="in-page-dropdown-menu" [ngbCollapse]="!dropdownCollapsed" [ngClass]="{'hidden-dropdown': !dropdownCollapsed}">
+        <div class="first-section-nav d-flex">
+          <div class="grouped-dropdown-wrapper btn-group">
+
+          <div ngbDropdown class="grouped-dropdown dropdown">
+            <button type="button" class="grouped-dropdown-btn btn btn-secondary first px-3" id="season-dd" ngbDropdownToggle>
+              <span class="pr-0 pr-sm-3">{{params.year | handleLeagueYear: 'nfl'}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+            </button>
+            <div class="dropdown-menu" aria-labelledby="season-dd">
+              <div *ngFor="let season of ddData.seasons;">
+                <button
+                 [ngClass]="{'dd-active-btn': params.year === season.year}"
+                 (click)="onYearDdChange(season)"
+                 class="dropdown-item">
+                  <span>{{season.name}}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+            <div ngbDropdown class="grouped-dropdown dropdown">
+              <button type="button" class="grouped-dropdown-btn btn btn-secondary last px-3" id="main-dropdown" ngbDropdownToggle>
+                <span class="pr-0 pr-sm-3">Stats</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+              </button>
+              <div class="dropdown-menu" aria-labelledby="main-dropdown">
+                <div *ngFor="let mainRadio of snapsMainRadio;">
+                  <button
+                    [ngClass]="{'dd-active-btn': mainRadio.name === 'Stats'}"
+                    (click)="onSnapCountMainTabClick(mainRadio)"
+                    class="dropdown-item">
+                    <span>{{mainRadio.name}}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="grouped-dropdown-wrapper btn-group player-type-dds">
+            <app-dropdown
+              [ddData]="ddData"
+              [filterItems]="onButtonGroupClick.bind(this, true)"
+              prop="tabs"
+              className="big-dd first last"
+              isSingleSelect="true"
+            ></app-dropdown>
+          </div>
+          <div class="toggles-in-page-wrapper player-type-tabs mb-0 mt-0">
+            <div class="toggles-in-page-group btn-group toggles-group">
+              <a [routerLink]="['/nfl/player-stats' + (tab.url ? '/' + tab.url : '')]" *ngFor="let tab of ddData.tabs; let first = first; let last = last;"
+                      (click)="onButtonGroupClick(false, first);"
+                      class="toggle-in-page" [ngClass]="{'active': tab.selected, 'first': first, 'last': last}">{{tab.name}}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngIf="hasData; else noDataTpl">
+      <div class="col-12" *ngFor="let row of data.subheadings">
+        <h2 class="page-heading-two">{{row.title}}</h2>
+        <div class="d-flex flex-wrap leader-list-wrapper">
+          <div *ngFor="let itemName of row.api_keys; let index = index;" class="leader-list-item-container">
+            <app-stats-leader-list (teamWasClicked)="preselectTeamSeason($event)" (onViewMoreClick)="onViewMoreClick($event)" [league]="'nfl'" [leadersData]="data[itemName]" [cardHeader]="row.sub_titles[index]"></app-stats-leader-list>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

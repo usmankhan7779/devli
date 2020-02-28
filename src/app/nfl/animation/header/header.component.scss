@@ -1,0 +1,220 @@
+:host {
+  flex: 1 1 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  .team-name-short {
+    display: none;
+  }
+  @media(max-width: 1850px) {
+    .team-name-long {
+      display: none;
+    }
+    .team-name-short {
+      display: inline;
+    }
+  }
+}
+
+:host ::ng-deep .control-box a {
+  path {
+    fill: #fff;
+  }
+
+  text {
+    fill: #fff;
+  }
+
+  &:hover {
+    path {
+      fill: #5ED0F8;
+    }
+
+    text {
+      fill: #5ED0F8;
+    }
+  }
+
+  &.active {
+    path {
+      fill: #01afec;
+    }
+
+    text {
+      fill: #01afec;
+    }
+  }
+}
+
+.summary {
+  color: #fff;
+  margin: 10px 0 10px;
+  text-align: center;
+
+  h1 {
+    font-size: 1.5em;
+    line-height: 26px;
+    margin: 0;
+  }
+
+  h4 {
+    font-size: 1em;
+    margin: 0.3em 0;
+    line-height: 17px;
+  }
+
+  @media (max-width: 1480px) {
+    h1 {
+      font-size: 18px;
+    }
+    h4 {
+      font-size: 16px;
+    }
+  }
+
+  h2 {
+    font-size: 1.2em;
+    margin: 0;
+  }
+}
+
+.score-row {
+  display: flex;
+  justify-content: space-between;
+  min-width: 100%;
+  padding: 0 10px;
+  box-sizing: border-box;
+
+  @media(min-width: 1361px) {
+    margin-top: -70px;
+    position: relative;
+    z-index: 1;
+  }
+  @media(max-width: 730px) {
+    flex-direction: column;
+    app-score-box, .control-box {
+      margin: 0 auto 10px auto;
+    }
+  }
+}
+
+.control-box {
+  max-width: 250px;
+  min-width: 250px;
+
+  .tabs {
+    display: flex;
+    background: #e3e3e3;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    overflow: hidden;
+
+    a {
+      flex: 1 0 auto;
+      text-align: center;
+      padding: 5px 10px;
+      font-size: .8em;
+      color: #353534;
+      text-decoration: none;
+      border-right: solid 1px #bdbdbd;
+
+      &:last-child {
+        border-right: none;
+      }
+
+      &.active {
+        background: #01afec;
+        color: #fff;
+      }
+    }
+  }
+
+  .game-controls {
+    display: flex;
+    align-items: center;
+    background: #6e6e6e;
+    height: 36px;
+    padding: 0 10px;
+    justify-content: space-around;
+    position: relative;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+    a {
+      height: 22px;
+      width: 30px;
+      display: block;
+    }
+
+    input {
+      width: 35px;
+    }
+
+    .debug-controls {
+      position: absolute;
+      top: 105%;
+    }
+  }
+
+  .recap-controls {
+    background: #6e6e6e;
+    display: flex;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+    a {
+      padding: 5px 0;
+      color: #fff;
+      text-decoration: none;
+      text-align: center;
+      font-size: .7em;
+      border-right: solid 1px #fff;
+
+      &.active {
+        background: #01afec;
+      }
+
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+
+  @media (max-width: 600px) {
+    max-width: 170px;
+    min-width: 170px;
+    .game-controls {
+      height: 26px;
+      a {
+        height: 16px;
+        width: 16px;
+      }
+    }
+  }
+}
+
+.desc-wrapper {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @media(max-width: 760px) {
+    min-height: 50px;
+  }
+
+  .description {
+    background: #3b5d98;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 17px;
+    color: black;
+    @media(max-width: 1060px) {
+      padding: 7px;
+      font-size: 15px;
+    }
+    @media(max-width: 760px) {
+      padding: 5px;
+      font-size: 10px;
+    }
+  }
+}

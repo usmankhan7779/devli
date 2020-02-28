@@ -1,0 +1,138 @@
+<div class="container-fluid">
+  <h2>Today's Bets</h2>
+  <div class="lu-dropdowns">
+    <div ngbDropdown class="d-inline-block" style="margin-right: 2rem;">
+      <button class="btn btn-secondary" ngbDropdownToggle>NFL</button>
+      <div class="dropdown-menu" aria-labelledby="dropdownBasic1">
+        <button class="dropdown-item">NFL</button>
+        <button class="dropdown-item">MLB</button>
+      </div>
+    </div>
+
+    <!--Models-->
+    <div ngbDropdown class="d-inline-block">
+      <button class="btn btn-secondary" ngbDropdownToggle>All Models</button>
+      <div class="dropdown-menu" aria-labelledby="dropdownBasic1">
+        <button class="dropdown-item text-center">Select All</button>
+        <label *ngFor="let oneParameter of options" class="custom-control custom-checkbox">
+          <input [checked]="oneParameter.value" (change)="oneParameter.value = !oneParameter.value;"
+                 type="checkbox" class="custom-control-input">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">{{oneParameter.title}}</span>
+        </label>
+      </div>
+    </div>
+
+    <!--Books-->
+    <div ngbDropdown class="d-inline-block">
+      <button class="btn btn-secondary" ngbDropdownToggle>All Books</button>
+      <div class="dropdown-menu" aria-labelledby="dropdownBasic1">
+        <button class="dropdown-item text-center">Select All</button>
+        <label *ngFor="let oneParameter of options2" class="custom-control custom-checkbox">
+          <input [checked]="oneParameter.value" (change)="oneParameter.value = !oneParameter.value;"
+                 type="checkbox" class="custom-control-input">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">{{oneParameter.title}}</span>
+        </label>
+      </div>
+    </div>
+
+    <!--Bet Types-->
+    <div ngbDropdown class="d-inline-block">
+      <button class="btn btn-secondary" ngbDropdownToggle>All Bet Types</button>
+      <div class="dropdown-menu" aria-labelledby="dropdownBasic1">
+        <button class="dropdown-item text-center">Select All</button>
+        <label *ngFor="let oneParameter of options3" class="custom-control custom-checkbox">
+          <input [checked]="oneParameter.value" (change)="oneParameter.value = !oneParameter.value;"
+                 type="checkbox" class="custom-control-input">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">{{oneParameter.title}}</span>
+        </label>
+      </div>
+    </div>
+
+    <!--Bets-->
+    <div ngbDropdown class="d-inline-block">
+      <button class="btn btn-secondary" id="dropdownBasic2" ngbDropdownToggle>All Bets</button>
+      <div class="dropdown-menu" aria-labelledby="dropdownBasic1">
+        <button *ngFor="let oneParameter of options4" class="dropdown-item">{{oneParameter.title}}</button>
+      </div>
+    </div>
+
+    <!--Games-->
+    <div ngbDropdown class="d-inline-block">
+      <button class="btn btn-secondary" ngbDropdownToggle>All Games</button>
+      <div class="dropdown-menu" aria-labelledby="dropdownBasic1">
+        <button class="dropdown-item text-center">Select All</button>
+        <label *ngFor="let oneParameter of options5" class="custom-control custom-checkbox">
+          <input [checked]="oneParameter.value" (change)="oneParameter.value = !oneParameter.value;"
+                 type="checkbox" class="custom-control-input">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">{{oneParameter.title}}</span>
+        </label>
+      </div>
+    </div>
+
+    <!--Probability-->
+    <div ngbDropdown class="d-inline-block">
+      <button class="btn btn-secondary" ngbDropdownToggle>All Probability</button>
+      <div class="dropdown-menu" aria-labelledby="dropdownBasic1">
+        <button class="dropdown-item text-center">Select All</button>
+        <label *ngFor="let oneParameter of options6" class="custom-control custom-checkbox">
+          <input [checked]="oneParameter.value" (change)="oneParameter.value = !oneParameter.value;"
+                 type="checkbox" class="custom-control-input">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">{{oneParameter.title}}</span>
+        </label>
+      </div>
+    </div>
+
+    <!--EV-->
+    <div ngbDropdown class="d-inline-block">
+      <button class="btn btn-secondary" ngbDropdownToggle>All EV</button>
+      <div class="dropdown-menu" aria-labelledby="dropdownBasic1">
+        <button class="dropdown-item text-center">Select All</button>
+        <label *ngFor="let oneParameter of options7" class="custom-control custom-checkbox">
+          <input [checked]="oneParameter.value" (change)="oneParameter.value = !oneParameter.value;"
+                 type="checkbox" class="custom-control-input">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">{{oneParameter.title}}</span>
+        </label>
+      </div>
+    </div>
+
+    <!--$$$$$-->
+    <div ngbDropdown class="d-inline-block">
+      <button class="btn btn-secondary" ngbDropdownToggle>All
+          <app-dollars [amount]="5"  [classes]="'teal'"></app-dollars>
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownBasic1">
+        <button class="dropdown-item text-center">Select All</button>
+        <label *ngFor="let oneParameter of options8" class="custom-control custom-checkbox">
+          <input [checked]="oneParameter.value" (change)="oneParameter.value = !oneParameter.value;"
+                 type="checkbox" class="custom-control-input">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">
+              <app-dollars [amount]="oneParameter.title" [classes]="'teal'" style="display: inline-block;"></app-dollars>
+          </span>
+        </label>
+      </div>
+    </div>
+
+
+  </div>
+  <div class="row" style="margin-right: -7.5px; margin-left: -7.5px;">
+    <div *ngFor="let card of bets" class="col-xl-3 col-lg-6 col-md-12" style="padding-right: 7.5px; padding-left: 7.5px; padding-bottom: 15px;">
+      <app-betting-card
+        [title]="card.title"
+        [cardType]="card.type"
+        [additionalInfo]=""
+        [awayProbability]="card.away_probability"
+        [homeProbability]="card.home_probability"
+        [bets]="card.bets"
+      ></app-betting-card>
+    </div>
+
+
+  </div>
+</div>

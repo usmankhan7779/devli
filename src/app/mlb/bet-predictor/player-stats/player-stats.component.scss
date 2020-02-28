@@ -1,0 +1,45 @@
+:host {
+  .table-header {
+    margin-bottom: 13px;
+  }
+  .team-heading {
+    font-size: 26px;
+    font-weight: bold;
+  }
+  ::ng-deep app-status-only {
+    position: relative;
+    top: -2px;
+    .status:before {
+      font-size: 22px;
+      font-weight: bold;
+      position: relative;
+      top: 2px;
+    }
+  }
+  .last-table {
+    margin-bottom: 40px;
+  }
+  @media (max-width: 1200px) {
+    .player-stats-table-wrapper {
+      overflow-x: auto;
+      table {
+        min-width: 1200px;
+      }
+    }
+  }
+  @media (max-width: 375px) {
+    .team-heading {
+      font-size: 15px;
+      padding-top: 5px;
+    }
+    ::ng-deep app-status-only {
+      top: -1px;
+      .status {
+        font-size: 13px;
+      }
+      .status:before {
+        font-size: 18px;
+      }
+    }
+  }
+}

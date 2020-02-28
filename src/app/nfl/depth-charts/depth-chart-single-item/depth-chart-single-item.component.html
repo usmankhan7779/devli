@@ -1,0 +1,482 @@
+<div class="depth-chart-box" [ngClass]="{'right': index % 2 == 1, 'center': (depthChart.length === index + 1 && index % 2 == 0) || totalItemsLength == 1 }">
+  <!-- Starting Lineup Box Head -->
+  <div class="depth-chart-box-head">
+    <!-- Event Participants-->
+    <div class="event-top-participants depth-chart-box-top">
+      <!-- Event Away Participant -->
+      <div class="event-away-participant">
+
+        <div class="away-participant-wrapper stat-head-participant">
+          <div class="away-participant-content">
+            <h2 class="event-top-participant-name long-team-name">
+              <a class="link-black-underline" [routerLink]="['/' + depthChart.away_depth_chart_route]">
+                <span class="normal-team-name">
+                  {{depthChart.game_info.away_team_full}}
+                </span>
+                <span class="short-team-name">
+                  {{depthChart.game_info.away_team_full | lastTeamName}}
+                </span>
+              </a>
+            </h2>
+            <h4 class="event-top-participant-standing">
+              <span class="event-top-participant-record">{{depthChart.game_info.away_team_wins}} - {{depthChart.game_info.away_team_losses}},</span>
+              <span>{{depthChart.game_info.away_team_rank}}</span>
+            </h4>
+          </div>
+          <a [routerLink]="['/' + depthChart.away_depth_chart_route]" rel="nofollow" class="away-participant-logo event-participant-logo">
+            <img [type]="'white'" [appSpriteImg]="'nfl'" class="event-top-logo" [src]="depthChart.away_white_logo" alt="{{depthChart.game_info.away_team_full}}"/>
+          </a>
+          <div class="mobile-standing">
+            <span class="event-top-participant-record">{{depthChart.game_info.away_team_wins}} - {{depthChart.game_info.away_team_losses}},</span>
+            <span>{{depthChart.game_info.away_team_rank}}</span>
+          </div>
+        </div>
+
+      </div>
+      <!-- Event Wind -->
+      <div class="event-date-mid">
+        <div class="event-mid-row">
+          <div class="event-date-cal-date">
+            <ng-container *ngIf="!depthChart.status || (depthChart.status.status !== 'In Progress' && depthChart.status.status !== 'Final')">
+              <h4>
+                <span>{{depthChart.game_info.game_time_dt | amTimeZone | amDateFormat: 'h:mm a' | lowercase}} {{timeZone}}</span>,
+                <span class="event-time">{{depthChart.game_info.game_time_dt | amTimeZone | amDateFormat:'M/D'}}</span>
+              </h4>
+              <div class="at-symbol">
+                @
+              </div>
+            </ng-container>
+            <div class="text-center" *ngIf="depthChart?.status?.status === 'In Progress'">
+              <span [ngClass]="{'font-bold': depthChart.status.away_has_ball}">{{depthChart.status.away}} {{depthChart.status.away_score}}</span> @ <span [ngClass]="{'font-bold': depthChart.status.home_has_ball}">{{depthChart.status.home}} {{depthChart.status.home_score}}</span>
+            </div>
+            <div class="text-center" *ngIf="depthChart?.status?.status === 'Final'">
+              <span [ngClass]="{'font-bold': depthChart.status.away_score > depthChart.status.home_score}">{{depthChart.status.away}} {{depthChart.status.away_score}}</span> @ <span [ngClass]="{'font-bold': depthChart.status.home_score > depthChart.status.away_score}">{{depthChart.status.home}} {{depthChart.status.home_score}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="event-mid-row">
+          <span class="event-mobile-details">
+            <a class="link-black-underline" [routerLink]="['/' + depthChart.away_depth_chart_route]">
+              {{depthChart.game_info.away_team_key}}
+            </a>
+            @
+            <a class="link-black-underline" [routerLink]="['/' + depthChart.home_depth_chart_route]">
+              {{depthChart.game_info.home_team_key}}
+            </a>
+          </span>
+            <span *ngIf="(!depthChart.status || (depthChart.status.status !== 'In Progress' && depthChart.status.status !== 'Final')) &&
+           depthChart.game_info.rain && checkIfNA(depthChart.game_info.rain)" class="event-rain-percentage">
+            {{depthChart.game_info.rain}}% Rain
+          </span>
+          <span *ngIf="depthChart.status?.status === 'In Progress'">
+                    {{depthChart.status.down}} & {{depthChart.status.distance}}, Q{{depthChart.status.quarter}} {{depthChart.status.time_remaining}}
+                  </span>
+          <span *ngIf="depthChart.status?.status === 'Final'" class="event-rain-percentage">Final</span>
+        </div>
+      </div>
+      <!-- Event Home Participant -->
+      <div class="event-home-participant">
+        <div  class="home-participant-wrapper stat-head-participant">
+          <a [routerLink]="['/' + depthChart.home_depth_chart_route]" rel="nofollow" class="home-participant-logo event-participant-logo">
+            <img [type]="'white'" [appSpriteImg]="'nfl'" class="box-team-logo" [src]="depthChart.home_white_logo" alt="{{depthChart.game_info.home_team_full}}"/>
+          </a>
+          <div class="mobile-standing">
+            <span class="event-top-participant-record">{{depthChart.game_info.home_team_wins}} - {{depthChart.game_info.home_team_losses}},</span>
+            <span>{{depthChart.game_info.home_team_rank}}</span>
+          </div>
+          <div class="home-participant-content">
+            <h2 class="event-top-participant-name long-team-name">
+              <a class="link-black-underline" [routerLink]="['/' + depthChart.home_depth_chart_route]">
+                <span class="normal-team-name">
+                  {{depthChart.game_info.home_team_full}}
+                </span>
+                <span class="short-team-name">
+                  {{depthChart.game_info.home_team_full | lastTeamName}}
+                </span>
+              </a>
+            </h2>
+            <h4 class="event-top-participant-standing">
+              <span class="event-top-participant-record">{{depthChart.game_info.home_team_wins}} - {{depthChart.game_info.home_team_losses}},</span>
+              <span>{{depthChart.game_info.home_team_rank}}</span>
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Event Depth Chart Stats -->
+  <div class="event-mid-stats">
+    <!-- Away Depth Chart Tables -->
+    <div class="away-participant-stats">
+      <!-- Horizontal Table Wrapper -->
+      <div class="stand-horizontal-table-wrapper">
+        <table class="table">
+          <thead class="stats-head">
+          <tr>
+            <th class="stat-align-left player-number">No</th>
+            <th class="stat-align-left position-and-name">Quarterbacks</th>
+            <th class="stat-align-center rating-wrap">Rating</th>
+            <th class="stat-align-center quick-stats">Quick Stats</th>
+          </tr>
+          </thead>
+          <tbody>
+          <!-- Table Rows -->
+          <tr *ngFor="let qb of depthChart.away_qb" class="depth-charts-tr">
+            <td class="stat-align-left player-number border-right">
+              <span>{{qb.number}}</span>
+            </td>
+            <td class="stat-align-left position-and-name border-right">
+              <app-player-link [league]="'nfl'" [playerName]="qb.first_dot_last" [playerUrl]="qb.profile_url" [generateShortName]="false"></app-player-link>
+            </td>
+            <td class="stat-align-center border-right rating-wrap">
+                      <span class="rating" [ngClass]="{'green': qb.rating >= 90,
+                                      'yellow': qb.rating < 90,
+                                      'red': qb.rating < 70}">{{qb.rating}}</span>
+            </td>
+            <td class="stat-align-center quick-stats">
+              <span class="">{{qb.yards}} YDS, {{qb.td}} TD, {{qb.int}} INT</span>
+            </td>
+          </tr>
+          </tbody>
+        </table> <!-- End Table -->
+        <!-- Running Backs Table -->
+        <table class="table">
+          <thead class="stats-head">
+          <tr>
+            <th class="stat-align-left player-number">No</th>
+            <th class="stat-align-left position-and-name">Running Backs</th>
+            <th class="stat-align-center rating-wrap">Rating</th>
+            <th class="quick-stats stat-align-center">Quick Stats</th>
+          </tr>
+          </thead>
+          <tbody>
+          <!-- Table Rows -->
+          <tr *ngFor="let rb of [depthChart.away_rb[0], depthChart.away_rb[1], depthChart.away_rb[2]]" class="depth-charts-tr">
+            <ng-container *ngIf="rb">
+              <td class="stat-align-left player-number border-right">
+                <span>{{rb?.number}}</span>
+              </td>
+              <td class="stat-align-left position-and-name border-right">
+                <app-player-link [league]="'nfl'" [playerName]="rb.first_dot_last" [playerUrl]="rb.profile_url" [generateShortName]="false"></app-player-link>
+              </td>
+              <td class="stat-align-center border-right rating-wrap">
+                    <span *ngIf="rb && rb.rating !== null" class="rating" [ngClass]="{'green': rb.rating >= 90,
+                                    'yellow': rb.rating < 90,
+                                    'red': rb.rating < 70}">{{rb.rating}}</span>
+                <span *ngIf="rb && rb.rating === null">N/A</span>
+              </td>
+              <td class="quick-stats stat-align-center">
+                <span *ngIf="rb" class="">{{rb.attempts}} ATT, {{rb.yards}} YDS, {{rb.td}} TD</span>
+              </td>
+            </ng-container>
+          </tr>
+          </tbody>
+        </table> <!-- End  Table -->
+        <!-- Wide Receivers Table -->
+        <table class="table">
+          <thead class="stats-head">
+          <tr>
+            <th class="stat-align-left player-number">No</th>
+            <th class="stat-align-left position-and-name">Wide Receivers</th>
+            <th class="stat-align-center rating-wrap">Rating</th>
+            <th class="stat-align-center quick-stats">Quick Stats</th>
+          </tr>
+          </thead>
+          <tbody>
+          <!-- Table Rows -->
+          <tr *ngFor="let wr of [depthChart.away_wr[0], depthChart.away_wr[1], depthChart.away_wr[2]]" class="depth-charts-tr">
+            <ng-container *ngIf="wr">
+              <td class="stat-align-left player-number border-right">
+                <span>{{wr?.number}}</span>
+              </td>
+              <td class="stat-align-left position-and-name border-right">
+                <app-player-link [league]="'nfl'" [playerName]="wr.first_dot_last" [playerUrl]="wr.profile_url" [generateShortName]="false"></app-player-link>
+              </td>
+              <td class="stat-align-center border-right rating-wrap">
+                        <span *ngIf="wr && wr.rating !== null" class="rating" [ngClass]="{'green': wr.rating >= 90,
+                                        'yellow': wr.rating < 90,
+                                        'red': wr.rating < 70}">{{wr.rating}}</span>
+                <span *ngIf="wr && wr.rating === null">N/A</span>
+              </td>
+              <td class="quick-stats">
+                <span *ngIf="wr">{{wr.receptions}} REC, {{wr.yards}} YDS, {{wr.td}} TD</span>
+              </td>
+            </ng-container>
+          </tr>
+          </tbody>
+        </table> <!-- End Wide Receivers Table -->
+        <!-- Tight Ends Table -->
+        <table class="table">
+          <thead class="stats-head">
+          <tr>
+            <th class="stat-align-left player-number">No</th>
+            <th class="stat-align-left position-and-name">Tight Ends</th>
+            <th class="stat-align-center rating-wrap">Rating</th>
+            <th class="stat-align-center quick-stats">Quick Stats</th>
+          </tr>
+          </thead>
+          <tbody>
+          <!-- Table Rows -->
+          <tr *ngFor="let te of depthChart.away_te" class="depth-charts-tr">
+            <td class="stat-align-left player-number border-right">
+              <span>{{te.number}}</span>
+            </td>
+            <td class="stat-align-left position-and-name border-right">
+              <app-player-link [league]="'nfl'" [playerName]="te.first_dot_last" [playerUrl]="te.profile_url" [generateShortName]="false"></app-player-link>
+            </td>
+            <td class="stat-align-center border-right rating-wrap">
+                      <span *ngIf="te.rating !== null" class="rating" [ngClass]="{'green': te.rating >= 90,
+                                      'yellow': te.rating < 90,
+                                      'red': te.rating < 70}">{{te.rating}}</span>
+              <span *ngIf="te.rating === null">N/A</span>
+            </td>
+            <td class="stat-align-center quick-stats">
+              <span>{{te.receptions}} REC, {{te.yards}} YDS, {{te.td}} TD</span>
+            </td>
+          </tr>
+          </tbody>
+        </table> <!-- End Tight Ends Table -->
+      </div><!-- Horizontal Table Wrapper -->
+      <div class="away-team-injuries table-injuries">
+        <div class="injuries-container">
+          <span class="bold-label">Injuries:</span>
+          <span class="injury-item-wrapper" *ngFor="let injury of depthChart.away_injuries; let last = last;">
+            <span class="injury-item">
+              <app-player-link [league]="'nfl'" [playerName]="injury.name" [playerUrl]="injury.profile_url" [generateShortName]="false"></app-player-link>
+              <span *ngIf="injury.designation">({{injury.designation}})</span>
+            </span><span *ngIf="!last">,&nbsp;</span>
+          </span>
+        </div>
+        <a [hidden]="depthChart.away_injuries.length < 2" [routerLink]="[depthChart.away_team_injuries_route || '']" class="see-all-injuries">See All</a>
+      </div>
+      <!-- Away Team Lineup Data-->
+      <div class="lineup-data-btn-wrapper">
+        <a [routerLink]="['/' + depthChart.away_depth_chart_route]" class="btn lineup-data-btn">{{depthChart.game_info.away_team_name}} Depth Chart <img src="/assets/images/white-right-arrow.png" alt="{{depthChart.game_info.away_team_name}} Depth Chart" /></a>
+      </div>
+    </div>
+    <!-- Home Participant Stats (Right)-->
+    <div class="home-participant-stats">
+      <!-- Horizontal Table Wrapper -->
+      <div class="stand-horizontal-table-wrapper">
+        <!-- Quarterback Table -->
+        <table class="table">
+          <thead class="stats-head">
+          <tr>
+            <th class="stat-align-left player-number">No</th>
+            <th class="stat-align-left position-and-name">Quarterback</th>
+            <th class="stat-align-center rating-wrap">
+              <span class="rating-head" [hidden]="!sportActionActive">Rating</span>
+              <span class="rating-head" [hidden]="!fantasyActionActive">Salary</span>
+            </th>
+            <th class="stat-align-center quick-stats">
+              <span class="qk-stats-head">Quick Stats</span>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let qb of depthChart.home_qb" class="depth-charts-tr">
+            <td class="stat-align-left player-number border-right">
+              <span>{{qb.number}}</span>
+            </td>
+            <td class="stat-align-left position-and-name border-right">
+              <app-player-link [league]="'nfl'" [playerName]="qb.first_dot_last" [playerUrl]="qb.profile_url" [generateShortName]="false"></app-player-link>
+            </td>
+            <td class="stat-align-center border-right rating-wrap">
+                      <span class="rating" [ngClass]="{'green': qb.rating >= 90,
+                                      'yellow': qb.rating < 90,
+                                      'red': qb.rating < 70}">{{qb.rating}}</span>
+            </td>
+            <td class="stat-align-center quick-stats">
+              <span class="">{{qb.yards}} YDS, {{qb.td}} TD, {{qb.int}} INT</span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <!-- Running Back Table -->
+        <table class="table">
+          <thead class="stats-head">
+          <tr>
+            <th class="stat-align-left player-number">No</th>
+            <th class="stat-align-left position-and-name">Running Back</th>
+            <th class="stat-align-center rating-wrap">Rating</th>
+            <th class="stat-align-center quick-stats">Quick Stats</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let rb of [depthChart.home_rb[0], depthChart.home_rb[1], depthChart.home_rb[2]]" class="depth-charts-tr">
+            <ng-container *ngIf="rb">
+              <td class="stat-align-left player-number border-right">
+                <span>{{rb?.number}}</span>
+              </td>
+              <td class="stat-align-left position-and-name border-right">
+                <app-player-link [league]="'nfl'" [playerName]="rb.first_dot_last" [playerUrl]="rb.profile_url" [generateShortName]="false"></app-player-link>
+              </td>
+              <td class="stat-align-center border-right rating-wrap">
+                        <span *ngIf="rb && rb.rating !== null" class="rating" [ngClass]="{'green': rb.rating >= 90,
+                                        'yellow': rb.rating < 90,
+                                        'red': rb.rating < 70}">{{rb.rating}}</span>
+                <span *ngIf="rb && rb.rating === null">N/A</span>
+              </td>
+              <td class="stat-align-center quick-stats">
+                <span *ngIf="rb">{{rb.attempts}} ATT, {{rb.yards}} YDS, {{rb.td}} TD</span>
+              </td>
+            </ng-container>
+          </tr>
+          </tbody>
+        </table>
+        <!-- Wide Receivers Table -->
+        <table class="table">
+          <thead class="stats-head">
+          <tr>
+            <th class="stat-align-left player-number">No</th>
+            <th class="stat-align-left position-and-name">Wide Receivers</th>
+            <th class="stat-align-center rating-wrap">Rating</th>
+            <th class="stat-align-center quick-stats">Quick Stats</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let wr of [depthChart.home_wr[0], depthChart.home_wr[1], depthChart.home_wr[2]]" class="depth-charts-tr">
+            <ng-container *ngIf="wr">
+              <td class="stat-align-left player-number border-right">
+                <span>{{wr?.number}}</span>
+              </td>
+              <td class="stat-align-left position-and-name border-right">
+                <app-player-link [league]="'nfl'" [playerName]="wr.first_dot_last" [playerUrl]="wr.profile_url" [generateShortName]="false"></app-player-link>
+              </td>
+              <td class="stat-align-center border-right rating-wrap">
+                        <span *ngIf="wr && wr.rating !== null" class="rating" [ngClass]="{'green': wr.rating >= 90,
+                                        'yellow': wr.rating < 90,
+                                        'red': wr.rating < 70}">{{wr.rating}}</span>
+                <span *ngIf="wr && wr.rating === null">N/A</span>
+              </td>
+              <td class="stat-align-center quick-stats">
+                <span *ngIf="wr" class="">{{wr.receptions}} REC, {{wr.yards}} YDS, {{wr.td}} TD</span>
+              </td>
+            </ng-container>
+          </tr>
+          </tbody>
+        </table><!-- End Wide Receivers Table -->
+        <!-- Tight Ends Table -->
+        <table class="table">
+          <thead class="stats-head">
+          <tr>
+            <th class="stat-align-left player-number">No</th>
+            <th class="stat-align-left position-and-name">Tight Ends</th>
+            <th class="stat-align-center rating-wrap">Rating</th>
+            <th class="stat-align-center quick-stats">Quick Stats</th>
+          </tr>
+          </thead>
+          <tbody>
+          <!-- Table Rows -->
+          <tr *ngFor="let te of depthChart.home_te" class="depth-charts-tr">
+            <td class="stat-align-left player-number border-right">
+              <span>{{te.number}}</span>
+            </td>
+            <td class="stat-align-left position-and-name border-right">
+              <app-player-link [league]="'nfl'" [playerName]="te.first_dot_last" [playerUrl]="te.profile_url" [generateShortName]="false"></app-player-link>
+            </td>
+            <td class="stat-align-center border-right rating-wrap">
+                      <span *ngIf="te.rating !== null" class="rating" [ngClass]="{'green': te.rating >= 90,
+                                      'yellow': te.rating < 90,
+                                      'red': te.rating < 70}">{{te.rating}}</span>
+              <span *ngIf="te.rating === null">N/A</span>
+            </td>
+            <td class="stat-align-center quick-stats">
+              <span class="">{{te.receptions}} REC, {{te.yards}} YDS, {{te.td}} TD</span>
+            </td>
+          </tr>
+          </tbody>
+        </table> <!-- End Tight Ends Table -->
+        <!-- END HOME DEPTH CHART TABLES -->
+      </div>
+      <div class="home-team-injuries table-injuries">
+        <div class="injuries-container">
+          <span class="bold-label">Injuries:</span>
+          <span class="injury-item-wrapper" *ngFor="let injury of depthChart.home_injuries; let last = last;">
+            <span class="injury-item">
+              <app-player-link [league]="'nfl'" [playerName]="injury.name" [playerUrl]="injury.profile_url" [generateShortName]="false"></app-player-link>
+              <span *ngIf="injury.designation">({{injury.designation}})</span>
+            </span><span *ngIf="!last">,&nbsp;</span>
+          </span>
+        </div>
+        <a [hidden]="depthChart.home_injuries.length < 2" [routerLink]="[depthChart.home_team_injuries_route || '']" class="see-all-injuries">See All</a>
+      </div>
+      <!-- Home Team Lineup Data-->
+      <div class="lineup-data-btn-wrapper">
+        <a [routerLink]="['/' + depthChart.home_depth_chart_route]" class="btn lineup-data-btn">{{depthChart.game_info.home_team_name}} Depth Chart <img src="/assets/images/white-right-arrow.png" alt="{{depthChart.game_info.home_team_name}} Depth Chart" /></a>
+      </div>
+    </div>
+  </div>
+  <!-- Event Lineup Footer -->
+  <div class="event-lineup-footer depth-chart-footer">
+    <div class="event-lineup-footer-row">
+      <!-- Spread -->
+      <div class="depth-charts-foot-col" *ngIf="checkIfNA(depthChart.away_bets.spread)|| checkIfNA(depthChart.home_bets.spread)">
+        <h6 class="foot-stat-title">Spread</h6>
+        <!-- Away Moneyline -->
+        <p class="foot-stat-value" *ngIf="checkIfNA(depthChart.away_bets.spread)">
+          <span>{{depthChart.away_bets.key}}</span>
+          <!-- Away Bet Spread-->
+          <span *ngIf="depthChart.away_bets.spread < 0">{{depthChart.away_bets.spread}}</span>
+          <span *ngIf="depthChart.away_bets.spread > 0">+{{depthChart.away_bets.spread}}</span>
+        </p>
+        <!-- Home Moneyline-->
+        <p class="foot-stat-value" *ngIf="checkIfNA(depthChart.home_bets.spread)">
+          <span>{{depthChart.home_bets.key}}</span>
+          <!-- Home Bet Spread -->
+          <span *ngIf="depthChart.home_bets.spread < 0">{{depthChart.home_bets.spread}}</span>
+          <span *ngIf="depthChart.home_bets.spread > 0">+{{depthChart.home_bets.spread}}</span>
+        </p>
+      </div>
+      <div class="depth-charts-foot-col" *ngIf="checkIfNA(depthChart.away_bets.moneyline)|| checkIfNA(depthChart.home_bets.moneyline)">
+        <h6 class="foot-stat-title">Moneyline</h6>
+        <!-- Away Bets -->
+        <p class="foot-stat-value" *ngIf="checkIfNA(depthChart.away_bets.moneyline)">
+          <span>{{depthChart.away_bets.key}}</span>
+          <span *ngIf="depthChart.away_bets.moneyline < 0">{{depthChart.away_bets.moneyline}}</span>
+          <span *ngIf="depthChart.away_bets.moneyline > 0">+{{depthChart.away_bets.moneyline}}</span>
+        </p>
+        <!-- Home Bets -->
+        <p class="foot-stat-value" *ngIf="checkIfNA(depthChart.home_bets.moneyline)">
+          <span>{{depthChart.home_bets.key}}</span>
+          <span *ngIf="depthChart.home_bets.moneyline < 0">{{depthChart.home_bets.moneyline}}</span>
+          <span *ngIf="depthChart.home_bets.moneyline > 0">+{{depthChart.home_bets.moneyline}}</span>
+        </p>
+      </div>
+      <!-- Totals -->
+      <div class="depth-charts-foot-col" *ngIf="checkIfNA(depthChart.away_bets.total)|| checkIfNA(depthChart.home_bets.total)">
+        <h6 class="foot-stat-title">Totals</h6>
+        <!-- Away Bets -->
+        <p class="foot-stat-value" *ngIf="checkIfNA(depthChart.away_bets.total)">
+          <span>{{depthChart.away_bets.key}}</span>
+          <span *ngIf="depthChart.away_bets.total < 0">{{depthChart.away_bets.total}}</span>
+          <span *ngIf="depthChart.away_bets.total > 0">{{depthChart.away_bets.total}}</span>
+        </p>
+        <!-- Home Bets -->
+        <p class="foot-stat-value" *ngIf="checkIfNA(depthChart.home_bets.total)">
+          <span>{{depthChart.home_bets.key}}</span>
+          <span *ngIf="depthChart.home_bets.total < 0">{{depthChart.home_bets.total}}</span>
+          <span *ngIf="depthChart.home_bets.total > 0">{{depthChart.home_bets.total}}</span>
+        </p>
+      </div>
+      <div class="depth-charts-foot-col" *ngIf="checkIfNA(depthChart.away_bets.over_under_moneyline)|| checkIfNA(depthChart.home_bets.over_under_moneyline)">
+        <h6 class="foot-stat-title">Over/Under</h6>
+        <!-- Away Over/Under -->
+        <p class="foot-stat-value" *ngIf="checkIfNA(depthChart.away_bets.over_under_moneyline)">
+          <span>{{depthChart.away_bets.over_under}}</span>
+          <span *ngIf="depthChart.away_bets.over_under_moneyline < 0">({{depthChart.away_bets.over_under_moneyline}})</span>
+          <span *ngIf="depthChart.away_bets.over_under_moneyline > 0">(+{{depthChart.away_bets.over_under_moneyline}})</span>
+        </p>
+        <!-- Home Over/Under -->
+        <p class="foot-stat-value" *ngIf="checkIfNA(depthChart.home_bets.over_under_moneyline)">
+          <span>{{depthChart.home_bets.over_under}}</span>
+          <span *ngIf="depthChart.home_bets.over_under_moneyline < 0">({{depthChart.home_bets.over_under_moneyline}})</span>
+          <span *ngIf="depthChart.home_bets.over_under_moneyline > 0">(+{{depthChart.home_bets.over_under_moneyline}})</span>
+        </p>
+      </div>
+    </div>
+    <div class="text-center">
+      <a [routerLink]="[depthChart.matchup_route ? (notFullMatchupUrl ? '/nfl/matchups' + depthChart.matchup_route : depthChart.matchup_route) : '']" [appNflMatchupIdPreselect]="depthChart.game_key" class="btn match-odds-and-line">Matchup Breakdown <img src="/assets/images/white-right-arrow.png" alt="Matchup Breakdown"></a>
+    </div>
+  </div>
+</div> <!-- End Lineup Box -->

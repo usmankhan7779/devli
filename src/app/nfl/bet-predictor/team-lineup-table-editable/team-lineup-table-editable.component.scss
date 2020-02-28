@@ -1,0 +1,39 @@
+:host {
+  table.multi-row-data-table td {
+    cursor: pointer;
+    &.no-pointer {
+      cursor: default;
+    }
+  }
+  .bet-predictor-table-wrapper {
+    margin: 0;
+  }
+  ::ng-deep app-swappable-table {
+    table.multi-row-data-table td {
+      cursor: pointer;
+      &.no-pointer {
+        cursor: default;
+      }
+    }
+    ngui-auto-complete {
+      width: auto !important;
+      margin-left: -7.7%;
+      .ngui-auto-complete {
+        max-height: 300px;
+        overflow-y: auto;
+      }
+    }
+  }
+  .table-conditional-item-wrapper {
+    white-space: nowrap;
+    .table-conditional-item {
+      position: relative;
+      font-size: 12px;
+      top: -1px;
+    }
+    @media (max-width: 1500px) {
+      font-size: 10px;
+      top: 0;
+    }
+  }
+}

@@ -1,0 +1,135 @@
+<ng-template #teamLogoNameTpl let-item="item">
+  <div class="nowrap team-col">
+    <a class="link-black" rel="nofollow" [appPreselectNflStatsTeamSeason]="params?.year" [routerLink]="item.team_stats_route || ''">
+      <img [type]="'white'" [appSpriteImg]="'nfl'" class="mr-1 logo-sm" [src]="item.white_logo" alt="{{item.team}}">
+    </a>
+    <a class="link-black-underline" [appPreselectNflStatsTeamSeason]="params?.year" [routerLink]="item.team_stats_route || ''">
+      <span class="hidden-lg-down">{{item.team}}</span>
+      <span class="hidden-xl-up">{{item.team_name}}</span>
+    </a>
+  </div>
+</ng-template>
+
+<!-- Prediction Model Accuracy -->
+<div class="container-fluid pb-5">
+  <!-- Breadcrumbs -->
+  <app-breadcrumb></app-breadcrumb>
+  <!-- Starting Lineups Page Title -->
+  <div class="row">
+    <div class="col-12 col-lg-8">
+      <h1 class="page-heading">{{pageHeading}}</h1>
+      <div *ngIf="teamStatsData.intro_paragraph" class="hidden-md-down">
+        <p class="site-pages-content" [innerHTML]="teamStatsData.intro_paragraph | safeHtml"></p>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component [league]="'nfl'"></app-ad-component>
+    </div>
+
+    <div *ngIf="teamStatsData.intro_paragraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+      <p class="site-pages-content" [innerHtml]="teamStatsData.intro_paragraph | safeHtml"></p>
+    </div>
+    <div class="col-12">
+      <!-- Collapse Menu -->
+      <div class="in-page-dropdown-toggle">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="dropdownCollapsed = !dropdownCollapsed"
+                [attr.aria-expanded]="!dropdownCollapsed" aria-controls="collapseExample">
+          <i class="fa fa-bars dropdown-icon" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="in-page-dropdown-menu" [ngbCollapse]="!dropdownCollapsed" [ngClass]="{'hidden-dropdown': !dropdownCollapsed}">
+        <!-- Grouped Dropdown -->
+        <div class="d-flex">
+            <div class="grouped-dropdown-wrapper btn-group">
+              <div ngbDropdown class="grouped-dropdown dropdown">
+                <button type="button" class="grouped-dropdown-btn btn btn-secondary first px-3" id="season-dd" ngbDropdownToggle>
+                  <span class="pr-0 pr-sm-3">{{params.year | handleLeagueYear: 'nfl'}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="season-dd">
+                  <div *ngFor="let season of ddData.seasons;">
+                    <button
+                      [ngClass]="{'dd-active-btn': params.year === season.year}"
+                      (click)="onYearDdChange(season)"
+                      class="dropdown-item">
+                      <span>{{season.name}}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <app-dropdown
+                [ddData]="ddData"
+                [filterItems]="onDdChange.bind(this, true)"
+                [isSingleSelect]="true"
+                prop="seasonTypeDropdown"
+              ></app-dropdown>
+              <app-dropdown
+                [ddData]="ddData"
+                [filterItems]="onDdChange.bind(this, true)"
+                [isSingleSelect]="true"
+                prop="conferenceDropdown"
+              ></app-dropdown>
+              <app-dropdown
+                *ngIf="ddData.activeConference !== null"
+                [ddData]="ddData"
+                [filterItems]="onDdChange.bind(this, true)"
+                [isSingleSelect]="true"
+                prop="divisionDropdown"
+              ></app-dropdown>
+              <app-dropdown
+                [ddData]="ddData"
+                [filterItems]="onStatTypeDdChange.bind(this, true)"
+                [isSingleSelect]="true"
+                prop="statsType"
+              ></app-dropdown>
+            </div>
+          </div>
+      </div>
+      <!-- End Grouped Dropdown -->
+    </div>
+
+    <div class="col-12">
+      <div class="multi-row-data-table-wrapper custom-width">
+        <table
+          [mfRowsOnPage]="10000" [mfData]="teamStatsData.data"
+          [(mfSortBy)]="sortBy"
+          [(mfSortOrder)]="sortOrder"
+          (mfSortByChange)="onSortBy($event)"
+          (mfSortOrderChange)="onSortOrder($event)"
+          #tableData="mfDataTable"
+          class="multi-row-data-table t-stripped">
+            <colgroup *ngFor="let col of tableSizeArr[params.type]" [attr.span]="col.colLength"></colgroup>
+            <tbody>
+              <tr class="t-header">
+                <th *ngFor="let col of tableSizeArr[params.type]; let last = last" [attr.colspan]="col.colLength" scope="colgroup" class="text-center" [ngClass]="{'main-border': !last}">{{col.name}}</th>
+              </tr>
+              <tr class="t-sub-header">
+                <th *ngFor="let header of teamStatsData.column_headers; let index = index" scope="col" class="text-center" [ngClass]="{'main-border': showMainBorder(index)}">
+                  <mfSorter [by]="sortFunctions[header]">{{teamStatsData.header_map[header]}}</mfSorter>
+                </th>
+              </tr>
+              <tr class="t-content" *ngFor="let item of tableData.data">
+                <td *ngFor="let header of teamStatsData.column_headers; let index = index" [ngClass]="{'main-border': showMainBorder(index)}">
+                  <ng-container [ngSwitch]="header">
+                    <ng-container *ngSwitchCase="'team'">
+                      <ng-template [ngTemplateOutlet]="teamLogoNameTpl" [ngTemplateOutletContext]="{item: item}"></ng-template>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault>
+                      {{item[header] | showPercentage : header}}
+                    </ng-container>
+                  </ng-container>
+                </td>
+              </tr>
+            </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div *ngIf="teamStatsData?.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="teamStatsData.bottom_header" class="page-heading-two">
+        {{teamStatsData.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="teamStatsData.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+</div>
+

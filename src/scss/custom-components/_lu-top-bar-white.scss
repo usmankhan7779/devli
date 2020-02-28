@@ -1,0 +1,16 @@
+.lu-top-bar-white {
+	box-shadow: 1px 10px 13px -10px #bdbbbb;
+	padding-bottom: 0.9rem;
+	display: flex;
+	//& > * {
+	//	display: inline-block;
+	//}
+	& > div:first-child {
+		width: 16rem;
+		flex-basis: 16rem;
+		h2 {
+			padding: 0;
+			margin: 0;
+		}
+	}
+}

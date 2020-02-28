@@ -1,0 +1,29 @@
+.input-with-icon {
+  position: relative;
+  display: inline-block;
+
+  input {
+    display: inline-block;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 16px rgba(193, 193, 193, 0.35);
+    
+    &::placeholder {
+      color: #ddd;
+    }
+  }
+
+  .action {
+    display: block;
+    position: absolute;
+    right: 12px;
+    top: 5px;
+
+    i {
+      color: #ddd;
+    }
+
+    &:hover > i {
+      color: #bbb;
+    }
+  }
+}

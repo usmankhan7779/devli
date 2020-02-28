@@ -1,0 +1,107 @@
+:host {
+  $big-table-shortname-breakdown: 920px;
+
+  .live-odds-chart-wrapper {
+    max-width: 1500px;
+    margin: 38px auto 20px auto;
+    @media (max-width: 1670px) {
+      max-width: 1400px;
+      margin: 38px 0 20px 38px;
+    }
+    @media (max-width: 1500px) {
+      max-width: 1000px;
+    }
+    @media (max-width: 1273px) {
+      max-width: 730px;
+    }
+  }
+
+  .game-last-team-name {
+    display: none;
+  }
+  .time-col {
+    width: 70px;
+  }
+  .matchup-col {
+    width: 75px;
+  }
+  .line-col {
+    width: 85px;
+  }
+  .teams-col {
+    width: 150px;
+  }
+  .rot-col {
+    width: 32px;
+  }
+  tr.chart-tr {
+    border: 1px solid #e5e5e5;
+  }
+  td[rowspan="2"] {
+    border-bottom: 1px solid #e1e1e1;
+  }
+  @media (max-width: $big-table-shortname-breakdown) {
+    .game-team-name {
+      display: none;
+    }
+    .game-last-team-name {
+      display: inline;
+    }
+    .teams-col {
+      width: 80px;
+    }
+  }
+  .multi-row-data-table-wrapper {
+    overflow: auto;
+  }
+  .multi-row-data-table {
+    table-layout: auto;
+    font-size: 12px;
+    .t-header {
+      font-size: 12px;
+    }
+    .t-sub-header th {
+      border-right: 1px solid #e1e1e1;
+      min-width: 35px;
+    }
+    tr.t-content.home-team-tr {
+      border-bottom: 1px solid #e1e1e1;
+    }
+  }
+  .multi-row-data-table-wrapper.custom-width {
+    &.all-books-all-bets {
+      @media (max-width: 1705px) {
+        overflow-x: auto;
+        table {
+          min-width: 1673px;
+        }
+      }
+    }
+    &.all-books-one-bet {
+      @media (max-width: 1667px) {
+        overflow-x: auto;
+        table {
+          min-width: 1635px;
+        }
+      }
+    }
+    &.one-book-bets {
+      &.one-bet {
+        @media (max-width: 997px) {
+          overflow-x: auto;
+          table {
+            min-width: 1008px;
+          }
+        }
+      }
+      &:not(.one-bet) {
+        @media (max-width: 633px) {
+          overflow-x: auto;
+          table {
+            min-width: 601px;
+          }
+        }
+      }
+    }
+  }
+}

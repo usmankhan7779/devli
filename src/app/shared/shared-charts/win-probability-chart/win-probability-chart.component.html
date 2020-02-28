@@ -1,0 +1,65 @@
+<div class="multi-row-data-table-wrapper">
+  <table class="multi-row-data-table mb-0 chart-table" style="border-bottom: none">
+    <colgroup span="3">
+      <col span="1" width="50%">
+      <col span="1">
+      <col span="1">
+    </colgroup>
+    <tbody [ngClass]="{'no-border-bottom': finalScore}">
+      <tr class="t-sub-header">
+        <th colspan="3" scope="colgroup" class="text-center bigger-th">Win Probability % </th>
+      </tr>
+      <tr class="t-content">
+        <td class="chart">
+          <div class="chart-wrapper">
+            <canvas baseChart height="140"
+                    [datasets]="datasets"
+                    [labels]="labels"
+                    [options]="options"
+                    [colors]="colors"
+                    [legend]="legend"
+                    [chartType]="chartType">
+            </canvas>
+          </div>
+        </td>
+        <td>
+          <div>
+            <img class="logo" [type]="'white'" [appSpriteImg]="league" [src]="awayLogo" alt="{{awayTeamName}}">
+            <span class="team-name-main" [ngStyle]="{'color': colors[0].pointBackgroundColor}">{{awayTeamName}} {{awayCurrentProb}}%</span>
+          </div>
+          <div class="team-name-secondary">
+            <span>
+              {{awayTeamName}} {{awayChangeProb | plus}}%
+            </span>
+          </div>
+
+        </td>
+        <td>
+          <div>
+            <img class="logo" [type]="'white'" [appSpriteImg]="league" [src]="homeLogo" alt="{{homeTeamName}}">
+            <span class="team-name-main" [ngStyle]="{'color': colors[1].pointBackgroundColor}">{{homeTeamName}} {{homeCurrentProb}}%</span>
+          </div>
+          <div class="team-name-secondary">
+            <span>
+              {{homeTeamName}} {{homeChangeProb | plus}}%
+            </span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="multi-row-data-table-wrapper custom-width ">
+  <app-score-prediction-table
+    *ngIf="finalScore"
+    [league]="league"
+    [homeTeamName]="homeTeamName"
+    [homeFinalScorePrediction]="homeFinalScorePrediction"
+    [homeFirstHalfScorePrediction]="homeFirstHalfScorePrediction"
+    [homeLogo]="homeLogo"
+    [awayTeamName]="awayTeamName"
+    [awayFinalScorePrediction]="awayFinalScorePrediction"
+    [awayFirstHalfScorePrediction]="awayFirstHalfScorePrediction"
+    [awayLogo]="awayLogo"
+  ></app-score-prediction-table>
+</div>

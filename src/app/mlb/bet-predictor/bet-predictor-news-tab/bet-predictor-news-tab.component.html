@@ -1,0 +1,84 @@
+<div *ngIf="!newsData" class="starting-loader">
+  <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+</div>
+<section *ngIf="newsData" id="selected-team-news" class="team-news">
+  <!-- Team Name Label -->
+  <div class="row">
+    <div class="col-12">
+      <div class="team-name-label">
+        <h3 class="mt-0">{{newsData.away.team_name_full}} News</h3>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="row">
+        <div class="col-sm-6 col-12">
+          <ng-container  *ngFor="let newsItem of newsData?.away_news | orderBy: 'updated': false; let i = index;">
+            <app-news-item
+              class="inner-news-item"
+              *ngIf="i < newsData.away_news.length / 2"
+              [cardTitle]="newsItem.title"
+              [cardContent]="newsItem.content"
+              [cardImageRoute]="newsData.away.team_logo_white"
+              [borderedLogo]="false"
+              [cardDate]="newsItem.updated"
+              [fullLogoUrl]="true"
+            ></app-news-item>
+          </ng-container>
+        </div>
+        <div class="col-sm-6 col-12">
+          <ng-container  *ngFor="let newsItem of newsData?.away_news | orderBy: 'updated': false; let i = index;">
+            <app-news-item
+              class="inner-news-item"
+              *ngIf="i >= newsData.away_news.length / 2"
+              [cardTitle]="newsItem.title"
+              [cardContent]="newsItem.content"
+              [cardImageRoute]="newsData.away.team_logo_white"
+              [borderedLogo]="false"
+              [cardDate]="newsItem.updated"
+              [fullLogoUrl]="true"
+            ></app-news-item>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="team-name-label">
+        <h3>{{newsData.home.team_name_full}} News</h3>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="row">
+        <div class="col-sm-6 col-12">
+          <ng-container  *ngFor="let newsItem of newsData?.home_news | orderBy: 'updated': false; let i = index;">
+            <app-news-item
+              class="inner-news-item"
+              *ngIf="i < newsData.home_news.length / 2"
+              [cardTitle]="newsItem.title"
+              [cardContent]="newsItem.content"
+              [cardImageRoute]="newsData.home.team_logo_white"
+              [borderedLogo]="false"
+              [cardDate]="newsItem.updated"
+              [fullLogoUrl]="true"
+            ></app-news-item>
+          </ng-container>
+        </div>
+        <div class="col-sm-6 col-12">
+          <ng-container  *ngFor="let newsItem of newsData?.home_news | orderBy: 'updated': false; let i = index;">
+            <app-news-item
+              class="inner-news-item"
+              *ngIf="i >= newsData.home_news.length / 2"
+              [cardTitle]="newsItem.title"
+              [cardContent]="newsItem.content"
+              [cardImageRoute]="newsData.home.team_logo_white"
+              [borderedLogo]="false"
+              [cardDate]="newsItem.updated"
+              [fullLogoUrl]="true"
+            ></app-news-item>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

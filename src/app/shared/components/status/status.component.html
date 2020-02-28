@@ -1,0 +1,88 @@
+<ng-template #teamNameTpl>
+  <ng-container *ngIf="!redirectUrl; else teamLinkTpl">
+    <ng-container *ngTemplateOutlet="mobileTitltTpl"></ng-container>
+  </ng-container>
+</ng-template>
+<ng-template #teamLinkTpl>
+  <a class="team-name-link" (click)="onTeamLinkClick()" [routerLink]="['/'+ redirectUrl]" [rel]="noFollow ? 'nofollow' : ''">
+    <ng-container *ngTemplateOutlet="mobileTitltTpl"></ng-container>
+  </a>
+</ng-template>
+
+<ng-template #mobileTitltTpl>
+  <ng-container *ngIf="mobileTitle; else normalTitleTpl">
+    <span  class="normal-team-name">{{teamName}}</span>
+    <span class="mobile-team-name">{{mobileTitle}}</span>
+  </ng-container>
+</ng-template>
+
+<ng-template #normalTitleTpl>
+  <span>{{teamName}}</span>
+</ng-template>
+
+<ng-template #hedingContent>
+  <span
+    *ngIf="side === 'right' && !isHeader"
+    class="mr-3"
+  ><ng-container *ngTemplateOutlet="teamNameTpl"></ng-container></span>
+  <h1
+    *ngIf="side === 'right' && isHeader"
+    class="m-0 mr-3"
+  ><ng-container *ngTemplateOutlet="teamNameTpl"></ng-container></h1>
+
+  <span
+    *ngIf="side === 'left'"
+    class="hidden-xl-up left-side-name"
+  ><ng-container *ngTemplateOutlet="teamNameTpl"></ng-container></span>
+  <span
+    class="status-display hidden-lg-down"
+  >
+    <span
+      *ngIf="(status === true || status === false)"
+      class="status"
+      [ngClass]="{'confirmed': status === true, 'rejected': status === false}"
+    >
+      {{status === false ? 'Projected' : 'Confirmed'}}
+    </span>
+  </span>
+  <div
+    *ngIf="(status === true || status === false)"
+    class="hidden-xl-up status-display"
+  >
+    <span
+        *ngIf="(status === true || status === false)"
+        class="status"
+        [ngClass]="{'confirmed': status === true, 'rejected': status === false}"
+    >
+      {{status === false ? 'Projected' : 'Confirmed'}}
+    </span>
+  </div>
+  <span
+    *ngIf="side === 'left'"
+    class="ml-3 hidden-lg-down left-side-name"
+  ><ng-container *ngTemplateOutlet="teamNameTpl"></ng-container></span>
+</ng-template>
+
+<div class="app-status" [ngClass]="{'matchup-media': matchupMedia}">
+  <div class="media">
+    <ng-content [ngClass]="{'flex-first': side === 'right', 'flex-last': side === 'left'}"></ng-content>
+
+    <div class="media-body details" [ngClass]="{'flex-first': side === 'left', 'flex-last':  side === 'right', 'text-right': side === 'left'}">
+      <div class="heading-content" [ngClass]="{'is-header': isHeader}">
+        <ng-container *ngTemplateOutlet="hedingContent"></ng-container>
+      </div>
+      <p>{{record}}</p>
+      <p *ngIf="additionalInfo" class="normal-text">{{additionalInfo}}</p>
+      <p *ngIf="pitcherInfo && pitcherName && !pitcherLink" class="normal-text">
+        {{pitcherName}} {{pitcherInfo}}
+      </p>
+      <p *ngIf="pitcherInfo && pitcherName && pitcherLink" class="normal-text">
+        <a class="link-black-underline" [routerLink]="pitcherLink" target="_blank">
+          {{pitcherName}}
+        </a>
+         {{pitcherInfo}}
+      </p>
+    </div>
+  </div>
+</div>
+

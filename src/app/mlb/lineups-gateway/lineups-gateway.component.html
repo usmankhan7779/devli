@@ -1,0 +1,121 @@
+<!-- Starting Lineup Box Loader -->
+<ng-template #loadingTpl>
+  <div class="starting-lineup-loader">
+    <img class="loader-image" alt="loader-image" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<!-- Starting Lineups Content -->
+<div class="lineups-gateway-content content" *ngIf="!loading; else loadingTpl" >
+  <div class="page-wrap">
+    <!-- Breadcrumb -->
+    <app-breadcrumb></app-breadcrumb>
+    <div class="row">
+      <!-- Starting Lineups Page Title -->
+      <div class="col-12 col-lg-8">
+        <div #containerEl class="d-flex flex-wrap after-heading-margin">
+          <div>
+            <h1 #headingEl class="page-heading m-0">
+              <span class="hidden-xs-down">{{pageTitle}}</span>
+              <span class="hidden-sm-up">MLB Lineups</span>
+            </h1>
+          </div>
+          <app-twitter-follow-btn [textElement]="headingEl" [containerElement]="containerEl"></app-twitter-follow-btn>
+        </div>
+        <div *ngIf="introParagraph" class="hidden-md-down">
+          <p class="site-pages-content" [innerHTML]="introParagraph | safeHtml"></p>
+        </div>
+      </div>
+      <div class="col-12 col-lg-4 gateway-video-container">
+        <app-ad-component [league]="'mlb'"></app-ad-component>
+      </div>
+
+      <div *ngIf="introParagraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+        <p class="site-pages-content" [innerHtml]="introParagraph | safeHtml"></p>
+      </div>
+
+      <div class="col-12">
+        <!-- Starting Lineups Action Header -->
+        <div class="row">
+          <div class="col-12">
+            <div class="d-flex date-time-block-wrapper">
+              <div class="toggles-in-page-wrapper mt-0">
+                <!-- Action Header Button Group -->
+                <div class="toggles-in-page-group btn-group toggles-group">
+                  <button (click)="onSportAction()" class="toggle-in-page first" [ngClass]="{'active': sportActionActive}">Stats</button>
+                  <button *ngIf="false" (click)="onBettingAction()" class="toggle-in-page" [ngClass]="{'active': bettingActionActive}">Betting</button>
+                  <button (click)="onFantasyAction()" class="toggle-in-page last" [ngClass]="{'active': fantasyActionActive}">Fantasy</button>
+                </div>
+                <!-- Action Header Button Group -->
+                <div class="toggles-in-page-group btn-group toggles-group toggles-group-mid" *ngIf="!sportActionActive">
+                  <button (click)="onDraftKingsAction()" class="toggle-in-page first" [ngClass]="{'active': draftKingsActionActive}">DraftKings</button>
+                  <button (click)="onFanDuelAction()" class="toggle-in-page" [ngClass]="{'active': fanDuelActionActive}">FanDuel</button>
+                  <button (click)="onYahooAction()" class="toggle-in-page last" [ngClass]="{'active': yahooActionActive}">Yahoo</button>
+                </div>
+                <!-- Action Header Button Group -->
+                <div *ngIf="false" class="toggles-in-page-group btn-group toggles-group toggles-group-mid">
+                  <button (click)="onAverageAction()" class="toggle-in-page first" [ngClass]="{'active': averageActionActive}">Average</button>
+                  <button (click)="onBasePredictionAction()" class="toggle-in-page" [ngClass]="{'active': basePredictionActionActive}">Base Prediction</button>
+                  <button (click)="onMlConsensusAction()" class="toggle-in-page" [ngClass]="{'active': mlConsensusActionActive}">ML Consensus</button>
+                  <button (click)="onLinearRegressionAction()" class="toggle-in-page" [ngClass]="{'active': linearRegressionActionActive}">Linear Regression</button>
+                  <button (click)="onBoostedRegressorAction()" class="toggle-in-page" [ngClass]="{'active': boostedRegressorActionActive}">Boosted Regressor</button>
+                  <button (click)="onRandomForestAction()" class="toggle-in-page" [ngClass]="{'active': randomForestActionActive}">Random Forest</button>
+                  <button (click)="onNaiveBayesAction()" class="toggle-in-page last" [ngClass]="{'active': naiveBayesActionActive}">Naive Bayes</button>
+                </div>
+              </div>
+              <div *ngIf="updatedTime" class="updated-date-time-block next-to-toggles">
+                Updated: <app-general-time-format [time]="updatedTime" [showTimeAgo]="true" [showSeoTime]="true"></app-general-time-format>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Starting Lineups Results -->
+        <div class="lineups-gateway-results" *appBrowserIf="true">
+          <!-- Starting Lineup Box - Repeated -->
+          <ng-container *ngIf="lineups?.length; else noLineups">
+            <app-lineup-item
+              *ngFor="let lineup of lineups; let i = index;"
+              [index]="i"
+              [lineup]="lineup.data"
+              [lineupsLength]="lineups.length"
+              [sportActionActive]="sportActionActive"
+              [fantasyActionActive]="fantasyActionActive"
+              [draftKingsActionActive]="draftKingsActionActive"
+              [fanDuelActionActive]="fanDuelActionActive"
+              [yahooActionActive]="yahooActionActive"
+            ></app-lineup-item>
+          </ng-container>
+          <ng-template #noLineups>
+            <h3 class="text-center mb-3 mt-0">No Games Today</h3>
+
+            <div *appBrowserIf="lineupsRoutes?.length" class="row">
+              <div class="col-xl-9 col-12">
+                <div class="row">
+                  <div class="col-12">
+                    <h5 class="mb-3 text-center text-sm-left">
+                      <strong>
+                        <span>Team Lineups</span>
+                      </strong>
+                    </h5>
+                  </div>
+                  <div class="col-12">
+                    <app-vertical-list-6-xl-col [data]="lineupsRoutes"></app-vertical-list-6-xl-col>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </ng-template>
+        </div>
+      </div>
+
+      <div *ngIf="bottomParagraph" class="col-12 flex-last flex-sm-unordered">
+        <h2 *ngIf="bottomHeading" class="page-heading-two">
+          {{bottomHeading}}
+        </h2>
+        <p class="site-pages-content" [innerHtml]="bottomParagraph | safeHtml"></p>
+      </div>
+    </div>
+
+  </div>
+</div>

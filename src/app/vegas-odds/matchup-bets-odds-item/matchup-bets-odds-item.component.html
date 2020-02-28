@@ -1,0 +1,202 @@
+<ng-template #tdCapTpl>
+  <td></td>
+  <td></td>
+  <td></td>
+</ng-template>
+<ng-template #homeTeamAbbrTpl>
+  {{matchup.home.team_abbr}}
+</ng-template>
+<ng-template #awayTeamAbbrTpl>
+  {{matchup.away.team_abbr}}
+</ng-template>
+
+<ng-template #awayTeamNameTpl>
+  <span class="short-team-name">
+    {{matchup.away.team_2nd_name}}
+  </span>
+  <span class="normal-team-name">
+    {{matchup.away.team_name}}
+  </span>
+</ng-template>
+
+<ng-template #homeTeamNameTpl>
+  <span class="short-team-name">
+    {{matchup.home.team_2nd_name}}
+  </span>
+  <span class="normal-team-name">
+    {{matchup.home.team_name}}
+  </span>
+</ng-template>
+
+<ng-template #awayTeamLogoTpl>
+  <img [type]="'white'" [appSpriteImg]="league" class="event-top-logo" [src]="matchup.away.logo" alt="{{matchup.away.team_name}}"/>
+</ng-template>
+
+<ng-template #homeTeamLogoTpl>
+  <img [type]="'white'" [appSpriteImg]="league" class="box-team-logo" [src]="matchup.home.logo" alt="{{matchup.home.team_name}}"/>
+</ng-template>
+
+<div class="starting-lineup-wrapper">
+  <div class="starting-lineup-box" [ngClass]="{'right': index % 2 == 1, 'left': index % 2 == 0, 'center': arrLength === index + 1 && index % 2 == 0 }">
+    <!-- Starting Lineup Box Head -->
+    <div class="starting-lineup-box-head depth-chart-box-head">
+      <!-- Event Participants-->
+      <div class="event-top-participants depth-chart-box-top">
+        <!-- Event Away Participant -->
+        <div class="event-away-participant">
+
+          <div class="away-participant-wrapper stat-head-participant">
+            <div class="away-participant-content">
+              <h2 class="event-top-participant-name long-team-name">
+                <a class="link-black-underline" [routerLink]="['/' + matchup.away.lineup_route]">
+                  <ng-container *ngTemplateOutlet="awayTeamNameTpl"></ng-container>
+                </a>
+              </h2>
+              <!--<h4 class="event-top-participant-standing">-->
+                <!--<span class="event-top-participant-record">{{matchup.game_info.header.away.away_record}}<span class="event-top-participant-record-comma">,</span></span>-->
+                <!--<span class="event-top-participant-rank">-->
+                  <!--<span>{{matchup.game_info.away_nav.team_rank}}</span>-->
+                <!--</span>-->
+                <!--{{matchup.game_info.away_nav.team_conference}} {{matchup.game_info.away_nav.team_division}}-->
+              <!--</h4>-->
+            </div>
+            <a class="away-participant-logo event-participant-logo" rel="nofollow" [routerLink]="['/' + matchup.away.lineup_route]">
+              <ng-container *ngTemplateOutlet="awayTeamLogoTpl"></ng-container>
+            </a>
+            <!--<div class="mobile-standing">-->
+              <!--<span class="event-top-participant-record">{{matchup.game_info.header.away.away_record}}<span class="event-top-participant-record-comma">,</span></span>-->
+              <!--<span class="event-top-participant-rank">-->
+                <!--<span>{{matchup.game_info.away_nav.team_rank}}</span>-->
+              <!--</span>-->
+              <!--{{matchup.game_info.away_nav.team_conference}} {{matchup.game_info.away_nav.team_division}}-->
+            <!--</div>-->
+          </div>
+
+        </div>
+        <!-- Event Wind -->
+        <div class="event-date-mid">
+          <div class="event-mid-row">
+            <div class="event-date-cal-date">
+              <ng-container>
+                <h4>
+                  <app-general-time-format [time]="matchup.date_time"></app-general-time-format>
+                </h4>
+                <div class="at-symbol">
+                  @
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          <div class="event-mid-row">
+            <span class="event-mobile-details">
+              <a class="link-black-underline" [routerLink]="['/' + matchup.away.lineup_route]">
+                <ng-container *ngTemplateOutlet="awayTeamAbbrTpl"></ng-container>
+              </a>
+              @
+              <a class="link-black-underline" [routerLink]="['/' + matchup.home.lineup_route]">
+                <ng-container *ngTemplateOutlet="homeTeamAbbrTpl"></ng-container>
+              </a>
+            </span>
+          </div>
+        </div>
+        <!-- Event Home Participant -->
+        <div class="event-home-participant">
+          <div  class="home-participant-wrapper stat-head-participant">
+            <a class="home-participant-logo event-participant-logo" rel="nofollow" [routerLink]="['/' + matchup.home.lineup_route]">
+              <ng-container *ngTemplateOutlet="homeTeamLogoTpl"></ng-container>
+            </a>
+            <!--<div class="mobile-standing">-->
+              <!--<span class="event-top-participant-record">{{matchup.game_info.header.home.home_record}}<span class="event-top-participant-record-comma">,</span></span>-->
+              <!--<span class="event-top-participant-rank">-->
+                  <!--<span>{{matchup.game_info.home_nav.team_rank}}</span>-->
+                <!--</span>-->
+              <!--{{matchup.game_info.home_nav.team_conference}} {{matchup.game_info.home_nav.team_division}}-->
+            <!--</div>-->
+            <div class="home-participant-content">
+              <h2 class="event-top-participant-name long-team-name">
+                <a class="link-black-underline" [routerLink]="['/' + matchup.home.lineup_route]">
+                  <ng-container *ngTemplateOutlet="homeTeamNameTpl"></ng-container>
+                </a>
+              </h2>
+              <!--<h4 class="event-top-participant-standing">-->
+                <!--<span class="event-top-participant-record">{{matchup.game_info.header.home.home_record}}<span class="event-top-participant-record-comma">,</span></span>-->
+                <!--<span class="event-top-participant-rank">-->
+                  <!--<span>{{matchup.game_info.home_nav.team_rank}}</span>-->
+                <!--</span>-->
+                <!--{{matchup.game_info.home_nav.team_conference}} {{matchup.game_info.home_nav.team_division}}-->
+              <!--</h4>-->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dd-wrapper">
+        <div class="left-dd">
+          <div class="grouped-dropdown-wrapper not-mobile btn-group mb-2">
+            <app-dropdown
+              [ddData]="ddData"
+              [scrollableMenu]="false"
+              [filterItems]="filterItems.bind(this)"
+              [className]="'first'"
+              [isSingleSelect]="true"
+              prop="books"
+              name="Books"
+            ></app-dropdown>
+          </div>
+        </div>
+        <div class="right-dd">
+          <div class="grouped-dropdown-wrapper not-mobile btn-group mb-2">
+            <app-dropdown
+              [ddData]="ddData"
+              [scrollableMenu]="false"
+              [filterItems]="filterItems.bind(this)"
+              [className]="'last'"
+              [isSingleSelect]="true"
+              prop="bets"
+              name="Bets"
+            ></app-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Event Lineup Stats -->
+    <ng-container [ngSwitch]="league">
+      <ng-container *ngSwitchCase="'mlb'">
+        <app-mlb-live-odds-mobile-table [ddData]="ddData" [matchup]="matchup"></app-mlb-live-odds-mobile-table>
+      </ng-container>
+      <ng-container *ngSwitchCase="'nba'">
+        <app-nba-live-odds-mobile-table [ddData]="ddData" [matchup]="matchup"></app-nba-live-odds-mobile-table>
+      </ng-container>
+      <ng-container *ngSwitchCase="'nfl'">
+        <app-nfl-live-odds-mobile-table [ddData]="ddData" [matchup]="matchup"></app-nfl-live-odds-mobile-table>
+      </ng-container>
+    </ng-container>
+    <!-- Event Lineup Footer -->
+    <div class="event-lineup-footer">
+      <div class="btn-left-wrapper">
+        <div class="text-center match-odds-btn-wrapper">
+          <a [routerLink]="[matchup.matchup_route || '/' + league + '/matchups']" class="btn match-odds-and-line d-inline-block">Matchup Breakdown <img src="/assets/images/white-right-arrow.png" alt="Matchup Breakdown"></a>
+        </div>
+      </div>
+      <div class="btn-right-wrapper">
+        <div class="text-center match-odds-btn-wrapper">
+          <button class="btn match-odds-and-line d-inline-block" (click)="onLineClick(matchup)">Line Movement <i class="fa fa-line-chart ml-1" aria-hidden="true"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-chart-wrapper" *ngIf="checkActiveChart(matchup)">
+      <div class="live-odds-chart-wrapper">
+        <app-live-odds-chart
+          (onLineMoveClose)="onLineClick($event)"
+          [switchOptions]="switchOptions"
+          [allBooksOption]="allBooksOption"
+          [allAdditionalBooksOption]="allAdditionalBooksOption"
+          [allBetsOption]="allBetsOption"
+          [matchup]="matchup"
+          [parentDdData]="ddData"
+          [league]="league"
+        ></app-live-odds-chart>
+      </div>
+    </div>
+  </div> <!-- End Lineup Box -->
+</div> <!-- End Lineups Loop -->

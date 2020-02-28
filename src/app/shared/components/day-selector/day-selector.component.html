@@ -1,0 +1,35 @@
+<div class="day-selector-wrapper-first">
+  <div class="day-selector-wrapper-second">
+    <div class="day-selector">
+      <div class="selector-actions-wrap">
+        <a [ngClass]="{'disabled': isPrevWeekDisabled()}" class="slider-prev" (click)="prevWeek()">
+          <img src="https://res.cloudinary.com/dvtp41gsb/image/upload/v1501546576/scorebar-prev-arrow_f8rc2i.png">
+        </a>
+        <div class="slider-clip-container">
+          <ul class="slides">
+            <li class="slide" [ngClass]="{'active-day': selectedDate === date.date }" *ngFor="let date of dates">
+              <div class="radio">
+                <input type="radio" name="group-days" id="field-{{date.weekDay | lowercase}}" [value]="selectedDate" [checked]="selectedDate === date.date"/>
+                <label class="radio-label" for="field-{{date.weekDay | lowercase}}" (click)="selectDate(date)">
+                  <span>{{date.weekDay}}</span> {{date.shortDate}}
+                </label>
+              </div>
+            </li>
+            <div class="clearfix"></div>
+          </ul>
+        </div>
+        <a class="slider-next" (click)="nextWeek()">
+          <img src="https://res.cloudinary.com/dvtp41gsb/image/upload/v1501546576/scorebar-next-arrow_eq9jcg.png">
+        </a>
+        <div class="clearfix"></div>
+      </div>
+      <div class="selector-calendar-wrap">
+        <input type="hidden" ngbDatepicker [minDate]="minDateDatePicker" #d="ngbDatepicker" [(ngModel)]="selectedCalendarDate" (ngModelChange)="onCalendarDateChange($event)">
+        <a class="calendar" (click)="d.toggle()">
+          <img src="/assets/images/calendar-icon.png" alt="calendar-icon"/>
+        </a>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</div>

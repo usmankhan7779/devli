@@ -1,0 +1,210 @@
+:host {
+  .app-status {
+    .status {
+      font-size: 16px;
+      white-space: nowrap;
+      &.confirmed {
+        color: #2bb673;
+        &:before {
+          font-family: 'FontAwesome';
+          content: "\F058";
+        }
+      }
+      &.rejected {
+        color: #e14747;
+        &:before {
+          font-family: 'FontAwesome';
+          content: "\F057";
+        }
+      }
+    }
+    &:not(.matchup-media) {
+      .mobile-team-name {
+        font-size: 24px;
+      }
+      .heading-content.is-header h1, .mobile-team-name {
+        @media (max-width: 400px) {
+          font-size: 20px;
+          line-height: 29px;
+        }
+        @media (max-width: 360px) {
+          font-size: 17px;
+          line-height: 22px;
+        }
+      }
+      .details  p {
+        font-size: 13px;
+        margin-top: 2px;
+      }
+    }
+
+    p {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1;
+    }
+    p.pitcher {
+      font-size: 14px;
+      line-height: normal;
+    }
+    .heading-content {
+      &, h1 {
+        font-size: 27px;
+        font-weight: bold;
+        margin-bottom: 3px;
+      }
+    }
+
+    .status-display {
+      position: relative;
+      top: -3px;
+    }
+
+    p.normal-text {
+      font-size: 14px;
+      font-weight: normal;
+      line-height: 1.5;
+    }
+
+    a.team-name-link {
+      color: black;
+    }
+
+    .details {
+      .heading-content {
+        font-size: 22px;
+        margin: 0;
+        font-weight: bold;
+        line-height: 1.1;
+      }
+      p.normal-text {
+        @extend .normal-text
+      }
+      p {
+        font-weight: normal;
+        font-size: 15px;
+      }
+    }
+    &:not(.matchup-media) {
+      @media (max-width: 1100px) {
+        .team-logo {
+          display: block;
+          margin: auto;
+        }
+        .team-logo.with-status {
+          margin-bottom: 5px;
+        }
+      }
+      @media (max-width: 900px) {
+        .status-display {
+          position: static;
+        }
+        .status {
+          font-size: 12px;
+        }
+        .heading-content {
+          font-size: 15px;
+        }
+        p, p.normal-text {
+          font-size: 11px;
+        }
+      }
+      @media (max-width: 635px) {
+        .normal-team-name {
+          font-size: 24px;
+          line-height: 29px;
+        }
+      }
+    }
+  }
+  @media (min-width: 576px) {
+    .mobile-team-name {
+      display: none;
+    }
+  }
+  @media (max-width: 575px) {
+    .normal-team-name {
+      display: none;
+    }
+  }
+}
+
+:host-context(.bp-item) {
+  .normal-team-name {
+    display: inline !important;
+  }
+  .mobile-team-name {
+    display: none !important;
+  }
+  @media (min-width: 1200px) and (max-width: 1265px), (min-width: 575px) and (max-width: 650px), (max-width: 420px) {
+    .normal-team-name {
+      display: none !important;
+    }
+    .mobile-team-name {
+      display: inline !important;
+    }
+  }
+}
+
+:host-context(.simulator-item) {
+  .normal-team-name {
+    display: inline !important;
+  }
+  .mobile-team-name {
+    display: none !important;
+  }
+  @media (min-width: 992px) and (max-width: 1401px), (max-width: 715px) {
+    .normal-team-name {
+      display: none !important;
+    }
+    .mobile-team-name {
+      display: inline !important;
+    }
+  }
+}
+
+:host-context(.team-lineup-status-wrapper) {
+  @media (min-width: 1200px) and (max-width: 1620px) {
+    .heading-content {
+      font-size: 20px;
+    }
+    .status {
+      font-size: 15px;
+    }
+    p {
+      font-size: 17px;
+    }
+  }
+  @media (min-width: 1200px) and (max-width: 1500px) {
+    .heading-content {
+      font-size: 17px;
+      span {
+        margin-right: 5px !important;
+      }
+    }
+    p {
+      font-size: 15px;
+    }
+    .status {
+      font-size: 13px;
+    }
+  }
+  @media (min-width: 1200px) and (max-width: 1320px) {
+    .status-display {
+      display: block;
+    }
+  }
+
+  @media (max-width: 900px) {
+    p {
+      font-size: 13px !important;
+    }
+    .status-display {
+      position: relative !important;
+      .status {
+        font-size: 14px !important;
+      }
+    }
+  }
+
+}

@@ -1,0 +1,8 @@
+<div class="team-logo-container d-flex flex-nowrap justify-content-start align-items-center">
+  <a (click)="onUrlClick()" [routerLink]="url || ''" class="link-black logo-container" rel="nofollow noopener">
+    <img [type]="'white'" [appSpriteImg]="league" [src]="logo" alt="{{name}}">
+  </a>
+  <a (click)="onUrlClick()" [ngStyle]="{'color': hex}" [routerLink]="url || ''" class="link-black-underline team-txt" rel="nofollow noopener">
+    {{name}}
+  </a>
+</div>

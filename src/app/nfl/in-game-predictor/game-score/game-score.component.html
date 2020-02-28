@@ -1,0 +1,34 @@
+<ng-template #activeTeam>
+  <div *ngIf="data?.status === 'Final'" class="text box grey">
+    Final
+  </div>
+  <div *ngIf="data?.status !== 'Final' && data?.quarter !== 'Halftime'" class="text box grey">
+    {{data?.down | ordinal}} & {{data?.yards_to_go}}
+  </div>
+  <div *ngIf="data?.status !== 'Final' && data?.yardline && data?.quarter !== 'Halftime'" class="text box grey">
+    {{data.yardline}}
+  </div>
+  <div *ngIf="data?.status !== 'Final' && data?.quarter !== 'Halftime'" class="text box grey">
+    {{data?.quarter | ordinal}} {{data?.clock}}
+  </div>
+  <div *ngIf="data?.quarter === 'Halftime'" class="text box grey">
+    {{data?.quarter}}
+  </div>
+</ng-template>
+<div class="game-score d-flex flex-nowrap justify-content-center">
+  <div class="d-flex flex-nowrap align-self-center">
+    <img [type]="'white'" [appSpriteImg]="'nfl'" class="logo" [src]="data?.away_team_logo" alt="{{data?.away_team}}">
+    <strong class="text" [ngClass]="{'team-has-ball': data?.status !== 'Final' && data?.quarter !== 'Halftime' && data?.possessing_team === data?.away_team}">{{data?.away_team}}</strong>
+    <div class="box blue text">
+      {{data?.away_score}}
+    </div>
+  </div>
+  <div class="d-flex flex-nowrap">
+    <img [type]="'white'" [appSpriteImg]="'nfl'" class="logo" [src]="data?.home_team_logo" alt="{{data?.home_team}}">
+    <strong class="text" [ngClass]="{'team-has-ball': data?.status !== 'Final' && data?.quarter !== 'Halftime' && data?.possessing_team === data?.home_team}">{{data?.home_team}}</strong>
+    <div class="box red text">
+      {{data?.home_score}}
+    </div>
+    <ng-template [ngTemplateOutlet]="activeTeam"></ng-template>
+  </div>
+</div>

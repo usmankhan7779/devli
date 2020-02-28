@@ -1,0 +1,114 @@
+<div class="ownership-content content container-fluid">
+  <app-breadcrumb></app-breadcrumb>
+
+  <div class="ownership-heading-wrap">
+    <h1 class="page-heading">NFL Projected Ownership</h1>
+  </div>
+
+  <div class="ownership-actions-wrap">
+    <div class="action-dropdowns">
+      <div class="grouped-dropdown-wrapper btn-group">
+        <div ngbDropdown class="grouped-dropdown dropdown">
+          <button type="button" class="grouped-dropdown-btn btn btn-secondary first" id="stats-dropdown" ngbDropdownToggle>
+            <span>{{btnGroupOneCurrentValue.label}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+          </button>
+          <div class="dropdown-menu" aria-labelledby="stats-dropdown">
+            <div *ngFor="let opt of btnGroupOneOpts"  class="dropdown-btn-wrap">
+              <a (click)="onSelectBtnGroupOneOpt(opt)" [ngClass]="{'dd-active-btn': btnGroupOneCurrentValue.label == opt.label}" class="dropdown-item">{{opt.label}}</a>
+            </div>
+          </div>
+        </div>
+        <div ngbDropdown class="grouped-dropdown dropdown">
+          <button type="button" class="grouped-dropdown-btn btn btn-secondary last" id="stats-dropdown" ngbDropdownToggle>
+            <span>{{btnGroupTwoCurrentValue.label}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+          </button>
+          <div class="dropdown-menu" aria-labelledby="stats-dropdown">
+            <div *ngFor="let opt of btnGroupTwoOpts"  class="dropdown-btn-wrap">
+              <a (click)="onSelectBtnGroupTwoOpt(opt)" [ngClass]="{'dd-active-btn': btnGroupOneCurrentValue.label == opt.label}" class="dropdown-item">{{opt.label}}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="action-toggles">
+      <div class="toggles-in-page-wrapper">
+        <div class="toggles-in-page-group btn-group toggles-group">
+          <button (click)="onToggleTab(0)" class="toggle-in-page first" [ngClass]="{'active': true}">All</button>
+          <button (click)="onToggleTab(1)" class="toggle-in-page" [ngClass]="{'active': false}">QB</button>
+          <button (click)="onToggleTab(2)" class="toggle-in-page" [ngClass]="{'active': false}">RB</button>
+          <button (click)="onToggleTab(3)" class="toggle-in-page" [ngClass]="{'active': false}">WR</button>
+          <button (click)="onToggleTab(4)" class="toggle-in-page" [ngClass]="{'active': false}">TE</button>
+          <button (click)="onToggleTab(5)" class="toggle-in-page" [ngClass]="{'active': false}">K</button>
+          <button (click)="onToggleTab(6)" class="toggle-in-page last" [ngClass]="{'active': false}">DEF</button>
+        </div>
+      </div>
+    </div>
+    <div class="action-search">
+      <app-input-with-icon
+        [icon] = "'search'"
+        [placeholder] = "'Search'">
+      </app-input-with-icon>
+    </div>
+    <div class="action-day-picker">
+      <app-day-selector
+        (dateChanged)="onUpdateDate($event)">
+      </app-day-selector>
+    </div>
+  </div>
+
+  <div class="row">
+    <div style="text-align: center; padding: 40px; font-size: 20px;" *ngIf="loading">Loading ...</div>
+    <div class="col-12">
+      <div class="ownership-entities-wrap" *ngIf="!loading">
+        <div class="table-container">
+          <table class="table table-striped">
+            <thead>
+              <tr class="table-head">
+                <th>Pos</th>
+                <th class="left-align">Player</th>
+                <th>Salary</th>
+                <th>Projection</th>
+                <th>GPP Value</th>
+                <th>Rating</th>
+                <th>Game</th>
+                <th>GPP 1</th>
+                <th>GPP 2</th>
+                <th>GPP 3</th>
+                <th>GPP Range</th>
+                <th>GPP Avg</th>
+                <th>GPP Avg Actual</th>
+                <th>50/50 1</th>
+                <th>50/50 Range</th>
+                <th>50/50 Actual</th>
+                <th>Twitter Buzz</th>
+                <th>Twitter Mentions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of items">
+                <td>{{ item.pos }}</td>
+                <td class="left-align">{{ item.player }}</td>
+                <td>$10,000</td>
+                <td>24.65</td>
+                <td>20</td>
+                <td class="rate"><span [ngClass]="{'green': item.rating > 90}">{{ item.rating }}</span></td>
+                <td>ATL @ LAD</td>
+                <td>20.5%</td>
+                <td>20.5%</td>
+                <td>20.5%</td>
+                <td>+/- 5</td>
+                <td class="gpp-avg">20.5%</td>
+                <td>25%</td>
+                <td>25.5%</td>
+                <td>+/- 5</td>
+                <td>25%</td>
+                <td>35</td>
+                <td>134</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

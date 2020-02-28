@@ -1,0 +1,187 @@
+:host {
+  @import '../../../scss/custom-components/fixed-table';
+  @import '../../../scss/bootstrap-customization/custom-mixins';
+
+
+  $first-break: 1579px;
+  $second-break: 911px;
+  $third-break: 435px;
+  $static-table-width: 380px;
+  $static-table-width-four-col: 309px;
+  $static-table-xs-width: 264px;
+  $static-table-xs-width-four-col: 309px;
+
+  .static-table-wrapper {
+    display: block !important;
+    overflow-x: visible !important;
+  }
+  .horizontal-table-wrapper.three-col {
+    width: calc(100% - 300px) !important;
+  }
+  .stats-table {
+    th {
+      min-width: 80px;
+    }
+  }
+  .horizontal-table-wrapper .multi-row-data-table .t-content td {
+    font-size: 16px;
+    @media (max-width: 1650px) {
+      font-size: 12px;
+    }
+  }
+  .table-sect-wrap .static-table td.player-name-col {
+    font-size: 14px !important;
+    padding: 0!important;
+    padding-left: 10px !important;
+  }
+  .horizontal-table-wrapper {
+    .minute-item-table th {
+      min-width: 50px;
+    }
+    .stats-item-table th {
+      min-width: 60px;
+    }
+    .fantasy-item-table th {
+      min-width: 65px;
+      font-size: 13px !important;
+    }
+  }
+  .static-table {
+    .game-col {
+      min-width: 85px;
+      max-width: 85px;
+    }
+    .position-col {
+      min-width: 35px;
+      max-width: 45px;
+    }
+  }
+  .fantasy-item-table {
+    min-width: 1100px;
+  }
+  .stats-item-table {
+    min-width: 900px;
+  }
+  .minute-item-table {
+    min-width: 850px;
+  }
+  @media (min-width: 1650px) {
+    //.fantasy-table-wrapper {
+    //
+    //}
+    //.stats-table-wrapper {
+    //
+    //}
+    //.minutes-table-wrapper {}
+    .static-table {
+      &.three-col {
+        max-width: $static-table-width;
+        @media (max-width: 550px) {
+          max-width: $static-table-xs-width;
+        }
+      }
+      &.four-col {
+        max-width: $static-table-width;
+        @media (max-width: 550px) {
+          max-width: $static-table-xs-width-four-col;
+        }
+      }
+      .player-name-col {
+        min-width: 220px;
+      }
+    }
+    .stats-table {
+      .game-col {
+        min-width: 85px;
+        max-width: 85px;
+      }
+      .position-col {
+        min-width: 50px;
+        max-width: 50px;
+      }
+    }
+
+    .horizontal-table-wrapper.three-col {
+      width: calc(100% - #{$static-table-width}) !important;
+    }
+    .player-name-col, .position-col, .game-col {
+      font-size: 1rem;
+    }
+    .table-sect-wrap .static-table {
+      td.position-col, td.game-col {
+        font-size: 1rem;
+      }
+      td.player-name-col {
+        font-size: 0.9375rem !important;
+      }
+    }
+    .horizontal-table-wrapper {
+
+    }
+    .static-table-wrapper {
+
+    }
+    .multi-row-data-table {
+      .t-content td {
+        font-size: 1rem;
+      }
+    }
+  }
+  @media (max-width: 1650px) {
+    .table-sect-wrap .static-table td.player-name-col {
+      font-size: 12px !important;
+    }
+  }
+  @media (max-width: 550px) {
+    .static-table {
+      &.three-col {
+        max-width: $static-table-xs-width;
+      }
+      &.four-col {
+        max-width: $static-table-xs-width-four-col;
+      }
+    }
+    .table-sect-wrap .static-table .game-col {
+      font-size: 10px !important;
+    }
+    .horizontal-table-wrapper {
+      &.three-col {
+        width: calc(100% - #{$static-table-xs-width}) !important;
+      }
+      &.four-col {
+        width: calc(100% - #{$static-table-width-four-col}) !important;
+      }
+    }
+  }
+  @media (max-width: 480px) {
+    @import '../../../scss/custom-components/fixed-table-mobile';
+    .horizontal-table-wrapper{
+      &.three-col {
+        width: calc(100% - 202px) !important;
+      }
+      &.four-col {
+        width: calc(100% - 250px) !important;
+      }
+    }
+
+    .table-sect-wrap {
+      .static-table {
+        &.three-col {
+          max-width: 202px !important;
+        }
+        width: auto;
+        td {
+          height: 54px;
+        }
+        .game-col {
+          min-width: 45px;
+          max-width: 45px;
+        }
+        .position-col {
+          min-width: 35px;
+          max-width: 47px;
+        }
+      }
+    }
+  }
+}

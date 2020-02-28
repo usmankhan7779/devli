@@ -1,0 +1,188 @@
+<ng-template #loading>
+  <div class="starting-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<div *ngIf="homeData; else loading" class="container-fluid pb-5">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+    <div class="col-12">
+      <h1 class="page-heading">{{homeData.heading}}</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div *ngIf="isDefaultYear && homeData.intro_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <p class="site-pages-content" [innerHtml]="homeData.intro_paragraph | safeHtml"></p>
+    </div>
+    <div class="col-12">
+      <div class="grouped-dropdown-wrapper btn-group mb-3">
+        <div ngbDropdown class="grouped-dropdown dropdown">
+          <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="main-dropdown" ngbDropdownToggle>
+            <span class="pr-0 pr-sm-3">{{displayCurrentYearDD(homeData.year)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+          </button>
+          <div class="dropdown-menu" aria-labelledby="main-dropdown">
+            <div *ngFor="let season of homeData.seasons_dropdown;">
+              <button
+                [ngClass]="{'dd-active-btn': homeData.year === season.year}"
+                (click)="onYearDdChange(season)"
+                class="dropdown-item">
+                <span>{{season.name}}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-9 col-12">
+      <div  class="row">
+        <div class="col-12">
+
+          <div *ngIf="homeData?.top_links?.length" class="row">
+            <div
+              *ngFor="let topLink of homeData.top_links; let last = last;"
+              class="mt-sm-3 mt-md-0 col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 text-center text-sm-left">
+              <h5 *ngIf="topLink.header_url && topLink.header" class="mb-3 mt-0">
+                <a class="link-black-underline" [routerLink]="topLink.header_url"><strong>{{topLink.header}}</strong></a>
+              </h5>
+              <div class="row">
+                <div *ngFor="let topLinkSubLink of topLink.contents" class="col-12">
+                  <a *ngIf="topLinkSubLink.text" class="link-black-underline mobile-margin" [routerLink]="[topLinkSubLink.url]" >{{topLinkSubLink.text}}</a>
+                  <h5 *ngIf="topLinkSubLink.header" class="mb-3 text-center text-md-left mt-md-0">
+                    <a class="link-black-underline" [routerLink]="[topLinkSubLink.url]">
+                      <strong>{{topLinkSubLink.header}}</strong>
+                    </a>
+                  </h5>
+                </div>
+              </div>
+            </div>
+            <div class="mt-sm-3 mt-md-0 col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 text-center text-sm-left">
+              <h5 *ngIf="homeData?.schedule_link?.text && homeData?.schedule_link?.url" class="mb-3 mt-0">
+                <a class="link-black-underline" [routerLink]="[homeData.schedule_link.url]"><strong>{{homeData.schedule_link.text}}</strong></a>
+              </h5>
+              <h5 *ngIf="homeData?.roster_link?.text && homeData?.roster_link?.url" class="mb-3 mt-0">
+                <a class="link-black-underline" [routerLink]="[homeData.roster_link.url]"><strong>{{homeData.roster_link.text}}</strong></a>
+              </h5>
+            </div>
+            <div class="mt-sm-3 mt-md-0 col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 text-center text-sm-left">
+              <h5 *ngIf="homeData?.news_link?.text && homeData?.news_link?.url" class="mb-3 mt-0">
+                <a class="link-black-underline" [routerLink]="[homeData.news_link.url]"><strong>{{homeData.news_link.text}}</strong></a>
+              </h5>
+              <h5 *ngIf="homeData.injuries_route" class="mb-3 mt-0">
+                <a class="link-black-underline" [routerLink]="[homeData.injuries_route]"><strong>Team Injuries</strong></a>
+              </h5>
+            </div>
+            <div class="col-12 border-bottom my-4"></div>
+          </div>
+          <!--hidden for now 1570 http://www.seoservicesla.com/projects/148?modal=Task-52639-148-->
+          <div *ngIf="false && isDefaultYear && !forceOffseason" class="row">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-12">
+                  <h5 class="after-heading-margin text-center text-sm-left">
+                    <strong>
+                      <a class="link-black-underline" [routerLink]="'/nba/matchups'">Today's Matchups</a>
+                    </strong>
+                  </h5>
+                </div>
+                <div class="col-12">
+                  <ng-template #noMatchups>
+                    <div class="text-center text-sm-left">
+                      No NBA Matchups Today
+                    </div>
+                  </ng-template>
+                  <ng-container *ngIf="homeData.matchup_routes?.length; else noMatchups">
+                    <app-vertical-list-6-xl-col [data]="homeData.matchup_routes" [linkToAll]="'/nba/matchups'" [textToAll]="'See Today\'s Matchups'"></app-vertical-list-6-xl-col>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-12 border-bottom my-4"></div>
+            </div>
+          </div>
+
+          <div *ngIf="isDefaultYear && articles.length" class="row">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-12">
+                  <h5 class="after-heading-margin text-center text-sm-left">
+                    <strong>
+                      <a class="link-black-underline" target="_blank" rel="noopener" href="https://www.lineups.com/articles/nba/">NBA News & Articles</a>
+                    </strong>
+                  </h5>
+                </div>
+                <div class="col-12 d-flex short-articles-wrapper league-page">
+                  <app-short-wp-article *ngFor="let article of articles" [wpSmBlogItem]="article"></app-short-wp-article>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 border-bottom my-4"></div>
+          </div>
+
+          <div *ngIf="isDefaultYear && bettingArticles.length" class="row">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-12">
+                  <h5 class="after-heading-margin text-center text-sm-left">
+                    <strong>
+                      <a class="link-black-underline" target="_blank" rel="noopener" href="https://www.lineups.com/betting/">NBA Betting News & Articles</a>
+                    </strong>
+                  </h5>
+                </div>
+                <div class="col-12 d-flex short-articles-wrapper league-page">
+                  <app-short-wp-article *ngFor="let article of bettingArticles" [wpSmBlogItem]="article"></app-short-wp-article>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 border-bottom my-4"></div>
+          </div>
+
+          <div *ngIf="isDefaultYear && podcasts.length" class="row">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-12">
+                  <h5 class="after-heading-margin text-center text-sm-left">
+                    <strong>
+                      <a class="link-black-underline" target="_blank" rel="noopener" href="https://www.lineups.com/podcasts/">NBA Podcasts</a>
+                    </strong>
+                  </h5>
+                </div>
+                <div class="col-12 d-flex short-articles-wrapper league-page">
+                  <app-short-wp-article *ngFor="let podcast of podcasts" [wpSmBlogItem]="podcast"></app-short-wp-article>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 border-bottom my-4"></div>
+          </div>
+
+          <div *ngIf="homeData?.lineup_routes?.length && homeData?.lineups_link?.text" class="row">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-12">
+                  <h5 class="after-heading-margin text-center text-sm-left">
+                    <strong>
+                      <a *ngIf="homeData.lineups_link.url" class="link-black-underline" [routerLink]="homeData.lineups_link.url">{{homeData.lineups_link.text}}</a>
+                      <span *ngIf="!homeData.lineups_link.url">{{homeData.lineups_link.text}}</span>
+                    </strong>
+                  </h5>
+                </div>
+
+                <div class="col-12">
+                  <div class="d-flex flex-wrap team-gateway-item-wrapper">
+                    <app-team-gateway-item
+                      *ngFor="let team of homeData.lineup_routes | orderBy: 'name'"
+                      (urlClicked)="setLineupTeamSeason($event)"
+                      [league]="'nba'"
+                      [team]="team"
+                    ></app-team-gateway-item>
+                  </div>
+                  <!--<app-vertical-list-6-xl-col (urlClicked)="setLineupTeamSeason()" [data]="homeData.lineup_routes" [linkToAll]="homeData.see_all_lineups_link.url" [textToAll]="homeData.see_all_lineups_link.text"></app-vertical-list-6-xl-col>-->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

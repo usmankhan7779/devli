@@ -1,0 +1,293 @@
+.content.bet-predictor-content {
+  $mobile-resolution: 930px;
+  $help-btns-px: 630px;
+  @import "./_responsive-page-nav.scss";
+  @include mobile-navigation($mobile-resolution);
+  .page-heading-navigation {
+    .tab-btn-wrap {
+      width: auto;
+      &:first-child .page-heading-nav-btn {
+        padding-left: 0;
+      }
+      .page-heading-nav-btn {
+        padding: 0 20px;
+        line-height: 51px;
+        @media (max-width: 1100px) and (min-width: 900px) {
+          line-height: 43px;
+        }
+      }
+    }
+  }
+
+  .mobile-help-button {
+    float: right;
+    button {
+      height: 30px;
+      width: 75px;
+      padding: 5px 10px;
+      margin: 0 !important;
+    }
+    button.help-btn {
+      margin-right: 0.25rem !important;
+    }
+  }
+
+  @media (max-width: $help-btns-px) {
+    .in-page-dropdown-toggle {
+      button.collapse-page-nav-btn {
+        width: 30px;
+        height: 30px;
+        padding: 0;
+      }
+      display: block;
+      margin-bottom: 20px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+    .in-page-dropdown-menu.collapse {
+      &.show {
+        display: block;
+
+      }
+      &:not(.show) {
+        display: none;
+      }
+    }
+    .content.bet-predictor-content .top-section {
+      padding-bottom: 0;
+    }
+    .separated-dropdowns-wrapper.responsive.bet-predictor-dd .separated-dropdown-menu {
+      width: 100%;
+      button {
+        width: 100%;
+      }
+    }
+  }
+
+  .game-date {
+    font-size: 0.6875rem;
+  }
+  .check-mark {
+    display: inline-block;
+    text-align: center;
+    img {
+      width: 14px;
+    }
+    &.red {
+      img {
+        width: 12px;
+      }
+    }
+  }
+
+  .top-section {
+    padding-bottom: 8px;
+    z-index: 1;
+    position: relative;
+    background-color: #ffffff;
+    -moz-box-shadow: 0 1px 5px 1px #e2e2e2;
+    -webkit-box-shadow: 0 1px 5px 1px #e2e2e2;
+    box-shadow: 0 1px 5px 1px #e2e2e2;
+    .powered-by-logo {
+      display: none;
+      margin-top: 5px;
+      margin-left: 13px;
+      margin-right: 15px;
+    }
+  }
+  .bottom-section {
+    background-color: #fafafa;
+    padding-bottom: 100px;
+  }
+  .page-heading-navigation {
+    border-top: none;
+    border-bottom: 2px solid #ebebec;
+    margin-bottom: 20px;
+  }
+  .page-heading-nav-btn {
+    font-size: 18px;
+  }
+  .tab-btn-wrap {
+    color: #656565;
+    white-space: nowrap;
+  }
+  .nav-section {
+    width: 67%;
+  }
+  .in-page-collapse-toggle .btns-group-mobile {
+    margin-top: 0;
+    @media (max-width: 767px) {
+      margin-top: -4px;
+    }
+  }
+  .btns-group-mobile-second-row {
+    display: none;
+  }
+  .top-help-buttons {
+    display: none;
+  }
+  @media (min-width: $help-btns-px) {
+    .top-help-buttons {
+      display: block;
+    }
+  }
+  @media (max-width: $help-btns-px) {
+    .top-help-buttons {
+      display: none;
+    }
+    .bottom-help-buttons {
+      display: block;
+    }
+  }
+  @media (max-width: 1040px) {
+    .nav-section {
+      width: 100%;
+    }
+    .btns-group-desktop {
+      display: none;
+    }
+    .btns-group-mobile {
+      display: block;
+      margin-top: 10px;
+    }
+  }
+  @media (min-width: $mobile-resolution + 1) {
+    .btns-group-mobile-second-row {
+      display: block;
+      margin-top: -4px;
+    }
+    .btns-group-mobile {
+      display: none;
+    }
+    .nav-section {
+      display: inline-flex;
+    }
+    .page-heading-navigation .tab-btn-wrap {
+      height: auto;
+    }
+  }
+  @media (min-width: 992px) {
+    .btns-group-mobile-second-row {
+      display: none;
+    }
+    .btns-group-mobile {
+      display: block;
+      margin-top: 10px;
+    }
+  }
+  @media (max-width: $mobile-resolution) {
+    .page-heading-navigation .tab-btn-wrap {
+      height: auto;
+    }
+    .top-section .btns-group-mobile {
+      display: none;
+    }
+  }
+  @media (min-width: 1040px) {
+    .btns-group-desktop {
+      display: inline-flex;
+    }
+    .btns-group-mobile {
+      display: none;
+    }
+  }
+  @media (min-width: 1200px) and (max-width: 1320px) {
+    ::ng-deep .team-lineup-table-editable {
+      .gear-icon {
+        width: 10px;
+      }
+      .history-icon {
+        font-size: 10px;
+      }
+    }
+  }
+
+  @media (max-width: 400px) {
+    .how-it-works-btn.btn {
+      font-size: 14px;
+      img {
+        width: 14px;
+      }
+    }
+    .btns-group-mobile.float-right {
+      button {
+        font-size: 14px;
+        padding: 6px 5px;
+        .gear-icon {
+          width: 13px;
+        }
+      }
+      button.btn.btn-grey-light, button.btn.btn-orange-deep {
+        i {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &.in-iframe {
+    .powered-by-logo, .page-heading {
+      display: inline-block;
+    }
+    @media(max-width: 1044px) {
+      .top-section-main-content {
+        -webkit-box-orient: vertical !important;
+        -webkit-box-direction: normal !important;
+        -ms-flex-direction: column !important;
+        flex-direction: column !important;
+        .hidden-md-down.bottom-help-btns {
+          display: none !important;
+        }
+        //.hidden-lg-up.top-help-buttons {
+        //  display: block !important;
+        //}
+        .btns-group-mobile-second-row {
+          display: block !important;
+        }
+      }
+      .btns-group-mobile {
+        display: none !important;
+      }
+      .btns-group-desktop {
+        display: none !important;
+      }
+    }
+    @media(max-width: 900px) {
+      .top-section-main-content .btns-group-mobile-second-row {
+        display: none !important;
+      }
+      .in-page-collapse-toggle .btns-group-mobile {
+        display: block !important;
+      }
+    }
+    @media (max-width: 555px) {
+      .separated-dropdowns-wrapper.responsive.xs .separated-dropdown-menu {
+        width: 100%;
+        button {
+          width: 100%;
+        }
+        .dropdown-menu {
+          width: 100%;
+        }
+      }
+      .top-section-main-content .hidden-lg-up.top-help-buttons {
+        display: none !important;
+      }
+    }
+    @media (max-width: 405px) {
+      .page-header-wrapper {
+        -webkit-box-orient: vertical !important;
+        -webkit-box-direction: normal !important;
+        -ms-flex-direction: column !important;
+        flex-direction: column !important;
+        h1 {
+          text-align: center;
+        }
+        .powered-by-logo {
+          text-align: center;
+          margin-bottom: 20px;
+        }
+      }
+    }
+  }
+}

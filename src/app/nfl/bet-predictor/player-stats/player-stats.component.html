@@ -1,0 +1,322 @@
+<div class="row">
+  <div class="col-12">
+    <div class="toggles-in-page-wrapper d-inline-block mt-0 mb-4">
+      <!-- Action Header Button Group -->
+      <div class="toggles-in-page-group btn-group toggles-group">
+        <button (click)="onStatsRadioBtnClick('all')" class="toggle-in-page first" [ngClass]="{'active': statsRadioBtn.all}">All</button>
+        <button (click)="onStatsRadioBtnClick('qb')" class="toggle-in-page" [ngClass]="{'active': statsRadioBtn.qb}">QB</button>
+        <button (click)="onStatsRadioBtnClick('rb')" class="toggle-in-page" [ngClass]="{'active': statsRadioBtn.rb}">RB</button>
+        <button (click)="onStatsRadioBtnClick('wr')" class="toggle-in-page" [ngClass]="{'active': statsRadioBtn.wr}">WR</button>
+        <button (click)="onStatsRadioBtnClick('te')" class="toggle-in-page" [ngClass]="{'active': statsRadioBtn.te}">TE</button>
+        <button (click)="onStatsRadioBtnClick('def')" class="toggle-in-page" [ngClass]="{'active': statsRadioBtn.def}">DEF</button>
+        <button (click)="onStatsRadioBtnClick('k')" class="toggle-in-page last" [ngClass]="{'active': statsRadioBtn.k}">K</button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="statsRadioBtn.all || statsRadioBtn.qb" class="col-12 player-stats-table-wrapper">
+    <table class="multi-row-data-table t-stripped">
+      <colgroup span="3">
+        <col span="1" width="3.8%">
+        <col span="1" width="11.5%">
+        <col span="1" width="4.3%">
+      </colgroup>
+      <colgroup span="4">
+        <col span="1" width="11.3%">
+        <col span="3">
+      </colgroup>
+      <colgroup span="5"></colgroup>
+      <tbody >
+       <tr class="t-header">
+        <th colspan="3" scope="colgroup" class="text-center main-border">Quarterback</th>
+        <th colspan="4" scope="colgroup" class="text-center main-border">Games</th>
+        <th colspan="5" scope="colgroup" class="text-center">Stats</th>
+      </tr>
+        <tr class="t-sub-header bordered">
+        <th scope="col" class="text-center">Pos</th>
+        <th scope="col" class="text-center">Name</th>
+        <th scope="col" class="text-center main-border">Rating</th>
+        <th scope="col" class="text-center">Teams</th>
+        <th scope="col" class="text-center">Team Total</th>
+        <th scope="col" class="text-center">MoneyLine</th>
+        <th scope="col" class="text-center main-border">Spread</th>
+        <th scope="col" class="text-center">Att/Game</th>
+        <th scope="col" class="text-center">TD/Game</th>
+        <th scope="col" class="text-center">Yds/Att</th>
+        <th scope="col" class="text-center">INT/Game</th>
+        <th scope="col" class="text-center">Rush Yds/Game</th>
+      </tr>
+        <tr class="t-content">
+        <td>SP</td>
+        <td>Greg Maddux</td>
+        <td class="main-border">
+          <app-rating-ten [rating]="95"></app-rating-ten>
+        </td>
+        <td>ATL @ LAD</td>
+        <td>4.5</td>
+        <td>-135</td>
+        <td class="main-border">-2.5</td>
+        <td>92</td>
+        <td>1.21</td>
+        <td>12.21</td>
+        <td></td>
+        <td></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="statsRadioBtn.all || statsRadioBtn.rb" class="col-12 player-stats-table-wrapper">
+    <table class="multi-row-data-table t-stripped">
+      <colgroup span="3">
+        <col span="1" width="3.8%">
+        <col span="1" width="11.5%">
+        <col span="1" width="4.3%">
+      </colgroup>
+      <colgroup span="4">
+        <col span="1" width="11.3%">
+        <col span="3">
+      </colgroup>
+      <colgroup span="7"></colgroup>
+      <tbody >
+       <tr class="t-header">
+        <th colspan="3" scope="colgroup" class="text-center main-border">Running Back</th>
+        <th colspan="4" scope="colgroup" class="text-center main-border">Games</th>
+        <th colspan="7" scope="colgroup" class="text-center">Stats</th>
+      </tr>
+        <tr class="t-sub-header bordered">
+        <th scope="col" class="text-center">Pos</th>
+        <th scope="col" class="text-center">Name</th>
+        <th scope="col" class="text-center main-border">Rating</th>
+        <th scope="col" class="text-center">Teams</th>
+        <th scope="col" class="text-center">Team Total</th>
+        <th scope="col" class="text-center">MoneyLine</th>
+        <th scope="col" class="text-center main-border">Spread</th>
+        <th scope="col" class="text-center">Touch/Game</th>
+        <th scope="col" class="text-center">TD/Game</th>
+        <th scope="col" class="text-center">Yards/Touch</th>
+        <th scope="col" class="text-center">Snap Count %</th>
+        <th scope="col" class="text-center">TD/Touch</th>
+        <th scope="col" class="text-center">Rec/Game</th>
+        <th scope="col" class="text-center">Rush/Game</th>
+      </tr>
+        <tr class="t-content">
+        <td>SP</td>
+        <td>Greg Maddux</td>
+        <td class="main-border">
+          <app-rating-ten [rating]="95"></app-rating-ten>
+        </td>
+        <td>ATL @ LAD</td>
+        <td>4.5</td>
+        <td>-135</td>
+        <td class="main-border">-2.5</td>
+        <td>43</td>
+        <td>1.21</td>
+        <td>12.21</td>
+        <td>21</td>
+        <td>21</td>
+        <td>21</td>
+        <td>21</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="statsRadioBtn.all || statsRadioBtn.wr" class="col-12 player-stats-table-wrapper">
+    <table class="multi-row-data-table t-stripped">
+      <colgroup span="3">
+        <col span="1" width="3.8%">
+        <col span="1" width="11.5%">
+        <col span="1" width="4.3%">
+      </colgroup>
+      <colgroup span="4">
+        <col span="1" width="11.3%">
+        <col span="3">
+      </colgroup>
+      <colgroup span="6" width="8.1%"></colgroup>
+      <tbody >
+       <tr class="t-header">
+        <th colspan="3" scope="colgroup" class="text-center main-border">Wide Receiver</th>
+        <th colspan="4" scope="colgroup" class="text-center main-border">Games</th>
+        <th colspan="6" scope="colgroup" class="text-center">Stats</th>
+      </tr>
+        <tr class="t-sub-header bordered">
+        <th scope="col" class="text-center">Pos</th>
+        <th scope="col" class="text-center">Name</th>
+        <th scope="col" class="text-center main-border">Rating</th>
+        <th scope="col" class="text-center">Teams</th>
+        <th scope="col" class="text-center">Team Total</th>
+        <th scope="col" class="text-center">MoneyLine</th>
+        <th scope="col" class="text-center main-border">Spread</th>
+        <th scope="col" class="text-center">Targets/Game</th>
+        <th scope="col" class="text-center">TD/Game</th>
+        <th scope="col" class="text-center">Rec/Game</th>
+        <th scope="col" class="text-center">Snap Count %</th>
+        <th scope="col" class="text-center">Yards/Target</th>
+        <th scope="col" class="text-center">% of Targets</th>
+      </tr>
+        <tr class="t-content">
+        <td>SP</td>
+        <td>Greg Maddux</td>
+        <td class="main-border">
+          <app-rating-ten [rating]="95"></app-rating-ten>
+        </td>
+        <td>ATL @ LAD</td>
+        <td>4.5</td>
+        <td>-135</td>
+        <td class="main-border">-2.5</td>
+        <td>43</td>
+        <td>1.21</td>
+        <td>12.21</td>
+        <td>21</td>
+        <td>21</td>
+        <td>21</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="statsRadioBtn.all || statsRadioBtn.te" class="col-12 player-stats-table-wrapper">
+    <table class="multi-row-data-table t-stripped">
+      <colgroup span="3">
+        <col span="1" width="3.8%">
+        <col span="1" width="11.5%">
+        <col span="1" width="4.3%">
+      </colgroup>
+      <colgroup span="4">
+        <col span="1" width="11.3%">
+        <col span="3">
+      </colgroup>
+      <colgroup span="6" width="8.1%"></colgroup>
+      <tbody >
+       <tr class="t-header">
+        <th colspan="3" scope="colgroup" class="text-center main-border">Tight End</th>
+        <th colspan="4" scope="colgroup" class="text-center main-border">Games</th>
+        <th colspan="6" scope="colgroup" class="text-center">Stats</th>
+      </tr>
+        <tr class="t-sub-header bordered">
+        <th scope="col" class="text-center">Pos</th>
+        <th scope="col" class="text-center">Name</th>
+        <th scope="col" class="text-center main-border">Rating</th>
+        <th scope="col" class="text-center">Teams</th>
+        <th scope="col" class="text-center">Team Total</th>
+        <th scope="col" class="text-center">MoneyLine</th>
+        <th scope="col" class="text-center main-border">Spread</th>
+        <th scope="col" class="text-center">Targets/Game</th>
+        <th scope="col" class="text-center">TD/Game</th>
+        <th scope="col" class="text-center">Rec/Game</th>
+        <th scope="col" class="text-center">Snap Count %</th>
+        <th scope="col" class="text-center">Yards/Target</th>
+        <th scope="col" class="text-center">% of Targets</th>
+      </tr>
+        <tr class="t-content">
+        <td>SP</td>
+        <td>Greg Maddux</td>
+        <td class="main-border">
+          <app-rating-ten [rating]="95"></app-rating-ten>
+        </td>
+        <td>ATL @ LAD</td>
+        <td>4.5</td>
+        <td>-135</td>
+        <td class="main-border">-2.5</td>
+        <td>43</td>
+        <td>1.21</td>
+        <td>12.21</td>
+        <td>21</td>
+        <td>21</td>
+        <td>21</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="statsRadioBtn.all || statsRadioBtn.def" class="col-12 player-stats-table-wrapper">
+    <table class="multi-row-data-table t-stripped">
+      <colgroup span="3">
+        <col span="1" width="3.8%">
+        <col span="1" width="11.5%">
+        <col span="1" width="4.3%">
+      </colgroup>
+      <colgroup span="4">
+        <col span="1" width="11.3%">
+        <col span="3">
+      </colgroup>
+      <colgroup span="4"></colgroup>
+      <tbody >
+       <tr class="t-header">
+        <th colspan="3" scope="colgroup" class="text-center main-border">Defense</th>
+        <th colspan="4" scope="colgroup" class="text-center main-border">Games</th>
+        <th colspan="4" scope="colgroup" class="text-center">Stats</th>
+      </tr>
+        <tr class="t-sub-header bordered">
+        <th scope="col" class="text-center">Pos</th>
+        <th scope="col" class="text-center">Name</th>
+        <th scope="col" class="text-center main-border">Rating</th>
+        <th scope="col" class="text-center">Teams</th>
+        <th scope="col" class="text-center">Team Total</th>
+        <th scope="col" class="text-center">MoneyLine</th>
+        <th scope="col" class="text-center main-border">Spread</th>
+        <th scope="col" class="text-center">D/ST Touchdowns/Game</th>
+        <th scope="col" class="text-center">Sacks/Game</th>
+        <th scope="col" class="text-center">Takeaways/Game</th>
+        <th scope="col" class="text-center">Points Allow/Game</th>
+      </tr>
+        <tr class="t-content">
+        <td>SP</td>
+        <td>Greg Maddux</td>
+        <td class="main-border">
+          <app-rating-ten [rating]="95"></app-rating-ten>
+        </td>
+        <td>ATL @ LAD</td>
+        <td>4.5</td>
+        <td>-135</td>
+        <td class="main-border">-2.5</td>
+        <td>43</td>
+        <td>1.21</td>
+        <td>12.21</td>
+        <td>21</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="statsRadioBtn.all || statsRadioBtn.k" class="col-12 player-stats-table-wrapper">
+    <table class="multi-row-data-table t-stripped">
+      <colgroup span="3">
+        <col span="1" width="3.8%">
+        <col span="1" width="11.5%">
+        <col span="1" width="4.3%">
+      </colgroup>
+      <colgroup span="4">
+        <col span="1" width="11.3%">
+        <col span="3">
+      </colgroup>
+      <colgroup span="2" width="19.85%"></colgroup>
+      <tbody >
+       <tr class="t-header">
+        <th colspan="3" scope="colgroup" class="text-center main-border">Kicker</th>
+        <th colspan="4" scope="colgroup" class="text-center main-border">Games</th>
+        <th colspan="2" scope="colgroup" class="text-center">Stats</th>
+      </tr>
+        <tr class="t-sub-header bordered">
+        <th scope="col" class="text-center">Pos</th>
+        <th scope="col" class="text-center">Name</th>
+        <th scope="col" class="text-center main-border">Rating</th>
+        <th scope="col" class="text-center">Teams</th>
+        <th scope="col" class="text-center">Team Total</th>
+        <th scope="col" class="text-center">MoneyLine</th>
+        <th scope="col" class="text-center main-border">Spread</th>
+        <th scope="col" class="text-center">FG Conversion Rate</th>
+        <th scope="col" class="text-center">FG Attempts/Game</th>
+      </tr>
+        <tr class="t-content">
+        <td>SP</td>
+        <td>Greg Maddux</td>
+        <td class="main-border">
+          <app-rating-ten [rating]="95"></app-rating-ten>
+        </td>
+        <td>ATL @ LAD</td>
+        <td>4.5</td>
+        <td>-135</td>
+        <td class="main-border">-2.5</td>
+        <td>43</td>
+        <td>1.21</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,89 @@
+@import "../../../scss/custom-components/responsive-page-nav";
+@import '../../../scss/bootstrap-customization/custom-mixins';
+@import '../../../scss/shared/variables/project';
+:host {
+  //$first-break: 1145px;
+  //$main-break: 775px;
+  $first-break: 650px;
+  $main-break: 650px;
+  $tab-sm-break-1: 842px;
+  $tab-sm-break-2: 755px;
+  @include mobile-navigation($nfl-nav-breakdown-1, $nfl-nav-breakdown-2, $nfl-nav-breakdown-3);
+
+  .position-dd {
+    display: none;
+  }
+
+  .no-snaps-cap {
+    text-align: center;
+    font-size: 30px;
+    margin: 9px 0 25px 0;
+  }
+
+  //.pagination-wrapper {
+  //  margin-left: auto;
+  //  ::ng-deep .ngx-pagination {
+  //    padding: 0 !important;
+  //    margin: 0 !important;
+  //    @media (max-width: $first-break) {
+  //      margin: 1.125rem 0 0 0 !important;
+  //    }
+  //    @media (max-width: 400px) {
+  //      font-size: 12px;
+  //    }
+  //  }
+  //}
+
+  .top-action-section {
+    @include flex-row-mixin();
+    @media (max-width: $first-break) {
+      @include flex-column-mixin();
+    }
+  }
+
+  .action-section {
+    .in-page-dropdown-menu {
+      margin-right: 10px;
+    }
+    @include flex-row-mixin();
+    @media (max-width: $main-break) {
+      .in-page-dropdown-menu {
+        margin-right: 0;
+      }
+      .position-tab-bar {
+        display: none !important;
+      }
+      .position-dd {
+        display: block;
+      }
+      @include flex-column-mixin();
+    }
+  }
+
+  @media (max-width: 1650px) {
+    ::ng-deep app-targets .horizontal-table-wrapper {
+      overflow-x: initial !important;
+      & > table.multi-row-data-table {
+        table-layout: fixed !important;
+        min-width: 1035px !important;
+      }
+    }
+  }
+  @media (max-width: 1360px) {
+    ::ng-deep app-targets .horizontal-table-wrapper {
+      overflow-x: auto !important;
+    }
+  }
+  @media (max-width: $tab-sm-break-1) {
+    .toggles-in-page-wrapper .toggles-in-page-group .toggle-in-page {
+      min-width: 58px;
+      font-size: 13px;
+    }
+  }
+  @media (max-width: $tab-sm-break-2) {
+    .toggles-in-page-wrapper .toggles-in-page-group .toggle-in-page {
+      min-width: 44px;
+      font-size: 11px
+    }
+  }
+}

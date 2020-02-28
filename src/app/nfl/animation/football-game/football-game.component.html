@@ -1,0 +1,68 @@
+<div class="left-side-dds">
+  <div class="grouped-dropdown-wrapper mb-0 btn-group not-mobile">
+    <div ngbDropdown class="grouped-dropdown dropdown">
+      <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="results-dropdown" ngbDropdownToggle>
+        <span class="pr-0 pr-sm-3">Animation</span>
+        <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+      </button>
+      <div class="dropdown-menu" aria-labelledby="results-dropdown">
+        <div>
+          <button
+            (click)="onDdChange('game')"
+            class="dropdown-item">
+            <span>Game</span>
+          </button>
+        </div>
+        <div>
+          <button
+            (click)="onDdChange('results')"
+            class="dropdown-item">
+            <span>Results</span>
+          </button>
+        </div>
+        <div>
+          <button
+            class="dropdown-item dd-active-btn">
+            <span>Animation</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!--<div ngbDropdown class="grouped-dropdown dropdown readonly-dd">-->
+      <!--<button type="button" class="grouped-dropdown-btn btn btn-secondary last px-3" id="model-dropdown" ngbDropdownToggle>-->
+        <!--<span class="pr-0 pr-sm-3">Model</span>-->
+      <!--</button>-->
+      <!--<div class="dropdown-menu" aria-labelledby="model-dropdown">-->
+        <!--&lt;!&ndash;<div *ngFor="let season of seasons_dropdown;">&ndash;&gt;-->
+        <!--&lt;!&ndash;<button&ndash;&gt;-->
+        <!--&lt;!&ndash;[ngClass]="{'dd-active-btn': activeYear === season.year}"&ndash;&gt;-->
+        <!--&lt;!&ndash;(click)="onYearDdChange(season)"&ndash;&gt;-->
+        <!--&lt;!&ndash;class="dropdown-item">&ndash;&gt;-->
+        <!--&lt;!&ndash;<span>{{season.name}}</span>&ndash;&gt;-->
+        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+      <!--</div>-->
+    <!--</div>-->
+  </div>
+  <div *ngIf="isIframe" class="powered-by-logo">
+    <a [routerLink]="['./']" target="_blank" rel="noopener">
+      <img width="110px" src="assets/images/logo/powered_by.png" alt="">
+    </a>
+  </div>
+</div>
+<app-game-box [backgroundImage]="backgroundImage">
+    <app-fireworks></app-fireworks>
+    <app-header *ngIf="game" [game]="game" [highlights]="highlights" [(recapMode)]="recapMode" [displayMode]="displayMode" (displayModeChange)="displayModeChanged($event)"></app-header>
+    <app-field #mainField [ngStyle]="{ display: displayMode === DisplayMode.WatchGame ? 'block' : 'none' }"></app-field>
+    <app-field #highlightsField [ngStyle]="{ display: displayMode === DisplayMode.Highlights ? 'block' : 'none' }"></app-field>
+    <app-box-score [game]="game" *ngIf="displayMode === DisplayMode.Recap && recapMode === RecapMode.BoxScore"></app-box-score>
+    <app-play-by-play [game]="game" *ngIf="displayMode === DisplayMode.Recap && recapMode === RecapMode.PlayByPlay"></app-play-by-play>
+    <app-scoring-summary [game]="game" *ngIf="displayMode === DisplayMode.Recap && recapMode === RecapMode.ScoringSummary"></app-scoring-summary>
+    <app-game-review [game]="game" *ngIf="displayMode === DisplayMode.Recap && recapMode === RecapMode.GameReview"></app-game-review>
+    <!--<div class="exit-button" (click)="onClose.emit()">-->
+      <!--<span class="label">Exit Game</span> <span class="exit-icon">&times;</span>-->
+    <!--</div>-->
+    <div *ngIf="!gameData" class="loading-message">
+      <h1>Loading, please wait...</h1>
+    </div>
+</app-game-box>

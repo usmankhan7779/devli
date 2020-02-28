@@ -1,0 +1,818 @@
+<div class="row">
+  <div class="col-12">
+    <app-simulator-metrics [activeView]="activeView" [stadium]="data?.home?.header.stadium" [dropdowns]="dropdowns"></app-simulator-metrics>
+  </div>
+  <!-- Info Row -->
+  <div *ngIf="activeView === 'results' && resultData" class="col-12">
+      <div class="game-header-status">
+        <table>
+          <colgroup span="1">
+            <col span="1"/>
+          </colgroup>
+          <colgroup span="1">
+            <col class="score-col" span="1"/>
+          </colgroup>
+          <colgroup span="1">
+            <col class="status-col" span="1"/>
+          </colgroup>
+          <colgroup span="1">
+            <col class="score-col" span="1"/>
+          </colgroup>
+          <colgroup span="1">
+            <col span="1"/>
+          </colgroup>
+          <tbody>
+            <td>
+              <span class="team-name-full hidden-xs-down">{{resultData.away_team_full_name}}</span>
+              <span class="team-name-short hidden-xs-down">{{resultData.away_team_full_name | lastTeamName}}</span>
+              <img [type]="'white'" [appSpriteImg]="'nfl'" class="logo" [src]="resultData.away_team_white_logo" alt="{{resultData.away_team_full_name}}">
+            </td>
+            <td>
+              <span [ngClass]="{'winner-score': resultData.away_score > resultData.home_score}">
+                {{resultData.away_score}}
+              </span>
+            </td>
+            <td>
+              <strong>Final</strong>
+            </td>
+            <td>
+              <span [ngClass]="{'winner-score': resultData.home_score > resultData.away_score}">
+                {{resultData.home_score}}
+              </span>
+            </td>
+            <td>
+              <img [type]="'white'" [appSpriteImg]="'nfl'" class="logo" [src]="resultData.home_team_white_logo" alt="{{resultData.home_team_full_name}}">
+              <span class="team-name-full hidden-xs-down">{{resultData.home_team_full_name}}</span>
+              <span class="team-name-short hidden-xs-down">{{resultData.home_team_full_name | lastTeamName}}</span>
+            </td>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <!-- Info Row -->
+  <div *ngIf="activeView === 'results' && resultData" class="col-12 second-info-row">
+    <div class="row col-container">
+      <div class="col-6 flex-first flex-sm-unordered col-sm-4 col-md-4 col-lg-2 nowrap">
+        <div counto [step]="countoConfig.step" [countTo]="resultData.simulations_run" [countFrom]="countoConfig.countFrom" [duration]="countoConfig.duration" (countoChange)="countoAnimation.simulations_run = $event" class="top-number">
+          {{countoAnimation.simulations_run | number: '1.0-0' | numberWithCommas}}
+        </div>
+        <div class="under-num-txt">Game Simulations</div>
+      </div>
+      <div class="col-6 col-sm-4 col-md-4 col-lg-2 nowrap">
+        <div class="top-number">
+          <span counto [step]="countoConfig.step" [countTo]="resultData.away_team_wins" [countFrom]="countoConfig.countFrom" [duration]="countoConfig.duration" (countoChange)="countoAnimation.away_team_wins = $event">
+            {{countoAnimation.away_team_wins | number: '1.0-0'}}
+          </span>
+          <span class="text-sm" counto [step]="countoConfig.step" [countTo]="resultData.away_team_win_percent" [countFrom]="countoConfig.countFrom" [duration]="countoConfig.duration" (countoChange)="countoAnimation.away_team_win_percent = $event">
+            ({{countoAnimation.away_team_win_percent | number: '1.0-0'}}%)
+          </span>
+        </div>
+        <div class="under-num-txt">{{resultData.away_team_full_name | lastTeamName}} Win</div>
+      </div>
+      <div class="col-6 col-sm-4 col-md-4 col-lg-2 nowrap">
+        <div class="top-number">
+          <span counto [step]="countoConfig.step" [countTo]="resultData.home_team_wins" [countFrom]="countoConfig.countFrom" [duration]="countoConfig.duration" (countoChange)="countoAnimation.home_team_wins = $event">
+            {{countoAnimation.home_team_wins | number: '1.0-0'}}
+          </span>
+          <span class="text-sm" counto [step]="countoConfig.step" [countTo]="resultData.home_team_win_percent" [countFrom]="countoConfig.countFrom" [duration]="countoConfig.duration" (countoChange)="countoAnimation.home_team_win_percent = $event">
+            ({{countoAnimation.home_team_win_percent | number: '1.0-0'}}%)
+          </span>
+        </div>
+        <div class="under-num-txt">{{resultData.home_team_full_name | lastTeamName}} Win</div>
+      </div>
+      <div class="col-6 flex-first flex-sm-unordered col-sm-4 col-md-4 col-lg-2 nowrap">
+        <div class="top-number">
+          <span counto [step]="countoConfig.step" [countTo]="resultData.overtimes" [countFrom]="countoConfig.countFrom" [duration]="countoConfig.duration" (countoChange)="countoAnimation.overtimes = $event">
+            {{countoAnimation.overtimes | number: '1.0-0'}}
+          </span>
+          <span class="text-sm" counto [step]="countoConfig.step" [countTo]="resultData.overtime_percent" [countFrom]="countoConfig.countFrom" [duration]="countoConfig.duration" (countoChange)="countoAnimation.overtime_percent = $event">
+            ({{countoAnimation.overtime_percent | number: '1.0-0'}}%)
+          </span>
+        </div>
+        <div class="under-num-txt">Overtimes</div>
+      </div>
+      <div class="col-6 col-sm-4 col-md-4 col-lg-2 nowrap">
+        <div class="top-number">
+          <span counto [step]="countoConfig.step" [countTo]="resultData.away_team_wins_by_10" [countFrom]="countoConfig.countFrom" [duration]="countoConfig.duration" (countoChange)="countoAnimation.away_team_wins_by_10 = $event">
+            {{countoAnimation.away_team_wins_by_10 | number: '1.0-0'}}
+          </span>
+          <span class="text-sm" counto [step]="countoConfig.step" [countTo]="resultData.away_team_wins_by_10_percent" [countFrom]="countoConfig.countFrom" [duration]="countoConfig.duration" (countoChange)="countoAnimation.away_team_wins_by_10_percent = $event">
+            ({{countoAnimation.away_team_wins_by_10_percent | number: '1.0-0'}}%)
+          </span>
+        </div>
+        <div class="under-num-txt">{{resultData.away_team_full_name | lastTeamName}} win > 10pts</div>
+      </div>
+      <div class="col-6 col-sm-4 col-md-4 col-lg-2 nowrap">
+        <div class="top-number">
+          <span counto [step]="countoConfig.step" [countTo]="resultData.home_team_wins_by_10" [countFrom]="countoConfig.countFrom" [duration]="countoConfig.duration" (countoChange)="countoAnimation.home_team_wins_by_10 = $event">
+            {{countoAnimation.home_team_wins_by_10 | number: '1.0-0'}}
+          </span>
+          <span class="text-sm" counto [step]="countoConfig.step" [countTo]="resultData.home_team_wins_by_10_percent" [countFrom]="countoConfig.countFrom" [duration]="countoConfig.duration" (countoChange)="countoAnimation.home_team_wins_by_10_percent = $event">
+            ({{countoAnimation.home_team_wins_by_10_percent | number: '1.0-0'}}%)
+          </span>
+        </div>
+        <div class="under-num-txt">{{resultData.home_team_full_name | lastTeamName}} win > 10pts</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <p class="m-0">{{resultData.text_recap}}</p>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="activeView === 'game'" class="col-12">
+    <div class="historic-team-tables" *ngIf="data">
+      <div class="row gutter-20">
+        <div class="col-lg-6 col-md-12">
+          <app-team-table-swappable [teamData]="data.away" [teamType]="'away'"></app-team-table-swappable>
+        </div>
+        <div class="col-lg-6 col-md-12">
+          <app-team-table-swappable [teamData]="data.home" [teamType]="'home'"></app-team-table-swappable>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="activeView === 'results' && resultData" class="col-12">
+    <div class="historic-team-tables">
+      <div class="row">
+        <div class="col-12 col-md-6">
+          <div class="away-players-table-wrapper mb-4 mb-md-0">
+            <div class="row">
+              <div class="col-12">
+                <div class="fake-t-header text-left">
+                  <div class="nowrap">
+                    <img [type]="'white'" [appSpriteImg]="'nfl'" class="mr-1 logo-sm" [src]="resultData.away_team_white_logo" alt="{{resultData.away_team_full_name}}">
+                    <span class="team-name">{{resultData.away_team_full_name}}</span>
+                    <span>
+                      <app-rating class="ml-3 header-rating" [value]="resultData.away_team_lineups_rating"></app-rating>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="multi-row-data-table-wrapper custom-width mb-0">
+                  <table class="multi-row-data-table t-stripped">
+                    <colgroup span="8">
+                      <col span="1" class="player-name-td"/>
+                      <col span="7"/>
+                    </colgroup>
+                    <thead>
+                      <tr class="t-sub-header">
+                        <th class="text-center">Passing</th>
+                        <th class="text-center">Pos</th>
+                        <th class="text-center">Rtg</th>
+                        <th class="text-center">Att</th>
+                        <th class="text-center">Comp</th>
+                        <th class="text-center">Yds</th>
+                        <th class="text-center">TD</th>
+                        <th class="text-center fake-header-score-container">
+                          INT
+                          <div class="fake-header-score">
+                            <span [ngClass]="{'winner-score': resultData.away_score > resultData.home_score}">
+                              {{resultData.away_score}}
+                            </span>
+                          </div>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="t-content" *ngFor="let player of resultData.away_passing[0]">
+                        <td class="player-name-td">
+                          <span class="player-name-col-to-hide-on-xs">{{player.name}}</span>
+                          <span class="player-name-col-xs">{{player.name | shortPlayerName}}</span>
+                        </td>
+                        <td>
+                          {{player.position}}
+                        </td>
+                        <td>
+                          <app-rating *ngIf="player.lineups_rating" [value]="player.lineups_rating"></app-rating>
+                        </td>
+                        <td>
+                          {{player.passing_attempts}}
+                        </td>
+                        <td>
+                          {{player.passing_completions}}
+                        </td>
+                        <td>
+                          {{player.passing_yards}}
+                        </td>
+                        <td>
+                          {{player.passing_touchdowns}}
+                        </td>
+                        <td>
+                          {{player.passing_interceptions}}
+                        </td>
+                      </tr>
+                      <tr class="t-content empty-row" *ngFor="let row of getEmptyRows('away', 'passing')">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="multi-row-data-table-wrapper custom-width mb-0">
+                  <table class="multi-row-data-table t-stripped">
+                    <colgroup span="8">
+                      <col span="1" class="player-name-td"/>
+                      <col span="7"/>
+                    </colgroup>
+                    <thead>
+                      <tr class="t-sub-header">
+                        <th class="text-center">Rushing</th>
+                        <th class="text-center">Pos</th>
+                        <th class="text-center">Rtg</th>
+                        <th class="text-center">Att</th>
+                        <th class="text-center">Yds</th>
+                        <th class="text-center">YDS/ATT</th>
+                        <th class="text-center">LONG</th>
+                        <th class="text-center">TD</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="t-content" *ngFor="let player of resultData.away_rushing[0]">
+                        <td class="player-name-td">
+                          <span class="player-name-col-to-hide-on-xs">{{player.name}}</span>
+                          <span class="player-name-col-xs">{{player.name | shortPlayerName}}</span>
+                        </td>
+                        <td>
+                          {{player.position}}
+                        </td>
+                        <td>
+                          <app-rating *ngIf="player.lineups_rating" [value]="player.lineups_rating"></app-rating>
+                        </td>
+                        <td>
+                          {{player.rushing_attempts}}
+                        </td>
+                        <td>
+                          {{player.rushing_yards}}
+                        </td>
+                        <td>
+                          {{player.rushing_yards_per_attempt | number: '1.0-1'}}
+                        </td>
+                        <td>
+                          {{player.rushing_long}}
+                        </td>
+                        <td>
+                          {{player.rushing_touchdowns}}
+                        </td>
+                      </tr>
+                      <tr class="t-content empty-row" *ngFor="let row of getEmptyRows('away', 'rushing')">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="multi-row-data-table-wrapper custom-width mb-0">
+                  <table class="multi-row-data-table t-stripped">
+                    <colgroup span="8">
+                      <col span="1" class="player-name-td"/>
+                      <col span="7"/>
+                    </colgroup>
+                    <thead>
+                      <tr class="t-sub-header">
+                        <th class="text-center">Receiving</th>
+                        <th class="text-center">Pos</th>
+                        <th class="text-center">Rtg</th>
+                        <th class="text-center">Tgt</th>
+                        <th class="text-center">Rec</th>
+                        <th class="text-center">YDS</th>
+                        <th class="text-center">YDS/REC</th>
+                        <th class="text-center">LONG</th>
+                        <th class="text-center">TD</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="t-content" *ngFor="let player of resultData.away_receiving[0]">
+                        <td class="player-name-td">
+                          <span class="player-name-col-to-hide-on-xs">{{player.name}}</span>
+                          <span class="player-name-col-xs">{{player.name | shortPlayerName}}</span>
+                        </td>
+                        <td>
+                          {{player.position}}
+                        </td>
+                        <td>
+                          <app-rating *ngIf="player.lineups_rating" [value]="player.lineups_rating"></app-rating>
+                        </td>
+                        <td>
+                          {{player.receiving_targets}}
+                        </td>
+                        <td>
+                          {{player.receptions}}
+                        </td>
+                        <td>
+                          {{player.receiving_yards}}
+                        </td>
+                        <td>
+                          {{player.receiving_yards_per_reception | number: '1.0-1'}}
+                        </td>
+                        <td>
+                          {{player.receiving_long}}
+                        </td>
+                        <td>
+                          {{player.receiving_touchdowns}}
+                        </td>
+                      </tr>
+                      <tr class="t-content empty-row" *ngFor="let row of getEmptyRows('away', 'receiving')">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="multi-row-data-table-wrapper custom-width mb-0">
+                  <table class="multi-row-data-table t-stripped">
+                    <colgroup span="9">
+                      <col span="1" class="player-name-td"/>
+                      <col span="8"/>
+                    </colgroup>
+                    <tbody>
+                      <tr class="t-sub-header">
+                        <th class="text-center">Kicking</th>
+                        <th class="text-center">Pos</th>
+                        <th class="text-center">Rtg</th>
+                        <th class="text-center">0-39</th>
+                        <th class="text-center">40-49</th>
+                        <th class="text-center">50+</th>
+                        <th class="text-center">FGA</th>
+                        <th class="text-center">XPM</th>
+                        <th class="text-center">XPA</th>
+                      </tr>
+                      <tr class="t-content" *ngFor="let player of resultData.away_kicking[0]">
+                        <td class="player-name-td">
+                          <span class="player-name-col-to-hide-on-xs">{{player.name}}</span>
+                          <span class="player-name-col-xs">{{player.name | shortPlayerName}}</span>
+                        </td>
+                        <td>
+                          {{player.position}}
+                        </td>
+                        <td>
+                          <app-rating *ngIf="player.lineups_rating" [value]="player.lineups_rating"></app-rating>
+                        </td>
+                        <td>
+                          {{player.field_goals_made0to39}}
+                        </td>
+                        <td>
+                          {{player.field_goals_made40to49}}
+                        </td>
+                        <td>
+                          {{player.field_goals_made50_plus}}
+                        </td>
+                        <td>
+                          {{player.field_goals_attempted}}
+                        </td>
+                        <td>
+                          {{player.extra_points_made}}
+                        </td>
+                        <td>
+                          {{player.extra_points_attempted}}
+                        </td>
+                      </tr>
+                      <tr class="t-content empty-row" *ngFor="let row of getEmptyRows('away', 'kicking')">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="multi-row-data-table-wrapper custom-width mb-0">
+                  <table class="multi-row-data-table t-stripped">
+                    <colgroup span="6">
+                      <col span="1" class="player-name-td"/>
+                      <col span="5"/>
+                    </colgroup>
+                    <thead>
+                      <tr class="t-sub-header">
+                        <th class="text-center">Defense</th>
+                        <th class="text-center">Pos</th>
+                        <th class="text-center">Rtg</th>
+                        <th class="text-center">Sack</th>
+                        <th class="text-center">INT</th>
+                        <th class="text-center">Fum</th>
+                        <th class="text-center">Pts Allow</th>
+                        <th class="text-center">TD</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="t-content" *ngFor="let player of resultData.away_defense[0]">
+                        <td class="player-name-td">
+                          <span class="player-name-col-to-hide-on-xs">{{player.name}}</span>
+                          <span class="player-name-col-xs">{{player.name | shortPlayerName}}</span>
+                        </td>
+                        <td>
+                          {{player.position}}
+                        </td>
+                        <td>
+                          <app-rating *ngIf="player.lineups_rating" [value]="player.lineups_rating"></app-rating>
+                        </td>
+                        <td>
+                          {{player.sacks}}
+                        </td>
+                        <td>
+                          {{player.interceptions}}
+                        </td>
+                        <td>
+                          {{player.fumbles}}
+                        </td>
+                        <td>
+                          {{player.points_allowed}}
+                        </td>
+                        <td>
+                          {{player.defensive_touchdowns}}
+                        </td>
+                      </tr>
+                      <tr class="t-content empty-row" *ngFor="let row of getEmptyRows('away', 'defense')">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="home-players-table-wrapper">
+            <div class="row">
+              <div class="col-12">
+                <div class="fake-t-header text-left">
+                  <div class="nowrap">
+                    <img [type]="'white'" [appSpriteImg]="'nfl'" class="mr-1 logo-sm" [src]="resultData.home_team_white_logo" alt="{{resultData.home_team_full_name}}">
+                    <span class="team-name">{{resultData.home_team_full_name}}</span>
+                    <span>
+                      <app-rating class="ml-3 header-rating" [value]="resultData.home_team_lineups_rating"></app-rating>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="multi-row-data-table-wrapper custom-width mb-0">
+                  <table class="multi-row-data-table t-stripped">
+                    <colgroup span="8">
+                      <col span="1" class="player-name-td"/>
+                      <col span="7"/>
+                    </colgroup>
+                    <thead>
+                    <tr class="t-sub-header">
+                      <th class="text-center">Passing</th>
+                      <th class="text-center">Pos</th>
+                      <th class="text-center">Rtg</th>
+                      <th class="text-center">Att</th>
+                      <th class="text-center">Comp</th>
+                      <th class="text-center">Yds</th>
+                      <th class="text-center">TD</th>
+                      <th class="text-center fake-header-score-container">
+                        INT
+                        <div class="fake-header-score">
+                          <span [ngClass]="{'winner-score': resultData.home_score > resultData.away_score}">
+                            {{resultData.home_score}}
+                          </span>
+                        </div>
+                      </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="t-content" *ngFor="let player of resultData.home_passing[0]">
+                      <td class="player-name-td">
+                        <span class="player-name-col-to-hide-on-xs">{{player.name}}</span>
+                        <span class="player-name-col-xs">{{player.name | shortPlayerName}}</span>
+                      </td>
+                      <td>
+                        {{player.position}}
+                      </td>
+                      <td>
+                        <app-rating *ngIf="player.lineups_rating" [value]="player.lineups_rating"></app-rating>
+                      </td>
+                      <td>
+                        {{player.passing_attempts}}
+                      </td>
+                      <td>
+                        {{player.passing_completions}}
+                      </td>
+                      <td>
+                        {{player.passing_yards}}
+                      </td>
+                      <td>
+                        {{player.passing_touchdowns}}
+                      </td>
+                      <td>
+                        {{player.passing_interceptions}}
+                      </td>
+                    </tr>
+                    <tr class="t-content empty-row" *ngFor="let row of getEmptyRows('home', 'passing')">
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="multi-row-data-table-wrapper custom-width mb-0">
+                  <table class="multi-row-data-table t-stripped">
+                    <colgroup span="8">
+                      <col span="1" class="player-name-td"/>
+                      <col span="7"/>
+                    </colgroup>
+                    <thead>
+                    <tr class="t-sub-header">
+                      <th class="text-center">Rushing</th>
+                      <th class="text-center">Pos</th>
+                      <th class="text-center">Rtg</th>
+                      <th class="text-center">Att</th>
+                      <th class="text-center">Yds</th>
+                      <th class="text-center">YDS/ATT</th>
+                      <th class="text-center">LONG</th>
+                      <th class="text-center">TD</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="t-content" *ngFor="let player of resultData.home_rushing[0]">
+                      <td class="player-name-td">
+                        <span class="player-name-col-to-hide-on-xs">{{player.name}}</span>
+                        <span class="player-name-col-xs">{{player.name | shortPlayerName}}</span>
+                      </td>
+                      <td>
+                        {{player.position}}
+                      </td>
+                      <td>
+                        <app-rating *ngIf="player.lineups_rating" [value]="player.lineups_rating"></app-rating>
+                      </td>
+                      <td>
+                        {{player.rushing_attempts}}
+                      </td>
+                      <td>
+                        {{player.rushing_yards}}
+                      </td>
+                      <td>
+                        {{player.rushing_yards_per_attempt | number: '1.0-1'}}
+                      </td>
+                      <td>
+                        {{player.rushing_long}}
+                      </td>
+                      <td>
+                        {{player.rushing_touchdowns}}
+                      </td>
+                    </tr>
+                    <tr class="t-content empty-row" *ngFor="let row of getEmptyRows('home', 'rushing')">
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="multi-row-data-table-wrapper custom-width mb-0">
+                  <table class="multi-row-data-table t-stripped">
+                    <colgroup span="8">
+                      <col span="1" class="player-name-td"/>
+                      <col span="7"/>
+                    </colgroup>
+                    <thead>
+                    <tr class="t-sub-header">
+                      <th class="text-center">Receiving</th>
+                      <th class="text-center">Pos</th>
+                      <th class="text-center">Rtg</th>
+                      <th class="text-center">Tgt</th>
+                      <th class="text-center">Rec</th>
+                      <th class="text-center">YDS</th>
+                      <th class="text-center">YDS/REC</th>
+                      <th class="text-center">LONG</th>
+                      <th class="text-center">TD</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="t-content" *ngFor="let player of resultData.home_receiving[0]">
+                      <td class="player-name-td">
+                        <span class="player-name-col-to-hide-on-xs">{{player.name}}</span>
+                        <span class="player-name-col-xs">{{player.name | shortPlayerName}}</span>
+                      </td>
+                      <td>
+                        {{player.position}}
+                      </td>
+                      <td>
+                        <app-rating *ngIf="player.lineups_rating" [value]="player.lineups_rating"></app-rating>
+                      </td>
+                      <td>
+                        {{player.receiving_targets}}
+                      </td>
+                      <td>
+                        {{player.receptions}}
+                      </td>
+                      <td>
+                        {{player.receiving_yards}}
+                      </td>
+                      <td>
+                        {{player.receiving_yards_per_reception | number: '1.0-1'}}
+                      </td>
+                      <td>
+                        {{player.receiving_long}}
+                      </td>
+                      <td>
+                        {{player.receiving_touchdowns}}
+                      </td>
+                    </tr>
+                    <tr class="t-content empty-row" *ngFor="let row of getEmptyRows('home', 'receiving')">
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="multi-row-data-table-wrapper custom-width mb-0">
+                  <table class="multi-row-data-table t-stripped">
+                    <colgroup span="9">
+                      <col span="1" class="player-name-td"/>
+                      <col span="8"/>
+                    </colgroup>
+                    <tbody>
+                    <tr class="t-sub-header">
+                      <th class="text-center">Kicking</th>
+                      <th class="text-center">Pos</th>
+                      <th class="text-center">Rtg</th>
+                      <th class="text-center">0-39</th>
+                      <th class="text-center">40-49</th>
+                      <th class="text-center">50+</th>
+                      <th class="text-center">FGA</th>
+                      <th class="text-center">XPM</th>
+                      <th class="text-center">XPA</th>
+                    </tr>
+                    <tr class="t-content" *ngFor="let player of resultData.home_kicking[0]">
+                      <td class="player-name-td">
+                        <span class="player-name-col-to-hide-on-xs">{{player.name}}</span>
+                        <span class="player-name-col-xs">{{player.name | shortPlayerName}}</span>
+                      </td>
+                      <td>
+                        {{player.position}}
+                      </td>
+                      <td>
+                        <app-rating *ngIf="player.lineups_rating" [value]="player.lineups_rating"></app-rating>
+                      </td>
+                      <td>
+                        {{player.field_goals_made0to39}}
+                      </td>
+                      <td>
+                        {{player.field_goals_made40to49}}
+                      </td>
+                      <td>
+                        {{player.field_goals_made50_plus}}
+                      </td>
+                      <td>
+                        {{player.field_goals_attempted}}
+                      </td>
+                      <td>
+                        {{player.extra_points_made}}
+                      </td>
+                      <td>
+                        {{player.extra_points_attempted}}
+                      </td>
+                    </tr>
+                    <tr class="t-content empty-row" *ngFor="let row of getEmptyRows('home', 'kicking')">
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="multi-row-data-table-wrapper custom-width mb-0">
+                  <table class="multi-row-data-table t-stripped">
+                    <colgroup span="6">
+                      <col span="1" class="player-name-td"/>
+                      <col span="5"/>
+                    </colgroup>
+                    <thead>
+                    <tr class="t-sub-header">
+                      <th class="text-center">Defense</th>
+                      <th class="text-center">Pos</th>
+                      <th class="text-center">Rtg</th>
+                      <th class="text-center">Sack</th>
+                      <th class="text-center">INT</th>
+                      <th class="text-center">Fum</th>
+                      <th class="text-center">Pts Allow</th>
+                      <th class="text-center">TD</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="t-content" *ngFor="let player of resultData.home_defense[0]">
+                      <td class="player-name-td">
+                        <span class="player-name-col-to-hide-on-xs">{{player.name}}</span>
+                        <span class="player-name-col-xs">{{player.name | shortPlayerName}}</span>
+                      </td>
+                      <td>
+                        {{player.position}}
+                      </td>
+                      <td>
+                        <app-rating *ngIf="player.lineups_rating" [value]="player.lineups_rating"></app-rating>
+                      </td>
+                      <td>
+                        {{player.sacks}}
+                      </td>
+                      <td>
+                        {{player.interceptions}}
+                      </td>
+                      <td>
+                        {{player.fumbles}}
+                      </td>
+                      <td>
+                        {{player.points_allowed}}
+                      </td>
+                      <td>
+                        {{player.defensive_touchdowns}}
+                      </td>
+                    </tr>
+                    <tr class="t-content empty-row" *ngFor="let row of getEmptyRows('home', 'defense')">
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+

@@ -1,0 +1,68 @@
+.btn {
+  &.btn-lu-blue {
+    color: #fff;
+    background-color: #01afed;
+    padding: 10px 20px;
+    border-radius: 0;
+    font-weight: normal;
+  }
+
+  &.btn-big {
+    font-size: 18px;
+    padding: 12px 22px;
+  }
+
+  &.btn-lu-gray {
+    color: #fff;
+    background-color: #8a8a9c;
+    padding: 10px 20px;
+    border-radius: 0;
+    font-weight: normal;
+  }
+
+  &.btn-full-width {
+    width: 100%;
+  }
+}
+.lineup-form {
+  .form-control, .form-control::placeholder, .custom-file-control, .custom-file-control::before {
+    font-family: 'Lato';
+    border-radius: 0;
+    color: #333333;
+    font-size: 14px;
+    font-weight: normal;
+  }
+  .custom-file-control {
+    padding: 6px 13px;
+    height: 35px;
+  }
+  .custom-file-control::before {
+    height: 35px;
+    padding: 6px 16px;
+  }
+}
+
+.show-invalid {
+  &.ng-dirty.ng-invalid {
+    border-color: red;
+  }
+}
+
+.required-label:after {
+  content: '*';
+  color: red;
+  padding-left: 2px;
+}
+
+.error-container {
+  color: red;
+}
+
+input.hide-placeholder:focus::-webkit-input-placeholder { color:transparent; }
+input.hide-placeholder:focus:-moz-placeholder { color:transparent; } /* FF 4-18 */
+input.hide-placeholder:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
+input.hide-placeholder:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
+
+.dropdown-btn-wrap .dropdown-item[disabled] {
+  opacity: 0.5;
+}

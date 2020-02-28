@@ -1,0 +1,79 @@
+<ng-template #tableHeader>
+  <th class="text-center">Pos</th>
+  <th width="50%" class="px-3">Name</th>
+  <th class="text-center">Rating</th>
+  <th class="text-center">Depth</th>
+  <th class="text-center">Snaps</th>
+</ng-template>
+
+<ng-template #tableRow let-item="item" let-swap="swap">
+  <td class="text-center">
+    <button
+      type="button"
+      (click)="swap(item)"
+      [disabled]="true"
+      style="cursor: initial; opacity: 1;"
+      class="btn team-swap-btn"
+    >{{item.position}}</button></td>
+  <td class="text-left px-3">
+    <span class="team-name-full">{{item.full_name}}</span>
+    <span class="team-name-short">{{item.name}}</span>
+    {{getPosText(item)}}
+  </td>
+  <td class="text-center"><app-rating [value]="item.lineups_rating"></app-rating></td>
+  <td class="text-center">{{item.depth}}</td>
+  <td class="text-center">{{item.offensive_snaps_played}}</td>
+</ng-template>
+
+<div class="team-table-swappable" *ngIf="teamData">
+  <table class="team-info">
+    <colgroup span="2">
+      <col span="1">
+      <col span="1" width="50%">
+    </colgroup>
+    <colgroup span="3"></colgroup>
+    <tbody>
+    <tr>
+      <td></td>
+      <td scope="colgroup" class="simulator-item px-3">
+        <app-status
+          side="right"
+          [status]="true"
+          [teamName]="teamData.header.full_name"
+          [mobileTitle]="teamData.header.full_name | lastTeamName"
+          [record]="teamData.header.standing"
+        >
+          <img [type]="'white'" [appSpriteImg]="'nfl'" class="d-flex mr-3 logo rounded" [src]="teamData.header.full_name | logo : 'nfl' : 'white' : true" alt="{{teamData.header.full_name}}">
+        </app-status>
+      </td>
+      <td class="text-center">
+        <div class="text-center td-rating-wrapper">
+          <app-rating [value]="teamData.header.rating" class="rating-big"></app-rating>
+        </div>
+      </td>
+      <td colspan="2" scope="colgroup"></td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="row">
+    <div class="col-12">
+      <app-swappable-table
+        [dropdownFormatter]="playerFormatter.bind(this)"
+        allowSorting="false"
+        [data]="teamData.players"
+        [searchFunction]="searchFunction.bind(this)"
+        [rowTemplate]="tableRow"
+        [theadTemplate]="tableHeader"
+        [primaryField]="'player_id'"
+        [displayField]="'name'"
+        [columnCount]="5"
+        [buttonOnFirstColumn]="true"
+        [buttonClass]="'btn team-swap-btn'"
+        [placeholder]="'Select a player to swap with ...'"
+        [apiSwap]="true"
+        (onSwap)="onSwap($event)"
+      >
+      </app-swappable-table>
+    </div>
+  </div>
+</div>

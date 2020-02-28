@@ -1,0 +1,229 @@
+@mixin matchup-mobile-styles(
+  $is-individual: false,
+  $table-name-breakpoint: 1299px,
+  $breakpoint-1: 1505px,
+  $rating-breakpoint: 911px,
+  $team-name-breakpoint: 919px,
+  $small-breakpoint: 771px,
+  $hide-logo-breakpoint: 682px,
+  $xs-breakpoint: 530px,
+  $true-mobile-breakpoint: 500px) {
+    border: 1px solid #e1e1e1;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    .logo {
+      width: 60px;
+      height: 60px;
+      &.away-logo {
+        margin-left: 1rem;
+      }
+      &.home-logo {
+        margin-right: 1rem;
+      }
+    }
+    .mobile-stats {
+      display: none;
+    }
+    .team-section {
+      width: 50%;
+    }
+    .time-section {
+      min-width: 225px;
+    }
+    .matchup-header {
+      padding: 24px;
+      p {
+        margin: 0;
+        font-weight: normal;
+        font-size: 13px;
+      }
+      h5 {
+        font-size: 18px;
+        margin: 0;
+        font-weight: bold;
+      }
+
+      .media {
+        margin-top: 7px;
+      }
+    }
+    .table-wrapper {
+      width: calc(100% + 2px);
+    }
+
+    .multi-row-data-table-wrapper.custom-width {
+      @if $is-individual == false {
+        @media (max-width: $rating-breakpoint), (min-width: 992px) and (max-width: 1269px) {
+          .team-rating {
+            width: 54px;
+          }
+        }
+      } @else {
+        @media (max-width: $rating-breakpoint) {
+          .team-rating {
+            width: 54px;
+          }
+        }
+      }
+      @media (max-width: 825px) {
+        overflow-x: auto;
+        table {
+          min-width: 791px;
+        }
+      }
+    }
+
+    @media (max-width: $small-breakpoint) {
+      .logo {
+        width: 50px;
+        height: 50px;
+        &.away-logo {
+          margin-left: 8px;
+        }
+        &.home-logo {
+          margin-right: 8px;
+        }
+      }
+    }
+
+    @media (max-width: $hide-logo-breakpoint) {
+      .logo {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: $xs-breakpoint) {
+      .matchup-header {
+        p {
+          font-size: 13px;
+        }
+        h5 {
+          font-size: 15px;
+        }
+      }
+      .time-section {
+        min-width: 200px;
+      }
+    }
+
+    @media (max-width: $true-mobile-breakpoint) {
+      .mobile-stats {
+        display: inline;
+        &.stats-left {
+          margin-right: 5px;
+        }
+        &.stats-right {
+          margin-left: 5px;
+        }
+      }
+      .hide-on-mobile {
+        display: none;
+      }
+      .matchup-header {
+        padding: 8px;
+      }
+    }
+    .close-chart-btn {
+      height: 30px;
+      width: 40px;
+      padding: 1px 12px;
+      margin-bottom: 5px;
+      //color: white;
+    }
+
+    .short-matchup-team-name {
+      display: none;
+    }
+    @media (max-width: $table-name-breakpoint) {
+      .origin-matchup-team-name {
+        display: none;
+      }
+      .short-matchup-team-name {
+        display: inline;
+      }
+      .spread-col span {
+        display: block;
+      }
+    }
+
+    .matchup-col {
+      width: 19%;
+      @media (max-width: $table-name-breakpoint) {
+        width: 125px;
+      }
+    }
+
+    ::ng-deep app-status {
+      @media (max-width: $small-breakpoint) {
+        .app-status .details p, .app-status .details p.normal-text {
+          font-size: 12px !important;
+        }
+        .app-status .details h5 {
+          font-size: 19px !important;
+          line-height: 18px !important;
+          margin-bottom: 3px !important;
+        }
+      }
+      .normal-team-name {
+        display: inline !important;
+      }
+      .mobile-team-name {
+        display: none !important;
+      }
+      @if $is-individual == false {
+        @media (max-width: $team-name-breakpoint), (min-width: 992px) and (max-width: 1250px)  {
+          .normal-team-name {
+            display: none !important;
+          }
+          .mobile-team-name {
+            display: inline !important;
+          }
+        }
+      } @else {
+        @media (max-width: $team-name-breakpoint)  {
+          .normal-team-name {
+            display: none !important;
+          }
+          .mobile-team-name {
+            display: inline !important;
+          }
+        }
+      }
+
+      @media (max-width: $xs-breakpoint) {
+        .app-status .details p, .app-status .details p.normal-text {
+          font-size: 11px !important;
+        }
+        .app-status .details h5 {
+          font-size: 16px !important;
+          margin-bottom: 1px !important;
+        }
+      }
+    }
+}
+
+
+:host {
+  .matchup {
+    &.in-individual-matchup-wrapper {
+      @include matchup-mobile-styles(true, 983px, 0px, 1123px);
+    }
+    &:not(.in-individual-matchup-wrapper) {
+      @include matchup-mobile-styles();
+    }
+    &.ind-page {
+      border-radius: 0;
+      border: none;
+      .multi-row-data-table tbody {
+        border: 1px solid #e1e1e1;
+        border-top: none;
+      }
+    }
+    &:not(.ind-page) {
+      .multi-row-data-table tbody {
+        border: none;
+      }
+    }
+  }
+}

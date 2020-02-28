@@ -1,0 +1,177 @@
+@mixin lg-styles(
+  $t-sub-header-font-size: 0.6rem,
+  $t-content-font-size: 12px,
+  $small-col: 68px,
+  $date-col: 105px,
+  $matchup-col: 165px,
+  $stadium-col: 235px,
+  $leader-col: 240px
+) {
+  .multi-row-data-table .t-sub-header * {
+    font-size: $t-sub-header-font-size;
+  }
+  .multi-row-data-table .t-content * {
+    font-size: $t-content-font-size;
+  }
+  .small-header {
+    width: $small-col;
+  }
+  .date-header {
+    width: $date-col;
+  }
+  .matchup-col {
+    width: $matchup-col;
+  }
+  .stadium-col {
+    width:$stadium-col;
+  }
+  .leader-col {
+    width: $leader-col;
+  }
+}
+
+:host {
+  .table-title {
+    margin: 30px 0;
+  }
+
+  .week-toggles .toggle-in-page {
+    min-width: 50px;
+  }
+
+  .mobile-week-selector, .mobile-tab-selector {
+    display: none;
+  }
+  .normal-tab-selector {
+    display: block;
+  }
+  .grouped-dropdown-wrapper {
+    margin-right: 1rem;
+  }
+  @media (max-width: 1318px) {
+    .grouped-dropdown-wrapper {
+      margin-right: 0;
+      margin-bottom: 0;
+    }
+    .mobile-week-selector, .mobile-tab-selector {
+      display: block;
+    }
+    .normal-tab-selector {
+      display: none;
+    }
+  }
+
+  .team-logo-mini {
+    width: 1.2rem;
+    height: 1.2rem;
+    vertical-align: middle;
+    margin-right: 5px;
+    margin-left: 5px;
+  }
+  .small-header {
+    width: 95px;
+  }
+  .date-header {
+    width: 125px;
+  }
+  .completed-games {
+    .stadium-col {
+      width: 280px;
+    }
+  }
+  .depth-chart-col {
+    width: 12%;
+  }
+  .team-name-short {
+    display: none;
+  }
+  .completed-games {
+    @media (max-width: 1643px) {
+      .team-name-full {
+        display: none;
+      }
+      .team-name-short {
+        display: inline;
+      }
+    }
+  }
+  .pending-games {
+    @media (max-width: 1200px) {
+      .team-name-full {
+        display: none;
+      }
+      .team-name-short {
+        display: inline;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 2200px) {
+    .completed-games {
+      @include lg-styles(0.8rem, 14px, 85px, 125px, 185px, 275px, 240px);
+    }
+  }
+
+  @media only screen and (max-width: 1900px) {
+    .pending-games {
+      @include lg-styles(0.8rem, 14px, 85px, 125px, 185px, 275px, 240px);
+    }
+  }
+
+  @media only screen and (max-width: 2000px) {
+    .completed-games {
+      @include lg-styles(0.6rem, 13px, 68px, 105px, 165px, 235px, 240px);
+    }
+  }
+  @media only screen and (max-width: 1895px) {
+    .completed-games {
+      @include lg-styles(0.6rem, 13px, 68px, 103px, 165px, 235px, 220px);
+    }
+  }
+  @media only screen and (max-width: 1805px) {
+    .completed-games {
+      @include lg-styles(0.6rem, 13px, 68px, 103px, 165px, 215px, 210px);
+    }
+  }
+  @media only screen and (max-width: 1735px) {
+    .completed-games {
+      @include lg-styles(0.6rem, 12px, 68px, 103px, 165px, 215px, 195px);
+    }
+  }
+  @media only screen and (max-width: 1705px) {
+    .pending-games {
+      @include lg-styles();
+    }
+  }
+  @media only screen and (max-width: 1605px) {
+    .pending-games {
+      @include lg-styles(0.6rem, 11px, 58px, 85px, 125px, 205px, 240px);
+    }
+  }
+  @media only screen and (max-width: 1199px) {
+    .depth-chart-col {
+      width: 100px;
+    }
+  }
+
+  @media (max-width: 1525px) {
+    .schedule-entities-wrap {
+      .multi-row-data-table-wrapper.completed-games {
+        overflow-x: auto;
+        table {
+          min-width: 1493px;
+        }
+      }
+    }
+  }
+  @media (max-width: 978px) {
+    .schedule-entities-wrap {
+      .multi-row-data-table-wrapper.pending-games {
+        overflow-x: auto;
+        table {
+          min-width: 946px;
+        }
+      }
+    }
+  }
+}

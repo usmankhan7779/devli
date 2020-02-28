@@ -1,0 +1,143 @@
+@import "../../../../scss/bootstrap-customization/custom-mixins";
+:host {
+  $breakpoint-1: 1130px;
+  .simulator-metrics {
+    color: #fff;
+    position: relative;
+  }
+
+  .readonly-dd {
+    pointer-events: none;
+  }
+
+  .left-side-dds {
+    @media (min-width: $breakpoint-1 + 1) {
+      position: absolute;
+      left: 0;
+      z-index: 2;
+      padding: 1rem 0;
+    }
+    @media (max-width: $breakpoint-1) {
+      text-align: center;
+      padding-top: 1rem;
+      .grouped-dropdown.dropdown {
+        width: 130px;
+      }
+    }
+  }
+
+  .metrics-content-wrapper {
+    width: 100%;
+
+    .team-selectors {
+      width: 100%;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .metrics-weather {
+      .stadium {
+        font-size: 20px;
+      }
+      .column {
+        float: left;
+        width: 25%;
+      }
+
+      @media (max-width: 1250px) {
+        .column {
+          width: 50%;
+        }
+      }
+
+      @media (max-width: 700px) {
+        .column {
+          width: 100%;
+        }
+      }
+
+      width: 100%;
+      max-width: 1300px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  .team-selectors {
+    display: flex;
+    flex-flow: row nowrap;
+
+    padding: 1rem 0;
+
+    .away-team, .home-team {
+      flex: 1 1 auto;
+    }
+    .away-team {
+      text-align: right;
+    }
+    .home-team {
+      text-align: left;
+    }
+    .txt-holder {
+      font-size: 20px;
+      text-align: center;
+      flex: 0 0 50px;
+    }
+
+    @media (max-width: 600px) {
+      @include flex-column-mixin();
+      .away-team, .home-team {
+        flex: 0 0 100%;
+      }
+      .txt-holder span {
+        line-height: 45px;
+      }
+    }
+  }
+
+  .away-team, .home-team {
+    > span {
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+  }
+
+  .metrics-weather {
+    .grouped-dropdown-wrapper {
+      margin-bottom: 0px;
+    }
+
+    > div {
+      text-align: center;
+      padding-bottom: 1rem;
+
+      > span {
+        display: inline-block;
+      }
+
+      > div {
+        display: inline-block;
+      }
+    }
+  }
+
+  @media (max-width: 690px) {
+    .grouped-dropdown-wrapper:not(.not-mobile):not(.side-by-side) {
+      display: inline-block;
+      width: 100%;
+      ::ng-deep app-dropdown .grouped-dropdown .grouped-dropdown-btn, .grouped-dropdown .grouped-dropdown-btn {
+        border-radius: 0 !important;
+        &.first {
+          border-top-right-radius: 5px !important;
+          border-top-left-radius: 5px !important;
+        }
+        &.last {
+          border-bottom-right-radius: 5px !important;
+          border-bottom-left-radius: 5px !important;
+        }
+      }
+    }
+  }
+}
+

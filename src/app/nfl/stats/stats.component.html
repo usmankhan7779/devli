@@ -1,0 +1,282 @@
+<ng-template #csvView>
+  <div class="col-12">
+    <p class="csv-text">
+      {{csvText}}
+    </p>
+  </div>
+</ng-template>
+
+<ng-template #noDataTpl>
+  <div class="col-12">
+    <app-no-stats></app-no-stats>
+  </div>
+</ng-template>
+
+<!-- Prediction Model Accuracy -->
+<div class="container-fluid pb-5">
+  <!-- Breadcrumbs -->
+  <app-breadcrumb></app-breadcrumb>
+  <!-- Starting Lineups Page Title -->
+
+  <div *ngIf="totalItems != undefined" class="row">
+    <div class="col-12 col-lg-8">
+      <h1 class="page-heading">{{pageHeading}}</h1>
+      <div *ngIf="statsData.intro_paragraph" class="hidden-md-down">
+        <p class="site-pages-content" [innerHTML]="statsData.intro_paragraph | safeHtml"></p>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component [league]="'nfl'"></app-ad-component>
+    </div>
+
+    <div *ngIf="statsData.intro_paragraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+      <p class="site-pages-content" [innerHtml]="statsData.intro_paragraph | safeHtml"></p>
+    </div>
+
+    <div class="col-12">
+      <!-- Collapse Menu -->
+      <div class="in-page-dropdown-toggle">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="dropdownCollapsed = !dropdownCollapsed"
+                [attr.aria-expanded]="!dropdownCollapsed" aria-controls="collapseExample">
+          <i class="fa fa-bars dropdown-icon" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="in-page-dropdown-menu" [ngbCollapse]="!dropdownCollapsed" [ngClass]="{'hidden-dropdown': !dropdownCollapsed}">
+        <!-- Grouped Dropdown -->
+        <div class="d-flex justify-content-start top-dd-wrapper">
+          <div class="first-section-nav d-flex">
+              <div class="grouped-dropdown-wrapper btn-group">
+                <div ngbDropdown class="grouped-dropdown dropdown">
+                  <button type="button" class="grouped-dropdown-btn btn btn-secondary first px-3" id="season-dd" ngbDropdownToggle>
+                    <span class="pr-0 pr-sm-3">{{params.year | handleLeagueYear: 'nfl'}}</span> <img class="down-arrow" alt="down-arrow" src="/assets/images/arrow-down.png" />
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="season-dd">
+                    <div *ngFor="let season of ddData.seasons;">
+                      <button
+                        [ngClass]="{'dd-active-btn': params.year === season.year}"
+                        (click)="onYearDdChange(season)"
+                        class="dropdown-item">
+                        <span>{{season.name}}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div ngbDropdown class="grouped-dropdown dropdown">
+                  <button type="button" class="grouped-dropdown-btn btn btn-secondary px-3" id="main-dropdown" ngbDropdownToggle>
+                    <span class="pr-0 pr-sm-3">Stats</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="main-dropdown">
+                    <div *ngFor="let mainRadio of snapsMainRadio;">
+                      <button
+                        [ngClass]="{'dd-active-btn': mainRadio.value === 'stats'}"
+                        (click)="onSnapCountMainTabClick(mainRadio)"
+                        class="dropdown-item">
+                        <span>{{mainRadio.name}}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <app-dropdown
+                    [ddData]="ddData"
+                    [filterItems]="onTeamDropdownChange.bind(this)"
+                    prop="teams"
+                    name="Teams"
+                    [className]="'last'"
+                  ></app-dropdown>
+                </div>
+              </div>
+              <div class="grouped-dropdown-wrapper btn-group player-type-dds">
+                <app-dropdown
+                  [ddData]="ddData"
+                  [filterItems]="onDropdownChange.bind(this, null, true)"
+                  prop="tabs"
+                  className="big-dd first last"
+                  isSingleSelect="true"
+                ></app-dropdown>
+              </div>
+              <div class="toggles-in-page-wrapper player-type-tabs mb-0 mt-0">
+                <div class="toggles-in-page-group btn-group toggles-group">
+                  <a [routerLink]="['/nfl/player-stats' + (tab.url ? '/' + tab.url : '')]" *ngFor="let tab of ddData.tabs; let first = first; let last = last;"
+                          (click)="onButtonGroupClick(tab.selected);"
+                          class="toggle-in-page" [ngClass]="{'active': tab.selected, 'first': first, 'last': last}">{{tab.name}}</a>
+                </div>
+              </div>
+            </div>
+          <div *ngIf="statsData && statsData.data && statsData.data.length" class="second-section-nav d-flex">
+            <div class="d-flex top-dd-wrapper-deep">
+              <div class="grouped-dropdown-wrapper btn-group">
+                <app-dropdown
+                  [ddData]="ddData"
+                  [filterItems]="onDropdownChange.bind(this)"
+                  prop="main"
+                  className="first"
+                  isSingleSelect="true"
+                ></app-dropdown>
+                <app-dropdown
+                  [ddData]="ddData"
+                  [filterItems]="onDropdownChange.bind(this)"
+                  prop="secondary"
+                  className="last"
+                  isSingleSelect="true"
+                ></app-dropdown>
+              </div>
+              <div class="search-input-wrapper-top">
+                <div class="search-input-wrapper">
+                  <div>
+                    <div class="input-group">
+                      <input type="text" class="form-control hide-placeholder" [ngModel]="searchModel" (ngModelChange)="filterByName($event)" placeholder="Search Players" aria-describedby="filter-by-player">
+                      <span class="input-group-addon" id="filter-by-player">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="mobile-page-dd">
+                  <div class="grouped-dropdown-wrapper btn-group">
+                    <app-dropdown
+                      [ddData]="ddData"
+                      [filterItems]="onDropdownChange.bind(this)"
+                      prop="items_per_page"
+                      [totalItems]="totalItems"
+                      [isSingleSelect]="true"
+                      className="first last"
+                    ></app-dropdown>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-start pagination-wrapper">
+              <div class="full-screen-page-dd">
+                <div class="grouped-dropdown-wrapper btn-group">
+                  <app-dropdown
+                    [ddData]="ddData"
+                    [filterItems]="onDropdownChange.bind(this)"
+                    prop="items_per_page"
+                    [totalItems]="totalItems"
+                    [isSingleSelect]="true"
+                    className="first last"
+                  ></app-dropdown>
+                </div>
+              </div>
+              <div>
+                <pagination-controls [maxSize]="5" (pageChange)="onDropdownChange($event)" id="server"></pagination-controls>
+              </div>
+              <div class="csv-button-wrapper">
+                <div class="float-right">
+                  <button type="button" (click)="onCsvShow()" class="btn btn-primary csv-button">Show {{csvShowed ? 'Table' : ' CSV'}}</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Grouped Dropdown -->
+    </div>
+    <ng-container *ngIf="statsData && statsData.data && statsData.data.length; else noDataTpl">
+      <div *ngIf="!csvShowed; else csvView" class="col-12 table-sect-wrap">
+        <!-- Static Positioned Tabled -->
+        <div class="static-table-wrapper">
+          <table
+            [mfRowsOnPage]="10000" [mfData]="players"
+            [(mfSortBy)]="sortBy"
+            [(mfSortOrder)]="sortOrder"
+            (mfSortByChange)="onSortBy($event)"
+            (mfSortOrderChange)="onSortOrder($event)"
+            #staticTableData="mfDataTable"
+            class="static-table stats-table table table-bordered multi-table-static three-col">
+            <thead>
+            <tr class="t-sub-header static-sub-header">
+              <th class="player-name-col">
+                <mfSorter by="name">NAME</mfSorter>
+              </th>
+              <th class="rating-col">
+                <mfSorter by="lineups_rating">RTG</mfSorter>
+              </th>
+              <th class="team-col">
+                <mfSorter by="team">TEAM</mfSorter>
+              </th>
+            </tr>
+            </thead>
+            <tbody class="static-table-body">
+            <tr *ngFor="let player of staticTableData.data | paginate: { id: 'server', itemsPerPage: ddData.itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
+              <td class="show-border player-name-col">
+                <app-player-link [league]="'nfl'" [playerName]="player.name" [playerUrl]="player.profile_url" [generateShortName]="false"></app-player-link>
+              </td>
+              <td class="text-center show-border rating-col">
+                <app-rating [value]="player.lineups_rating"></app-rating>
+              </td>
+              <td class="text-center team-col">
+                <a class="link-black-underline" [appPreselectNflDepthChartTeamSeason]="params?.year" rel="noopener" [routerLink]="[player.team_depth_chart_route || '']">
+                  {{player.team}}
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Horizontal Scrolling-->
+        <div class="horizontal-table-wrapper three-col">
+          <table
+            [mfRowsOnPage]="10000" [mfData]="players"
+            [(mfSortBy)]="sortBy"
+            [(mfSortOrder)]="sortOrder"
+            (mfSortByChange)="onSortBy($event)"
+            (mfSortOrderChange)="onSortOrder($event)"
+            #tableData="mfDataTable"
+            class="multi-row-data-table t-stripped">
+            <thead>
+            <tr class="t-sub-header">
+              <th class="text-left px-3 inner-col-switch" width="100px">
+                <mfSorter by="name">NAME</mfSorter>
+              </th>
+              <th class="text-center inner-col-switch" width="100px">
+                <mfSorter by="lineups_rating">RTG</mfSorter>
+              </th>
+              <th class="text-center inner-col-switch" width="100px">
+                <mfSorter by="team">TEAM</mfSorter>
+              </th>
+              <th class="text-center" *ngFor="let header of statsData[ddData.activeMain + '_order']">
+                <mfSorter [by]="sortFunctions[ddData.activeMain + '_stats' + '.' + ddData.activeSecondary + '.' + header]" [name]="header" [selectedSortName]="selectedSortName">
+                  {{statsData.header_map[header]}}
+                </mfSorter>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let player of tableData.data | paginate: { id: 'server', itemsPerPage: ddData.itemsPerPage, currentPage: currentPage, totalItems: totalItems }"
+                class="t-content">
+              <td class="inner-col-switch text-left px-3">
+                <app-player-link [league]="'nfl'" [playerName]="player.name" [playerUrl]="player.profile_url" [generateShortName]="false"></app-player-link>
+              </td>
+              <td class="inner-col-switch">
+                <app-rating [value]="player.lineups_rating"></app-rating>
+              </td>
+              <td class="inner-col-switch">
+                <a class="link-black-underline" [appPreselectNflDepthChartTeamSeason]="params?.year" rel="noopener" [routerLink]="[player.team_depth_chart_route || '']">
+                  {{player.team}}
+                </a>
+              </td>
+              <td *ngFor="let header of statsData[ddData.activeMain + '_order']">
+                <span
+                  *ngIf="player[ddData.activeMain + '_stats'] &&
+                   player[ddData.activeMain + '_stats'][ddData.activeSecondary] &&
+                    player[ddData.activeMain + '_stats'][ddData.activeSecondary][header] !== undefined">
+                  {{player[ddData.activeMain + '_stats'][ddData.activeSecondary][header] | showPercentage : header}}
+                </span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+
+    <div *ngIf="statsData?.bottom_paragraph" class="page-bottom-content col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="statsData.bottom_header" class="page-heading-two">
+        {{statsData.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="statsData.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+</div>

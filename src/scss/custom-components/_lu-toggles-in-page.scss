@@ -1,0 +1,139 @@
+// TO USE:
+// ------
+// Wrap all Toggle Groups with:
+//
+// - div.toggles-in-page-wrapper
+//
+//   - Wrap the Toggle Group Buttons with
+//     div.toggles-in-page-group.btn-group.toggles-group
+//      -> If there is more than 1 group, add this class 'toggles-group-mid'
+//         to allow the next button group to have margin left and display inline.
+//
+//     - button.toggle-in-page
+//       -> If it's the first button in a group, use the class '.first'
+//       -> If it's the last button in a group, use the class '.last'
+// ------------------------------------------------------------------------------
+$toggles-separator-color: #f1f1f1;
+
+.toggles-in-page-wrapper {
+  margin-top: 22px;
+  // For Standard Pages Anywhere In App
+  &.standard-page {
+
+  }
+  // For All Other Pages
+  .toggles-in-page-group {
+    $border-radius: 5px;
+    border-radius: $border-radius;
+    &.toggles-group {
+      transition: ease all 300ms;
+      display: inline-block;
+      background: $toggles-separator-color;
+      border-bottom: 0;
+      padding: 1px;
+      box-shadow: 0 2px 16px rgba(193, 193, 193, 0.19);
+    }
+    &.toggles-group-mid {
+      margin-left: 35px;
+    }
+    .toggle-separator {
+      height: 37px;
+      width: 2px;
+      background: $toggles-separator-color;
+      display: inline-block;
+    }
+    .toggle-in-page {
+      height: 33px;
+      line-height: 33px;
+      text-align: center;
+      text-decoration: none;
+
+      border-radius: 0;
+      min-width: 70px;
+      display: block;
+      float: left;
+      background-color: #FFF;
+      color: rgba(51, 51, 51, 1);
+      border: 1px solid #FFF;
+      transition: $lu-btn-transition;
+      outline: none;
+      font-size: 13px;
+      padding: 0 7px;
+      cursor: pointer;
+      font-weight: 700;
+      margin-left: 1px;
+      &[disabled] {
+        background-color: #e4e4e4;
+        border-color: #e4e4e4;
+        cursor: not-allowed;
+      }
+      &.first, &:first-child {
+        border-top-left-radius: $border-radius;
+        border-bottom-left-radius: $border-radius;
+        margin-left: 0;
+        //border-right: none;
+      }
+      &.last, &:last-child {
+        border-top-right-radius: $border-radius;
+        border-bottom-right-radius: $border-radius;
+        //border-right: 2px solid rgb(194, 194, 194);
+      }
+      &.active {
+        background-color: $dark-purple;
+        border-color: $dark-purple;
+        color: #FFF;
+        transition: $lu-btn-transition;
+        &:hover {
+          background-color: $dark-purple;
+          border-color: $lu-med-purple-hover;
+          color: #FFF;
+        }
+      }
+      &:hover {
+        background-color: #e0e0e4;
+        border-color: #e0e0e4;
+        color: rgb(51, 51, 51);
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .toggles-in-page-wrapper {
+    &.standard-page {
+      .toggles-in-page-group .toggle-in-page {
+        min-width: 60px;
+      }
+    }
+  }
+}
+
+@media (max-width: 440px) {
+  .toggles-in-page-wrapper {
+    &.standard-page {
+      .toggles-in-page-group .toggle-in-page {
+        min-width: 48px;
+      }
+    }
+  }
+}
+
+@media (max-width: 380px) {
+  .toggles-in-page-wrapper {
+    &.standard-page {
+      .toggles-in-page-group .toggle-in-page {
+        min-width: 32px;
+        font-size: 10px;
+      }
+    }
+  }
+}
+
+@-webkit-keyframes filter-options-fade {
+  0% { opacity: 0.25; }
+  100% { opacity: 1; }
+}
+@-moz-keyframes filter-options-fade {
+  0% { opacity: 0.25; }
+  100% { opacity: 1; }
+}

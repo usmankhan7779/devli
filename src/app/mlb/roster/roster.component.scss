@@ -1,0 +1,13 @@
+:host {
+  @import "../../../scss/custom-components/_responsive-page-nav.scss";
+  @include mobile-navigation();
+
+  @media (max-width: 900px) {
+    .multi-row-data-table-wrapper {
+      overflow-x: auto;
+      table {
+        min-width: 900px;
+      }
+    }
+  }
+}

@@ -1,0 +1,227 @@
+@import "../../../../scss/shared/variables/project";
+:host {
+  .historic-team-tables {
+    ::ng-deep .team-table-swappable {
+      margin-top: 16px;
+    }
+  }
+  .fake-t-header {
+    padding: 4px 10px;
+    background-color: white;
+    height: 38px;
+    .nowrap .team-name {
+      font-size: 18px;
+    }
+  }
+
+  .fake-header-score-container {
+    position: relative;
+    .fake-header-score {
+      position: absolute;
+      top: -29px;
+      margin-left: auto;
+      margin-right: auto;
+      left: 0;
+      right: 0;
+      font-weight: normal;
+      span {
+        font-size: 14px;
+        @media (min-width: 1501px) {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  .multi-row-data-table {
+   .t-sub-header th {
+     text-transform: uppercase;
+     @media (min-width: 768px) and (max-width: 850px), (max-width: 450px) {
+        font-size: 8px !important;
+      }
+      @media (max-width: 380px) {
+        font-size: 7px !important;
+      }
+    }
+    &.rating-th {
+      font-size: 1rem;
+      font-weight: normal;
+    }
+  }
+
+  .second-info-row {
+    padding: 25px 20px;
+    max-width: 1300px;
+    margin: 32px auto;
+    background-color: #ffffff;
+    .col-container {
+      margin-bottom: 25px;
+      & > div {
+        text-align: center;
+        font-weight: lighter;
+      }
+      .under-num-txt {
+        line-height: 20px;
+        font-weight: normal;
+      }
+      .top-number {
+        line-height: 42px;
+        font-size: 42px;
+        position: relative;
+        color: $psd-primary;
+        .text-sm {
+          position: absolute;
+          bottom: 0;
+          line-height: 22px;
+          font-size: 16px;
+          margin-left: 2px;
+          font-weight: normal;
+        }
+      }
+      @media (max-width: 400px) {
+        .under-num-txt {
+          font-size: 14px;
+        }
+        .top-number {
+          font-size: 35px;
+          .text-sm {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+
+
+  .team-name-short {
+    display: none;
+  }
+
+  .winner-score {
+    color: #00aeef;
+    font-weight: bold;
+  }
+
+  .home-players-table-wrapper,
+  .away-players-table-wrapper {
+    background: #fafafa;
+  }
+
+  .player-name-td {
+    width: 160px;
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 10px;
+    @media (max-width: 1500px) {
+      width: 130px;
+    }
+    @media (max-width: 480px) {
+      width: 100px;
+    }
+  }
+
+  .game-header-status {
+    &, table {
+      width: 100%;
+    }
+    table {
+      table-layout: fixed;
+      .status-col {
+        width: 150px;
+      }
+      .score-col {
+        width: 110px;
+      }
+      td {
+        white-space: nowrap;
+      }
+    }
+    max-width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 30px;
+    background-color: #ffffff;
+    .team-name-full, .team-name-short {
+      font-weight: bold;
+    }
+    td {
+      text-align: center;
+      vertical-align: middle;
+      border-right: 1px solid #e8e8e8;
+      padding: 11px 25px;
+      &:last-child {
+        padding-left: 50px;
+        text-align: left;
+      }
+      &:first-child {
+        padding-right: 50px;
+        text-align: right;
+      }
+    }
+    img {
+      width: 60px;
+      height: 60px;
+    }
+    @media (max-width: 991px) {
+      font-size: 24px;
+      table {
+        .status-col {
+          width: 135px;
+        }
+        .score-col {
+          width: 70px;
+        }
+        td {
+          padding: 11px;
+          &:last-child {
+            padding-left: 30px;
+          }
+          &:first-child {
+            padding-right: 30px;
+          }
+        }
+      }
+    }
+    @media (max-width: 767px) {
+      font-size: 18px;
+      table {
+        .status-col {
+          width: 65px;
+        }
+        .score-col {
+          width: 40px;
+        }
+        td {
+          padding: 9px;
+          &:last-child {
+            padding-left: 20px;
+          }
+          &:first-child {
+            padding-right: 20px;
+          }
+        }
+        img.logo {
+          width: 45px;
+          height: 45px;
+        }
+      }
+    }
+    @media (max-width: 575px) {
+      table {
+        td {
+          &:last-child, &:first-child  {
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+  @media (max-width: 1350px) {
+    .team-name-full {
+      display: none;
+    }
+    .team-name-short {
+      display: inline;
+    }
+  }
+}

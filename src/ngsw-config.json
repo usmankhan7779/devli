@@ -1,0 +1,89 @@
+{
+  "index": "/index.html",
+  "dataGroups": [
+    {
+      "name": "restricted",
+      "urls": [
+        "/blog/**",
+        "/articles/**",
+        "/betting/**",
+        "/draftkings-sportsbook-promo-code/**",
+        "/fanduel-sportsbook-promo/**",
+        "/podcasts/**",
+        "http://embed.sendtonews.com/**",
+        "https://www.google-analytics.com/**",
+        "!/articles/wp-json/**",
+        "!/betting/wp-json/**",
+        "!/podcasts/wp-json/**"
+      ],
+      "cacheConfig": {
+        "maxSize": 0,
+        "maxAge": "0u",
+        "strategy": "freshness"
+      }
+    },
+    {
+      "name": "api",
+      "urls": [
+        "https://api.lineups.com/**",
+        "https://www.lineups.com/articles/wp-json/**",
+        "https://www.lineups.com/betting/wp-json/**",
+        "https://www.lineups.com/podcasts/wp-json/**",
+        "https://nbadata.dailyfantasycafe.com/api/**",
+        "https://nba-api.lineups.com/json/PlayerGameProjectionStatsByDate/**",
+        "https://mlbdata.dailyfantasycafe.com/api/**",
+        "/articles/wp-json/**",
+        "/betting/wp-json/**",
+        "/podcasts/wp-json/**"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 100000,
+        "maxAge": "1d",
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "fast-update-api",
+      "urls": [
+        "https://depthcharts.com/wp-json/wp/v2/**"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 100000,
+        "maxAge": "10m",
+        "timeout": "10s"
+      }
+    }
+  ],
+  "assetGroups": [{
+    "name": "app",
+    "installMode": "prefetch",
+    "resources": {
+      "files": [
+        "/favicon.ico",
+        "/index.html",
+        "/*.css",
+        "/*.js"
+      ]
+    }
+  }, {
+    "name": "assets",
+    "installMode": "lazy",
+    "updateMode": "prefetch",
+    "resources": {
+      "files": [
+        "/assets/**",
+        "!/assets/images/nfl/**",
+        "!/assets/images/nba/**",
+        "!/assets/images/mlb/**",
+        "!/assets/images/nhl/**",
+        "!/assets/images/cfb/**"
+      ],
+      "urls": [
+        "https://fonts.googleapis.com/**",
+        "https://cdnjs.cloudflare.com/**"
+      ]
+    }
+  }]
+}

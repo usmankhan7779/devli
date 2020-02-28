@@ -1,0 +1,46 @@
+<div class="account-subscription account-block">
+  <h2>Subscription</h2>
+  <div class="panel">
+    <div class="panel-body">
+      <div class="big-liner liner">
+        <strong>Current Plan: </strong>
+        <span *ngIf="!activeSubscription?.plan?.name">Free</span>
+        <span *ngIf="activeSubscription?.plan?.name">{{activeSubscription.plan.name}}</span>
+      </div>
+      <div class="liner">
+        <strong>Price: </strong>
+        <span *ngIf="!activeSubscription?.plan?.amount">$0.00</span>
+        <span *ngIf="activeSubscription?.plan?.amount">${{activeSubscription.plan.amount}}</span>
+      </div>
+      <div class="liner">
+        <strong>Credit Card Last 4: </strong>
+        <span *ngIf="!activeCreditCard?.last4">N/A</span>
+        <span *ngIf="activeCreditCard?.last4">{{activeCreditCard.last4}}</span>
+      </div>
+      <div class="liner">
+        <strong>Billing Address: </strong>
+        <span *ngIf="activeCreditCard?.address_line_1" class="user-billing-addr-wrap">
+          <span *ngIf="activeCreditCard?.address_line_2">{{activeCreditCard.address_line_2}},</span>
+          <span>{{activeCreditCard.address_line_1}}, {{activeCreditCard.address_city}}, {{activeCreditCard.address_state}}</span><br/>
+          <span>{{activeCreditCard.address_zip}}</span>
+        </span>
+        <span *ngIf="!activeCreditCard?.address_line_1" class="user-billing-addr-wrap">
+          <span>N/A</span>
+        </span>
+      </div>
+      <div class="liner">
+        <strong>Next Billing Date: </strong>
+        <span *ngIf="!activeCreditCard || !activeSubscription">N/A</span>
+        <span *ngIf="activeCreditCard && activeSubscription">Credit card ending in {{activeCreditCard.exp_year}} will be charged ${{activeSubscription.plan.amount}} on {{ activeSubscription.current_period_end | amTimeZone | amDateFormat: 'MMM DD, YYYY h:mm a'}} {{getTimezoneName()}}</span>
+      </div>
+    </div>
+    <div class="panel-footer row">
+      <div class="col-6">
+        <button [disabled]="activeCreditCard === false" type="button" class="btn btn-lu-blue btn-full-width" (click)="onChangePlan()">Change Plan</button>
+      </div>
+      <div class="col-6">
+        <button [disabled]="activeSubscription === false" type="button" class="btn btn-lu-gray btn-full-width" (click)="onCancelPlan()">Cancel Plan</button>
+      </div>
+    </div>
+  </div>
+</div>

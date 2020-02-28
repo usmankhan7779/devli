@@ -1,0 +1,424 @@
+<ng-template #injuriesWrapper let-injuries="injuries" let-team="team">
+  <div class="injuries-wrapper">
+    <p *ngIf="injuries?.length">
+      <strong><span *ngIf="team">{{team | lastTeamName}}</span> Injuries:</strong>
+      <span *ngFor="let injury of injuries; let last = last;">
+        <app-player-link *ngIf="injury.name" [league]="'nba'" [playerName]="injury.name" [playerUrl]="injury.profile_url" [generateShortName]="false"></app-player-link>
+        {{injury.designation ? ' (' + injury.designation + ')' : ''}}{{last? '.' : ', '}}
+      </span>
+    </p>
+  </div>
+</ng-template>
+
+<ng-template #lineupConfirmed>
+  <span class="confirmed-lineup">
+    <span class="lineup-state confirmed">
+      <span>Conf</span>
+      <img src="/assets/images/green-check.png" alt="green-check" />
+    </span>
+  </span>
+</ng-template>
+<ng-template #lineupProjected>
+  <span class="projected-lineup">
+    <span class="lineup-state projected">
+      <span>Proj</span>
+      <img src="/assets/images/red-x.png" alt="red-x" />
+    </span>
+  </span>
+</ng-template>
+
+<ng-template #awayTeamNameMobileTpl>
+  <span class="hidden-xs-down">
+    {{lineup.game_info.header.away.away_full_name}}
+  </span>
+  <span class="hidden-sm-up">
+    {{lineup.game_info.away_nav.team_abbr}}
+  </span>
+</ng-template>
+
+<ng-template #homeTeamNameMobileTpl>
+  <span class="hidden-xs-down">
+    {{lineup.game_info.header.home.home_full_name}}
+  </span>
+  <span class="hidden-sm-up">
+    {{lineup.game_info.home_nav.team_abbr}}
+  </span>
+</ng-template>
+
+<ng-template #homeTeamAbbrTpl>
+  {{lineup.game_info.home_nav.team_abbr}}
+</ng-template>
+<ng-template #awayTeamAbbrTpl>
+  {{lineup.game_info.away_nav.team_abbr}}
+</ng-template>
+
+<ng-template #awayTeamNameTpl>
+  <span class="short-team-name">
+    {{lineup.game_info.header.away.away_full_name | lastTeamName}}
+  </span>
+  <span class="normal-team-name">
+    {{lineup.game_info.header.away.away_full_name}}
+  </span>
+</ng-template>
+
+<ng-template #homeTeamNameTpl>
+  <span class="short-team-name">
+    {{lineup.game_info.header.home.home_full_name | lastTeamName}}
+  </span>
+  <span class="normal-team-name">
+    {{lineup.game_info.header.home.home_full_name}}
+  </span>
+</ng-template>
+
+<ng-template #awayTeamLogoTpl>
+  <img [type]="'white'" [appSpriteImg]="'nba'" class="event-top-logo" [src]="lineup.game_info.away_nav.team_logo_white" alt="{{lineup.game_info.header.away.away_full_name}}"/>
+</ng-template>
+
+<ng-template #homeTeamLogoTpl>
+  <img [type]="'white'" [appSpriteImg]="'nba'" class="box-team-logo" [src]="lineup.game_info.home_nav.team_logo_white" alt="{{lineup.game_info.header.home.home_full_name}}"/>
+</ng-template>
+
+<ng-template #eventTime>
+  {{lineup.game_info.header.details.game_time | amTimeZone | amDateFormat: 'h:mm a' | lowercase}} {{timeZone}}
+</ng-template>
+
+<div class="starting-lineup-wrapper">
+  <div class="starting-lineup-box" [ngClass]="{'right': index % 2 == 1, 'left': index % 2 == 0, 'center': lineupsLength === index + 1 && index % 2 == 0 }">
+    <!-- Starting Lineup Box Head -->
+    <div class="starting-lineup-box-head depth-chart-box-head">
+      <!-- Event Participants-->
+      <div class="event-top-participants depth-chart-box-top">
+        <!-- Event Away Participant -->
+        <div class="event-away-participant">
+
+          <div class="away-participant-wrapper stat-head-participant">
+            <div class="away-participant-content">
+              <h2 class="event-top-participant-name long-team-name">
+                <span class="participant-lineup-state">
+                  <ng-template *ngIf="lineup.away_lineup_confirmed || lineup.gateway?.away_nav.lineup_confirmed; else lineupProjected"
+                               [ngTemplateOutlet]="lineupConfirmed"></ng-template>
+                </span>
+                <a *ngIf="showLinks; else awayTeamNameTpl" class="link-black-underline" [routerLink]="['/' + lineup.game_info.gateway.away.lineup_route]">
+                  <ng-container *ngTemplateOutlet="awayTeamNameTpl"></ng-container>
+                </a>
+              </h2>
+              <h4 class="event-top-participant-standing">
+                <span class="event-top-participant-record">{{lineup.game_info.header.away.away_record}}<span class="event-top-participant-record-comma">,</span></span>
+                <span class="event-top-participant-rank">
+                  <span>{{lineup.game_info.away_nav.team_rank}}</span>
+                </span>
+                {{lineup.game_info.away_nav.team_conference}} {{lineup.game_info.away_nav.team_division}}
+              </h4>
+            </div>
+            <a class="away-participant-logo event-participant-logo" *ngIf="showLinks; else awayTeamLogoTpl" rel="nofollow" [routerLink]="['/' + lineup.game_info.gateway.away.lineup_route]">
+              <ng-container *ngTemplateOutlet="awayTeamLogoTpl"></ng-container>
+            </a>
+            <div class="mobile-standing">
+              <span class="event-top-participant-record">{{lineup.game_info.header.away.away_record}}<span class="event-top-participant-record-comma">,</span></span>
+              <span class="event-top-participant-rank">
+                <span>{{lineup.game_info.away_nav.team_rank}}</span>
+              </span>
+              {{lineup.game_info.away_nav.team_conference}} {{lineup.game_info.away_nav.team_division}}
+            </div>
+          </div>
+
+        </div>
+        <!-- Event Wind -->
+        <div class="event-date-mid">
+          <div class="event-mid-row">
+            <div class="event-date-cal-date">
+              <ng-container *ngIf="!lineup.game_info.status|| (lineup.game_info.status.status !== 'In Progress' && lineup.game_info.status.status !== 'Final')">
+                <h4>
+                  <ng-template [ngTemplateOutlet]="eventTime"></ng-template>
+                </h4>
+                <div class="at-symbol">
+                  @
+                </div>
+              </ng-container>
+              <div class="text-center" *ngIf="lineup.game_info.status.status === 'In Progress'">
+                <span>
+                  <ng-container *ngTemplateOutlet="awayTeamAbbrTpl"></ng-container>
+                  {{lineup.game_info.status.away_team_score}}
+                </span>
+                @
+                <span>
+                  <ng-container *ngTemplateOutlet="homeTeamAbbrTpl"></ng-container>
+                  {{lineup.game_info.status.home_team_score}}
+                </span>
+              </div>
+              <div class="text-center" *ngIf="lineup.game_info.status.status === 'Final'">
+                <span [ngClass]="{'font-bold': isWinner(lineup.game_info.status.away_team_score, lineup.game_info.status.home_team_score)}">
+                  <ng-container *ngTemplateOutlet="awayTeamAbbrTpl"></ng-container>
+                  {{lineup.game_info.status.away_team_score}}
+                </span>
+                @
+                <span [ngClass]="{'font-bold': isWinner(lineup.game_info.status.home_team_score, lineup.game_info.status.away_team_score)}">
+                  <ng-container *ngTemplateOutlet="homeTeamAbbrTpl"></ng-container>
+                  {{lineup.game_info.status.home_team_score}}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="event-mid-row">
+            <span *ngIf="lineup.game_info.status.status !== 'In Progress' && lineup.game_info.status.status !== 'Final'" class="event-mobile-details">
+              <ng-template *ngIf="lineup.away_lineup_confirmed || lineup.gateway?.away_nav.lineup_confirmed; else lineupProjected"
+                           [ngTemplateOutlet]="lineupConfirmed"></ng-template>
+              <a class="link-black-underline" [routerLink]="['/' + lineup.game_info.gateway.away.lineup_route]">
+                {{lineup.game_info.away_nav.team_abbr}}
+              </a>
+              @
+              <a class="link-black-underline" [routerLink]="['/' + lineup.game_info.gateway.home.lineup_route]">
+                {{lineup.game_info.home_nav.team_abbr}}
+              </a>
+              <ng-template *ngIf="lineup.home_lineup_confirmed || lineup.gateway?.home_nav.lineup_confirmed; else lineupProjected"
+                           [ngTemplateOutlet]="lineupConfirmed"></ng-template>
+            </span>
+            <ng-template #inProgressTpl>
+              Q{{lineup.game_info.status.quarter_integer}} {{lineup.game_info.status.minutes}}:{{lineup.game_info.status.seconds | number : '2.0-0'}}
+            </ng-template>
+            <ng-template #halftimeTpl>
+              Halftime
+            </ng-template>
+            <span *ngIf="lineup.game_info.status.status === 'In Progress'">
+              <ng-template *ngIf="showHalftime(lineup.game_info.status); else inProgressTpl"
+                           [ngTemplateOutlet]="halftimeTpl"></ng-template>
+            </span>
+            <span  class="event-date text-center" style="font-weight: normal">
+            </span>
+            <span *ngIf="lineup.game_info.status.status === 'Final'" class="event-rain-percentage">Final</span>
+          </div>
+        </div>
+        <!-- Event Home Participant -->
+        <div class="event-home-participant">
+          <div  class="home-participant-wrapper stat-head-participant">
+            <a class="home-participant-logo event-participant-logo" *ngIf="showLinks; else homeTeamLogoTpl" rel="nofollow" [routerLink]="['/' + lineup.game_info.gateway.home.lineup_route]">
+              <ng-container *ngTemplateOutlet="homeTeamLogoTpl"></ng-container>
+            </a>
+            <div class="mobile-standing">
+              <span class="event-top-participant-record">{{lineup.game_info.header.home.home_record}}<span class="event-top-participant-record-comma">,</span></span>
+              <span class="event-top-participant-rank">
+                  <span>{{lineup.game_info.home_nav.team_rank}}</span>
+                </span>
+              {{lineup.game_info.home_nav.team_conference}} {{lineup.game_info.home_nav.team_division}}
+            </div>
+            <div class="home-participant-content">
+              <h2 class="event-top-participant-name long-team-name">
+                <a *ngIf="showLinks; else homeTeamNameTpl" class="link-black-underline" [routerLink]="['/' + lineup.game_info.gateway.home.lineup_route]">
+                  <ng-container *ngTemplateOutlet="homeTeamNameTpl"></ng-container>
+                </a>
+                <span class="participant-lineup-state">
+                  <ng-template *ngIf="lineup.home_lineup_confirmed || lineup.gateway?.home_nav.lineup_confirmed; else lineupProjected"
+                               [ngTemplateOutlet]="lineupConfirmed"></ng-template>
+                </span>
+              </h2>
+              <h4 class="event-top-participant-standing">
+                <span class="event-top-participant-record">{{lineup.game_info.header.home.home_record}}<span class="event-top-participant-record-comma">,</span></span>
+                <span class="event-top-participant-rank">
+                  <span>{{lineup.game_info.home_nav.team_rank}}</span>
+                </span>
+                {{lineup.game_info.home_nav.team_conference}} {{lineup.game_info.home_nav.team_division}}
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Event Lineup Stats -->
+    <div class="event-mid-stats">
+      <!-- Away Hitters Stats (Left) -->
+      <div class="away-participant-stats">
+        <div class="stand-horizontal-table-wrapper custom-br">
+          <table class="table hitter-table">
+            <thead class="stats-head">
+              <tr>
+                <th class="stat-align-left hitters-stat-col">{{lineup.game_info.header.away.away_full_name | lastTeamName}} Players</th>
+                <th [hidden]="!sportActionActive" class="stat-align-center">AST</th>
+                <th [hidden]="!sportActionActive" class="stat-align-center">REB</th>
+                <th [hidden]="!sportActionActive" class="stat-align-center pts-col">PTS</th>
+                <th [hidden]="sportActionActive">Salary</th>
+                <th [hidden]="sportActionActive">Proj</th>
+              </tr>
+            </thead>
+            <tbody>
+            <!-- Table Rows -->
+              <tr *ngFor="let player of lineup.away_players | slice:0:9" class="lineups-gateway-table-row">
+                <th class="hitter-data border-right">
+                  <app-player-link [league]="'nba'" [playerUrl]="player.profile_url" [customContent]="true">
+                    <span class="hitter-text">
+                      <span class="player-short-name">{{player.first_dot_last}}</span><span class="player-name">{{player.name}}</span>, {{getPlayerPosition(player)}}
+                    </span>
+                  </app-player-link>
+                </th>
+                <td [hidden]="!sportActionActive" class="stat-align-center border-right">
+                  <span *ngIf="player.assists !== null">{{player.assists}}</span>
+                  <span *ngIf="player.assists === null">N/A</span>
+                </td>
+                <td [hidden]="!sportActionActive" class="stat-align-center border-right">
+                  <span *ngIf="player.rebounds !== null">{{player.rebounds}}</span>
+                  <span *ngIf="player.rebounds === null">N/A</span>
+                </td>
+                <td [hidden]="!sportActionActive" class="stat-align-center border-right pts-col">
+                  <span *ngIf="player.points !== null">{{player.points}}</span>
+                  <span *ngIf="player.points === null">N/A</span>
+                </td>
+                <!-- Fantasy Data-->
+                <td [hidden]="sportActionActive" class="salary-stat-wrapper stat-align-center border-right">
+                  <span class="salary-stat draft-kings-salary" [hidden]="!draftKingsActionActive">
+                    <span *ngIf="player.draftkings_salary !== null">{{player.draftkings_salary | currency:'USD':'symbol':'4.0-0'}}</span>
+                    <span *ngIf="player.draftkings_salary === null">N/A</span>
+                  </span>
+                  <span class="salary-stat fan-duel-salary" [hidden]="!fanDuelActionActive">
+                    <span *ngIf="player.fanduel_salary !== null">{{player.fanduel_salary | currency:'USD':'symbol':'4.0-0'}}</span>
+                    <span *ngIf="player.fanduel_salary === null">N/A</span>
+                  </span>
+                </td>
+                <td [hidden]="sportActionActive" class="points-stat-wrapper border-right">
+                  <span class="points-stat draft-kings-points" [hidden]="!draftKingsActionActive">
+                    <span *ngIf="player.draftkings_projection !== null">{{player.draftkings_projection}} pts</span>
+                    <span *ngIf="player.draftkings_projection === null">N/A</span>
+                  </span>
+                  <span class="points-stat fan-duel-points" [hidden]="!fanDuelActionActive">
+                    <span *ngIf="player.fanduel_projection !== null">{{player.fanduel_projection}} pts</span>
+                    <span *ngIf="player.fanduel_projection === null">N/A</span>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!--<ng-template [ngTemplateOutlet]="injuriesWrapper" [ngTemplateOutletContext]="{injuries: lineup.away_injuries, team: lineup.game_info.header.away.away_full_name}"></ng-template>-->
+        <!-- Away Team Lineup Data-->
+        <div *ngIf="showLinks" class="lineup-data-btn-wrapper">
+          <a [routerLink]="['/' + lineup.game_info.gateway.away.lineup_route]" class="btn lineup-data-btn">{{lineup.game_info.away_nav.team_name}} Lineup Data <img src="/assets/images/white-right-arrow.png" alt="{{lineup.game_info.away_nav.team_name}} Lineup Data"/></a>
+        </div>
+      </div>
+      <!-- Home Participant Stats (Right)-->
+      <div class="home-participant-stats">
+        <div class="stand-horizontal-table-wrapper custom-br">
+          <table class="table hitter-table">
+            <thead class="stats-head">
+              <tr>
+                <th class="stat-align-left hitters-stat-col">{{lineup.game_info.header.home.home_full_name | lastTeamName}} Players</th>
+                <th [hidden]="!sportActionActive" class="stat-align-center">AST</th>
+                <th [hidden]="!sportActionActive" class="stat-align-center">REB</th>
+                <th [hidden]="!sportActionActive" class="stat-align-center pts-col">PTS</th>
+                <th [hidden]="sportActionActive">Salary</th>
+                <th [hidden]="sportActionActive">Proj</th>
+              </tr>
+            </thead>
+            <tbody>
+            <!-- Table Rows -->
+            <tr *ngFor="let player of lineup.home_players | slice:0:9" class="lineups-gateway-table-row">
+              <th class="hitter-data border-right">
+                <app-player-link [league]="'nba'" [playerUrl]="player.profile_url" [customContent]="true">
+                   <span class="hitter-text">
+                    <span class="player-short-name">{{player.first_dot_last}}</span><span class="player-name">{{player.name}}</span>, {{getPlayerPosition(player)}}
+                  </span>
+                </app-player-link>
+              </th>
+
+              <!-- General Stats -->
+              <td [hidden]="!sportActionActive" class="stat-align-center border-right">
+                <span *ngIf="player.assists !== null">{{player.assists}}</span>
+                <span *ngIf="player.assists === null">N/A</span>
+              </td>
+              <td [hidden]="!sportActionActive" class="stat-align-center border-right">
+                <span *ngIf="player.rebounds !== null">{{player.rebounds}}</span>
+                <span *ngIf="player.rebounds === null">N/A</span>
+              </td>
+              <td [hidden]="!sportActionActive" class="stat-align-center border-right pts-col">
+                <span *ngIf="player.points !== null">{{player.points}}</span>
+                <span *ngIf="player.points === null">N/A</span>
+              </td>
+              <!-- Fantasy Stats -->
+              <!-- Hitter Salary Stat -->
+              <td [hidden]="sportActionActive" class="salary-stat-wrapper stat-align-center border-right">
+                <span class="salary-stat draft-kings-salary" [hidden]="!draftKingsActionActive">
+                  <span *ngIf="player.draftkings_salary !== null">{{player.draftkings_salary | currency:'USD':'symbol':'4.0-0'}}</span>
+                  <span *ngIf="player.draftkings_salary === null">N/A</span>
+                </span>
+                <span class="salary-stat fan-duel-salary" [hidden]="!fanDuelActionActive">
+                  <span *ngIf="player.fanduel_salary !== null">{{player.fanduel_salary | currency:'USD':'symbol':'4.0-0'}}</span>
+                  <span *ngIf="player.fanduel_salary === null">N/A</span>
+                </span>
+              </td>
+              <!-- Hitter Points Stat -->
+              <td [hidden]="sportActionActive" class="points-stat-wrapper border-right">
+                <span class="points-stat draft-kings-points" [hidden]="!draftKingsActionActive">
+                  <span *ngIf="player.draftkings_projection !== null">{{player.draftkings_projection}} pts</span>
+                  <span *ngIf="player.draftkings_projection === null">N/A</span>
+                </span>
+                <span class="points-stat fan-duel-points" [hidden]="!fanDuelActionActive">
+                  <span *ngIf="player.fanduel_projection !== null">{{player.fanduel_projection}} pts</span>
+                  <span *ngIf="player.fanduel_projection === null">N/A</span>
+                </span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <!--<ng-template [ngTemplateOutlet]="injuriesWrapper" [ngTemplateOutletContext]="{injuries: lineup.home_injuries, team: lineup.game_info.header.home.home_full_name}"></ng-template>-->
+        <!-- Home Team Lineup Data-->
+        <div *ngIf="showLinks" class="lineup-data-btn-wrapper">
+          <a [routerLink]="['/' + lineup.game_info.gateway.home.lineup_route]" class="btn lineup-data-btn">{{lineup.game_info.home_nav.team_name}} Lineup Data <img src="/assets/images/white-right-arrow.png" alt="{{lineup.game_info.home_nav.team_name}} Lineup Data" /></a>
+        </div>
+      </div>
+    </div>
+    <!-- Event Lineup Footer -->
+    <div class="event-lineup-footer">
+      <div class="event-lineup-footer-row">
+        <div class="lineup-foot-stat-col">
+          <h6 class="foot-stat-title">Moneyline</h6>
+          <p class="foot-stat-value">{{lineup.game_info.away_nav.team_abbr}}
+            <span *ngIf="lineup.away_bets.moneyline < 0">{{lineup.away_bets.moneyline}}</span>
+            <span *ngIf="lineup.away_bets.moneyline > 0">+{{lineup.away_bets.moneyline}}</span>
+          </p>
+          <p class="foot-stat-value">{{lineup.game_info.home_nav.team_abbr}}
+            <span *ngIf="lineup.home_bets.moneyline < 0">{{lineup.home_bets.moneyline}}</span>
+            <span *ngIf="lineup.home_bets.moneyline > 0">+{{lineup.home_bets.moneyline}}</span>
+          </p>
+        </div>
+        <div class="lineup-foot-stat-col center">
+          <h6 class="foot-stat-title">Spread</h6>
+          <p class="foot-stat-value">{{lineup.game_info.away_nav.team_abbr}}
+            <!--Away Spread-->
+            <span *ngIf="lineup.away_bets.spread < 0">{{lineup.away_bets.spread}}</span>
+            <span *ngIf="lineup.away_bets.spread > 0">+{{lineup.away_bets.spread}}</span>
+            <!--Away Spread Moneyline-->
+            <span *ngIf="lineup.away_bets.spread_moneyline < 0">({{lineup.away_bets.spread_moneyline}})</span>
+            <span *ngIf="lineup.away_bets.spread_moneyline > 0">(+{{lineup.away_bets.spread_moneyline}})</span>
+          </p>
+          <p class="foot-stat-value">{{lineup.game_info.home_nav.team_abbr}}
+            <!--Home Spread-->
+            <span *ngIf="lineup.home_bets.spread < 0">{{lineup.home_bets.spread}}</span>
+            <span *ngIf="lineup.home_bets.spread > 0">+{{lineup.home_bets.spread}}</span>
+            <!--Home Spread Moneyline-->
+            <span *ngIf="lineup.home_bets.spread_moneyline < 0">({{lineup.home_bets.spread_moneyline}})</span>
+            <span *ngIf="lineup.home_bets.spread_moneyline > 0">(+{{lineup.home_bets.spread_moneyline}})</span>
+          </p>
+        </div>
+        <div class="lineup-foot-stat-col">
+          <h6 class="foot-stat-title">Over/Under</h6>
+          <p class="foot-stat-value">
+            <span>{{lineup.away_bets.over_under}} ({{lineup.away_bets.over_under_moneyline}})</span>
+          </p>
+          <p class="foot-stat-value">
+            <span>{{lineup.home_bets.over_under}} ({{lineup.home_bets.over_under_moneyline}})</span>
+          </p>
+        </div>
+        <div class="lineup-foot-stat-col last-col">
+          <h6 class="foot-stat-title">Implied Totals</h6>
+          <p class="foot-stat-value">
+            <span>{{lineup.away_bets.total}} pts</span>
+          </p>
+          <p class="foot-stat-value">
+            <span>{{lineup.home_bets.total}} pts</span>
+          </p>
+        </div>
+      </div>
+      <div class="text-center match-odds-btn-wrapper">
+        <a *ngIf="showLinks" [appNbaMatchupIdPreselect]="lineup.game_id" [routerLink]="[lineup.matchup_route || '']" class="btn match-odds-and-line d-inline-block">Matchup Breakdown <img src="/assets/images/white-right-arrow.png" alt="Matchup Breakdown"></a>
+      </div>
+    </div>
+  </div> <!-- End Lineup Box -->
+</div> <!-- End Lineups Loop -->

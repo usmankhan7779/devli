@@ -1,0 +1,37 @@
+:host {
+  .jumbotron {
+    background-position: bottom;
+    margin-bottom: 0;
+    h1 {
+      margin: 35px 0;
+    }
+  }
+  .multi-row-data-table {
+    table-layout: auto;
+    width: 100%;
+    td {
+      padding: 22px;
+    }
+    @media only screen and (max-width: 1500px) {
+      .t-content * {
+        font-size: 13px;
+      }
+    }
+    margin-bottom: 0;
+  }
+  .winning-systems-card .image-wrapper {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  .soccer-scholarship {
+    float: right;
+    margin-top: .5rem;
+    margin-left: .5rem;
+    @media (max-width: 485px) {
+      float: none;
+      display: block;
+      margin: 0 auto 20px auto;
+    }
+  }
+}
+

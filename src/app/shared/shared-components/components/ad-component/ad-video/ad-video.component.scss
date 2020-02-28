@@ -1,0 +1,92 @@
+$video-size-width: 480px;
+$video-size-height: 270px;
+
+@mixin _ad-video-container-styling($base-height: 0, $base-width: 0) {
+  .ad-video-container {
+    max-width: $base-width;
+    height: $base-height;
+    #parentVideoSlot {
+      height: $base-height !important;
+      max-width: $base-width;
+
+      & > video, & > div, & > div > video, & > div > iframe, & > iframe {
+        height: $base-height !important;
+        max-width: $base-width;
+      }
+    }
+  }
+}
+@mixin ad-video-container-styling($base-height: 0, $base--width: 0) {
+  $origin-height: 311px;
+  $origin-width: 553px;
+  @if $base-height != 0 {
+    $base-width: ($base-height * $origin-width)/$origin-height;
+    @include _ad-video-container-styling($base-height, $base-width);
+  }
+  @if $base--width != 0 {
+    $base-width: $base--width;
+    $base-height: ($origin-height * $base-width)/$origin-width;
+    @include _ad-video-container-styling($base-height, $base-width);
+  }
+}
+
+.gateway-video-container {
+  margin-bottom: 1.375rem;
+  @media (min-width: 991px) {
+    max-height: 244px;
+    overflow: visible;
+    margin-bottom: 0;
+  }
+}
+
+.ad-video-container {
+  position: relative;
+  width: 100% !important;
+  margin: 0 auto;
+  #parentVideoSlot {
+    position: static !important;
+    overflow: hidden !important;
+    width: 100% !important;
+
+    & > video, & > div, & > div > video, & > div > iframe, & > iframe {
+      width: 100% !important;
+    }
+  }
+}
+
+@include ad-video-container-styling($video-size-height);
+
+.ad-video {
+  position: relative;
+  top: -35px;
+}
+
+@media (max-width: 991px) {
+  .ad-video {
+    position: relative;
+    top: 0;
+  }
+}
+@media (max-width: 1455px) and (min-width: 991px) {
+  @include ad-video-container-styling(255px);
+}
+@media (max-width: 1361px) and (min-width: 991px) {
+  @include ad-video-container-styling(235px);
+}
+@media (max-width: 1255px) and (min-width: 991px) {
+  @include ad-video-container-styling(215px);
+}
+@media (max-width: 1155px) and (min-width: 991px) {
+  @include ad-video-container-styling(195px);
+}
+@media (max-width: 1055px) and (min-width: 991px) {
+  @include ad-video-container-styling(175px);
+}
+
+@media (max-width: 768px) {
+  @include ad-video-container-styling(0, 300px);
+}
+
+
+
+

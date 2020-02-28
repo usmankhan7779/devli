@@ -1,0 +1,5 @@
+<div [class]="isFilled ? 'filled' : 'outline'" [ngClass]="classes" >
+  <div *ngFor="let i of [0,1,2,3,4]" [ngStyle]="setStyle(color, amount, i)" [ngClass]="{'highlighted': amount > i}">
+    <i class="fa fa-usd" aria-hidden="true"></i>
+  </div>
+</div>

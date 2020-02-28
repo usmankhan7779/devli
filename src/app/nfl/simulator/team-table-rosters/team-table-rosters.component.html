@@ -1,0 +1,123 @@
+<div class="team-table-rosters">
+  <div class="team-info">
+    <div class="team-flag">
+      <app-status
+        side="right"
+        [status]="true"
+        [teamName]="'Atlanta Braves'"
+        [record]="'29-36, 4th in NL East'"
+      >
+        <img [type]="'bordered'" [appSpriteImg]="'mlb'" class="d-flex mr-3 logo rounded" [src]="'assets/images/mlb/logos/bordered/atlanta-braves-largest.svg'" alt="">
+      </app-status>
+    </div>
+  </div>
+
+  <div class="sub-table">
+    <div class="table-wrapper">
+      <table class="multi-row-data-table t-stripped m-0 no-border">
+        <thead>
+          <tr class="t-single-header">
+            <th class="text-center" width="20%">Passing</th>
+            <th class="text-center" width="10%">Rating</th>
+            <th class="text-center" width="10%">Depth</th>
+            <th class="text-center" width="7%">Snaps</th>
+            <th class="text-center" width="7%">Att</th>
+            <th class="text-center" width="7%">Comp</th>
+            <th class="text-center" width="7%">Comp%</th>
+            <th class="text-center" width="*">Yards</th>
+            <th class="text-center" width="7%">Yds/Att</th>
+            <th class="text-center" width="7%">TD</th>
+            <th class="text-center" width="7%">INTs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-center t-content" *ngFor="let player of teamData.passing">
+            <td>{{player.name}}</td>
+            <td><app-rating [value]="player.rating"></app-rating></td>
+            <td>{{player.depth}}</td>
+            <td>{{player.snaps}}</td>
+            <td>{{player.att}}</td>
+            <td>{{player.comp}}</td>
+            <td>{{player.compP}}</td>
+            <td>{{player.yards}}</td>
+            <td>{{player.yardsPerAtt}}</td>
+            <td>{{player.td}}</td>
+            <td>{{player.ints}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sub-table">
+    <div class="table-wrapper">
+      <table class="multi-row-data-table t-stripped m-0 no-border">
+        <thead>
+          <tr class="t-single-header">
+            <th class="text-center" width="20%">Rushing</th>
+            <th class="text-center" width="10%">Rating</th>
+            <th class="text-center" width="10%">Depth</th>
+            <th class="text-center" width="8%">Snaps</th>
+            <th class="text-center" width="8%">Att</th>
+            <th class="text-center" width="*">Yards</th>
+            <th class="text-center" width="8%">Yds/Att</th>
+            <th class="text-center" width="8%">YPG</th>
+            <th class="text-center" width="8%">Long</th>
+            <th class="text-center" width="8%">TDs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-center t-content" *ngFor="let player of teamData.rushing">
+            <td>{{player.name}}</td>
+            <td><app-rating [value]="player.rating"></app-rating></td>
+            <td>{{player.depth}}</td>
+            <td>{{player.snaps}}</td>
+            <td>{{player.att}}</td>
+            <td>{{player.yards}}</td>
+            <td>{{player.yardsPerAtt}}</td>
+            <td>{{player.ypg}}</td>
+            <td>{{player.long}}</td>
+            <td>{{player.td}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sub-table">
+    <div class="table-wrapper">
+      <table class="multi-row-data-table t-stripped m-0 no-border">
+        <thead>
+          <tr class="t-single-header">
+            <th class="text-center" width="20%">Receiving</th>
+            <th class="text-center" width="10%">Rating</th>
+            <th class="text-center" width="10%">Depth</th>
+            <th class="text-center" width="7%">Snaps</th>
+            <th class="text-center" width="7%">Targets</th>
+            <th class="text-center" width="9%">Receptions</th>
+            <th class="text-center" width="9%">Yards</th>
+            <th class="text-center" width="7%">Catch%</th>
+            <th class="text-center" width="7%">YPC</th>
+            <th class="text-center" width="7%">Long</th>
+            <th class="text-center" width="7%">TD</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-center t-content" *ngFor="let player of teamData.receiving">
+            <td>{{player.name}}</td>
+            <td><app-rating [value]="player.rating"></app-rating></td>
+            <td>{{player.depth}}</td>
+            <td>{{player.snaps}}</td>
+            <td>{{player.targets || ''}}</td>
+            <td>{{player.receptions || ''}}</td>
+            <td>{{player.yards || ''}}</td>
+            <td>{{player.catchP || ''}}</td>
+            <td>{{player.ypc || ''}}</td>
+            <td>{{player.long || ''}}</td>
+            <td>{{player.td || ''}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+.short-articles-wrapper {
+  $spacing: -30px;
+  margin: 0 $spacing $spacing * 2 $spacing;
+  flex-wrap: nowrap;
+  @media (max-width: 1200px) {
+    flex-wrap: wrap;
+    app-short-wp-article {
+      min-width: 205px;
+    }
+  }
+  &.league-page {
+    @media (max-width: 860px) {
+      flex-wrap: wrap;
+      app-short-wp-article {
+        width: calc(50% - #{$spacing * -2});
+      }
+    }
+    @media (max-width: 664px) {
+      app-short-wp-article {
+        width: 100%;
+      }
+    }
+    @media (max-width: 511px) {
+      margin: 0;
+      app-short-wp-article {
+        width: 100%;
+        margin: 0 auto $spacing * -2 auto;
+      }
+    }
+  }
+}

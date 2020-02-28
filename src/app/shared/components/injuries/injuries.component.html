@@ -1,0 +1,217 @@
+<ng-template #NaTpl><span>N/A</span></ng-template>
+
+<div class="injuries-page" [ngClass]="{'container-fluid': !isTeamPage}">
+  <ng-container *ngIf="!isTeamPage">
+    <app-breadcrumb></app-breadcrumb>
+    <div class="row">
+      <div class="col-12">
+        <div #containerEl class="d-flex flex-wrap after-heading-margin">
+          <div>
+            <h1 #headingEl class="page-heading mb-0">{{currentLeague | uppercase}} Injuries</h1>
+          </div>
+          <ng-container *ngIf="currentLeague === 'nfl' || currentLeague === 'mlb'">
+            <app-twitter-follow-btn [textElement]="headingEl" [containerElement]="containerEl"></app-twitter-follow-btn>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <div *ngIf="injuries === undefined" class="starting-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+  <div *appBrowserIf="injuries !== undefined" class="mb-4">
+    <div class="row">
+      <div *ngIf="!isTeamPage && introParagraph" class="col-12 flex-last flex-sm-unordered">
+        <p class="site-pages-content" [innerHtml]="introParagraph | safeHtml"></p>
+      </div>
+      <div class="col-12">
+        <div class="d-flex justify-content-start top-dd-wrapper">
+          <!-- Grouped Dropdown -->
+          <div class="d-flex justify-content-start top-search-wrapper">
+            <div>
+              <div class="grouped-dropdown-wrapper btn-group">
+                <ng-container *ngIf="!isTeamPage">
+                  <div ngbDropdown class="grouped-dropdown dropdown" >
+                    <button type="button" class="grouped-dropdown-btn btn btn-secondary first px-3" id="page-select-dropdown" ngbDropdownToggle>
+                      <span class="pr-0 pr-sm-3">{{currentLeague | uppercase}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="page-select-dropdown">
+                      <div class="dropdown-btn-wrap">
+                        <a [routerLink]="['/nfl/player-injuries']" routerLinkActive="dd-active-btn" class="dropdown-item">NFL</a>
+                      </div>
+                      <div class="dropdown-btn-wrap">
+                        <a [routerLink]="['/mlb/player-injuries']" routerLinkActive="dd-active-btn" class="dropdown-item">MLB</a>
+                      </div>
+                      <div class="dropdown-btn-wrap">
+                        <a [routerLink]="['/nba/player-injuries']" routerLinkActive="dd-active-btn" class="dropdown-item">NBA</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div ngbDropdown class="grouped-dropdown dropdown">
+                    <button type="button" class="grouped-dropdown-btn btn btn-secondary px-3" id="team-dropdown" ngbDropdownToggle>
+                      <span class="pr-0 pr-sm-3">{{showSelectedValues('Team', 'Teams', teams)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                    </button>
+                    <div class="dropdown-menu scrollable-menu" aria-labelledby="team-dropdown">
+                      <div class="dropdown-item" *ngIf="!isSelectedNone(teams)" (click)="toggleAll($event, teams, false)">
+                        <div class="form-check pl-1 m-0">
+                          <label class="m-0">
+                            Select None
+                          </label>
+                        </div>
+                      </div>
+                      <div class="dropdown-item" *ngIf="isSelectedNone(teams)" (click)="toggleAll($event, teams, true)">
+                        <div class="form-check pl-1 m-0">
+                          <label class="m-0">
+                            Select All
+                          </label>
+                        </div>
+                      </div>
+                      <div *ngFor="let team of teams" (click)="onToggleItem($event, team)" class="dropdown-item">
+                        <div class="form-check pl-1 m-0">
+                          <input [checked]="team.selected" class="form-check-input" type="checkbox">
+                          <label class="m-0">
+                            {{team.name}}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <div ngbDropdown class="grouped-dropdown dropdown">
+                  <button type="button" class="grouped-dropdown-btn btn btn-secondary px-3" [ngClass]="{'first': isTeamPage}" id="status-dropdown" ngbDropdownToggle>
+                    <span class="pr-0 pr-sm-3">{{showSelectedValues('Status', 'Statuses', statuses)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                  </button>
+                  <div class="dropdown-menu scrollable-menu" aria-labelledby="status-dropdown">
+                    <div class="dropdown-item" *ngIf="!isSelectedNone(statuses)" (click)="toggleAll($event, statuses, false)">
+                      <div class="form-check pl-1 m-0">
+                        <label class="m-0">
+                          Select None
+                        </label>
+                      </div>
+                    </div>
+                    <div class="dropdown-item" *ngIf="isSelectedNone(statuses)" (click)="toggleAll($event, statuses, true)">
+                      <div class="form-check pl-1 m-0">
+                        <label class="m-0">
+                          Select All
+                        </label>
+                      </div>
+                    </div>
+                    <div *ngFor="let status of statuses" (click)="onToggleItem($event, status)" class="dropdown-item">
+                      <div class="form-check pl-1 m-0">
+                        <input [checked]="status.selected" class="form-check-input" type="checkbox">
+                        <label class="m-0">
+                          {{status.name}}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div ngbDropdown class="grouped-dropdown dropdown">
+                  <button type="button" class="grouped-dropdown-btn btn btn-secondary px-3 last" id="position-dropdown" ngbDropdownToggle>
+                    <span class="pr-0 pr-sm-3">{{showSelectedValues('Position', 'Positions', positions)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                  </button>
+                  <div class="dropdown-menu scrollable-menu" aria-labelledby="position-dropdown">
+                    <div class="dropdown-item" *ngIf="!isSelectedNone(positions)" (click)="toggleAll($event, positions, false)">
+                      <div class="form-check pl-1 m-0">
+                        <label class="m-0">
+                          Select None
+                        </label>
+                      </div>
+                    </div>
+                    <div class="dropdown-item" *ngIf="isSelectedNone(positions)" (click)="toggleAll($event, positions, true)">
+                      <div class="form-check pl-1 m-0">
+                        <label class="m-0">
+                          Select All
+                        </label>
+                      </div>
+                    </div>
+                    <div *ngFor="let position of positions" (click)="onToggleItem($event, position)" class="dropdown-item">
+                      <div class="form-check pl-1 m-0">
+                        <input [checked]="position.selected" class="form-check-input" type="checkbox">
+                        <label class="m-0">
+                          {{position.name}}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="!isTeamPage" class="search-input-wrapper normal-view">
+              <app-search-input [className]="'search-next-to-dd'" (onDataFiltered)="filterByName($event)"></app-search-input>
+            </div>
+          </div>
+          <div *ngIf="!isTeamPage" class="d-flex justify-content-start pagination-wrapper">
+            <div class="d-flex per-page-section-wrapper">
+              <div class="search-input-wrapper mobile-view">
+                <app-search-input [className]="'search-next-to-dd'" (onDataFiltered)="filterByName($event)"></app-search-input>
+              </div>
+              <div>
+                <div class="grouped-dropdown-wrapper btn-group">
+                  <div ngbDropdown class="grouped-dropdown dropdown">
+                    <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="items-per-page-dropdown" ngbDropdownToggle>
+                      <span>{{itemsPerPage}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="items-per-page-dropdown">
+                      <div class="dropdown-btn-wrap" (click)="setItemsPerPage(25)">
+                        <a [ngClass]="{'dd-active-btn': itemsPerPage === 25}" class="dropdown-item">25</a>
+                      </div>
+                      <div class="dropdown-btn-wrap" (click)="setItemsPerPage(50)">
+                        <a [ngClass]="{'dd-active-btn': itemsPerPage === 50}" class="dropdown-item">50</a>
+                      </div>
+                      <div class="dropdown-btn-wrap" (click)="setItemsPerPage(100)">
+                        <a [ngClass]="{'dd-active-btn': itemsPerPage === 100}" class="dropdown-item">100</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pagination-controls-wrapper">
+              <pagination-controls [maxSize]="5" (pageChange)="getInjuries($event, false, false, statuses, teams, positions, itemsPerPage)" id="server"></pagination-controls>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 multi-row-data-table-wrapper" [ngClass]="{'mb-0': isTeamPage}">
+        <table class="multi-row-data-table t-stripped">
+          <thead>
+            <tr class="t-sub-header">
+              <th class="text-center">Reported</th>
+              <th class="text-center" width="4%">Pos</th>
+              <th class="text-center" width="10%">Name</th>
+              <th class="text-center" width="4%">Rating</th>
+              <th *ngIf="!isTeamPage" class="text-center">Team</th>
+              <th class="text-center">Status</th>
+              <th class="text-center">Body&nbsp;Part</th>
+              <th class="text-center" width="50%">Injury&nbsp;Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="t-content" *ngFor="let injury of injuries | paginate: { id: 'server', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
+              <td>
+                {{injury.updated | amTimeZone | amDateFormat: 'M/D/YY'}}
+              </td>
+              <td>{{injury.position}}</td>
+              <td>
+                <app-player-link [league]="currentLeague" [playerName]="injury.name || injury.full_name || injury.player_name" [playerUrl]="injury.profile_url" [generateShortName]="false"></app-player-link>
+                <div *ngIf="injury[this.statusPropName] === 'Questionable'" class="lu-upper-suffix">Q</div>
+              </td>
+              <td>
+                <app-rating *ngIf="injury.rating != null || injury.lineups_rating != null; else NaTpl" [value]="injury.rating || injury.lineups_rating"></app-rating>
+              </td>
+              <td *ngIf="!isTeamPage">{{injury.team}}</td>
+              <td>{{injury[this.statusPropName]}}</td>
+              <td>{{injury.body_part || injury.injury_body_part}}</td>
+              <td class="text-left p-2">{{injury.details || injury.content}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div *ngIf="!this.injuries.length && isTeamPage" class="col-12 mt-2 text-center">
+        <h5>No Current Injuries</h5>
+      </div>
+    </div>
+  </div>
+</div>

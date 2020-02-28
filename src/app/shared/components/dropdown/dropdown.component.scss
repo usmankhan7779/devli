@@ -1,0 +1,26 @@
+:host {
+  .dd-dollar {
+    padding-top: 6px !important;
+  }
+  .dropdown-item.dd-opt-active {
+    background-color: #01afed;
+    color: #FFF;
+  }
+  .readonly {
+    pointer-events: none;
+  }
+  .dropdown-item {
+    cursor: pointer;
+  }
+  .big-dd {
+    padding: 8px 34px !important;
+  }
+  .has-logo {
+    padding: 0 15px 0 18px !important;
+    line-height: 18px;
+    height: 35px;
+    .down-arrow {
+      margin-left: 15px;
+    }
+  }
+}

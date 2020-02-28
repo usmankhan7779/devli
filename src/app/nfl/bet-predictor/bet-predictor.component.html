@@ -1,0 +1,346 @@
+<ng-template #redCheck>
+  <div class="check-mark red">
+    <img src="assets/images/White_X_in_red_background.svg" alt="x">
+  </div>
+</ng-template>
+<ng-template #btnSection>
+  <button (click)="onResetBtnClick()" [disabled]="!betPredictionData || !activeDDs?.predictiveModel?.value || !selectedMatcupId" type="button" class="btn btn-grey-light mr-1 mt-1 mt-md-0" >
+    <i class="fa fa-repeat" aria-hidden="true"></i>
+    Reset
+  </button>
+  <button (click)="onInputPanelClick()" [disabled]="!betPredictionData || !activeDDs?.predictiveModel?.value || !selectedMatcupId" type="button" class="btn btn-blue-gray-dark mr-1 mt-1 mt-md-0" >
+    <img class="gear-icon mr-1" src="/assets/images/icon-white-wrench.png" alt="gear-icon">
+    Inputs
+  </button>
+  <button (click)="onSaveBtnClick()" [disabled]="!betPredictionData || !activeDDs?.predictiveModel?.value || !selectedMatcupId" type="button" class="btn btn-orange-deep mt-1 mt-md-0" >
+    <i class="fa fa-refresh" aria-hidden="true"></i>
+    <span class="hidden-sm-down">Generate Bets</span>
+    <span class="hidden-md-up">Generate</span>
+  </button>
+</ng-template>
+<ng-template #helpSection>
+  <div class="heading-action-cta-wrapper">
+    <button (click)="onHowItWorksClick()" class="heading-action-cta-btn how-it-works-btn btn mr-1 mt-1 mt-md-0">
+      <img src="/assets/images/icon-video.png" alt="video"/>
+      <span class="hidden-md-down">How it works</span>
+      <span class="hidden-lg-up">How</span>
+    </button>
+  </div>
+  <div class="heading-action-cta-wrapper text-right">
+    <button (click)="onHelpBtnClick()" class="heading-action-cta-btn help-btn btn mr-1 mt-1 mt-md-0">
+      <img src="/assets/images/help.png" alt="help"/> Help
+    </button>
+  </div>
+</ng-template>
+<div class="content bet-predictor-content" [ngClass]="{'in-iframe': inIframe}">
+  <div class="container-fluid top-section clearfix">
+    <app-breadcrumb *ngIf="!inIframe"></app-breadcrumb>
+    <br [hidden]="!inIframe"/>
+    <div class="top-section-main-content d-flex justify-content-start flex-column flex-lg-row">
+      <div class="pr-0 pr-md-2 d-flex page-header-wrapper">
+        <h1 class="page-heading mt-1">NFL Bet Predictor</h1>
+        <div class="powered-by-logo">
+          <a [routerLink]="['./']" target="_blank" rel="noopener">
+            <img width="110px" src="assets/images/logo/powered_by.png" alt="powered by lineups">
+          </a>
+        </div>
+        <div class="ml-auto hidden-lg-up top-help-buttons mb-md-2">
+          <div class="float-right my-1 my-lg-0">
+            <ng-container *ngTemplateOutlet="helpSection"></ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="pr-0 pr-md-2 mt-sm-2 mt-md-0">
+        <div class="in-page-dropdown-toggle-wrapper">
+          <div class="in-page-dropdown-toggle">
+            <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="dropdownCollapsed = !dropdownCollapsed"
+                    [attr.aria-expanded]="!dropdownCollapsed" aria-controls="collapseExample">
+              <i class="fa fa-bars dropdown-icon" aria-hidden="true"></i>
+            </button>
+
+            <div class="mobile-help-button">
+              <ng-container *ngTemplateOutlet="helpSection"></ng-container>
+            </div>
+          </div>
+          <div class="in-page-dropdown-menu" [ngbCollapse]="!dropdownCollapsed" [ngClass]="{'hidden-dropdown': !dropdownCollapsed}">
+            <div class="separated-dropdowns-wrapper responsive bet-predictor-dd d-lg-inline-flex">
+              <div *ngIf="!inIframe" ngbDropdown class="ml-0 my-1 my-sm-0 mr-sm-1 separated-dropdown-menu dropdown page-heading-right-dropdown first">
+                <button type="button" class="separated-dropdown-btn btn btn-secondary" id="leagueDD" ngbDropdownToggle>
+                  <span>{{activeDDs.league.label}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu w-100" aria-labelledby="leagueDD">
+                  <div class="dropdown-btn-wrap">
+                    <a [routerLink]="['/nfl/betting-system']" routerLinkActive="dd-opt-active" class="dropdown-item px-2">NFL</a>
+                  </div>
+                  <div class="dropdown-btn-wrap">
+                    <a [routerLink]="['/mlb/betting-system']" routerLinkActive="dd-opt-active" class="dropdown-item px-2">MLB</a>
+                  </div>
+                </div>
+              </div>
+              <div ngbDropdown class="ml-0 my-1 my-sm-0 mr-sm-1 separated-dropdown-menu dropdown page-heading-right-dropdown">
+                <button type="button" class="separated-dropdown-btn btn btn-secondary" id="teamDD" [ngClass]="{'first': inIframe}" ngbDropdownToggle>
+              <span *ngIf="activeDDs.matchup">
+                <span class="hidden-lg-down" >{{activeDDs.matchup.game_info.away_team_full}}</span>
+                <span class="hidden-xl-up">{{activeDDs.matchup.game_info.away_team_full | lastTeamName}}</span>
+                at
+                <span class="hidden-lg-down" >{{activeDDs.matchup.game_info.home_team_full}}</span>
+                <span class="hidden-xl-up">{{activeDDs.matchup.game_info.home_team_full | lastTeamName}}</span>
+                <span class="game-date">
+                  (<app-general-time-format [time]="activeDDs.matchup.game_info.game_time_dt" [showDay]="false"></app-general-time-format>)
+                </span>
+                <div
+                  class="check-mark"
+                  *ngIf="
+                  !activeDDs.matchup.status ||
+                  (activeDDs.matchup.status.status !== 'In Progress' && activeDDs.matchup.status.status !== 'Final');
+                  else redCheck
+                  ">
+                  <img src="assets/images/check.svg" alt="check">
+                </div>
+              </span>
+                  <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu scrollable-menu" aria-labelledby="teamDD">
+                  <div *ngIf="activeDDs.matchup" class="dropdown-btn-wrap">
+                    <button
+                      type="button"
+                      class="dropdown-item px-2"
+                      (click)="selectMatchup(matchup)"
+                      *ngFor="let matchup of orderedMatchups"
+                      [ngClass]="{'dd-opt-active': activeDDs.matchup.game_key === matchup.game_key}"
+                    >
+                      <span class="hidden-lg-down" >{{matchup.game_info.away_team_full}}</span>
+                      <span class="hidden-xl-up">{{matchup.game_info.away_team_full | lastTeamName}}</span>
+                      at
+                      <span class="hidden-lg-down" >{{matchup.game_info.home_team_full}}</span>
+                      <span class="hidden-xl-up">{{matchup.game_info.home_team_full | lastTeamName}}</span>
+                      <span class="game-date">
+                    (<app-general-time-format [time]="matchup.game_info.game_time_dt" [showDay]="false"></app-general-time-format>)
+                  </span>
+                      <div
+                        class="check-mark"
+                        *ngIf="
+                  !matchup.status ||
+                  (matchup.status.status !== 'In Progress' && matchup.status.status !== 'Final');
+                  else redCheck
+                  ">
+                        <img src="assets/images/check.svg" alt="check">
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div ngbDropdown class="ml-0 my-1 my-sm-0 mr-sm-1 separated-dropdown-menu dropdown page-heading-right-dropdown last">
+                <button type="button" class="separated-dropdown-btn btn btn-secondary" id="modelDD" ngbDropdownToggle>
+                  <span *ngIf="activeDDs.predictiveModel">{{activeDDs.predictiveModel.label}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="modelDD">
+                  <div *ngIf="activeDDs.predictiveModel" class="dropdown-btn-wrap">
+                    <button
+                      *ngFor="let predictiveModel of predictiveModels"
+                      type="button"
+                      class="dropdown-item"
+                      (click)="onPredictiveModelSelect(predictiveModel)"
+                      [ngClass]="{'dd-opt-active': activeDDs.predictiveModel.value === predictiveModel.value}"
+                    >{{predictiveModel.label}}</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="btns-group-mobile-second-row mt-md-0 float-right">
+          <ng-container *ngTemplateOutlet="btnSection"></ng-container>
+        </div>
+      </div>
+      <div class="ml-auto hidden-md-down bottom-help-btns">
+        <div class="float-right">
+          <ng-container *ngTemplateOutlet="helpSection"></ng-container>
+        </div>
+      </div>
+      <!--<div class="ml-auto bottom-help-buttons">-->
+        <!--<div class="float-right mt-2 mb-1">-->
+          <!--<ng-container *ngTemplateOutlet="helpSection"></ng-container>-->
+        <!--</div>-->
+      <!--</div>-->
+    </div>
+    <div class="btns-group-mobile float-right">
+      <ng-container *ngTemplateOutlet="btnSection"></ng-container>
+    </div>
+  </div>
+  <div class="container-fluid bottom-section">
+    <div class="row">
+      <div class="col-12">
+        <div class="in-page-collapse-toggle alt-page">
+          <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="pageNavOpen = !pageNavOpen"
+                  [attr.aria-expanded]="!pageNavOpen" aria-controls="collapseExample">
+            Menu
+          </button>
+          <div class="btns-group-mobile float-right">
+            <ng-container *ngTemplateOutlet="btnSection"></ng-container>
+          </div>
+        </div>
+        <div class="in-page-nav-menu" [ngbCollapse]="!pageNavOpen" [ngClass]="{'hidden': !pageNavOpen}">
+          <div class="page-heading-navigation d-inline-flex justify-content-between mt-0">
+            <div class="nav-section">
+              <div class="tab-btn-wrap">
+                <a class="page-heading-nav-btn" [ngClass]="{'active': currentTab === tabs.games}" (click)="onTabClick(tabs.games)">Games</a>
+              </div>
+              <div class="tab-btn-wrap">
+                <a class="page-heading-nav-btn" [ngClass]="{'active': currentTab === tabs.lineups}" (click)="onTabClick(tabs.lineups)">Lineups</a>
+              </div>
+              <!--<div class="tab-btn-wrap">-->
+                <!--<a class="page-heading-nav-btn" [ngClass]="{'active': currentTab === tabs.playerStats}" (click)="onTabClick(tabs.playerStats)">Research</a>-->
+              <!--</div>-->
+              <!--<div class="tab-btn-wrap">-->
+              <!--<a class="page-heading-nav-btn">Data Mining</a>-->
+              <!--</div>-->
+              <div class="tab-btn-wrap">
+                <a class="page-heading-nav-btn" [ngClass]="{'active': currentTab === tabs.matchup}" (click)="onTabClick(tabs.matchup)">Matchup</a>
+              </div>
+              <!--news commented-->
+              <!--<div class="tab-btn-wrap">-->
+                <!--<a class="page-heading-nav-btn" [ngClass]="{'active': currentTab === tabs.news}" (click)="onTabClick(tabs.news)">News</a>-->
+              <!--</div>-->
+
+              <!--<div class="tab-btn-wrap">-->
+              <!--<a class="page-heading-nav-btn">Injuries</a>-->
+              <!--</div>-->
+              <div class="tab-btn-wrap">
+                <a class="page-heading-nav-btn" [ngClass]="{'active': currentTab === tabs.predictedBets}" (click)="onTabClick(tabs.predictedBets)">Predicted Bets</a>
+              </div>
+              <div class="tab-btn-wrap">
+                <a class="page-heading-nav-btn" [ngClass]="{'active': currentTab === tabs.savedBets}" (click)="onTabClick(tabs.savedBets)">Saved Bets</a>
+              </div>
+            </div>
+            <div class="align-self-center btns-group-desktop">
+              <ng-container *ngTemplateOutlet="btnSection"></ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12" [ngSwitch]="currentTab">
+        <div class="row" *ngSwitchCase="tabs.lineups">
+          <ng-container *ngIf="betPredictionData">
+            <div class="col-12 col-xl-6 mb-2 my-xl-0">
+              <app-team-lineup-table-editable
+                [teamLogo]="activeDDs.matchup.away_route"
+                [teamMoneyline]="betPredictionData.bet_predictor.away_team_moneyline"
+                [teamMoneylineDiff]="betPredictionData.bet_predictor.away_team_moneyline_diff"
+                [teamMoneylineDisplay]="betPredictionData.bet_predictor.away_team_moneyline_display"
+                [teamMoneylineDisplayConditional]="betPredictionData.bet_predictor.away_team_moneyline_display_conditional"
+                [teamName]="betPredictionData.bet_predictor.away_team_name"
+                [teamRecord]="
+                activeDDs.matchup.game_info.away_team_wins + '-' +
+                activeDDs.matchup.game_info.away_team_losses + ', ' +
+                activeDDs.matchup.game_info.away_team_rank"
+
+                [teamSpread]="betPredictionData.bet_predictor.away_team_spread"
+                [teamSpreadDiff]="betPredictionData.bet_predictor.away_team_spread_diff"
+                [teamSpreadDisplay]="betPredictionData.bet_predictor.away_team_spread_display"
+                [teamSpreadDisplayConditional]="betPredictionData.bet_predictor.away_team_spread_display_conditional"
+                [teamTotal]="betPredictionData.bet_predictor.away_team_total"
+                [teamTotalDiff]="betPredictionData.bet_predictor.away_team_total_diff"
+                [teamTotalDisplay]="betPredictionData.bet_predictor.away_team_total_display"
+                [teamTotalDisplayConditional]="betPredictionData.bet_predictor.away_team_total_display_conditional"
+                [teamWin]="betPredictionData.bet_predictor.away_team_win"
+                [teamWinDiff]="betPredictionData.bet_predictor.away_team_win_diff"
+                [teamWinDisplay]="betPredictionData.bet_predictor.away_team_win_display"
+                [teamWinDisplayConditional]="betPredictionData.bet_predictor.away_team_win_display_conditional"
+                [quarterbacks]="betPredictionData.away.qb"
+                [runningbacks]="betPredictionData.away.rb"
+                [wideReceivers]="betPredictionData.away.wr"
+                [tightEnds]="betPredictionData.away.te"
+                [teamDefense]="betPredictionData.away.def"
+                [kickers]="betPredictionData.away.k"
+                [matchup]="activeDDs.matchup"
+                team="away"
+                [betPredictionData]="betPredictionData"
+                [predictiveModelValue]="activeDDs.predictiveModel?.value"
+                [selectedMatcupUrl]="selectedMatcupId"
+              ></app-team-lineup-table-editable>
+            </div>
+            <div class="col-12 col-xl-6 mb-2 my-xl-0">
+              <app-team-lineup-table-editable
+                [teamLogo]="activeDDs.matchup.home_route"
+                [teamMoneyline]="betPredictionData.bet_predictor.home_team_moneyline"
+                [teamMoneylineDiff]="betPredictionData.bet_predictor.home_team_moneyline_diff"
+                [teamMoneylineDisplay]="betPredictionData.bet_predictor.home_team_moneyline_display"
+                [teamMoneylineDisplayConditional]="betPredictionData.bet_predictor.home_team_moneyline_display_conditional"
+                [teamName]="betPredictionData.bet_predictor.home_team_name"
+                [teamRecord]="
+                activeDDs.matchup.game_info.home_team_wins + '-' +
+                activeDDs.matchup.game_info.home_team_losses + ', ' +
+                activeDDs.matchup.game_info.home_team_rank"
+                [teamSpread]="betPredictionData.bet_predictor.home_team_spread"
+                [teamSpreadDiff]="betPredictionData.bet_predictor.home_team_spread_diff"
+                [teamSpreadDisplay]="betPredictionData.bet_predictor.home_team_spread_display"
+                [teamSpreadDisplayConditional]="betPredictionData.bet_predictor.home_team_spread_display_conditional"
+                [teamTotal]="betPredictionData.bet_predictor.home_team_total"
+                [teamTotalDiff]="betPredictionData.bet_predictor.home_team_total_diff"
+                [teamTotalDisplay]="betPredictionData.bet_predictor.home_team_total_display"
+                [teamTotalDisplayConditional]="betPredictionData.bet_predictor.home_team_total_display_conditional"
+                [teamWin]="betPredictionData.bet_predictor.home_team_win"
+                [teamWinDiff]="betPredictionData.bet_predictor.home_team_win_diff"
+                [teamWinDisplay]="betPredictionData.bet_predictor.home_team_win_display"
+                [teamWinDisplayConditional]="betPredictionData.bet_predictor.home_team_win_display_conditional"
+                [quarterbacks]="betPredictionData.home.qb"
+                [runningbacks]="betPredictionData.home.rb"
+                [wideReceivers]="betPredictionData.home.wr"
+                [tightEnds]="betPredictionData.home.te"
+                [teamDefense]="betPredictionData.home.def"
+                [kickers]="betPredictionData.home.k"
+                [matchup]="activeDDs.matchup"
+                team="home"
+                [betPredictionData]="betPredictionData"
+                [predictiveModelValue]="activeDDs.predictiveModel?.value"
+                [selectedMatcupUrl]="selectedMatcupId"
+              ></app-team-lineup-table-editable>
+            </div>
+          </ng-container>
+        </div>
+        <div class="row" *ngSwitchCase="tabs.playerStats">
+          <div class="col-12">
+            <app-player-stats></app-player-stats>
+          </div>
+        </div>
+        <div class="row" *ngSwitchCase="tabs.matchup">
+          <div class="col-12">
+            <app-matchup-details [matchupGameKey]="selectedMatcupId"></app-matchup-details>
+          </div>
+        </div>
+        <div class="row" *ngSwitchCase="tabs.news">
+          <div class="col-12">
+            <app-bet-predictor-news-tab [matchup]="activeDDs.matchup"></app-bet-predictor-news-tab>
+          </div>
+        </div>
+        <div class="row" *ngSwitchCase="tabs.games">
+          <div class="col-12">
+            <div *ngFor="let depthChart of matchups; let i = index;" class="depth-chart-wrapper">
+              <app-depth-chart-single-item
+                [index]="i"
+                [depthChart]="depthChart"
+                [notFullMatchupUrl]="true"
+                [totalItemsLength]="matchups.length"
+              ></app-depth-chart-single-item>
+            </div> <!-- End Lineups Loop -->
+          </div>
+        </div>
+      </div>
+      <div class="col-12" *ngIf="activeDDs?.predictiveModel">
+        <div class="row" [hidden]="currentTab !== tabs.predictedBets">
+          <div class="col-12">
+            <app-predicted-bets [predictiveModel]="activeDDs.predictiveModel" type="predictedBets" league="nfl" [predictedBetsData]="predictedBetsData"></app-predicted-bets>
+          </div>
+        </div>
+        <div class="row" [hidden]="currentTab !== tabs.savedBets">
+          <div class="col-12">
+            <app-predicted-bets [predictiveModel]="activeDDs.predictiveModel" type="savedBets" league="nfl" [predictedBetsData]="savedBetsData"></app-predicted-bets>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

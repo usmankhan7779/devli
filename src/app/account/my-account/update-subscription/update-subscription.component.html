@@ -1,0 +1,41 @@
+<div class="account-update-subscription account-block">
+  <h2>Update Subscription</h2>
+  <div class="liner">
+    <span>Current Plan: </span> {{currentPlan.name}} ${{currentPlan.price | number: '1.2-2'}}/{{currentPlan.duration_label}}
+  </div>
+  <div class="form-group choice-liner liner row">
+    <label class="col-sm-3 col-form-label"><strong>Change Plan to: </strong></label>
+    <div class="col-sm-9">
+      <div ngbDropdown class="ml-0 my-1 my-sm-0 mr-sm-1 separated-dropdown-menu dropdown page-heading-right-dropdown last">
+        <button type="button" class="separated-dropdown-btn btn btn-secondary w-100 text-left" id="planDD" ngbDropdownToggle>
+          <span style="font-weight: normal;">{{selectedPlan?.name ? selectedPlan.name + ' ' + (selectedPlan.price | number: '1.2-2') + '/' + selectedPlan.duration_label : 'Select a Plan' }}</span>
+          <img class="down-arrow float-right mt-2" src="/assets/images/arrow-down.png" alt="arrow-down"/>
+        </button>
+        <div class="dropdown-menu w-100" aria-labelledby="planDD">
+          <button
+            *ngFor="let plan of allPlans"
+            type="button"
+            class="dropdown-item text-normal px-1"
+            (click)="selectPlan(plan)"
+            [ngClass]="{'active': plan.stripe_id === selectedPlan?.stripe_id}"
+          >
+            {{plan.name}} ${{plan.price | number: '1.2-2'}}/{{plan.duration_label}}
+          </button>
+        </div>
+      </div>
+
+      <!--<select class="form-control form-control-md" id="plan" name="plan" required>-->
+        <!--<option value="">Daily Fantasy Yearly, $499.99/year</option>-->
+      <!--</select>-->
+    </div>
+  </div>
+  <div class="liner">
+    Once you click Save below, you will receive a prorated credit for your current plan for the remaining days of the current billing cycle. This prorated credit will be subtracted from the new cost of the plan you are changing to and you will be charged the difference. IE - if you have 5 days left on your current plan of $199.99/month and are changing your plan to a $299.99/month plan, you will be given a credit of approximately $33 and will be charged approximately $266.
+  </div>
+  <div class="button-wrapper row">
+    <div class="col-8"></div>
+    <div class="col-4">
+      <button type="button" (click)="updatePlan()" [disabled]="!this.selectedPlan" class="btn btn-lu-blue btn-full-width">Save</button>
+    </div>
+  </div>
+</div>

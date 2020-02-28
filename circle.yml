@@ -1,0 +1,40 @@
+machine:
+  node:
+    version: 8.10.0
+
+dependencies:
+  pre:
+    - sudo apt-get update
+    - sudo apt-get install python-dev
+    - sudo python -m pip install -U pip
+    # - sudo pip install --upgrade six
+    - sudo pip install --ignore-installed six
+    # - sudo pip install awsebcli
+    - sudo pip install awsebcli --upgrade --ignore-installed six
+    - sudo pip install awscli --upgrade
+
+compile:
+  override:
+          - npm run build:client
+          - npm run build:aot
+          - npm run build:server
+test:
+  pre:
+    - yarn lint
+  override:
+    - echo "test"
+
+deployment:
+  production:
+    timeout: 1200
+    branch: master
+    commands:
+      - eb deploy --profile default lineups-production-universal-v1 --timeout 15
+      - aws configure set preview.cloudfront true
+      - aws cloudfront create-invalidation --cli-input-json "{\"DistributionId\":\"E2CAIO4776LUFJ\",\"InvalidationBatch\":{\"Paths\":{\"Quantity\":1,\"Items\":[\"/*\"]},\"CallerReference\":\"$(date +%s)\"}}"
+  development:
+    timeout: 1200
+    branch: develop
+    commands:
+      - eb deploy --profile default lineups-frontend-universal-dev-v1
+

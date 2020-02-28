@@ -1,0 +1,39 @@
+<div *ngIf="!newsData" class="starting-loader">
+  <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+</div>
+<section *ngIf="newsData" id="selected-team-news" class="team-news">
+  <div class="row">
+    <div class="col-md-6 col-12">
+      <div class="team-name-label mt-4">
+        <h3>{{newsData.away.full_name}} News</h3>
+      </div>
+      <ng-container  *ngFor="let newsItem of newsData?.away_news | orderBy: 'updated': false;">
+        <app-news-item
+          class="inner-news-item"
+          [cardLeague]="'nfl'"
+          [cardTitle]="newsItem.title"
+          [cardContent]="newsItem.content"
+          [cardImageRoute]="newsData.away.logo"
+          [cardDate]="newsItem.updated"
+          [fullLogoUrl]="true"
+        ></app-news-item>
+      </ng-container>
+    </div>
+    <div class="col-md-6 col-12">
+      <div class="team-name-label mt-4">
+        <h3>{{newsData.home.full_name}} News</h3>
+      </div>
+      <ng-container  *ngFor="let newsItem of newsData?.home_news | orderBy: 'updated': false;">
+        <app-news-item
+          class="inner-news-item"
+          [cardLeague]="'nfl'"
+          [cardTitle]="newsItem.title"
+          [cardContent]="newsItem.content"
+          [cardImageRoute]="newsData.home.logo"
+          [cardDate]="newsItem.updated"
+          [fullLogoUrl]="true"
+        ></app-news-item>
+      </ng-container>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,94 @@
+<ng-template #homeLogoNameLink>
+  <div class="nowrap logo-name">
+    <a [routerLink]="startersOnly ? depthChart.team_fk.nav.team_lineup_route : depthChart.team_fk.nav.team_depth_chart_route" class="link-black" rel="nofollow">
+      <img [type]="'white'" [appSpriteImg]="'nba'" class="mr-1 logo-sm" [src]="depthChart.team_fk.nav.team_logo_white" alt="{{depthChart.team_fk.nav.team_name_full}}">
+    </a>
+    <a [routerLink]="startersOnly ? depthChart.team_fk.nav.team_lineup_route : depthChart.team_fk.nav.team_depth_chart_route" class="link-black-underline">
+      <span>{{depthChart.team_fk.nav.team_name_full}}</span>
+    </a>
+  </div>
+</ng-template>
+
+<ng-template #profileUrlTpl let-profile="profile">
+  <span class="profile-url-tpl" [ngClass]="[defineIfLongName(profile)]">
+    <span class="long-player-name">{{profile?.name}}</span>
+    <span class="short-player-name">{{profile?.short_name}}</span>
+  </span>
+</ng-template>
+
+
+<div class="multi-row-data-table-wrapper custom-width">
+  <table class="multi-row-data-table t-stripped">
+    <ng-container *ngIf="startersOnly">
+      <colgroup span="2" align="center">
+        <col span="1" class="pos-col">
+        <col span="1">
+      </colgroup>
+    </ng-container>
+    <ng-container *ngIf="!startersOnly">
+      <colgroup span="4" align="center">
+        <col span="1" class="pos-col">
+        <col span="3">
+      </colgroup>
+    </ng-container>
+    <tbody>
+    <tr class="t-header" [ngStyle]="{
+    'background-color': '#' + depthChart.team_fk.primary_hex,
+    'border-color': '#' + depthChart.team_fk.primary_hex
+    }">
+      <th [attr.colspan]="startersOnly ? 2 : 4" scope="colgroup" class="text-center">
+        <ng-container *ngTemplateOutlet="homeLogoNameLink"></ng-container>
+      </th>
+    </tr>
+    <tr class="t-sub-header">
+      <th scope="col" class="text-center">POS</th>
+      <th scope="col" class="text-center">{{startersOnly ? 'Starter' : '1'}}</th>
+      <ng-container *ngIf="!startersOnly">
+        <th scope="col" class="text-center">2</th>
+        <th scope="col" class="text-center">3</th>
+      </ng-container>
+    </tr>
+    <ng-container *ngIf="startersOnly && depthChart.starters?.length; else regularTpl;">
+      <tr *ngFor="let starter of depthChart.starters" class="t-content">
+        <td>{{starter.position}}</td>
+        <td>
+          <app-player-link [customContent]="true" [league]="'nba'" [playerUrl]="starter.profile_url">
+            <span class="profile-url-tpl">
+              <span class="long-player-name">{{starter?.name}}</span>
+              <span class="short-player-name">{{starter?.first_dot_last || starter?.short_name}}</span>
+            </span>
+          </app-player-link>
+        </td>
+      </tr>
+    </ng-container>
+    <ng-template #regularTpl>
+      <tr *ngFor="let position of posKeysArr" class="t-content">
+        <td>{{posKeys[position]}}</td>
+        <td>
+          <ng-container *ngIf="startersOnly && position === 'power_forwards' && (!depthChart[position] || !depthChart[position]['1'])">
+            <app-player-link *ngIf="depthChart['small_forwards'] && depthChart['small_forwards']['2']" [customContent]="true" [league]="'nba'" [playerUrl]="depthChart['small_forwards']['2'].profile_url">
+              <ng-template [ngTemplateOutlet]="profileUrlTpl" [ngTemplateOutletContext]="{profile: depthChart['small_forwards']['2']}"></ng-template>
+            </app-player-link>
+          </ng-container>
+          <app-player-link *ngIf="depthChart[position]['1']" [customContent]="true" [league]="'nba'" [playerUrl]="depthChart[position]['1'].profile_url">
+            <ng-template [ngTemplateOutlet]="profileUrlTpl" [ngTemplateOutletContext]="{profile: depthChart[position]['1']}"></ng-template>
+          </app-player-link>
+        </td>
+        <ng-container *ngIf="!startersOnly">
+          <td>
+            <app-player-link *ngIf="depthChart[position]['2']" [customContent]="true" [league]="'nba'" [playerUrl]="depthChart[position]['2'].profile_url">
+              <ng-template [ngTemplateOutlet]="profileUrlTpl" [ngTemplateOutletContext]="{profile: depthChart[position]['2']}"></ng-template>
+            </app-player-link>
+          </td>
+          <td>
+            <app-player-link *ngIf="depthChart[position]['3']" [customContent]="true" [league]="'nba'" [playerUrl]="depthChart[position]['3'].profile_url">
+              <ng-template [ngTemplateOutlet]="profileUrlTpl" [ngTemplateOutletContext]="{profile: depthChart[position]['3']}"></ng-template>
+            </app-player-link>
+          </td>
+        </ng-container>
+      </tr>
+    </ng-template>
+    </tbody>
+  </table>
+</div>
+

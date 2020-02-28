@@ -1,0 +1,92 @@
+<ng-template #loadingTpl>
+  <div class="starting-lineup-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<div class="container-fluid pb-3 before-text-margin" *ngIf="depthChartsList && !loading; else loadingTpl">
+  <div class="row">
+    <div class="col-12 multi-row-data-table-wrapper">
+        <table class="multi-row-data-table t-stripped" [mfRowsOnPage]="10000" [mfData]="depthChartsList" mfSortBy="team_full" mfSortOrder="asc" #teamsTable="mfDataTable">
+          <thead>
+            <tr class="t-sub-header">
+              <th class="text-center matchup-col">
+                <mfSorter by="team_full">Team</mfSorter>
+              </th>
+              <th class="text-center">
+                QB
+              </th>
+              <th class="text-center">
+                RB1
+              </th>
+              <th class="text-center">
+                RB2
+              </th>
+              <th class="text-center">
+                RB3
+              </th>
+              <th class="text-center">
+                WR1
+              </th>
+              <th class="text-center">
+                WR2
+              </th>
+              <th class="text-center">
+                WR3
+              </th>
+              <th class="text-center">
+                TE
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="t-content" *ngFor="let teamData of teamsTable.data">
+
+              <td [ngStyle]="{
+    'background-color': teamData.primary_hex,
+    'border-color': teamData.primary_hex
+    }" class="text-left pl-2">
+                <div class="nowrap">
+                  <a [routerLink]="[teamData.depth_chart_route || '']" rel="nofollow" class="link-black logo-link-container">
+                    <img [type]="'white'" [appSpriteImg]="'nfl'" class="mr-1 logo-sm" [src]="teamData.white_logo" alt="{{teamData.team_full}}"/>
+                  </a>
+                  <a style="color: white;" [routerLink]="[teamData.depth_chart_route || '']" class="link-black-underline">
+                    <span class="player-name-col-xs">
+                      {{teamData.team_name}}
+                    </span>
+                    <span class="player-name-col-lg">
+                      {{teamData.team_full}}
+                    </span>
+                  </a>
+                </div>
+                </td>
+              <td>
+                <app-player-link *ngIf="teamData.players.qb[0]; let player;" [league]="'nfl'" [playerName]="player.first_dot_last" [playerUrl]="player.profile_url"></app-player-link>
+              </td>
+              <td>
+                <app-player-link *ngIf="teamData.players.rb[0]; let player;" [league]="'nfl'" [playerName]="player.first_dot_last" [playerUrl]="player.profile_url"></app-player-link>
+              </td>
+              <td>
+                <app-player-link *ngIf="teamData.players.rb[1]; let player;" [league]="'nfl'" [playerName]="player.first_dot_last" [playerUrl]="player.profile_url"></app-player-link>
+              </td>
+              <td>
+                <app-player-link *ngIf="teamData.players.rb[2]; let player;" [league]="'nfl'" [playerName]="player.first_dot_last" [playerUrl]="player.profile_url"></app-player-link>
+              </td>
+              <td>
+                <app-player-link *ngIf="teamData.players.wr[0]; let player;" [league]="'nfl'" [playerName]="player.first_dot_last" [playerUrl]="player.profile_url"></app-player-link>
+              </td>
+              <td>
+                <app-player-link *ngIf="teamData.players.wr[1]; let player;" [league]="'nfl'" [playerName]="player.first_dot_last" [playerUrl]="player.profile_url"></app-player-link>
+              </td>
+              <td>
+                <app-player-link *ngIf="teamData.players.wr[2]; let player;" [league]="'nfl'" [playerName]="player.first_dot_last" [playerUrl]="player.profile_url"></app-player-link>
+              </td>
+              <td>
+                <app-player-link *ngIf="teamData.players.te[0]; let player;" [league]="'nfl'" [playerName]="player.first_dot_last" [playerUrl]="player.profile_url"></app-player-link>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  </div>
+</div>

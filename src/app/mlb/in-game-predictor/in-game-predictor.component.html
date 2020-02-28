@@ -1,0 +1,65 @@
+<div class="container-fluid in-game-predictor">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="d-flex flex-column flex-md-row">
+    <div class="pr-0 pr-md-2">
+      <h1 style="padding-top: 3px" class="page-heading">MLB In-Game Predictor</h1>
+    </div>
+    <div class="pr-0 pr-md-2">
+      <div class="separated-dropdowns-wrapper">
+        <div ngbDropdown class="ml-0 my-1 my-sm-0 mr-sm-1 separated-dropdown-menu dropdown page-heading-right-dropdown first">
+          <button type="button" class="separated-dropdown-btn btn btn-secondary" id="leagueDD" ngbDropdownToggle>
+            <span>Atlanta Falcons at New England Patriots</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+          </button>
+          <div class="dropdown-menu w-100" aria-labelledby="leagueDD">
+
+          </div>
+        </div>
+
+        <div ngbDropdown class="ml-0 my-1 my-sm-0 mr-sm-1 separated-dropdown-menu dropdown page-heading-right-dropdown last">
+          <button type="button" class="separated-dropdown-btn btn btn-secondary" id="modelDD" ngbDropdownToggle>
+            <span>Base Model</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+          </button>
+          <div class="dropdown-menu" aria-labelledby="modelDD">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-8">
+      <div class="in-page-collapse-toggle alt-page">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="pageNavOpen = !pageNavOpen"
+                [attr.aria-expanded]="!pageNavOpen" aria-controls="collapseExample">
+          Menu
+        </button>
+      </div>
+      <div class="in-page-nav-menu" [ngbCollapse]="!pageNavOpen" [ngClass]="{'hidden': !pageNavOpen}">
+        <div class="page-heading-navigation border-bottom">
+          <div class="nav-section">
+            <div class="tab-wrapper" *ngFor="let tabName of availableTabs; let i = index">
+              <a class="page-heading-nav-btn" (click)="onTabClick(tabName)" [ngClass]="{'active': activeTab === availableTabs[i]}">{{tabName}}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-sm-8" [ngSwitch]="activeTab">
+      <div *ngSwitchCase="availableTabs[0]">
+        <app-live-game></app-live-game>
+      </div>
+      <div *ngSwitchCase="availableTabs[1]">
+        <app-pre-game></app-pre-game>
+      </div>
+      <div *ngSwitchCase="availableTabs[2]">
+        <app-in-game-bets></app-in-game-bets>
+      </div>
+      <div *ngSwitchCase="availableTabs[3]">
+        <app-box-score></app-box-score>
+      </div>
+    </div>
+    <div></div>
+  </div>
+</div>

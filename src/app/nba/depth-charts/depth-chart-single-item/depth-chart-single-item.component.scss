@@ -1,0 +1,105 @@
+:host {
+  .pos-col {
+    width: 50px;
+  }
+  td {
+    line-height: 13px;
+    &:not(:first-child) {
+      padding-left: 15px;
+      padding-right: 15px;
+      text-align: left;
+      @media (max-width: 900px) and (min-width: 691px), (max-width: 400px) {
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+    }
+  }
+  .t-header {
+    color: white;
+  }
+
+  .logo-name {
+    a {
+      color: inherit;
+      span {
+        color: inherit;
+      }
+    }
+  }
+  span.profile-url-tpl {
+    font-size: 15px;
+    @media (max-width: 1890px) {
+      font-size: 14px;
+    }
+    .short-player-name {
+      display: none;
+    }
+    .long-player-name {
+      display: inline;
+    }
+    @media (max-width: 900px) and (min-width: 691px), (max-width: 400px) {
+      .short-player-name {
+        display: inline;
+        white-space: nowrap;
+      }
+      .long-player-name {
+        display: none;
+      }
+    }
+    &.long-team-name,
+    &.do-small-team-name {
+      @media (max-width: 1650px) {
+        .short-player-name {
+          display: inline;
+        }
+        .long-player-name {
+          display: none;
+        }
+      }
+    }
+
+    &.do-small-1-team-name,
+    &.do-small-2-team-name,
+    &.do-extra-small-team-name {
+        .short-player-name {
+          display: inline;
+        }
+        .long-player-name {
+          display: none;
+        }
+    }
+
+    &.do-small-team-name {
+      font-size: 14px;
+      @media (max-width: 1700px) {
+        font-size: 13px;
+      }
+    }
+    &.do-small-1-team-name {
+      font-size: 13px;
+      @media (max-width: 1700px) {
+        font-size: 12px;
+      }
+    }
+    &.do-small-2-team-name {
+      font-size: 12px;
+      @media (max-width: 1700px) {
+        font-size: 11px;
+      }
+    }
+    &.do-extra-small-team-name {
+      font-size: 10px;
+      @media (max-width: 1700px) {
+        font-size: 9px;
+      }
+    }
+  }
+  @media (max-width: 400px) {
+    td, .multi-row-data-table .t-content * {
+      font-size: 10px !important;
+    }
+    .pos-col {
+      width: 40px;
+    }
+  }
+}

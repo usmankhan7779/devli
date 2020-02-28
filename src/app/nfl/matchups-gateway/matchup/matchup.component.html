@@ -1,0 +1,307 @@
+<div class="row">
+  <div class="col-12">
+    <div class="matchup" [ngClass]="{'in-individual-matchup-wrapper':isIndividual, 'ind-page': isIndividualPage}">
+
+      <div *ngIf="!isIndividualPage" class="matchup-header light-bg">
+        <div class="d-flex justify-content-center">
+
+          <div class="hide-on-mobile team-section">
+            <app-status
+              (teamWasClicked)="preselectTeamSeason()"
+              [noFollow]="noFollow"
+              side="left"
+              [redirectUrl]="awayRedirectUrl"
+              matchupMedia="true"
+              [mobileTitle]="header.away.away_full_name | lastTeamName"
+              [teamName]="header.away.away_full_name"
+              record="{{header.away.away_record}}, {{header.away.away_standing}}"
+              [additionalInfo]="!isIndividual &&
+              gateway.away.spread_live && gateway.away.spread_live !== 'N/A' &&
+              gateway.away.spread_live_juice && gateway.away.spread_live_juice !== 'N/A' ?  (gateway.away.spread_live | plus) + ' (' + (gateway.away.spread_live_juice | plus) + ')'  : false"
+            >
+              <a *ngIf="awayRedirectUrl" [appPreselectNflDepthChartTeamSeason]="season" [routerLink]="'/' + awayRedirectUrl" rel="nofollow">
+                <img [type]="'white'" [appSpriteImg]="'nfl'" class="d-flex away-logo logo rounded" [src]="getLogoRoute('away')" alt="{{header.away.away_full_name}}">
+              </a>
+              <img *ngIf="!awayRedirectUrl" [type]="'white'" [appSpriteImg]="'nfl'" class="d-flex away-logo logo rounded" [src]="getLogoRoute('away')" alt="{{header.away.away_full_name}}">
+            </app-status>
+          </div>
+
+          <div class="text-center time-section">
+            <h5 *ngIf="!status || (status.status !== 'In Progress' && status.status !== 'Final')" class="mt-0">
+              <app-general-time-format [time]="header.details.game_time"></app-general-time-format>
+            </h5>
+            <p *ngIf="!status || (status.status !== 'In Progress' && status.status !== 'Final')">
+              <span class="mobile-stats stats-left" *ngIf="!isIndividual && gateway.away.spread_live != null && gateway.away.spread_live !== 'N/A'">
+                {{(gateway.away.spread_live | plus) + ' (' + (gateway.away.spread_live_juice | plus) + ')'}}
+              </span>
+              {{header.details.away_short}} @ {{header.details.home_short}}
+              <span class="mobile-stats stats-right" *ngIf="!isIndividual && gateway.home.spread_live != null && gateway.home.spread_live !== 'N/A'">
+                {{(gateway.home.spread_live | plus) + ' (' + (gateway.home.spread_live_juice | plus) + ')'}}
+              </span>
+            </p>
+            <p *ngIf="status?.status === 'In Progress'">
+              <span [ngClass]="{'font-bold': status.away_has_ball}">{{status.away}} {{status.away_score}}</span> @ <span [ngClass]="{'font-bold': status.home_has_ball}">{{status.home}} {{status.home_score}}</span>
+            </p>
+            <p *ngIf="status?.status === 'Final'">
+              <span [ngClass]="{'font-bold': status.away_score > status.home_score}">{{status.away}} {{status.away_score}}</span> @ <span [ngClass]="{'font-bold': status.home_score > status.away_score}">{{status.home}} {{status.home_score}}</span>
+            </p>
+            <p *ngIf="status?.status === 'In Progress'">
+              {{status.down}} & {{status.distance}}, Q{{status.quarter}} {{status.time_remaining}}
+            </p>
+            <p *ngIf="status?.status === 'Final'">
+              Final
+            </p>
+            <p>
+              <span *ngIf="header.details.rain && header.details.rain !== 'N/A'">
+                {{header.details.rain}}% Rain
+              </span>
+              <span *ngIf="header.details.wind && header.details.rain && header.details.rain !== 'N/A' && header.details.wind !== 'N/A'">,</span>
+              <span *ngIf="header.details.wind && header.details.wind !== 'N/A'">
+                Wind: {{header.details.wind}} MPH
+              </span>
+            </p>
+            <p *ngIf="header.details.stadium">
+              {{header.details.stadium}}
+            </p>
+            <a *ngIf="!isIndividual && gateway.matchup_route" [appNflMatchupIdPreselect]="gameId" style="font-size: 14px;" [routerLink]="['/' + gateway.matchup_route]">
+              See Matchup
+            </a>
+          </div>
+
+          <div class="hide-on-mobile team-section">
+            <app-status
+              (teamWasClicked)="preselectTeamSeason()"
+              [noFollow]="noFollow"
+              side="right"
+              [redirectUrl]="homeRedirectUrl"
+              matchupMedia="true"
+              [mobileTitle]="header.home.home_full_name | lastTeamName"
+              [teamName]="header.home.home_full_name"
+              record="{{header.home.home_record}}, {{header.home.home_standing}}"
+              [additionalInfo]="!isIndividual &&
+              gateway.home.spread_live && gateway.home.spread_live !== 'N/A' &&
+              gateway.home.spread_live_juice && gateway.home.spread_live_juice !== 'N/A' ?  (gateway.home.spread_live | plus) + ' (' + (gateway.home.spread_live_juice | plus) + ')'  : false"
+            >
+              <a *ngIf="homeRedirectUrl" [appPreselectNflDepthChartTeamSeason]="season" [routerLink]="'/' + homeRedirectUrl" rel="nofollow">
+                <img [type]="'white'" [appSpriteImg]="'nfl'" class="d-flex home-logo logo rounded" [src]="getLogoRoute('home')" alt="{{header.home.home_full_name}}">
+              </a>
+              <img *ngIf="!homeRedirectUrl" [type]="'white'" [appSpriteImg]="'nfl'" class="d-flex home-logo logo rounded" [src]="getLogoRoute('home')" alt="{{header.home.home_full_name}}">
+            </app-status>
+          </div>
+
+        </div>
+      </div>
+      <div class="multi-row-data-table-wrapper mb-0 custom-width">
+        <table class="multi-row-data-table t-stripped m-0">
+          <colgroup span="4">
+            <col span="1" class="matchup-col">
+            <col span="3" class="team-rating">
+          </colgroup>
+          <colgroup *ngIf="isIndividual" span="2"></colgroup>
+          <colgroup span="2"></colgroup>
+          <colgroup span="2"></colgroup>
+          <colgroup span="2"></colgroup>
+          <colgroup span="1"></colgroup>
+          <tbody>
+            <tr class="t-header">
+              <th colspan="4" scope="colgroup" class="text-center main-border">Game</th>
+              <th *ngIf="isIndividual" colspan="2" scope="colgroup" class="text-center main-border">Spread</th>
+              <th colspan="2" scope="colgroup" class="text-center main-border">Team Totals</th>
+              <th colspan="2" scope="colgroup" class="text-center main-border">Over/Under</th>
+              <th colspan="2" scope="colgroup" class="text-center main-border">Moneyline</th>
+              <th colspan="1" scope="colgroup" class="text-center">Charts</th>
+            </tr>
+            <tr class="t-sub-header">
+              <th class="padded">Game</th>
+              <th scope="col" class="text-center ">Team Rating</th>
+              <th scope="col" class="text-center">Defense Rating</th>
+              <th scope="col" class="text-center main-border">Offense Rating</th>
+
+              <th *ngIf="isIndividual" scope="col" class="text-center">Open</th>
+              <th *ngIf="isIndividual" scope="col" class="text-center main-border">Live</th>
+
+              <th scope="col" class="text-center">Open</th>
+              <th scope="col" class="text-center main-border">Live</th>
+
+              <th scope="col" class="text-center">Open</th>
+              <th scope="col" class="text-center main-border">Live</th>
+
+              <th scope="col" class="text-center">Open</th>
+              <th scope="col" class="text-center main-border">Live</th>
+
+              <th scope="col" class="text-center">Line Moves</th>
+            </tr>
+            <tr class="t-content">
+              <th *ngIf="awayRedirectUrl" scope="row" class="content-border">
+                <a [appPreselectNflDepthChartTeamSeason]="season" [routerLink]="'/' + awayRedirectUrl" rel="nofollow" class="link-black">
+                  <img [type]="'white'" [appSpriteImg]="'nfl'" class="mr-1 logo-sm" [src]="getLogoRoute('away')" alt="{{gateway.away.full_name}}">
+                </a>
+                <a [appPreselectNflDepthChartTeamSeason]="season" [routerLink]="'/' + awayRedirectUrl" rel="nofollow" class="link-black-underline">
+                  <span class="origin-matchup-team-name">{{gateway.away.full_name}}</span>
+                  <span class="short-matchup-team-name">{{gateway.away.full_name | lastTeamName}}</span>
+                </a>
+              </th>
+              <th *ngIf="!awayRedirectUrl" scope="row" class="content-border">
+                <img [type]="'white'" [appSpriteImg]="'nfl'" class="mr-1 logo-sm" [src]="getLogoRoute('away')" alt="{{gateway.away.full_name}}">
+                <span class="origin-matchup-team-name">{{gateway.away.full_name}}</span>
+                <span class="short-matchup-team-name">{{gateway.away.full_name | lastTeamName}}</span>
+              </th>
+              <td><app-rating [value]="gateway.away.rating"></app-rating></td>
+              <td><app-rating [value]="gateway.away.defense_rating"></app-rating></td>
+              <td class="main-border"><app-rating [value]="gateway.away.offense_rating"></app-rating></td>
+
+              <td *ngIf="isIndividual" class="spread-col">
+                <span>
+                  {{gateway.away.spread_open || gateway.away_spread_open | plus}}
+                </span>
+                <span *ngIf="gateway.away.spread_open_juice != null">
+                  ({{gateway.away.spread_open_juice | plus}})
+                </span>
+              </td>
+              <td *ngIf="isIndividual" class="main-border spread-col">
+                <span>
+                  {{gateway.away.spread_live | plus}}
+                </span>
+                <span *ngIf="gateway.away.spread_live_juice != null">
+                  ({{gateway.away.spread_live_juice | plus}})
+                </span>
+              </td>
+
+              <td>{{gateway.away.team_total_open}}</td>
+              <td class="main-border">{{gateway.away.team_total_live}}</td>
+
+              <td rowspan="2">{{gateway.over_under_open}} pts</td>
+              <td rowspan="2" class="main-border">{{gateway.over_under_live}} pts</td>
+
+              <td>{{gateway.away.moneyline_open | plus}}</td>
+              <td class="main-border">{{gateway.away.moneyline_live | plus}}</td>
+
+              <td (click)="onLineClick()" style="cursor: pointer; border-right: none;" rowspan="2">
+                <img class="img-fluid p-1" src="/assets/images/line-movement.png" alt="line-movement">
+              </td>
+            </tr>
+            <tr class="t-content">
+              <th *ngIf="homeRedirectUrl" scope="row" class="content-border">
+                <a [appPreselectNflDepthChartTeamSeason]="season" [routerLink]="'/' + homeRedirectUrl" rel="nofollow" class="link-black">
+                  <img [type]="'white'" [appSpriteImg]="'nfl'" class="mr-1 logo-sm" [src]="getLogoRoute('home')" alt="{{gateway.home.full_name}}">
+                </a>
+                <a [appPreselectNflDepthChartTeamSeason]="season" [routerLink]="'/' + homeRedirectUrl" rel="nofollow" class="link-black-underline">
+                  <span class="origin-matchup-team-name">{{gateway.home.full_name}}</span>
+                  <span class="short-matchup-team-name">{{gateway.home.full_name | lastTeamName}}</span>
+                </a>
+              </th>
+              <th *ngIf="!homeRedirectUrl" scope="row" class="content-border">
+                <img [type]="'white'" [appSpriteImg]="'nfl'" class="mr-1 logo-sm" [src]="getLogoRoute('home')" alt="{{gateway.home.full_name}}">
+                <span class="origin-matchup-team-name">{{gateway.home.full_name}}</span>
+                <span class="short-matchup-team-name">{{gateway.home.full_name | lastTeamName}}</span>
+              </th>
+              <td>
+                <app-rating [value]="gateway.home.rating"></app-rating>
+              </td>
+              <td>
+                <app-rating [value]="gateway.home.defense_rating"></app-rating>
+              </td>
+              <td class="main-border">
+                <app-rating [value]="gateway.home.offense_rating"></app-rating>
+              </td>
+
+              <td *ngIf="isIndividual" class="spread-col">
+                <span>
+                  {{gateway.home.spread_open || gateway.home_spread_open | plus}}
+                </span>
+                <span *ngIf="gateway.home.spread_open_juice != null">
+                  ({{gateway.home.spread_open_juice | plus}})
+                </span>
+              </td>
+              <td *ngIf="isIndividual" class="main-border spread-col">
+                <span>
+                  {{gateway.home.spread_live | plus}}
+                </span>
+                <span *ngIf="gateway.home.spread_live_juice != null">
+                  ({{gateway.home.spread_live_juice | plus}})
+                </span>
+              </td>
+
+              <td>{{gateway.home.team_total_open}}</td>
+              <td class="main-border">{{gateway.home.team_total_live}}</td>
+
+              <td>{{gateway.home.moneyline_open | plus}}</td>
+              <td class="main-border">{{gateway.home.moneyline_live | plus}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="chartsVisible" class="row mb-3">
+  <div class="col-12">
+    <hr>
+    <button (click)="onCloseChartsClick()" type="button" class="btn btn-default float-right text-center close-chart-btn">
+      <i class="fa fa-times" aria-hidden="true"></i>
+    </button>
+    <app-graph-table
+      [league]="'nfl'"
+      [awayLogo]="getLogoRoute('away')"
+      [homeLogo]="getLogoRoute('home')"
+      [bordered]="false"
+      [isIndividualMatchup]="isIndividual"
+      tableName="Moneyline"
+      [homeTeamName]="header.home.home_full_name"
+      [awayTeamName]="header.away.away_full_name"
+      [datasets]="lineChartData.moneyline.data"
+      [labels]="lineChartData.moneyline.dates"
+      [awayOpen]="gateway.away.moneyline_open | plus"
+      [awayCurrent]="gateway.away.moneyline_live | plus"
+      [awayChange]="gateway.away.moneyline_diff"
+      [homeOpen]="gateway.home.moneyline_open | plus"
+      [homeCurrent]="gateway.home.moneyline_live | plus"
+      [homeChange]="gateway.home.moneyline_diff"
+      [showLabels]="gateway.moneyline_history.show"
+    ></app-graph-table>
+  </div>
+  <div class="col-12">
+    <hr>
+    <app-graph-table
+      [league]="'nfl'"
+      [awayLogo]="getLogoRoute('away')"
+      [homeLogo]="getLogoRoute('home')"
+      [bordered]="false"
+      [isIndividualMatchup]="isIndividual"
+      tableName="Spread"
+      [homeTeamName]="header.home.home_full_name"
+      [awayTeamName]="header.away.away_full_name"
+      [datasets]="lineChartData.spread.data"
+      [labels]="lineChartData.spread.dates"
+      [awayOpen]="gateway.away.spread_open || gateway.away_spread_open"
+      [awayCurrent]="gateway.away.spread_live"
+      [awayChange]="gateway.away.spread_diff"
+      [homeOpen]="gateway.home.spread_open || gateway.home_spread_open"
+      [homeCurrent]="gateway.home.spread_live"
+      [homeChange]="gateway.home.spread_diff"
+      [showLabels]="gateway.spread_history.show"
+    ></app-graph-table>
+  </div>
+  <div class="col-12">
+    <hr>
+    <app-graph-table
+      [league]="'nfl'"
+      [awayLogo]="getLogoRoute('away')"
+      [homeLogo]="getLogoRoute('home')"
+      [bordered]="false"
+      [isIndividualMatchup]="isIndividual"
+      tableName="Team Totals"
+      [homeTeamName]="header.home.home_full_name"
+      [awayTeamName]="header.away.away_full_name"
+      [datasets]="lineChartData.total.data"
+      [labels]="lineChartData.total.dates"
+      [homeOpen]="gateway.home.team_total_open"
+      [homeCurrent]="gateway.home.team_total_live"
+      [homeChange]="gateway.home.team_total_diff"
+      [awayOpen]="gateway.away.team_total_open"
+      [awayCurrent]="gateway.away.team_total_live"
+      [awayChange]="gateway.away.team_total_diff"
+      [showLabels]="gateway.total_history.show"
+    ></app-graph-table>
+  </div>
+</div>

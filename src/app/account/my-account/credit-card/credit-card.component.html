@@ -1,0 +1,102 @@
+<div class="account-credit-card account-block">
+  <h2>Update Credit Card</h2>
+  <div class="panel">
+    <form name="ccPaymentForm" [formGroup]="ccPaymentForm" (ngSubmit)="onSubmitForm(ccPaymentForm)">
+      <div class="panel-body">
+        <div class="form-field">
+          <input
+            type="text"
+            formControlName="ccFullName"
+            class="form-control form-control-md hide-placeholder"
+            placeholder="Name on Card"
+            required />
+        </div>
+        <div class="form-field">
+          <input formControlName="ccNumber"
+                 (keypress)="_onlyNumbers($event)"
+                 type="tel" pattern="\d*" [maxlength]="20"
+                 class="form-control form-control-md hide-placeholder"
+                 placeholder="Card Number" required />
+        </div>
+        <div class="form-field form-group row gutter-10">
+          <label class="col-4 col-form-label">Expiration Date</label>
+          <div class="col-4">
+            <select formControlName="expMonth" class="form-select form-control form-control-md" data-name="Month" id="Month" name="Month">
+              <optgroup>
+                <option class="select-option select-option-default" [value]="null">Month</option>
+                <option class="select-option select-option-valid" *ngFor="let option of expMonthOpts" [value]="option.octalValue">{{option.octalValue}}</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="col-4">
+            <select formControlName="expYear" class="form-select form-control form-control-md" data-name="Year" id="Year" name="Year">
+              <optgroup>
+                <option class="select-option select-option-default" [value]="null">Year</option>
+                <option class="select-option select-option-valid" *ngFor="let option of expYearOpts" [value]="option">{{option}}</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+        <div class="form-field">
+          <input
+            type="text"
+            [maxlength]="4"
+            formControlName="cvvCode"
+            class="form-control form-control-md hide-placeholder"
+            placeholder="Security Code"
+            required />
+        </div>
+        <div class="form-field">
+          <input
+            type="text"
+            formControlName="ccBillingAddress"
+            class="form-control form-control-md hide-placeholder"
+            placeholder="Street Address"
+            required />
+        </div>
+        <div class="form-field">
+          <input
+            type="text"
+            formControlName="ccAptNumber"
+            class="form-control form-control-md"
+            placeholder="Apt., Suite(optional)"
+          />
+        </div>
+        <div class="form-field form-group row gutter-10">
+          <div class="col-6">
+            <input
+              type="text"
+              formControlName="ccCity"
+              class="form-control form-control-md hide-placeholder"
+              placeholder="City"
+              required />
+          </div>
+          <div class="col-3">
+            <select formControlName="ccState" class="form-select form-control form-control-md" data-name="State" id="State" name="State">
+              <optgroup class="state-abbr-dd">
+                <option class="select-option select-option-default" [value]="null">State</option>
+                <option class="select-option select-option-valid" *ngFor="let option of usStates" [value]="option.abbreviation">{{option.abbreviation}}</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="col-3">
+            <input
+              type="text"
+              formControlName="ccZipCode"
+              class="form-control form-control-md hide-placeholder"
+              placeholder="Zip"
+              required />
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <p style="color: red;">{{errorMessage}}</p>
+      </div>
+      <div class="panel-footer row">
+        <div class="col-6">
+          <button type="submit" class="btn btn-lu-blue btn-full-width">Update Credit Card</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+<div class="game-box-bg"
+[style.background-image]="backgroundImage"
+[style.padding-top]="padding"
+[style.padding-bottom]="padding"></div>
+<div class="game-box" #gameBox>
+  <ng-content select="app-fireworks"></ng-content>
+  <div class="content">
+    <ng-content></ng-content>
+  </div>
+</div>

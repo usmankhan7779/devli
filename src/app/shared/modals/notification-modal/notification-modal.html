@@ -1,0 +1,18 @@
+<div class="modal-header" [ngClass]="{'no-border no-padding': !header}">
+  <h4 *ngIf="header" class="modal-title">{{header}}</h4>
+  <div class="header-actions">
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-12">
+      <p class="m-0">{{text}}</p>
+    </div>
+  </div>
+</div>
+<div *ngIf="btn" class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="activeModal.close()">{{btn}}</button>
+</div>

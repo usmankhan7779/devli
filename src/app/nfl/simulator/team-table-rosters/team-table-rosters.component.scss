@@ -1,0 +1,56 @@
+.team-table-rosters {
+  background: #fff;
+  padding-top: 1rem;
+}
+
+.team-info {
+  flex-flow: row nowrap;
+
+  .team-flag {
+    text-align: center;
+    padding: 0 1rem;
+
+    @media (max-width: 900px) {
+      text-align: left;
+    }
+
+    ::ng-deep .app-status {
+      display: inline-block;
+      margin-left: auto;
+      text-align: left;
+
+      .status-display {
+        display: none !important;
+      }
+    }
+
+    .logo {
+      width: 60px;
+      height: 60px;
+      position: relative;
+      top: -4px;
+    }
+  }
+}
+
+.table-wrapper {
+  overflow: auto;
+  overflow-y: hidden;
+}
+
+.sub-table:not(:last-child) {
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #e1e1e1;
+}
+
+table {
+  min-width: 800px;
+
+  th {
+    padding: 0.2rem 1rem;
+  }
+
+  td {
+    padding: 0.2rem 1rem;
+  }
+}

@@ -1,0 +1,59 @@
+User-Agent: *
+Disallow:
+Disallow: /cgi-bin
+Disallow: /ads.txt
+Disallow: */wp-admin
+Disallow: */wp-content/cache
+Disallow: */wp-content/upgrade/
+Disallow: */wp-json/
+Disallow: */trackback
+Disallow: */comments
+Disallow: */feed
+Disallow: */trackback
+Disallow: *?replytocom
+Disallow: */?s=
+Disallow: */xmlrpc.php
+Disallow: *?wpmp_switcher=desktop
+
+
+User-agent: Googlebot
+Disallow:
+
+User-agent: Googlebot-Image
+Disallow:
+
+User-agent: Googlebot-Video
+Disallow:
+
+User-agent: Googlebot-News
+Disallow:
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: SemrushBot-SA
+Disallow: /
+
+User-agent: Rogerbot
+Disallow: /
+
+User-agent: Exabot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: Dotbot
+Disallow: /
+
+User-agent: Gigabot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: Ahrefs
+Disallow: /
+
+
+Sitemap: https://www.lineups.com/sitemap.xml

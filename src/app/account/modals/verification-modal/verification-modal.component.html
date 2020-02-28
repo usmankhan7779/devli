@@ -1,0 +1,49 @@
+<div class="auth-verification-modal lu-modal">
+  <div class="modal-header no-border">
+    <div *ngIf="!blockUserActivity" class="header-actions">
+      <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+
+  <h1 class="page-heading">Check Your Email</h1>
+  <div class="modal-tagline">
+    We sent a six-digit confirmation code to {{ email }}.<br/>
+    It will expire shortly, so enter your code soon
+  </div>
+  <form (ngSubmit)="submit()" name="code" ngNativeValidate>
+    <div class="modal-controls">
+      <div class="alert alert-danger" role="alert" [hidden]="!errorMessage">
+        {{ errorMessage }}
+      </div>
+      <div class="form-field">
+        <div class="bold-label">
+          Your Confirmation code
+        </div>
+        <div class="code-input-pack">
+          <input type="text" name="digit_1" [(ngModel)]="d1" class="code-input" maxlength="1"
+            required (change)="codeChanged($event)" (paste)="onPaste($event)" />
+          <input type="text" name="digit_2" [(ngModel)]="d2" class="code-input" maxlength="1"
+            required (change)="codeChanged($event)" (paste)="onPaste($event)"/>
+          <input type="text" name="digit_3" [(ngModel)]="d3" class="code-input" maxlength="1"
+            required (change)="codeChanged($event)" (paste)="onPaste($event)"/>
+          <span class="divider">-</span>
+          <input type="text" name="digit_4" [(ngModel)]="d4" class="code-input" maxlength="1"
+            required (change)="codeChanged($event)" (paste)="onPaste($event)"/>
+          <input type="text" name="digit_5" [(ngModel)]="d5" class="code-input" maxlength="1"
+            required (change)="codeChanged($event)" (paste)="onPaste($event)"/>
+          <input type="text" name="digit_6" [(ngModel)]="d6" class="code-input" maxlength="1"
+            required (change)="codeChanged($event)" (paste)="onPaste($event)"/>
+        </div>
+      </div>
+    </div>
+    <div class="modal-buttons">
+      <button type="submit" class="btn btn-big btn-lu-blue btn-full-width">Submit</button>
+    </div>
+  </form>
+  <div class="modal-link">
+    Keep this window open while checking for your code.<br/>
+    Can't find it? Try your SPAM folder.
+  </div>
+</div>

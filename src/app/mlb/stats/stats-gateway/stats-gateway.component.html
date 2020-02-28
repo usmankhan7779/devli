@@ -1,0 +1,60 @@
+<div class="container-fluid  pb-5">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+    <div class="col-12">
+      <div #containerEl class="d-flex flex-wrap after-heading-margin">
+        <div>
+          <h1 #headingEl class="page-heading mb-0">{{pageTitle}}</h1>
+        </div>
+        <app-twitter-follow-btn [textElement]="headingEl" [containerElement]="containerEl"></app-twitter-follow-btn>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div *ngIf="data.intro_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <p class="site-pages-content" [innerHtml]="data.intro_paragraph | safeHtml"></p>
+    </div>
+    <div class="col-12">
+      <div class="in-page-dropdown-toggle">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="dropdownCollapsed = !dropdownCollapsed"
+                [attr.aria-expanded]="!dropdownCollapsed" aria-controls="collapseExample">
+          <i class="fa fa-bars dropdown-icon" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="in-page-dropdown-menu" [ngbCollapse]="!dropdownCollapsed" [ngClass]="{'hidden-dropdown': !dropdownCollapsed}">
+        <div class="first-section-nav d-flex">
+          <div class="grouped-dropdown-wrapper btn-group">
+            <app-dropdown
+              [ddData]="ddData"
+              prop="seasons"
+              (onLinkClick)="onLinkDdClick($event)"
+              [className]="'first'"
+              [linksOnly]="true"
+            ></app-dropdown>
+            <app-dropdown
+              [ddData]="ddData"
+              prop="leagueDD"
+              (onLinkClick)="onLinkDdClick($event)"
+              [linksOnly]="true"
+            ></app-dropdown>
+            <app-dropdown
+              [ddData]="ddData"
+              prop="leadersDD"
+              (onLinkClick)="onLinkDdClick($event)"
+              [className]="'last'"
+              [linksOnly]="true"
+            ></app-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12" *ngFor="let row of data.subheadings">
+      <h2 class="page-heading-two">{{row.title}}</h2>
+      <div class="d-flex flex-wrap leader-list-wrapper">
+        <div *ngFor="let itemName of row.api_keys; let index = index;" class="leader-list-item-container">
+          <app-stats-leader-list (onViewMoreClick)="onViewMoreClick($event)" [league]="'mlb'" [leadersData]="data[itemName]" [cardHeader]="row.sub_titles[index]"></app-stats-leader-list>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,119 @@
+.horizontal-table-wrapper.three-col {
+  width: calc(100% - 220px);
+}
+.horizontal-table-wrapper.four-col {
+  width: calc(100% - 250px);
+}
+.stat-wrapper {
+  padding: 0;
+}
+.team-lineup-heading-right {
+  font-size: 14px;
+}
+.in-page-collapse-toggle {
+  top: -42px;
+  .collapse-page-nav-btn {
+    padding: 6px;
+    font-size: 14px;
+  }
+}
+.table-sect-wrap {
+  .static-table {
+    width: 165px;
+    &.three-col {
+      width: auto;
+      max-width: 220px;
+    }
+    &.four-col {
+      width: auto;
+      max-width: 250px;
+    }
+    .static-row-header {
+      padding: 10px 6px;
+    }
+    .static-sub-header {
+      th {
+        &.player-name-col,
+        &.position-col {
+          font-size: 11px;
+          padding: 11px 6px;
+          text-align: center;
+        }
+      }
+    }
+    th {
+      font-size: 11px;
+      padding: 6px 0;
+      &.player-name-col,
+      &.position-col {
+        font-size: 11px;
+        padding: 20px 6px 19px;
+        text-align: center;
+      }
+    }
+    .player-name-col {
+      min-width: 115px;
+      overflow: hidden;
+      //word-break: break-word; /* for breaking longer text */
+      word-break: break-all;
+      //vertical-align: middle;
+    }
+    .position-col {
+      max-width: 45px;
+      min-width: 45px;
+    }
+    td {
+      height: 54px;
+    }
+  }
+}
+.multi-row-static-table {
+  width: 165px;
+  .static-row-header {
+    padding: 10px 6px;
+  }
+  .static-sub-header {
+    th {
+      &.player-name-col,
+      &.position-col {
+        font-size: 11px;
+        padding: 11px 6px;
+        text-align: center;
+      }
+    }
+  }
+  th {
+    font-size: 11px;
+    padding: 6px 0;
+    &.player-name-col,
+    &.position-col {
+      font-size: 11px;
+      padding: 20px 6px 19px;
+      text-align: center;
+    }
+  }
+  .player-name-col {
+    max-width: 100px;
+    overflow: hidden;
+    //word-break: break-word; /* for breaking longer text */
+    word-break: break-all;
+  }
+  .position-col {
+
+  }
+  td {
+    height: 54px;
+  }
+}
+.horizontal-table-wrapper {
+  width: calc(100% - 165px);
+  th {
+    font-size: 11px;
+  }
+  td {
+    height: 54px;
+  }
+  .t-single-header {
+    height: 57px;
+  }
+}

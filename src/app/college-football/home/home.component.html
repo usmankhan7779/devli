@@ -1,0 +1,74 @@
+<ng-template #loading>
+  <div class="starting-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+<div *ngIf="homeData; else loading" class="container-fluid pb-3 pb-sm-5">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+    <div class="col-12">
+      <h1 class="page-heading">{{homeData.heading}}</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div *ngIf="isDefaultYear && homeData.intro_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <p class="site-pages-content" [innerHtml]="homeData.intro_paragraph | safeHtml"></p>
+    </div>
+    <div class="col-12">
+      <div class="grouped-dropdown-wrapper btn-group mb-3">
+        <div ngbDropdown class="grouped-dropdown dropdown">
+          <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="main-dropdown" ngbDropdownToggle>
+            <span class="pr-0 pr-sm-3">{{homeData.year}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+          </button>
+          <div class="dropdown-menu" aria-labelledby="main-dropdown">
+            <div *ngFor="let season of homeData.seasons_dropdown;">
+              <button
+                [ngClass]="{'dd-active-btn': homeData.year === season.year}"
+                (click)="onYearDdChange(season)"
+                class="dropdown-item">
+                <span>{{season.name}}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-9">
+
+      <div *ngIf="homeData?.top_links?.length" class="row">
+        <div class="col-12">
+          <div class="row top-targets-links">
+            <div *ngFor="let statLink of homeData.top_links" class="col-12 col-md-6 col-lg-6 col-xl-3 mb-3">
+              <h5 *ngIf="statLink.header_url && statLink.header" class="mb-3 text-center text-md-left mt-md-0">
+                  <a class="link-black-underline" [routerLink]="statLink.header_url">
+                    <strong>
+                      {{statLink.header}}
+                    </strong>
+                  </a>
+              </h5>
+              <div class="row">
+                <div *ngFor="let subLink of statLink.contents" class="col-12 text-center text-md-left">
+                  <a *ngIf="subLink.text" class="link-black-underline mobile-margin" [routerLink]="[subLink.url]">{{subLink.text}}</a>
+                  <h5 *ngIf="subLink.header" class="mb-3 text-center text-md-left mt-md-0">
+                    <a class="link-black-underline" [routerLink]="[subLink.url]">
+                      <strong>{{subLink.header}}</strong>
+                    </a>
+                  </h5>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 border-bottom mb-4 mt-1"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div *ngIf="homeData.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="homeData.bottom_header" class="page-heading-two">
+        {{homeData.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="homeData.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+</div>

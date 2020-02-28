@@ -1,0 +1,380 @@
+<ng-template #csvViewStats>
+  <div class="col-12">
+    <p class="csv-text">
+      {{csvTextStats}}
+    </p>
+  </div>
+</ng-template>
+<ng-template #csvViewLogs>
+  <div class="col-12">
+    <p class="csv-text">
+      {{csvTextLogs}}
+    </p>
+  </div>
+</ng-template>
+
+
+<ng-template #seasonDD let-last="last">
+  <div ngbDropdown class="grouped-dropdown dropdown">
+    <button type="button" class="grouped-dropdown-btn btn btn-secondary first px-3" [ngClass]="{'last': last}" id="season-dd" ngbDropdownToggle>
+      <span class="pr-0 pr-sm-3">{{activeYear}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down"/>
+    </button>
+    <div class="dropdown-menu" aria-labelledby="season-dd">
+      <div *ngFor="let season of playerData.seasons_dropdown;">
+        <button
+          [ngClass]="{'dd-active-btn': activeYear === season.year}"
+          (click)="onYearDdChange(season)"
+          class="dropdown-item">
+          <span>{{season.name}}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div class="container-fluid individual-matchup pb-2">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+    <div class="col-12 col-lg-8">
+      <div class="d-flex player-page-header flex-column flex-wrap">
+        <div class="d-flex flex-column flex-sm-row">
+          <div class="align-items-stretch d-flex">
+            <div class="d-inline-block logo-small mr-2">
+              <app-fallback-img [alt]="playerData.full_name" [photoUrl]="playerData.photo_url"></app-fallback-img>
+            </div>
+            <h1 class="m-0 align-self-center player-name">{{playerData.heading || playerData.full_name}}</h1>
+          </div>
+          <div class="ml-sm-auto mt-sm-0 hidden-xs-down">
+            <img *ngIf="playerData.team_logo" [type]="'white'" [appSpriteImg]="'mlb'" class="logo-small" [src]="playerData.team_logo_white" alt="{{playerData.full_team_name}}">
+          </div>
+        </div>
+        <div class="d-flex flex-column flex-sm-row flex-wrap align-items-sm-center player-stats mt-2">
+          <div>
+            <strong>Player Rating:</strong>
+            <app-rating [value]="playerData.lineups_rating"></app-rating>
+          </div>
+          <div>
+            <strong>Team:</strong> <a class="link-black-underline" [routerLink]="'/' + (playerData.team_lineups_route || '')">{{playerData.full_team_name}}</a>
+          </div>
+          <div>
+            <strong>Position:</strong> {{playerData.position}}
+          </div>
+          <div>
+            <strong>Number:</strong> {{playerData.jersey}}
+          </div>
+          <div>
+            <strong>Experience:</strong> {{playerData.experience}}
+          </div>
+          <div>
+            <strong>Age:</strong> {{playerData.age}}
+          </div>
+          <div>
+            <strong>Height:</strong> {{playerData.height_formatted}}
+          </div>
+          <div>
+            <strong>Weight:</strong> {{playerData.weight}} lbs
+          </div>
+          <!--<div *ngIf="playerData.college">-->
+            <!--<strong>College:</strong> {{playerData.college}}-->
+          <!--</div>-->
+          <div *ngIf="playerData.salary">
+            <strong>Salary:</strong> {{playerData.salary}}
+          </div>
+        </div>
+      </div>
+      <div *ngIf="playerData.intro_paragraph" class="hidden-md-down">
+        <p class="site-pages-content before-text-margin mb-0" [innerHtml]="playerData.intro_paragraph | safeHtml"></p>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component [league]="'mlb'"></app-ad-component>
+    </div>
+  </div>
+  <div *ngIf="!ddData || !playerData">
+    <p class="unavailable-stats">Stats unavailable for this player.</p>
+  </div>
+  <div *ngIf="ddData && playerData" class="row">
+    <div *ngIf="playerData.intro_paragraph" class="col-12 flex-last flex-sm-unordered mt-3 hidden-lg-up">
+      <p class="site-pages-content m-0" [innerHtml]="playerData.intro_paragraph | safeHtml"></p>
+    </div>
+    <div class="col-12">
+      <div class="d-flex flex-sm-row flex-column">
+        <div>
+          <div class="grouped-dropdown-wrapper tabs-dd btn-group hidden-sm-up mt-3">
+            <ng-template [ngTemplateOutlet]="seasonDD" [ngTemplateOutletContext]="{last: false}"></ng-template>
+            <app-dropdown
+              [ddData]="ddData"
+              [filterItems]="onDropdownChange.bind(this)"
+              prop="tabs"
+              className="big-dd first last"
+              isSingleSelect="true"
+            ></app-dropdown>
+          </div>
+
+          <div class="toggles-in-page-wrapper hidden-xs-down">
+            <div class="grouped-dropdown-wrapper my-0 not-mobile btn-group mr-3">
+              <ng-template [ngTemplateOutlet]="seasonDD" [ngTemplateOutletContext]="{last: true}"></ng-template>
+            </div>
+            <div class="toggles-in-page-group btn-group toggles-group">
+              <button *ngFor="let tab of ddData.tabs; let first = first; let last = last;"
+                      (click)="onButtonGroupClick(tab.prop);"
+                      class="toggle-in-page first" [ngClass]="{'active': tab.selected, 'first': first, 'last': last}">{{tab.name}}</button>
+            </div>
+          </div>
+        </div>
+        <div class="align-self-end ml-auto mt-2 mt-sm-0 hidden-xs-down">
+          <button type="button" (click)="onCsvShow()" class="btn btn-primary csv-button">Show {{csvShowed ? 'Table' : ' CSV'}}</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div *ngIf="ddData.activeTab === ddData.tabs[0].prop || ddData.activeTab === ddData.tabs[1].prop" class="row">
+        <div class="col-12">
+          <h2 class="page-heading-two">
+            Player Stats
+          </h2>
+        </div>
+        <div class="col-12">
+
+          <div class="grouped-dropdown-wrapper btn-group">
+            <app-dropdown
+              [ddData]="ddData"
+              [filterItems]="onDropdownChange.bind(this)"
+              prop="batter"
+              [className]="'big-dd first'"
+              isSingleSelect="true"
+            ></app-dropdown>
+            <app-dropdown
+              [ddData]="ddData"
+              [filterItems]="onDropdownChange.bind(this)"
+              prop="main"
+              [className]="'big-dd' + (ddData.activeMain !== 'fantasy' ? '' : ' last')"
+              isSingleSelect="true"
+            ></app-dropdown>
+            <app-dropdown
+              *ngIf="ddData.activeMain !== 'fantasy'"
+              [ddData]="ddData"
+              [filterItems]="onDropdownChange.bind(this)"
+              prop="secondary"
+              className="big-dd last"
+              isSingleSelect="true"
+            ></app-dropdown>
+          </div>
+        </div>
+        <div *ngIf="!csvShowed; else csvViewStats" class="col-12">
+          <div class="multi-row-data-table-wrapper">
+            <table class="multi-row-data-table t-stripped">
+              <thead>
+              <ng-container [ngSwitch]="ddData.activeMain">
+                <tr  *ngSwitchCase="'basic'" class="t-sub-header">
+                  <th class="text-center" *ngFor="let basicHeader of playerData['basic_' + ddData.activeBatter + '_header_order']">
+                    {{playerData['basic_' + ddData.activeBatter + '_header_map'][basicHeader]}}
+                  </th>
+                </tr>
+                <tr *ngSwitchCase="'advanced'" class="t-sub-header">
+                  <th class="text-center" *ngFor="let advancedHeader of playerData['advanced_' + ddData.activeBatter + '_header_order']">
+                    {{playerData['advanced_' + ddData.activeBatter + '_header_map'][advancedHeader]}}
+                  </th>
+                </tr>
+                <tr *ngSwitchCase="'fantasy'" class="t-sub-header">
+                  <th class="text-center" *ngFor="let fantasyHeader of playerData.fantasy_header_order">
+                    {{playerData.fantasy_header_map[fantasyHeader]}}
+                  </th>
+                </tr>
+              </ng-container>
+              </thead>
+              <tbody>
+              <ng-container [ngSwitch]="ddData.activeMain">
+                <tr *ngSwitchCase="'basic'" class="t-content">
+                  <td *ngFor="let basicHeader of playerData['basic_' + ddData.activeBatter + '_header_order']">
+                    {{playerData[ddData.activeBatter + '_stats'][ddData.activeMain][ddData.activeSecondary][basicHeader] | showPercentage : basicHeader}}
+                  </td>
+                </tr>
+                <tr *ngSwitchCase="'advanced'" class="t-content">
+                  <td *ngFor="let advancedHeader of playerData['advanced_' + ddData.activeBatter + '_header_order']">
+                    {{playerData[ddData.activeBatter + '_stats'][ddData.activeMain][ddData.activeSecondary][advancedHeader] | showPercentage : advancedHeader}}
+                  </td>
+                </tr>
+                <tr *ngSwitchCase="'fantasy'" class="t-content">
+                  <td *ngFor="let fantasyHeader of playerData.fantasy_header_order">
+                    {{playerData[ddData.activeBatter + '_stats'][ddData.activeMain][fantasyHeader] | showPercentage : fantasyHeader}}
+                  </td>
+                </tr>
+              </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="ddData.activeTab === ddData.tabs[0].prop || ddData.activeTab === ddData.tabs[2].prop" class="row">
+        <div class="col-12">
+          <h2 class="page-heading-two">
+            Game Logs
+          </h2>
+        </div>
+        <div class="col-12">
+          <div class="grouped-dropdown-wrapper btn-group">
+            <app-dropdown
+              [ddData]="ddData"
+              [filterItems]="onDropdownChange.bind(this)"
+              prop="batterGame"
+              [className]="'big-dd first'"
+              isSingleSelect="true"
+            ></app-dropdown>
+            <app-dropdown
+              [ddData]="ddData"
+              [filterItems]="onDropdownChange.bind(this)"
+              prop="mainGame"
+              className="big-dd last"
+              isSingleSelect="true"
+            ></app-dropdown>
+          </div>
+        </div>
+        <div *ngIf="!csvShowed; else csvViewLogs" class="col-12 table-sect-wrap">
+          <!-- Static Positioned Tabled -->
+          <div class="static-table-wrapper">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="playerData[ddData.activeBatterGame + '_game_logs']"
+              [(mfSortBy)]="sortBy"
+              [(mfSortOrder)]="sortOrder"
+              (mfSortByChange)="onSortBy($event)"
+              (mfSortOrderChange)="onSortOrder($event)"
+              #staticGameLogs="mfDataTable"
+              class="static-table stats-table table table-bordered multi-table-static">
+              <thead>
+              <tr class="t-sub-header static-sub-header">
+                <th width="140px">
+                  <mfSorter by="game">Game</mfSorter>
+                </th>
+                <th width="100px">
+                  <mfSorter by="game_score">Score</mfSorter>
+                </th>
+              </tr>
+              </thead>
+              <tbody class="static-table-body">
+              <tr *ngFor="let gameLog of staticGameLogs.data">
+                <td class="show-border">
+                  {{gameLog.date_time | amTimeZone | amDateFormat: 'M/D'}}
+                  {{gameLog.home_or_away}}
+                  <a [routerLink]="gameLog.opponent_lineup_route || ''" class="link-black-underline">
+                    {{gameLog.opponent}}
+                  </a>
+                </td>
+                <td class="text-center">
+                  {{gameLog.game_score}}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Horizontal Scrolling-->
+          <div class="horizontal-table-wrapper">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="playerData[ddData.activeBatterGame + '_game_logs']"
+              [(mfSortBy)]="sortBy"
+              [(mfSortOrder)]="sortOrder"
+              (mfSortByChange)="onSortBy($event)"
+              (mfSortOrderChange)="onSortOrder($event)"
+              #gameLogs="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <thead>
+              <tr class="t-sub-header">
+                <th class="text-left px-3 inner-col-switch" width="180px">
+                  <mfSorter by="game">Game</mfSorter>
+                </th>
+                <th class="text-center inner-col-switch" width="100px">
+                  <mfSorter by="game_score">Score</mfSorter>
+                </th>
+                <ng-container [ngSwitch]="ddData.activeMainGame">
+                  <ng-container  *ngSwitchCase="'basic'">
+                    <th class="text-center" *ngFor="let basicHeader of playerData['game_logs_basic_'+ ddData.activeBatterGame +'_header_order']">
+                      <mfSorter [by]="ddData.activeMainGame + '.' + basicHeader">
+                        {{playerData['game_logs_basic_'+ ddData.activeBatterGame +'_header_map'][basicHeader]}}
+                      </mfSorter>
+                    </th>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'fantasy'">
+                    <th class="text-center" *ngFor="let fantasyHeader of playerData.game_logs_fantasy_header_order">
+                      <mfSorter [by]="ddData.activeMainGame + '.' + fantasyHeader">
+                        {{playerData.game_logs_fantasy_header_map[fantasyHeader]}}
+                      </mfSorter>
+                    </th>
+                  </ng-container>
+                </ng-container>
+              </tr>
+              </thead>
+              <tbody>
+              <ng-container [ngSwitch]="ddData.activeMainGame">
+                <ng-container *ngSwitchCase="'basic'">
+                  <tr *ngFor="let gameLog of gameLogs.data" class="t-content">
+                    <td class="inner-col-switch text-left px-3">
+                      {{gameLog.date_time | amTimeZone | amDateFormat: 'M/D'}}
+                      {{gameLog.home_or_away}}
+                      <a [routerLink]="gameLog.opponent_lineup_route || ''" class="link-black-underline">
+                        {{gameLog.opponent}}
+                      </a>
+                    </td>
+                    <td class="inner-col-switch">{{gameLog.game_score}}</td>
+                    <td *ngFor="let basicHeader of playerData['game_logs_basic_'+ ddData.activeBatterGame +'_header_order']">
+                      {{gameLog[ddData.activeMainGame][basicHeader] | showPercentage : basicHeader}}
+                    </td>
+                  </tr>
+                </ng-container>
+                <ng-container *ngSwitchCase="'fantasy'">
+                  <tr *ngFor="let gameLog of gameLogs.data" class="t-content">
+                    <td class="inner-col-switch text-left px-3">
+                      {{gameLog.date_time | amTimeZone | amDateFormat: 'M/D'}}
+                      {{gameLog.home_or_away}}
+                      <a [routerLink]="gameLog.opponent_lineup_route || ''" class="link-black-underline">
+                        {{gameLog.opponent}}
+                      </a>
+                    </td>
+                    <td class="inner-col-switch">{{gameLog.game_score}}</td>
+                    <td *ngFor="let fantasyHeader of playerData.game_logs_fantasy_header_order">
+                      {{gameLog[ddData.activeMainGame][fantasyHeader] | showPercentage : fantasyHeader}}
+                    </td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!--<div *ngIf="ddData.activeTab === ddData.tabs[0].prop || ddData.activeTab === ddData.tabs[3].prop" class="row">-->
+        <!--<div class="col-12">-->
+          <!--<h2 class="page-heading-two">-->
+            <!--News-->
+          <!--</h2>-->
+        <!--</div>-->
+        <!--<ng-template #noNews>-->
+          <!--<div class="col-12 mb-4">-->
+            <!--<div>-->
+              <!--No News Provided-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</ng-template>-->
+        <!--<div class="col-12 col-md-6" *ngIf="playerData.news.length; else noNews">-->
+          <!--<ng-container  *ngFor="let newsItem of playerData.news | orderBy: 'updated': false;">-->
+            <!--<app-news-item-->
+              <!--class="inner-news-item"-->
+              <!--[cardLeague]="'mlb'"-->
+              <!--[cardTitle]="newsItem.title"-->
+              <!--[cardContent]="newsItem.content"-->
+              <!--[cardImageRoute]="newsItem.logo"-->
+              <!--[cardDate]="newsItem.updated"-->
+              <!--[fullLogoUrl]="true"-->
+              <!--[cardPreOpened]="false"-->
+            <!--&gt;</app-news-item>-->
+          <!--</ng-container>-->
+        <!--</div>-->
+      <!--</div>-->
+    </div>
+    <div *ngIf="playerData.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="playerData.bottom_header" class="page-heading-two">
+        {{playerData.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="playerData.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+</div>

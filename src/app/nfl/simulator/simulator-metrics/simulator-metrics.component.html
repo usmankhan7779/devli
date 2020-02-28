@@ -1,0 +1,137 @@
+<div class="simulator-metrics" *ngIf="awayTeamDropdowns && homeTeamDropdowns">
+  <div class="metrics-content-wrapper">
+    <div class="left-side-dds">
+      <div class="grouped-dropdown-wrapper mb-0 btn-group not-mobile">
+        <div ngbDropdown class="grouped-dropdown dropdown">
+          <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="results-dropdown" ngbDropdownToggle>
+            <span class="pr-0 pr-sm-3">{{activeView | capitalizeFirst}}</span>
+            <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+          </button>
+          <div class="dropdown-menu" aria-labelledby="results-dropdown">
+            <div *ngFor="let view of availableViews;">
+              <button
+              [ngClass]="{'dd-active-btn': activeView === view}"
+              (click)="onViewChange(view)"
+              class="dropdown-item">
+              <span>{{view | capitalizeFirst}}</span>
+              </button>
+            </div>
+            <div>
+              <button
+              (click)="onWatchGameClick()"
+              class="dropdown-item">
+              <span>Animation</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--<div ngbDropdown class="grouped-dropdown dropdown readonly-dd">-->
+          <!--<button type="button" class="grouped-dropdown-btn btn btn-secondary last px-3" id="model-dropdown" ngbDropdownToggle>-->
+            <!--<span class="pr-0 pr-sm-3">Model</span>-->
+          <!--</button>-->
+          <!--<div class="dropdown-menu" aria-labelledby="model-dropdown">-->
+            <!--&lt;!&ndash;<div *ngFor="let season of seasons_dropdown;">&ndash;&gt;-->
+            <!--&lt;!&ndash;<button&ndash;&gt;-->
+            <!--&lt;!&ndash;[ngClass]="{'dd-active-btn': activeYear === season.year}"&ndash;&gt;-->
+            <!--&lt;!&ndash;(click)="onYearDdChange(season)"&ndash;&gt;-->
+            <!--&lt;!&ndash;class="dropdown-item">&ndash;&gt;-->
+            <!--&lt;!&ndash;<span>{{season.name}}</span>&ndash;&gt;-->
+            <!--&lt;!&ndash;</button>&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+          <!--</div>-->
+        <!--</div>-->
+      </div>
+    </div>
+    <div class="team-selectors align-self-center">
+        <div class="away-team">
+          <!--<span>Away</span>-->
+          <div class="grouped-dropdown-wrapper mb-0 btn-group">
+            <app-dropdown
+              [ddData]="awayTeamDropdowns"
+              [filterItems]="onDropdownChange.bind(this)"
+              prop="seasons"
+              name="Season"
+              readonly="true"
+              isSingleSelect="true"
+              className="first"
+            ></app-dropdown>
+            <app-dropdown
+              [ddData]="awayTeamDropdowns"
+              [filterItems]="onDropdownChange.bind(this)"
+              prop="teams"
+              name="Team"
+              className="last"
+              [showTeamLogo]="true"
+              [teamLogoType]="'white'"
+              [league]="'nfl'"
+              [allowHiddenFiltering]="true"
+              [isSingleSelect]="true"
+            ></app-dropdown>
+            <!--<app-dropdown-->
+            <!--[ddData]="awayTeamDropdowns"-->
+            <!--[filterItems]="onDropdownChange.bind(this)"-->
+            <!--prop="tactic"-->
+            <!--name="Tactic"-->
+            <!--isSingleSelect="true"-->
+            <!--className="last"-->
+            <!--&gt;</app-dropdown>-->
+          </div>
+        </div>
+        <div class="txt-holder align-self-center">
+          <span>at</span>
+        </div>
+        <div class="home-team">
+          <!--<span>Home</span>-->
+          <div class="grouped-dropdown-wrapper mb-0 btn-group">
+            <app-dropdown
+              [ddData]="homeTeamDropdowns"
+              [filterItems]="onDropdownChange.bind(this)"
+              prop="seasons"
+              name="Season"
+              readonly="true"
+              isSingleSelect="true"
+              className="first"
+            ></app-dropdown>
+            <app-dropdown
+              [ddData]="homeTeamDropdowns"
+              [filterItems]="onDropdownChange.bind(this)"
+              prop="teams"
+              name="Team"
+              className="last"
+              [showTeamLogo]="true"
+              [teamLogoType]="'white'"
+              [league]="'nfl'"
+              [allowHiddenFiltering]="true"
+              [isSingleSelect]="true"
+            ></app-dropdown>
+            <!--<app-dropdown-->
+            <!--[ddData]="homeTeamDropdowns"-->
+            <!--[filterItems]="onDropdownChange.bind(this)"-->
+            <!--prop="tactic"-->
+            <!--name="Tactic"-->
+            <!--isSingleSelect="true"-->
+            <!--className="last"-->
+            <!--&gt;</app-dropdown>-->
+          </div>
+        </div>
+      </div>
+    <div *ngIf="stadium" class="metrics-weather">
+      <div class="col-12">
+        <span class="stadium">
+          {{stadium}}
+        </span>
+        <!--<span><b>{{stadium}}:</b>&nbsp;&nbsp;Weather&nbsp;&nbsp;</span>-->
+        <!--<div class="grouped-dropdown-wrapper btn-group">-->
+          <!--<app-dropdown-->
+            <!--[ddData]="homeTeamDropdowns"-->
+            <!--[filterItems]="onDropdownChange.bind(this, false)"-->
+            <!--prop="weather"-->
+            <!--name="Weather Selected"-->
+            <!--isSingleSelect="true"-->
+            <!--className="first last"-->
+          <!--&gt;</app-dropdown>-->
+        <!--</div>-->
+      </div>
+    </div>
+  </div>
+</div>

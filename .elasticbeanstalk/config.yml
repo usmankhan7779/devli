@@ -1,0 +1,7 @@
+global:
+  application_name: frontend-universal
+  default_ec2_keyname: lineupsdotcom
+  default_region: us-east-1
+  #profile: eb-cli # removed for circleci 2.0
+  environment: lineups-production-universal-v1
+  sc: null

@@ -1,0 +1,429 @@
+<ng-template #ddPlayer let-playerType="playerType" let-showHand="showHand">
+  <div *ngFor="let player of dataToChange.betPredictionData[activeDDs.team][playerType]" class="dropdown-btn-wrap">
+    <button
+      *ngIf="data.league !== 'mlb' || (data.league === 'mlb' && (player.played || player.started))"
+      type="button"
+      class="dropdown-item"
+      (click)="selectPlayer(player, playerType)"
+      [ngClass]="{'dd-opt-active': activeDDs.player.item?.player_id === player.player_id}"
+    >{{player.name}} <span *ngIf="showHand">({{player.hand}})</span></button>
+  </div>
+</ng-template>
+<ng-template #modalActions>
+  <div class="header-actions">
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</ng-template>
+<ng-template #btnSection>
+  <button (click)="onResetBtnClick()" type="button" class="btn btn-grey-light my-2 mr-1 my-sm-0" >
+    <i class="fa fa-repeat" aria-hidden="true"></i>
+    Reset
+  </button>
+  <button [disabled]="inputForm.invalid" (click)="onInput()" type="button" class="btn btn-blue-gray-dark my-2 mr-1 my-sm-0" >
+    <img class="save-input-icon mr-1" src="/assets/images/floppy.png" alt="Inputs">
+    Inputs
+  </button>
+  <button [disabled]="inputForm.invalid" (click)="onSave()" type="button" class="btn btn-orange-deep my-2 mr-1 my-sm-0" >
+    <i class="fa fa-refresh" aria-hidden="true"></i>
+    Generate <span class="hidden-xs-down">Bets</span>
+  </button>
+</ng-template>
+<form #inputForm="ngForm" class="input-panel-modal-wrapper" [ngClass]="{'matchup-form': activeTab === 'matchup', 'team-form': activeTab === 'team', 'player-form': activeTab === 'player', 'team-and-player-form': activeDDs.player.item?.name && dataToChange.mode === 'multiple' && activeDDs.team !== 'matchup'}">
+  <div *ngIf="dataToChange.mode === 'multiple'" class="modal-header flex-wrap">
+    <div [hidden]="activeTab === 'matchup' || activeTab === 'team'" class="hidden-sm-up top-help-btn-container w-100 clearfix">
+      <div class="heading-action-cta-wrapper">
+        <button (click)="onHowItWorksClick()" class="heading-action-cta-btn how-it-works-btn btn mb-1">
+          <img src="/assets/images/icon-video.png" alt="video"/> How
+        </button>
+      </div>
+    </div>
+    <div class="w-100 clearfix">
+      <div [ngClass]="{'hidden-xs-down': activeTab !== 'matchup' && activeTab !== 'team'}" class="help-btn-container float-right clearfix">
+        <div class="heading-action-cta-wrapper">
+          <button (click)="onHowItWorksClick()" class="heading-action-cta-btn how-it-works-btn btn my-1 my-sm-0">
+            <img src="/assets/images/icon-video.png" alt="video"/>
+            <span [ngClass]="{'hidden-xs-down': activeTab === 'matchup' || activeTab === 'team'}"> How it works</span>
+            <span *ngIf="activeTab === 'matchup' || activeTab === 'team'" class="hidden-sm-up"> How</span>
+          </button>
+        </div>
+      </div>
+      <div class="separated-dropdowns-wrapper" [ngClass]="{'responsive': activeTab !== 'matchup'}">
+        <div ngbDropdown class="ml-0 my-1 my-sm-0 mr-sm-1 separated-dropdown-menu dropdown page-heading-right-dropdown first">
+          <button type="button" class="separated-dropdown-btn btn btn-secondary" id="teamDD" ngbDropdownToggle>
+            <span class="hidden-xs-down">
+              {{getTeamDDValue()}}
+            </span>
+            <span class="hidden-sm-up" *ngIf="activeTab === 'team' || activeTab === 'player'">{{getTeamDDValue() | lastTeamName}}</span>
+            <span *ngIf="activeTab === 'matchup'" class="hidden-sm-up">
+              {{dataToChange.betPredictionData.bet_predictor.away_team_name | lastTeamName}} @ {{dataToChange.betPredictionData.bet_predictor.home_team_name | lastTeamName}}
+            </span>
+            <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+          </button>
+          <div class="dropdown-menu" aria-labelledby="teamDD">
+            <div class="dropdown-btn-wrap">
+              <button
+                type="button"
+                class="dropdown-item"
+                (click)="selectTeam('away')"
+                [ngClass]="{'dd-opt-active': activeDDs.team === 'away'}"
+              >
+                {{dataToChange.betPredictionData.bet_predictor.away_team_name}}
+              </button>
+            </div>
+            <div class="dropdown-btn-wrap">
+              <button
+                type="button"
+                class="dropdown-item"
+                (click)="selectTeam('home')"
+                [ngClass]="{'dd-opt-active': activeDDs.team === 'home'}"
+              >
+                {{dataToChange.betPredictionData.bet_predictor.home_team_name}}
+              </button>
+            </div>
+            <div class="dropdown-btn-wrap">
+              <button
+                type="button"
+                class="dropdown-item"
+                (click)="selectTeam('matchup')"
+                [ngClass]="{'dd-opt-active': activeDDs.team === 'matchup'}"
+              >
+                {{dataToChange.betPredictionData.bet_predictor.away_team_name}} @ {{dataToChange.betPredictionData.bet_predictor.home_team_name}}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="activeDDs.team === 'home' || activeDDs.team === 'away'" ngbDropdown class="ml-0 my-1 my-sm-0 mr-sm-1 separated-dropdown-menu dropdown page-heading-right-dropdown last">
+          <button type="button" class="separated-dropdown-btn btn btn-secondary" id="playerDD" ngbDropdownToggle>
+            <span *ngIf="data.league === 'mlb'">{{activeDDs.player.item?.name ? activeDDs.player.item?.name + ' (' + activeDDs.player.item?.hand + ')' : 'Select Player'}}</span>
+            <span *ngIf="data.league === 'nfl'">{{activeDDs.player.item?.name ? activeDDs.player.item?.name : 'Select Player'}}</span>
+            <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+          </button>
+          <div  *ngIf="data.league === 'mlb'"  class="dropdown-menu scrollable-menu" aria-labelledby="playerDD">
+            <ng-template
+              [ngTemplateOutlet]="ddPlayer"
+              [ngTemplateOutletContext]="{playerType: 'pitchers', showHand: true}"
+            ></ng-template>
+
+            <ng-template
+              [ngTemplateOutlet]="ddPlayer"
+              [ngTemplateOutletContext]="{playerType: 'batters', showHand: true}"
+            ></ng-template>
+          </div>
+          <div  *ngIf="data.league === 'nfl'"  class="dropdown-menu scrollable-menu" aria-labelledby="playerDD">
+            <ng-template
+              *ngIf="data.league === 'nfl'"
+              [ngTemplateOutlet]="ddPlayer"
+              [ngTemplateOutletContext]="{playerType: 'qb', showHand: false}"
+            ></ng-template>
+
+            <ng-template
+              *ngIf="data.league === 'nfl'"
+              [ngTemplateOutlet]="ddPlayer"
+              [ngTemplateOutletContext]="{playerType: 'rb', showHand: false}"
+            ></ng-template>
+
+            <ng-template
+              *ngIf="data.league === 'nfl'"
+              [ngTemplateOutlet]="ddPlayer"
+              [ngTemplateOutletContext]="{playerType: 'wr', showHand: false}"
+            ></ng-template>
+
+            <ng-template
+              *ngIf="data.league === 'nfl'"
+              [ngTemplateOutlet]="ddPlayer"
+              [ngTemplateOutletContext]="{playerType: 'te', showHand: false}"
+            ></ng-template>
+
+            <ng-template
+              *ngIf="data.league === 'nfl'"
+              [ngTemplateOutlet]="ddPlayer"
+              [ngTemplateOutletContext]="{playerType: 'k', showHand: false}"
+            ></ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngTemplateOutlet="modalActions"></ng-container>
+  </div>
+
+  <div class="modal-body pb-4" [ngClass]="{'single': dataToChange.mode === 'single'}">
+    <h5 *ngIf="dataToChange.mode === 'single' && dataToChange.playerType !== 'team'">{{dataToChange.innerData.item.name}} <span *ngIf="dataToChange.league === 'mlb'">({{dataToChange.innerData.item.hand}})</span></h5>
+    <h5 *ngIf="dataToChange.mode === 'single' && dataToChange.playerType === 'team'">{{originData.teamName}}</h5>
+    <div *ngIf="dataToChange.mode !== 'multiple'">
+      <ng-container *ngTemplateOutlet="modalActions"></ng-container>
+    </div>
+    <div class="top-action-btn-section">
+      <div class="float-right">
+        <ng-container *ngTemplateOutlet="btnSection"></ng-container>
+      </div>
+    </div>
+    <div class="input-tabs page-heading-navigation d-inline-flex justify-content-between">
+      <div class="d-inline-flex nav-section flex-wrap flex-md-nowrap">
+        <div class="tab-btn-wrap" *ngIf="(dataToChange.mode === 'single' && dataToChange.playerType !== 'team') || (activeDDs.player.item?.name && activeDDs.team !== 'matchup')">
+          <a (click)="onSelectTab(availableTabs[0])" class="page-heading-nav-btn px-3" [ngClass]="{'active': activeTab === availableTabs[0]}">Player Inputs</a>
+        </div>
+        <div *ngIf="(dataToChange.mode === 'multiple' && activeDDs.team !== 'matchup') || (dataToChange.mode === 'single' && dataToChange.playerType === 'team')" class="tab-btn-wrap">
+          <a (click)="onSelectTab(availableTabs[1])" class="page-heading-nav-btn px-3" [ngClass]="{'active': activeTab === availableTabs[1]}">Team Inputs</a>
+        </div>
+        <div *ngIf="dataToChange.mode === 'multiple' && activeDDs.team === 'matchup'" class="tab-btn-wrap">
+          <a (click)="onSelectTab(availableTabs[2])" class="page-heading-nav-btn px-3" [ngClass]="{'active': activeTab === availableTabs[2]}">Matchup Inputs</a>
+        </div>
+      </div>
+      <div class="align-self-center inline-action-btn-section">
+        <ng-container *ngTemplateOutlet="btnSection"></ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="input-panel-table-wrapper" *ngIf="dataToChange.innerData && dataToChange.innerData.propsNames">
+    <table class="input-panel-table">
+      <tr *ngFor="let prop of dataToChange.innerData.propsNames; let index = index; let first = first; let last = last;">
+        <td width="20%" class="pr-3">
+          {{prop.name}}
+          <app-arrows-up-down
+            *ngIf="!prop.hideRange && !inputDisabled(prop)"
+            (downClick)="changeArrowValue(prop, 'down')"
+            (upClick)="changeArrowValue(prop, 'up')"
+            class="float-right {{disabledArrow(prop)}}"
+          ></app-arrows-up-down>
+        </td>
+        <td width="24%" *ngIf="activeTab !== 'matchup'">
+          <div *ngIf="prop.fixedCondition"></div>
+          <div *ngIf="!prop.fixedCondition" class="separated-dropdowns-wrapper w-100">
+            <div ngbDropdown class="ml-0 my-1 my-sm-0 mr-sm-1 separated-dropdown-menu dropdown page-heading-right-dropdown last w-100">
+              <button
+                [disabled]="!prop.hideRange && inputDisabled(prop)"
+                type="button"
+                class="w-100 separated-dropdown-btn text-normal btn btn-secondary input-disabled-style"
+                id="modelDD"
+                ngbDropdownToggle>
+                <span>{{!prop.hideRange && inputDisabled(prop) ? conditions[1].name : conditions[dataToChange.innerData.item[prop.value + '_conditional']]?.name}}</span> <img class="down-arrow float-right pt-2" src="/assets/images/arrow-down.png" alt="arrow-down" />
+              </button>
+              <div class="dropdown-menu w-100" aria-labelledby="modelDD">
+                <div class="dropdown-btn-wrap">
+                  <button
+                    *ngFor="let condition of conditions"
+                    type="button"
+                    class="dropdown-item text-normal px-1"
+                    (click)="selectCondition(condition.value, prop)"
+                    [ngClass]="{'dd-opt-active': dataToChange.innerData.item[prop.value + '_conditional'] === condition.value}"
+                  >
+                    {{condition.name}}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td width="18%" >
+          <div class="popover-container popover-nowrap">
+            <ng-template #popContent let-error="error"><span style="color: red;">{{error}}</span></ng-template>
+            <div [ngbPopover]="popContent" #popover="ngbPopover" placement="left" triggers="manual">
+              <ng-container [ngSwitch]="prop.inputType">
+
+                <ng-container *ngSwitchCase="'plusInput'">
+                  <input
+                    type="text"
+                    appNumberOnly="true"
+                    validation="true"
+                    required
+                    #input="ngModel"
+                    name="input{{index}}"
+                    class="form-control show-invalid"
+                    (keypress)="onUserManualInput(conditions[dataToChange.innerData.item[prop.value + '_conditional']]?.value, $event, prop)"
+                    (keyup)="afterUserManualInput(conditions[dataToChange.innerData.item[prop.value + '_conditional']]?.value, prop)"
+                    (ngModelChange)="setInputPlus(prop.value, $event); showPopover(inputForm, index, popover)"
+                    [appMin]="getItemValDependOnCondition(prop, dataToChange.innerData.item[prop.value + '_min'], 'min')"
+                    [appMax]="getItemValDependOnCondition(prop, dataToChange.innerData.item[prop.value + '_max'], 'max')"
+                    [min]="getItemValDependOnCondition(prop, dataToChange.innerData.item[prop.value + '_min'], 'min')"
+                    [max]="getItemValDependOnCondition(prop, dataToChange.innerData.item[prop.value + '_max'], 'max')"
+                    [disabled]="!prop.hideRange && inputDisabled(prop)"
+                    [ngModel]="dataToChange.innerData.item[prop.value] | plus">
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'number'">
+                  <input
+                    appNumberOnly="true"
+                    validation="true"
+                    type="number" required
+                    #input="ngModel"
+                    name="input{{index}}"
+                    class="form-control show-invalid"
+                    (keypress)="onUserManualInput(prop.canBeFloatOnEqual ? null : (prop.fixedCondition ? 1 : conditions[dataToChange.innerData.item[prop.value + '_conditional']]?.value), $event, prop)"
+                    (keyup)="afterUserManualInput(prop.canBeFloatOnEqual ? null : conditions[dataToChange.innerData.item[prop.value + '_conditional']]?.value, prop)"
+                    (ngModelChange)="dataToChange.innerData.item[prop.value] = $event; showPopover(inputForm, index, popover)"
+                    [appMin]="getItemValDependOnCondition(prop, prop.min, 'min')"
+                    [appMax]="getItemValDependOnCondition(prop, prop.max, 'max')"
+                    [min]="getItemValDependOnCondition(prop, prop.min, 'min')"
+                    [max]="getItemValDependOnCondition(prop, prop.max, 'max')"
+                    [disabled]="!prop.hideRange && inputDisabled(prop)"
+                    [ngModel]="dataToChange.innerData.item[prop.value]">
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'hourMinutePicker'">
+                  <div class="d-flex">
+                    <div>
+                      <input
+                        appNumberOnly="true"
+                        validation="true"
+                        type="number" required
+                        #inputHour="ngModel"
+                        name="input{{index + 100}}"
+                        class="form-control show-invalid timepicker-opt"
+                        (keypress)="onUserManualInput(prop.canBeFloatOnEqual ? null : (prop.fixedCondition ? 1 : conditions[dataToChange.innerData.item[prop.value + '_conditional']]?.value), $event, prop)"
+                        (keyup)="afterUserManualInput(prop.canBeFloatOnEqual ? null : conditions[dataToChange.innerData.item[prop.value + '_conditional']]?.value, prop)"
+                        (ngModelChange)="setTimeToModel(prop.value + '_hour_dont_send', $event); showPopover(inputForm, index + 100, popover); validateMinutes(prop); updateTimepicker(prop)"
+                        [appMin]="getItemValDependOnCondition(prop, getTime(dataToChange.innerData.item[prop.value + '_min'], 0), 'min')"
+                        [appMax]="getItemValDependOnCondition(prop, getTime(dataToChange.innerData.item[prop.value + '_max'], 0), 'max')"
+                        [min]="getItemValDependOnCondition(prop, getTime(dataToChange.innerData.item[prop.value + '_min'], 0), 'min')"
+                        [max]="getItemValDependOnCondition(prop, getTime(dataToChange.innerData.item[prop.value + '_max'], 0), 'max')"
+                        [disabled]="!prop.hideRange && inputDisabled(prop)"
+                        [ngModel]="dataToChange.innerData.item[prop.value + '_hour_dont_send']">
+                    </div>
+                    <div class="align-self-center">:</div>
+                    <div>
+                      <input
+                        appNumberOnly="true"
+                        validation="true"
+                        type="number" required
+                        #inputMin="ngModel"
+                        name="input{{index + 101}}"
+                        class="form-control show-invalid timepicker-opt"
+                        (keypress)="onUserManualInput(prop.canBeFloatOnEqual ? null : (prop.fixedCondition ? 1 : conditions[dataToChange.innerData.item[prop.value + '_conditional']]?.value), $event, prop)"
+                        (keyup)="afterUserManualInput(prop.canBeFloatOnEqual ? null : conditions[dataToChange.innerData.item[prop.value + '_conditional']]?.value, prop)"
+                        (ngModelChange)="setTimeToModel(prop.value + '_minute_dont_send', $event); showPopover(inputForm, index + 101, popover); updateTimepicker(prop)"
+                        [appMin]="getItemValDependOnCondition(prop,
+                      (dataToChange.innerData.item[prop.value + '_hour_dont_send'] === getTime(dataToChange.innerData.item[prop.value + '_min'], 0) ? getTime(dataToChange.innerData.item[prop.value + '_min'], 1) : prop.min),
+                       'min')"
+                        [appMax]="getItemValDependOnCondition(prop,
+                      (dataToChange.innerData.item[prop.value + '_hour_dont_send'] === getTime(dataToChange.innerData.item[prop.value + '_max'], 0) ? getTime(dataToChange.innerData.item[prop.value + '_max'], 1) : prop.max),
+                       'max')"
+                        [min]="getItemValDependOnCondition(prop,
+                      (dataToChange.innerData.item[prop.value + '_hour_dont_send'] === getTime(dataToChange.innerData.item[prop.value + '_min'], 0) ? getTime(dataToChange.innerData.item[prop.value + '_min'], 1) : prop.min),
+                       'min')"
+                        [max]="getItemValDependOnCondition(prop,
+                      (dataToChange.innerData.item[prop.value + '_hour_dont_send'] === getTime(dataToChange.innerData.item[prop.value + '_max'], 0) ? getTime(dataToChange.innerData.item[prop.value + '_max'], 1) : prop.max),
+                       'max')"
+                        [disabled]="(!prop.hideRange && inputDisabled(prop)) || dataToChange.innerData.item[prop.value + '_hour_dont_send'] === prop.max"
+                        [ngModel]="dataToChange.innerData.item[prop.value + '_minute_dont_send']">
+                    </div>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'dd'">
+                  <div class="separated-dropdowns-wrapper w-100">
+                    <div ngbDropdown class="ml-0 my-1 my-sm-0 mr-sm-1 separated-dropdown-menu dropdown page-heading-right-dropdown last w-100">
+                      <button type="button" class="w-100 separated-dropdown-btn text-normal btn btn-secondary" id="inputDD" ngbDropdownToggle>
+                        <span  *ngIf="!isBoolean(dataToChange.innerData.item[prop.value])">{{dataToChange.innerData.item[prop.value]}}</span>
+                        <span  *ngIf="isBoolean(dataToChange.innerData.item[prop.value])">{{dataToChange.innerData.item[prop.value] ? 'Yes' : 'No'}}</span>
+                        <img class="down-arrow float-right pt-2" src="/assets/images/arrow-down.png" alt="arrow-down"/>
+                      </button>
+                      <div class="dropdown-menu w-100 text-center" aria-labelledby="inputDD">
+                        <div class="dropdown-btn-wrap">
+                          <button
+                            *ngFor="let option of prop.ddOptions"
+                            type="button"
+                            class="dropdown-item text-normal"
+                            (click)="dataToChange.innerData.item[prop.value] = option"
+                            [ngClass]="{'dd-opt-active': dataToChange.innerData.item[prop.value] === option}"
+                          >
+                            <span *ngIf="!isBoolean(option)">{{option}}</span>
+                            <span *ngIf="isBoolean(option)">{{option ? 'Yes' : 'No'}}</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngSwitchDefault>
+                  <input
+                    type="number" required
+                    #input="ngModel"
+                    name="input{{index}}"
+                    class="form-control show-invalid"
+                    (keypress)="onUserManualInput(conditions[dataToChange.innerData.item[prop.value + '_conditional']]?.value, $event, prop)"
+                    (keyup)="afterUserManualInput(conditions[dataToChange.innerData.item[prop.value + '_conditional']]?.value, prop)"
+                    (ngModelChange)="dataToChange.innerData.item[prop.value] = $event; showPopover(inputForm, index, popover)"
+                    [appMin]="getItemValDependOnCondition(prop, dataToChange.innerData.item[prop.value + '_min'], 'min')"
+                    [appMax]="getItemValDependOnCondition(prop, dataToChange.innerData.item[prop.value + '_max'], 'max')"
+                    [min]="getItemValDependOnCondition(prop, dataToChange.innerData.item[prop.value + '_min'], 'min')"
+                    [max]="getItemValDependOnCondition(prop, dataToChange.innerData.item[prop.value + '_max'], 'max')"
+                    [disabled]="!prop.hideRange && inputDisabled(prop)"
+                    [ngModel]="dataToChange.innerData.item[prop.value]">
+                </ng-container>
+
+              </ng-container>
+            </div>
+          </div>
+        </td>
+        <td width="38%" *ngIf="activeTab !== 'matchup'" >
+          <div class="range-container" *ngIf="!prop.hideRange && !inputDisabled(prop)">
+            <input
+              type="range"
+              class="input-panel-range"
+              step="1" min="0" [max]="getRangeValues(originData.innerData.item, prop).length - 1" value="{{setRangeValue(prop)}}"
+              (change)="rangeChange(prop, $event.target.value); showPopover(inputForm, index, popover)">
+            <div class="d-flex justify-content-between flex-nowrap">
+              <div
+                class="range-legend popover-container popover-nowrap"
+                (click)="onRangeLegendClick(prop, '_min'); showPopover(inputForm, index, popover)"
+                [hidden]="checkRangeOptionExist('min', prop)">
+                <div
+                  [placement]="last && !first ? 'top' : 'bottom'"
+                  [ngbPopover]="showSliderPopupValue('Worst')"
+                  class="range-legend-text">
+                  Worst
+                </div>
+              </div>
+              <div
+                class="range-legend popover-container popover-nowrap"
+                (click)="onRangeLegendClick(prop, '_bad'); showPopover(inputForm, index, popover)"
+                [hidden]="checkRangeOptionExist('bad', prop)">
+                <div
+                  [placement]="last && !first ? 'top' : 'bottom'"
+                  [ngbPopover]="showSliderPopupValue('Bad')"
+                  class="range-legend-text">
+                  Bad
+                </div>
+              </div>
+              <div
+                class="range-legend popover-container popover-nowrap"
+                (click)="onRangeLegendClick(prop, 'current'); showPopover(inputForm, index, popover)">
+                <div
+                  [placement]="dataToChange.mode !== 'single' && isLastSliderOption('initial', prop) ? 'left' : (last && !first ? 'top' : 'bottom')"
+                  [ngbPopover]="showSliderPopupValue('Current')"
+                  class="range-legend-text">
+                  Current
+                </div>
+              </div>
+              <div
+                class="range-legend popover-container popover-nowrap"
+                (click)="onRangeLegendClick(prop, '_good'); showPopover(inputForm, index, popover)"
+                [hidden]="checkRangeOptionExist('good', prop)">
+                <div
+                  [placement]="dataToChange.mode !== 'single' && isLastSliderOption('good', prop) ? 'left' : (last && !first ? 'top' : 'bottom')"
+                  [ngbPopover]="showSliderPopupValue('Good')"
+                  class="range-legend-text">
+                  Good
+                </div>
+              </div>
+              <div
+                class="range-legend popover-container popover-nowrap"
+                (click)="onRangeLegendClick(prop, '_max'); showPopover(inputForm, index, popover)"
+                [hidden]="checkRangeOptionExist('max', prop)">
+                <div
+                  [placement]="dataToChange.mode !== 'single' ? 'left' : 'bottom'"
+                  [ngbPopover]="showSliderPopupValue('Best')"
+                  class="range-legend-text">
+                  Best
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</form>

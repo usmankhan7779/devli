@@ -1,0 +1,214 @@
+@import "form";
+@import "grid";
+@import "formatter";
+@import "static-pages";
+@import "mlb-white-sprite-same-size";
+@import "nfl-white-sprite-size";
+@import "nba-white-sprite-same-size";
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: $footer-height;
+  @media (max-width: $footer-md-breakpoint) {
+    margin-bottom: $footer-md-height;
+  }
+  @media (max-width: $footer-sm-breakpoint) {
+    margin-bottom: $footer-sm-height;
+  }
+  @media (max-width: $footer-xs-breakpoint) {
+    margin-bottom: $footer-xs-height;
+  }
+}
+// Global Classes
+
+.mobile-body .gateway-video-container {
+  display: none;
+}
+
+.site-pages-wrapper-container {
+  overflow: hidden;
+}
+/* Starting Loader */
+.starting-loader {
+  width: 85px;
+  display: block;
+  margin: 0 auto;
+  min-height: 400px;
+  margin-top: 80px;
+}
+
+.link-black, .link-black:hover, .link-black:focus {
+  text-decoration: none;
+  color: black;
+  @media only screen and (max-width: 575px) {
+    display: inline-block;
+    &.mobile-margin {
+      margin: 15px 0;
+    }
+  }
+}
+
+.player-name-col-lg {
+  &.too-long-pl-name {
+    display: none;
+    & + .player-name-col-xs {
+      display: inline;
+    }
+  }
+  @media only screen and (max-width: 480px) {
+    display: none;
+    & + .player-name-col-xs {
+      display: inline;
+    }
+  }
+}
+
+.link-black-underline {
+  &, &:focus {
+    text-decoration: none;
+    color: black;
+  }
+  &:hover, &:hover span {
+    color: black;
+    text-decoration: underline;
+  }
+  &:not(.player-name-col-xs):not(.player-name-col-lg) {
+    @media only screen and (max-width: 575px) {
+      display: inline-block;
+      &.mobile-margin {
+        margin: 15px 0;
+      }
+    }
+  }
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.before-heading-margin {
+  margin-top: 1.375rem;
+}
+.before-heading-margin-sm {
+  @media (max-width: 992px) {
+    margin-top: 1.375rem;
+  }
+}
+.after-heading-margin {
+  margin-bottom: 1.375rem;
+}
+
+.before-text-margin {
+  margin-top: 1.125rem;
+}
+.before-text-margin-sm {
+  @media (max-width: 992px) {
+    margin-top: 1.125rem;
+  }
+}
+.after-text-margin {
+  margin-bottom: 1.125rem;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.csv-text {
+  white-space: pre-line;
+  overflow: auto;
+}
+
+.heading-betting-card-wrapper {
+  height: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.hover-hand:hover {
+  cursor: pointer;
+}
+
+.box-team-logo {
+  width: inherit;
+  height: inherit;
+}
+
+@import '../bootstrap-customization/custom-mixins';
+.date-time-block-matchup-wrapper {
+  @include flex-row-mixin();
+  .updated-date-time-block {
+    font-size: 13px;
+    font-weight: normal;
+    display: inline-block;
+    margin-left: auto;
+    -ms-flex-item-align: center;
+    -ms-grid-row-align: center;
+    align-self: center;
+  }
+  @media (max-width: 650px) {
+    @include flex-column-reverse-mixin();
+    .updated-date-time-block {
+      margin-bottom: 1.125rem;
+      margin-left: 0;
+      -ms-flex-item-align: start;
+      -ms-grid-row-align: start;
+      align-self: start;
+    }
+  }
+}
+
+.no-stats-cap {
+  text-align: center;
+  font-size: 30px;
+  margin: 9px 0 25px 0;
+}
+
+.iflychat-popup * {
+  outline: none;
+}
+
+.zero-lg-height {
+  @media (min-width: 992px) {
+    height: 0;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.no-intro-paragraph {
+  margin-top: 60px;
+  @media (max-width: 1600px) {
+    margin-top: 55px;
+  }
+  @media (max-width: 1250px) {
+    margin-top: 110px;
+  }
+  @media (max-width: 992px) {
+    margin-top: 0;
+  }
+}
+
+.youtube-video-right {
+  $padding: 16px;
+  $video-width: 560;
+  $video-height: 315;
+  @media (max-width: 600px) {
+    width: 100%;
+    height: calc(((100vw - #{$padding * 2})*#{$video-height})/#{$video-width});
+  }
+  @media (min-width: 601px) and (max-width: 850px) {
+    $video-sm-width: 360px;
+    width: $video-sm-width;
+    height: calc((#{$video-sm-width}*#{$video-height})/#{$video-width});
+  }
+  @media (min-width: 601px) {
+    float: right;
+    margin-left: 10px;
+  }
+}
+

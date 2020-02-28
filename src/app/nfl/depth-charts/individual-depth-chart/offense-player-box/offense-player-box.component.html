@@ -1,0 +1,44 @@
+<div class="player-box-item" [ngClass]="{'active-player': player.id === activeOffense?.player?.id, 'o-line': isOLine}">
+  <div class="player-box-item-content">
+    <div class="top-section">
+      <div class="player-image-wrapper">
+        <img [hidden]="imageLoaded" class="player-image-cap" [src]="imageCap" alt="{{player.name}}">
+        <img [hidden]="!imageLoaded" (load)="onImageLoad()" [src]="player.photo_url || imageCap" alt="{{player.name}}">
+      </div>
+      <div class="player-name-wrapper">
+        <span class="player-name player-name-long">{{player.name}}</span>
+        <span class="player-name player-name-short">{{player.name | shortPlayerName}}</span>
+      </div>
+    </div>
+    <div class="bottom-section">
+      <div class="float-left">
+        <div>
+          <span class="player-info-title">POS:</span> <span>{{player.position}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">DEP:</span> <span>{{player.fantasy_position_depth_order || player.depth_order}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">RNK:</span> <span>#{{player.lineups_position_rank}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">RTG:</span> <span><app-rating [value]="player.rating"></app-rating></span>
+        </div>
+      </div>
+      <div class="float-right">
+        <div>
+          <span class="player-info-title">NUM:</span> <span>#{{player.number}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">EXP:</span> <span>{{player.experience_string}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">GP:</span> <span>{{player.played}}</span>
+        </div>
+        <div>
+          <span class="player-info-title">SN/G:</span> <span>{{player.offensive_snaps_played}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

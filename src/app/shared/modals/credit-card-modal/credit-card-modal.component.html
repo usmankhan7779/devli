@@ -1,0 +1,174 @@
+<div class="credit-card-modal-inner-container modal-inner-container">
+  <div class="modal-inner-wrapper">
+    <!-- Modal Title Wrapper -->
+    <div class="row modal-title-wrapper">
+      <div class="col-12 modal-head">
+        <h2 class="modal-feat-heading">{{selectedPlan.name}}</h2>
+      </div>
+      <div class="col-12 modal-subhead">
+        <div class="row row-eq-height">
+          <div class="col-12 col-sm-12 col-md-6 modal-subhead-sm modal-sub-text-right separator-container">
+            <span
+              *ngIf="promoCodeVerified === true"
+              class="pricing-text subhead-text"
+              [ngStyle]="{'text-decoration': promoCodeVerified === true ? 'line-through' : ''}"
+            >${{selectedPlan.price | number:'1.2-2'}}/{{selectedPlan.duration_label}}</span>
+            <span class="pricing-text subhead-text">${{(promoCodeVerified === true ? newPrice : selectedPlan.price) | number:'1.2-2'}}/{{selectedPlan.duration_label}}</span>
+            <span class="right-separater"></span>
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 modal-subhead-sm modal-sub-text-left d-flex">
+            <a *ngIf="isAuthenticated" class="align-self-center user-email modal-blue-link subhead-text">{{userEmail}}</a>
+            <div
+              class="align-self-center"
+              *ngIf="!isAuthenticated">
+              <!--d-inline-block-->
+              <a (click)="showSignUpModal()" class="modal-blue-link subhead-text">Sign Up</a>
+              <a class="modal-blue-link subhead-text" style="border-bottom: none;">/</a>
+              <a (click)="showLoginModal()" class="modal-blue-link subhead-text">Log In</a >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal Credit Card Form -->
+    <form name="ccPaymentForm" [formGroup]="ccPaymentForm" class="modal-cc-form" (ngSubmit)="onSubmitForm(ccPaymentForm)">
+      <div class="modal-controls">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-field">
+              <input formControlName="ccFullName" class="form-control form-control-lg hide-placeholder"
+                     placeholder="Name on card" type="text" required />
+            </div>
+          </div>
+        </div>
+        <!-- CC Number Row -->
+        <div class="row">
+          <div class="col-12">
+            <div class="form-field">
+              <input formControlName="ccNumber"
+                     (keypress)="_onlyNumbers($event)"
+                     type="tel" pattern="\d*" [maxlength]="20"
+                     class="form-control hide-placeholder form-control-lg"
+                     placeholder="Card Number" required />
+            </div>
+          </div>
+        </div>
+        <!-- CC Info Row-->
+        <div class="row">
+          <div class="col-1">
+            <span class="text-left cc-exp-label">Exp.</span>
+          </div>
+          <div class="col-4">
+            <div class="form-field">
+              <select formControlName="expMonth" class="form-select form-control form-control-lg" data-name="Month" id="Month" name="Month">
+                <optgroup>
+                  <option class="select-option select-option-default" [value]="null">Month</option>
+                  <option class="select-option select-option-valid" *ngFor="let option of expMonthOpts" [value]="option.octalValue">{{option.octalValue}}</option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="form-field">
+              <select formControlName="expYear" class="form-select form-control form-control-lg" data-name="Year" id="Year" name="Year">
+                <optgroup>
+                  <option class="select-option select-option-default" [value]="null">Year</option>
+                  <option class="select-option select-option-valid" *ngFor="let option of expYearOpts" [value]="option">{{option}}</option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-field">
+              <input type="tel"
+                     [maxlength]="4"
+                     formControlName="cvvCode" class="form-control hide-placeholder form-control-lg cvv-code"
+                     placeholder="CVV" required />
+            </div>
+          </div>
+        </div>
+        <!-- Street Address Row -->
+        <div class="row">
+          <div class="col-12">
+            <div class="form-field">
+              <input formControlName="ccBillingAddress" class="form-control hide-placeholder form-control-lg"
+                     placeholder="Street Address" required />
+            </div>
+          </div>
+        </div>
+        <!-- Street Address Row -->
+        <div class="row">
+          <div class="col-12">
+            <div class="form-field">
+              <input
+                formControlName="ccAptNumber"
+                class="form-control hide-placeholder form-control-lg"
+                placeholder="Apt., Suite (optional)"/>
+            </div>
+          </div>
+        </div>
+        <!-- CC Location Info Row-->
+        <div class="row">
+          <div class="col-5">
+            <div class="form-field">
+              <input formControlName="ccCity" class="form-control hide-placeholder form-control-lg"
+                     placeholder="City" required />
+            </div>
+          </div>
+          <div class="col-3 full-form">
+            <div class="form-field">
+              <select formControlName="ccState" class="form-select form-control form-control-lg" data-name="State" id="State" name="State">
+                <optgroup class="state-abbr-dd">
+                  <option class="select-option select-option-default" [value]="null">State</option>
+                  <option class="select-option select-option-valid" *ngFor="let option of usStates" [value]="option.abbreviation">{{option.abbreviation}}</option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-field">
+              <input type="number" formControlName="ccZipCode" class="form-control hide-placeholder form-control-lg"
+                     placeholder="Zip" required />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <div class="form-field">
+              <input
+                type="text"
+                formControlName="promoCode"
+                class="form-control hide-placeholder"
+                placeholder="Promo Code">
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-field">
+                <button
+                  [disabled]="!isAuthenticated || !ccPaymentForm.get('promoCode').value || this.promoCodeVerified"
+                  (click)="onPromoCodeVerifyBtnClick(ccPaymentForm.get('promoCode').value)"
+                  class="btn w-100"
+                  [ngClass]="{'btn-success': this.promoCodeVerified, 'btn-primary': !this.promoCodeVerified}"
+                  type="button">{{this.promoCodeVerified ? '✔' : 'Verify'}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div *ngIf="errorMessage" class="row">
+      <div class="col-12 text-center" style="color: #d00000;">
+        {{errorMessage}}
+      </div>
+    </div>
+    <div *ngIf="promoCodeVerified === false" class="row">
+      <div class="col-12 text-center" style="color: #d00000;">
+        Invalid Promo Code
+      </div>
+    </div>
+    <div class="row submit-form-wrapper">
+      <div class="col-12">
+        <button (click)="onSubmitForm(ccPaymentForm)" class="modal-form-submit mb-2">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

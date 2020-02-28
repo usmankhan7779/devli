@@ -1,0 +1,33 @@
+:host {
+  .bold {
+    font-weight: bold;
+  }
+  .table-sect-wrap .static-table-wrapper .static-table-body td {
+    padding: 8px 0 8px 0;
+    &.player-name-col {
+      padding: 8px 0 8px 10px;
+    }
+  }
+  .toggles-in-page-group {
+    margin-left: 1rem;
+  }
+  @media (min-width: 1018px) and (max-width: 1050px) {
+    .search-input-wrapper {
+      max-width: 199px;
+    }
+  }
+  .show-mobile {
+    display: none;
+  }
+  @media (max-width: 1160px) {
+    .show-desktop {
+      display: none;
+    }
+    .show-mobile {
+      display: block;
+    }
+    .toggles-in-page-group {
+      margin: 0;
+    }
+  }
+}

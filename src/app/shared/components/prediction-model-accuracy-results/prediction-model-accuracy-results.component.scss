@@ -1,0 +1,128 @@
+@import '../../../../scss/bootstrap-customization/custom-mixins';
+.prediction-model-accuracy {
+
+  @mixin width-set($width) {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 $width;
+    flex: 0 0 $width;
+    max-width: $width;
+  }
+
+  $first-break: 750px;
+  $second-break: 550px;
+  .top-pagination-wrapper {
+    @include flex-row-mixin();
+    .pagination-wrapper {
+      margin-left: auto;
+    }
+    @media (max-width: $first-break) {
+      @include flex-column-mixin();
+      .pagination-wrapper {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .pagination-wrapper {
+    margin-top: 20px;
+    @include flex-row-mixin();
+    @media (max-width: $second-break) {
+      @include flex-column-mixin();
+    }
+  }
+
+  @media (max-width: $second-break) {
+    .pagination-wrapper ::ng-deep .ngx-pagination {
+      padding: 0 !important;
+      text-align: center;
+      font-size: 13px;
+    }
+  }
+
+  .prediction-accuracy-wrapper {
+    @include width-set(60%);
+    @media (max-width: 1666px) {
+      @include width-set(70%);
+    }
+    @media (max-width: 1200px) {
+      @include width-set(100%);
+    }
+    @media (max-width: 850px) {
+      .multi-row-data-table-wrapper {
+        overflow-x: auto;
+        table {
+          min-width: 835px;
+        }
+      }
+    }
+  }
+
+
+  .prediction-accuracy-details-wrapper {
+    @include width-set(69%);
+    @media (max-width: 1830px) {
+      @include width-set(75%);
+    }
+    @media (max-width: 1666px) {
+      @include width-set(90%);
+    }
+    @media (max-width: 1200px) {
+      @include width-set(100%);
+    }
+    @media (max-width: 850px) {
+      .multi-row-data-table-wrapper {
+        overflow-x: auto;
+        table {
+          min-width: 835px;
+        }
+      }
+    }
+  }
+  // dds to mobile view
+  @media (max-width: 885px){
+    .grouped-dropdown-wrapper {
+      display: inline-block;
+      width: 100%;
+      .grouped-dropdown button {
+        width: 100%;
+      }
+      .dropdown-menu {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  }
+
+  .grouped-dropdown-btn {
+    max-height: 33px;
+    min-width: 0;
+  }
+
+  .grouped-dropdown-wrapper .grouped-dropdown .grouped-dropdown-btn {
+    padding: 8px 11px;
+  }
+
+  .dd-label {
+    min-width: 85px;
+    display: inline-block;
+  }
+
+  .grouped-dropdown-wrapper {
+    margin-bottom: 0;
+  }
+
+  .probability-cell {
+    &.good {
+      $green: #2bb673;
+      background-color: $green;
+      border-color: $green;
+      color: #FFF;
+    }
+    &.poor {
+      $red: #be1e2d;
+      background-color: $red;
+      border-color: $red;
+      color: #FFF;
+    }
+  }
+}

@@ -1,0 +1,629 @@
+<ng-template #csvView>
+  <div class="col-12">
+    <p class="csv-text">
+      {{csvText}}
+    </p>
+  </div>
+</ng-template>
+
+<ng-template #loadingTpl>
+  <div class="starting-lineup-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<ng-template #game let-item="item">
+  <span *ngIf="item.game.away && item.game.home && item.matchup_route">
+    <a class="link-black-underline nowrap" [routerLink]="item.matchup_route">
+      <span [ngClass]="{'bold': !item.game.bold_home}">{{item.game.away}}</span> at <span [ngClass]="{'bold': item.game.bold_home}">{{item.game.home}}</span>
+    </a>
+  </span>
+</ng-template>
+
+<div class="container-fluid pb-5" *ngIf="totalItems != undefined; else loadingTpl;">
+  <!-- Breadcrumbs -->
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+    <div class="col-12 col-lg-8">
+      <div class="after-heading-margin">
+        <h1 class="page-heading m-0">{{pageHeading}}</h1>
+      </div>
+      <div *ngIf="introParagraph" class="hidden-md-down">
+        <p class="site-pages-content" [innerHTML]="introParagraph | safeHtml"></p>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component [league]="'nfl'"></app-ad-component>
+    </div>
+
+
+    <div *ngIf="introParagraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+      <p class="site-pages-content" [innerHtml]="introParagraph | safeHtml"></p>
+    </div>
+
+    <div class="col-12">
+      <!-- Collapse Menu -->
+      <div class="in-page-dropdown-toggle">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="dropdownCollapsed = !dropdownCollapsed"
+                [attr.aria-expanded]="!dropdownCollapsed" aria-controls="collapseExample">
+          <i class="fa fa-bars dropdown-icon" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="in-page-dropdown-menu" [ngbCollapse]="!dropdownCollapsed" [ngClass]="{'hidden-dropdown': !dropdownCollapsed}">
+        <!-- Grouped Dropdown -->
+        <div class="d-flex justify-content-start top-dd-wrapper" [ngClass]="{'minutes-top-section': minutesDDs.activeMain.prop === 'minutes'}">
+          <div class="d-flex top-dd-wrapper-deep">
+            <div class="grouped-dropdown-wrapper btn-group">
+              <div *ngIf="minutesDDs.activeMain.prop === 'stats'" ngbDropdown class="grouped-dropdown dropdown">
+                <button type="button" class="grouped-dropdown-btn btn btn-secondary first px-3" id="main-dropdown" ngbDropdownToggle>
+                  <span class="pr-0 pr-sm-3">{{realYear | handleLeagueYear : 'nba'}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down"/>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="main-dropdown">
+                  <div *ngFor="let season of minutesDDs.seasons;">
+                    <button
+                      [ngClass]="{'dd-active-btn': checkActiveYear(realYear, season.year)}"
+                      (click)="onYearDdChange(season)"
+                      class="dropdown-item">
+                      <span>{{season.name}}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div ngbDropdown class="grouped-dropdown dropdown">
+                <button
+                  type="button"
+                  class="grouped-dropdown-btn btn btn-secondary px-3"
+                  [ngClass]="{'first': minutesDDs.activeMain.prop !== 'stats', 'last': minutesDDs.activeMain.prop === 'minutes'}"
+                  id="page-select-dropdown" ngbDropdownToggle>
+                  <span class="pr-0 pr-sm-3">{{minutesDDs.activeMain.name}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="page-select-dropdown">
+                  <div>
+                    <a [routerLink]="['/nba/nba-player-minutes-per-game']" routerLinkActive="dd-active-btn" class="dropdown-item">Minutes</a>
+                  </div>
+                  <div>
+                    <a [routerLink]="['/nba/player-stats']" routerLinkActive="dd-active-btn" class="dropdown-item">Stats</a>
+                  </div>
+                  <div>
+                    <a [routerLink]="['/nba/nba-fantasy-basketball-projections']" routerLinkActive="dd-active-btn" class="dropdown-item">Fantasy Projections</a>
+                  </div>
+                  <div>
+                    <a [routerLink]="['/nba/fantasy-points-per-game']" routerLinkActive="dd-active-btn" class="dropdown-item">Fantasy Points</a>
+                  </div>
+                </div>
+              </div>
+              <ng-container *ngIf="minutesDDs.activeMain.prop !== 'minutes'">
+                <app-dropdown
+                  [ddData]="minutesDDs"
+                  [filterItems]="onApiDropdownChange.bind(this)"
+                  prop="secondary"
+                  className="big-dd"
+                  isSingleSelect="true"
+                ></app-dropdown>
+                <app-dropdown
+                  *ngIf="minutesDDs.teams"
+                  [ddData]="minutesDDs"
+                  [filterItems]="onTeamDropdownChange.bind(this)"
+                  prop="teams"
+                  name="Teams"
+                ></app-dropdown>
+                <app-dropdown
+                  *ngIf="minutesDDs.activeMain.prop !== 'fantasy'"
+                  [ddData]="minutesDDs"
+                  [filterItems]="onThirdDropdownChange.bind(this)"
+                  [allowHiddenFiltering]="true"
+                  prop="third"
+                  className="big-dd last"
+                  isSingleSelect="true"
+                ></app-dropdown>
+                <app-dropdown
+                  *ngIf="minutesDDs.activeMain.prop === 'fantasy'"
+                  [ddData]="minutesDDs"
+                  [filterItems]="onThirdDropdownChange.bind(this)"
+                  prop="thirdFantasy"
+                  className="big-dd last"
+                  isSingleSelect="true"
+                ></app-dropdown>
+              </ng-container>
+            </div>
+            <div *ngIf="minutesDDs.activeMain.prop !== 'minutes'" class="search-input-wrapper-top">
+              <div class="search-input-wrapper">
+                <div>
+                  <div class="input-group">
+                    <input type="text" class="form-control hide-placeholder" [ngModel]="searchModel" (ngModelChange)="filterByName($event)" placeholder="Search Players" aria-describedby="filter-by-player">
+                    <span class="input-group-addon" id="filter-by-player">
+                  <i class="fa fa-search" aria-hidden="true"></i>
+                </span>
+                  </div>
+                </div>
+              </div>
+              <div class="mobile-page-dd">
+                <div class="grouped-dropdown-wrapper btn-group mb-3">
+                  <app-dropdown
+                    *ngIf="minutesDDs.activeMain.prop !== 'minutes'"
+                    [ddData]="minutesDDs"
+                    [filterItems]="onApiDropdownChange.bind(this)"
+                    prop="items_per_page"
+                    [isSingleSelect]="true"
+                    className="first last"
+                  ></app-dropdown>
+
+                  <app-dropdown
+                    *ngIf="minutesDDs.activeMain.prop === 'minutes'"
+                    [ddData]="minutesDDs"
+                    [totalItems]="totalItems"
+                    [filterItems]="onItemsPerPageChange.bind(this)"
+                    prop="items_per_page"
+                    [isSingleSelect]="true"
+                    className="first last"
+                  ></app-dropdown>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-start pagination-wrapper">
+            <div class="full-screen-page-dd">
+              <div class="grouped-dropdown-wrapper btn-group mb-3">
+                <app-dropdown
+                  *ngIf="minutesDDs.activeMain.prop !== 'minutes'"
+                  [ddData]="minutesDDs"
+                  [filterItems]="onApiDropdownChange.bind(this)"
+                  prop="items_per_page"
+                  [isSingleSelect]="true"
+                  className="first last"
+                ></app-dropdown>
+
+                <app-dropdown
+                  *ngIf="minutesDDs.activeMain.prop === 'minutes'"
+                  [ddData]="minutesDDs"
+                  [totalItems]="totalItems"
+                  [filterItems]="onItemsPerPageChange.bind(this)"
+                  prop="items_per_page"
+                  [isSingleSelect]="true"
+                  className="first last"
+                ></app-dropdown>
+              </div>
+            </div>
+            <div>
+              <pagination-controls *ngIf="minutesDDs.activeMain.prop !== 'minutes'" [maxSize]="5" (pageChange)="onApiDropdownChange($event)" id="server"></pagination-controls>
+              <pagination-controls *ngIf="minutesDDs.activeMain.prop === 'minutes'" [maxSize]="5" (pageChange)="onPageChange($event)" id="browserPagination"></pagination-controls>
+            </div>
+            <div class="ml-auto">
+              <div class="float-right">
+                <button type="button" (click)="onCsvShow()" class="btn btn-primary csv-btn">Show {{csvShowed ? 'Table' : ' CSV'}}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Grouped Dropdown -->
+    </div>
+    <div class="col-12">
+      <ng-template #noDataTpl>
+        <app-nba-no-stats [year]="realYear"></app-nba-no-stats>
+      </ng-template>
+      <ng-container *ngIf="data[minutesDDs.activeMain.prop]?.results?.length; else noDataTpl">
+        <ng-container *ngIf="!csvShowed; else csvView">
+          <div [ngSwitch]="minutesDDs.activeMain.prop">
+            <div *ngSwitchCase="'minutes'">
+              <div class="row minutes-table-wrapper" *ngIf="data.minutes">
+                <div class="col-12 table-sect-wrap">
+                  <!-- Static Positioned Tabled -->
+                  <div class="static-table-wrapper">
+                    <table
+                      [mfRowsOnPage]="10000" [mfData]="data.minutes.results"
+                      [(mfSortBy)]="sortByMinutes"
+                      [(mfSortOrder)]="sortOrderMinutes"
+                      (mfSortByChange)="onSortOrder('sortByMinutes', 'sortOrderMinutes', 'by', $event)"
+                      (mfSortOrderChange)="onSortOrder('sortByMinutes', 'sortOrderMinutes', 'order', $event)"
+                      #staticMinutes="mfDataTable"
+                      class="static-table stats-table table table-bordered multi-table-static bound-to-multi-row-data-table three-col">
+                      <tbody>
+                      <tr class="t-sub-header static-sub-header">
+                        <th class="player-name-col">
+                          <mfSorter by="full_name">Name</mfSorter>
+                        </th>
+                        <th class="position-col">
+                          <mfSorter by="position">Pos</mfSorter>
+                        </th>
+                        <!--<th class="position-col">-->
+                          <!--<mfSorter by="lineups_rating">Rating</mfSorter>-->
+                        <!--</th>-->
+                      </tr>
+                      </tbody>
+                      <tbody class="static-table-body">
+                      <tr *ngFor="let item of staticMinutes.data | paginate: { id: 'browserPagination', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
+                        <td class="player-name-col text-left">
+                          <app-player-link [league]="'nba'" [playerName]="item.full_name" [playerUrl]="item.profile_url"></app-player-link>
+                        </td>
+                        <td class="position-col show-border">
+                          {{item.main_position}}
+                        </td>
+                        <!--<td class="position-col show-border">-->
+                          <!--<app-rating *ngIf="item.lineups_rating" [value]="item.lineups_rating"></app-rating>-->
+                        <!--</td>-->
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- Horizontal Scrolling-->
+                  <div class="horizontal-table-wrapper three-col">
+                    <table
+                      [mfRowsOnPage]="10000" [mfData]="data.minutes.results"
+                      [(mfSortBy)]="sortByMinutes"
+                      [(mfSortOrder)]="sortOrderMinutes"
+                      (mfSortByChange)="onSortOrder('sortByMinutes', 'sortOrderMinutes', 'by', $event)"
+                      (mfSortOrderChange)="onSortOrder('sortByMinutes', 'sortOrderMinutes', 'order', $event)"
+                      #minutes="mfDataTable"
+                      class="multi-row-data-table minute-item-table has-static-cols t-stripped">
+                      <thead>
+                      <tr class="t-sub-header">
+                        <th width="14%" class="px-3 inner-col-switch">
+                          <mfSorter by="full_name">Name</mfSorter>
+                        </th>
+                        <th class="text-center inner-col-switch">
+                          <mfSorter by="main_position">Pos</mfSorter>
+                        </th>
+                        <!--<th class="text-center inner-col-switch">-->
+                          <!--<mfSorter by="lineups_rating">Rating</mfSorter>-->
+                        <!--</th>-->
+                        <th class="text-center">
+                          <mfSorter by="team">Team</mfSorter>
+                        </th>
+                        <th class="text-center">
+                          <mfSorter by="opponent">Opponent</mfSorter>
+                        </th>
+                        <th class="text-center">
+                          <mfSorter by="projection">Projection</mfSorter>
+                        </th>
+                        <th class="text-center">
+                          <mfSorter by="minutes">Projected Minutes</mfSorter>
+                        </th>
+                        <th class="text-center">
+                          <mfSorter by="fanduel_projection">FanDuel Projection</mfSorter>
+                        </th>
+                        <th class="text-center">
+                          <mfSorter by="fanduel_fppm">FanDuel FPPM</mfSorter>
+                        </th>
+                        <th class="text-center">
+                          <mfSorter by="draftkings_projection">DraftKings Projection</mfSorter>
+                        </th>
+                        <th class="text-center">
+                          <mfSorter by="draftkings_fppm">DraftKings FPPM</mfSorter>
+                        </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let item of minutes.data | paginate: { id: 'browserPagination', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }" class="t-content">
+                        <td class="text-left px-3 inner-col-switch">
+                          <app-player-link [league]="'nba'" [playerName]="item.full_name" [playerUrl]="item.profile_url"></app-player-link>
+                        </td>
+                        <td class="inner-col-switch">
+                          <span>{{item.position}}</span>
+                        </td>
+                        <td>
+                          <a class="link-black-underline" [routerLink]="item.team_lineup_route">
+                            {{item.team}}
+                          </a>
+                        </td>
+                        <td>
+                          <a class="link-black-underline" [routerLink]="item.opp_lineup_route">
+                            {{item.opponent}}
+                          </a>
+                        </td>
+                        <td>
+                          {{item.projection}}
+                        </td>
+                        <td>
+                          <app-color-badge [value]="item.minutes" [colorValues]="colorConfig.minutes"></app-color-badge>
+                        </td>
+                        <td>
+                          {{item.fanduel_projection}}
+                        </td>
+                        <td>
+                          <app-color-badge [value]="item.fanduel_fppm" [reverse]="true" [reverseColors]="true" [colorValues]="colorConfig.fppm"></app-color-badge>
+                        </td>
+                        <td>
+                          {{item.draftkings_projection}}
+                        </td>
+                        <td>
+                          <app-color-badge [value]="item.draftkings_fppm" [reverse]="true" [reverseColors]="true" [colorValues]="colorConfig.fppm"></app-color-badge>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngSwitchCase="'stats'">
+              <div class="row stats-table-wrapper" *ngIf="data.stats">
+                <div class="col-12 table-sect-wrap">
+                  <!-- Static Positioned Tabled -->
+                  <div class="static-table-wrapper">
+                    <table
+                      [mfRowsOnPage]="10000" [mfDataApi]="data.stats.results"
+                      [(mfSortBy)]="sortByStats"
+                      [(mfSortOrder)]="sortOrderStats"
+                      (mfSortByChange)="onSortOrder('sortByStats', 'sortOrderStats', 'by', $event)"
+                      (mfSortOrderChange)="onSortOrder('sortByStats', 'sortOrderStats', 'order', $event)"
+                      #staticStats="mfDataApiTable"
+                      class="static-table stats-table table table-bordered multi-table-static bound-to-multi-row-data-table four-col">
+                      <tbody>
+                      <tr class="t-sub-header static-sub-header">
+                        <th class="player-name-col">
+                          <mfSorterApi by="full_name">Name</mfSorterApi>
+                        </th>
+                        <th class="position-col">
+                          <mfSorterApi by="position">Pos</mfSorterApi>
+                        </th>
+                        <th class="position-col">
+                          <mfSorterApi by="team">Team</mfSorterApi>
+                        </th>
+                        <th class="position-col">
+                          <mfSorterApi by="lineups_rating">Rating</mfSorterApi>
+                        </th>
+                      </tr>
+                      </tbody>
+                      <tbody class="static-table-body">
+                      <tr *ngFor="let item of staticStats.data | paginate: { id: 'server', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
+                        <td class="player-name-col text-left">
+                          <app-player-link [league]="'nba'" [playerName]="item.full_name" [playerUrl]="item.profile_url"></app-player-link>
+                        </td>
+                        <td class="position-col show-border">
+                          {{item.position}}
+                        </td>
+                        <td class="position-col show-border">
+                          <a [routerLink]="[item.roster_route]" class="link-black-underline">{{item.team}}</a>
+                        </td>
+                        <td class="position-col show-border">
+                          <app-rating [value]="item.lineups_rating"></app-rating>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- Horizontal Scrolling-->
+                  <div class="horizontal-table-wrapper four-col">
+                    <table
+                      [mfRowsOnPage]="10000" [mfDataApi]="data.stats.results"
+                      [(mfSortBy)]="sortByStats"
+                      [(mfSortOrder)]="sortOrderStats"
+                      (mfSortByChange)="onSortOrder('sortByStats', 'sortOrderStats', 'by', $event)"
+                      (mfSortOrderChange)="onSortOrder('sortByStats', 'sortOrderStats', 'order', $event)"
+                      #stats="mfDataApiTable"
+                      class="multi-row-data-table stats-item-table has-static-cols t-stripped">
+                      <thead>
+                      <tr class="t-sub-header">
+                        <th width="14%" class="px-3 inner-col-switch">
+                          <mfSorterApi by="full_name">Name</mfSorterApi>
+                        </th>
+                        <th class="text-center inner-col-switch">
+                          <mfSorterApi by="position">Pos</mfSorterApi>
+                        </th>
+                        <th class="text-center inner-col-switch">
+                          <mfSorterApi by="team">Team</mfSorterApi>
+                        </th>
+                        <th class="text-center inner-col-switch">
+                          <mfSorterApi by="lineups_rating">Rating</mfSorterApi>
+                        </th>
+                        <th *ngIf="minutesDDs.activeThird === 'per_possession'" class="text-center">
+                          <mfSorterApi [by]="minutesDDs.activeThird +  '.minutes'">MIN</mfSorterApi>
+                        </th>
+                        <th *ngIf="minutesDDs.activeThird === 'per_game'" class="text-center">
+                          <mfSorterApi [by]="minutesDDs.activeThird +  '.minutes'">MIN/G</mfSorterApi>
+                        </th>
+                        <th class="text-center">
+                          <mfSorterApi [by]="minutesDDs.activeThird + '.points'">PTS</mfSorterApi>
+                        </th>
+                        <th class="text-center">
+                          <mfSorterApi [by]="minutesDDs.activeThird + '.assists'">AST</mfSorterApi>
+                        </th>
+                        <th class="text-center">
+                          <mfSorterApi [by]="minutesDDs.activeThird + '.rebounds'">REB</mfSorterApi>
+                        </th>
+                        <th class="text-center">
+                          <mfSorterApi [by]="minutesDDs.activeThird + '.steals'">STL</mfSorterApi>
+                        </th>
+                        <th class="text-center">
+                          <mfSorterApi [by]="minutesDDs.activeThird + '.blocked_shots'">BLK</mfSorterApi>
+                        </th>
+                        <th class="text-center">
+                          <mfSorterApi [by]="minutesDDs.activeThird + '.turnovers'">TOV</mfSorterApi>
+                        </th>
+                        <th class="text-center">
+                          <mfSorterApi [by]="minutesDDs.activeThird + '.offensive_rebounds'">ORB</mfSorterApi>
+                        </th>
+                        <th class="text-center">
+                          <mfSorterApi [by]="minutesDDs.activeThird + '.three_pointers_made'">3PM</mfSorterApi>
+                        </th>
+                        <th class="text-center">
+                          <mfSorterApi [by]="minutesDDs.activeThird + '.three_pointers_attempted'">3PA</mfSorterApi>
+                        </th>
+                        <th class="text-center">
+                          <mfSorterApi [by]="minutesDDs.activeThird + '.free_throws_made'">FTM</mfSorterApi>
+                        </th>
+                        <th class="text-center">
+                          <mfSorterApi [by]="minutesDDs.activeThird + '.free_throws_attempted'">FTA</mfSorterApi>
+                        </th>
+                        <th class="text-center">
+                          <mfSorterApi [by]="minutesDDs.activeThird + '.personal_fouls'">PF</mfSorterApi>
+                        </th>
+                        <th class="text-center">
+                          <mfSorterApi [by]="minutesDDs.activeThird + '.usage_rate_percentage'">USG%</mfSorterApi>
+                        </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let item of stats.data | paginate: { id: 'server', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }" class="t-content">
+                        <td class="text-left px-3 inner-col-switch">
+                          <app-player-link [league]="'nba'" [playerName]="item.full_name" [playerUrl]="item.profile_url"></app-player-link>
+                        </td>
+                        <td class="inner-col-switch">
+                          <span>{{item.position}}</span>
+                        </td>
+                        <td class="inner-col-switch">
+                          <a [routerLink]="[item.roster_route]" class="link-black-underline">{{item.team}}</a>
+                        </td>
+                        <td class="inner-col-switch">
+                          <span>{{item.lineups_rating}}</span>
+                        </td>
+                        <td *ngIf="minutesDDs.activeThird === 'per_possession' || minutesDDs.activeThird === 'per_game'">
+                          {{item[minutesDDs.activeThird].minutes}}
+                        </td>
+                        <td>{{item[minutesDDs.activeThird].points}}</td>
+                        <td>{{item[minutesDDs.activeThird].assists}}</td>
+                        <td>{{item[minutesDDs.activeThird].rebounds}}</td>
+                        <td>{{item[minutesDDs.activeThird].steals}}</td>
+                        <td>{{item[minutesDDs.activeThird].blocked_shots}}</td>
+                        <td>{{item[minutesDDs.activeThird].turnovers}}</td>
+                        <td>{{item[minutesDDs.activeThird].offensive_rebounds}}</td>
+                        <td>{{item[minutesDDs.activeThird].three_pointers_made}}</td>
+                        <td>{{item[minutesDDs.activeThird].three_pointers_attempted}}</td>
+                        <td>{{item[minutesDDs.activeThird].free_throws_made}}</td>
+                        <td>{{item[minutesDDs.activeThird].free_throws_attempted}}</td>
+                        <td>{{item[minutesDDs.activeThird].personal_fouls}}</td>
+                        <td>{{item[minutesDDs.activeThird].usage_rate_percentage}}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngSwitchCase="'fantasy'">
+              <div class="row fantasy-table-wrapper" *ngIf="data.fantasy">
+                <div class="col-12 table-sect-wrap">
+                  <!-- Static Positioned Tabled -->
+                  <div class="static-table-wrapper">
+                    <table
+                      [mfRowsOnPage]="10000" [mfDataApi]="data.fantasy.results"
+                      [(mfSortBy)]="sortByFantasy"
+                      [(mfSortOrder)]="sortOrderFantasy"
+                      (mfSortByChange)="onSortOrder('sortByFantasy', 'sortOrderFantasy', 'by', $event)"
+                      (mfSortOrderChange)="onSortOrder('sortByFantasy', 'sortOrderFantasy', 'order', $event)"
+                      #staticFantasy="mfDataApiTable"
+                      class="static-table stats-table fantasy-table table table-bordered multi-table-static bound-to-multi-row-data-table three-col">
+                      <tbody>
+                      <tr class="t-sub-header static-sub-header">
+                        <th class="player-name-col">
+                          <mfSorterApi by="full_name">Name</mfSorterApi>
+                        </th>
+                        <th class="position-col">
+                          <mfSorterApi by="position">Pos</mfSorterApi>
+                        </th>
+                        <th class="position-col">
+                          <mfSorterApi by="lineups_rating">Rating</mfSorterApi>
+                        </th>
+                      </tr>
+                      </tbody>
+                      <tbody class="static-table-body">
+                      <tr *ngFor="let item of staticFantasy.data | paginate: { id: 'server', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
+                        <td class="player-name-col text-left">
+                          <app-player-link [league]="'nba'" [playerName]="item.full_name" [playerUrl]="item.profile_url"></app-player-link>
+                        </td>
+                        <td class="position-col show-border">
+                          {{item.position}}
+                        </td>
+                        <td class="position-col show-border">
+                          <app-rating [value]="item.lineups_rating"></app-rating>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- Horizontal Scrolling-->
+                  <div class="horizontal-table-wrapper three-col">
+                    <table
+                      [mfRowsOnPage]="10000" [mfDataApi]="data.fantasy.results"
+                      [(mfSortBy)]="sortByFantasy"
+                      [(mfSortOrder)]="sortOrderFantasy"
+                      (mfSortByChange)="onSortOrder('sortByFantasy', 'sortOrderFantasy', 'by', $event)"
+                      (mfSortOrderChange)="onSortOrder('sortByFantasy', 'sortOrderFantasy', 'order', $event)"
+                      #fantasy="mfDataApiTable"
+                      class="multi-row-data-table fantasy-item-table has-static-cols t-stripped">
+                      <thead>
+                      <tr class="t-sub-header">
+                        <th width="14%" class="px-3 inner-col-switch">
+                          <mfSorterApi by="full_name">Name</mfSorterApi>
+                        </th>
+                        <th class="text-center inner-col-switch">
+                          <mfSorterApi by="position">Pos</mfSorterApi>
+                        </th>
+                        <th class="text-center inner-col-switch">
+                          <mfSorterApi by="lineups_rating">Rating</mfSorterApi>
+                        </th>
+                        <!--<ng-container *ngIf="!isOffseason">-->
+                          <!--<th class="text-center">-->
+                            <!--<mfSorterApi by="game.away">Game</mfSorterApi>-->
+                          <!--</th>-->
+                          <!--<th class="text-center">-->
+                            <!--<mfSorterApi [by]="'fantasy_projections.' + minutesDDs.activeThirdFantasy + '.salary'">Salary</mfSorterApi>-->
+                          <!--</th>-->
+                          <!--<th class="text-center">-->
+                            <!--<mfSorterApi [by]="'fantasy_projections.' + minutesDDs.activeThirdFantasy + '.projection'">Projection</mfSorterApi>-->
+                          <!--</th>-->
+                        <!--</ng-container>-->
+                        <th class="text-center">
+                          <mfSorterApi by="team">Team</mfSorterApi>
+                        </th>
+                        <th *ngIf="minutesDDs.activeSecondary === 'season'" class="text-center">
+                          <mfSorterApi [by]="'fantasy_points_' + minutesDDs.activeThirdFantasy">Fantasy Points</mfSorterApi>
+                        </th>
+                        <th class="text-center">
+                          <mfSorterApi [by]="'fantasy_points.' + minutesDDs.activeThirdFantasy + '_per_game'">FPPG</mfSorterApi>
+                        </th>
+                        <th class="text-center">
+                          <mfSorterApi [by]="'fantasy_points.' + minutesDDs.activeThirdFantasy + '_per_minute'">FPPM</mfSorterApi>
+                        </th>
+                        <th class="text-center" *ngFor="let fantasyHeader of data.fantasy.headers">
+                          <mfSorterApi [by]="'fantasy_points.' + minutesDDs.activeThirdFantasy + '.' + fantasyHeader">{{fantasyHeader}}</mfSorterApi>
+                        </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let item of fantasy.data | paginate: { id: 'server', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }" class="t-content">
+                        <td class="text-left px-3 inner-col-switch">
+                          <app-player-link [league]="'nba'" [playerName]="item.full_name" [playerUrl]="item.profile_url"></app-player-link>
+                        </td>
+                        <td class="inner-col-switch">
+                          <span>{{item.position}}</span>
+                        </td>
+                        <td class="inner-col-switch">
+                          <span>{{item.lineups_rating}}</span>
+                        </td>
+                        <!--<ng-container *ngIf="!isOffseason">-->
+                          <!--<td>-->
+                            <!--<ng-template [ngTemplateOutlet]="game" [ngTemplateOutletContext]="{item: item}"></ng-template>-->
+                          <!--</td>-->
+                          <!--<td>{{item.fantasy_projections[minutesDDs.activeThirdFantasy].salary}}</td>-->
+                          <!--<td>{{item.fantasy_projections[minutesDDs.activeThirdFantasy].projection}}</td>-->
+                        <!--</ng-container>-->
+                        <td><a class="link-black-underline" [routerLink]="[item.roster_route]">{{item.team}}</a></td>
+                        <td *ngIf="minutesDDs.activeSecondary === 'season'">
+                          {{item['fantasy_points_' + minutesDDs.activeThirdFantasy]}}
+                        </td>
+                        <td>{{item.fantasy_points[minutesDDs.activeThirdFantasy + '_per_game']}}</td>
+                        <td>{{item.fantasy_points[minutesDDs.activeThirdFantasy + '_per_minute']}}</td>
+                        <td *ngFor="let fantasyHeader of data.fantasy.headers">
+                          {{item.fantasy_points[minutesDDs.activeThirdFantasy][fantasyHeader]}}
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+    <div *ngIf="bottomInfo?.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="bottomInfo.bottom_header" class="page-heading-two">
+        {{bottomInfo.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="bottomInfo.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+</div>

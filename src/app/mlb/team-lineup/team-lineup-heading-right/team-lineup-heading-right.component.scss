@@ -1,0 +1,66 @@
+:host {
+  .updated-block-mobile {
+    display: none;
+    font-size: 13px;
+    font-weight: normal;
+  }
+  @media (min-width: 992px) and (max-width: 1100px), (max-width: 775px) {
+    .updated-block-mobile {
+      display: inline-block;
+    }
+    .team-lineup-heading-right .float-right {
+      margin-top: -9px;
+      margin-bottom: 11px;
+    }
+    .team-lineup-heading-right > div > h4 {
+      display: inline-block;
+      margin-right: 4px;
+      float: none;
+      width: auto !important;
+    }
+  }
+  @media (max-width: 775px) {
+    .team-lineup-heading-right .float-right {
+      h4.event-date, h4.opponent-team-name span {
+        font-size: 13px;
+      }
+      .updated-block-mobile {
+        font-size: 11px;
+        margin-top: 6px;
+      }
+    }
+  }
+  @media (max-width: 500px) {
+    .team-lineup-heading-right .float-right {
+      h4.opponent-team-name, h4.opponent-team-name span {
+        font-size: 12px;
+      }
+      h4.event-date {
+        font-size: 10px;
+      }
+      .updated-block-mobile {
+        font-size: 10px;
+      }
+    }
+  }
+  @media (max-width: 359px) {
+    .team-lineup-heading-right .float-right {
+      h4.opponent-team-name, h4.opponent-team-name span {
+        font-size: 12px;
+      }
+      h4.event-date {
+        font-size: 10px;
+      }
+      .updated-block-mobile {
+        font-size: 9px;
+      }
+    }
+  }
+  @media (min-width: 576px) and (max-width: 1100px) {
+    .updated-block-mobile {
+      position: absolute;
+      right: 0;
+      margin-top: 3px;
+    }
+  }
+}

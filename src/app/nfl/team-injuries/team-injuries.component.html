@@ -1,0 +1,121 @@
+<div class="container-fluid">
+  <app-breadcrumb></app-breadcrumb>
+  <!-- Starting Lineups Page Title -->
+  <div class="row">
+    <div class="team-lineup-heading-wrap nfl-team-depth-chart-heading col-lg-8 col-12">
+      <!-- Team Lineup Heading Text-->
+      <div class="team-lineup-heading-text">
+        <!-- Team Lineup Heading Left -->
+        <div class="team-lineup-heading-left" [ngClass]="{'no-opponent': !data.nav.opp_depth_chart_route}">
+          <div class="team-logo with-status">
+            <img [type]="'white'" [appSpriteImg]="'nfl'" align="middle" [src]="data.nav.team_logo_white" alt="{{data.nav.team_name_full}}"/>
+          </div>
+          <div class="team-heading-info">
+            <app-status
+              side="right"
+              isHeader="true"
+              mobileTitle="{{data.nav.team_name_full | lastTeamName}} Injuries"
+              [teamName]="pageTitle"
+              [record]="data.nav.team_record + ', ' + data.nav.team_rank + ' ' + data.nav.team_league + ' ' + data.nav.team_division"
+            ></app-status>
+          </div>
+        </div>
+        <!-- Team Lineup Heading Right -->
+        <div *ngIf="data.nav.opp_depth_chart_route" class="team-lineup-heading-right">
+          <div *ngIf="!data.nav.status || (data.nav.status.status !== 'In Progress' && data.nav.status.status !== 'Final')" class="float-right">
+            <h4 class="opponent-team-name">{{data.nav.is_home ? 'vs' : 'at'}} {{data.nav.opp_abbr}}</h4>
+            <h4 class="event-date">
+              <app-general-time-format [time]="data.nav.matchup_time"></app-general-time-format>
+            </h4>
+          </div>
+          <div *ngIf="data.nav.status?.status === 'In Progress'" class="float-right">
+            <span [ngClass]="{'font-bold': data.nav.status.away_has_ball}">{{data.nav.status.away}} {{data.nav.status.away_score}}</span> @ <span [ngClass]="{'font-bold': data.nav.status.home_has_ball}">{{data.nav.status.home}} {{data.nav.status.home_score}}</span>
+            <br>
+            <p class="text-center">
+              {{data.nav.status.down}} & {{data.nav.status.distance}}, Q{{data.nav.status.quarter}} {{data.nav.status.time_remaining}}
+            </p>
+          </div>
+          <div *ngIf="data.nav.status?.status === 'Final'" class="float-right">
+            <span [ngClass]="{'font-bold': data.nav.status.away_score > data.nav.status.home_score}">{{data.nav.status.away}} {{data.nav.status.away_score}}</span> @ <span [ngClass]="{'font-bold': data.nav.status.home_score > data.nav.status.away_score}">{{data.nav.status.home}} {{data.nav.status.home_score}}</span>
+            <br>
+            <p class="text-center">Final</p>
+          </div>
+        </div>
+      </div>
+      <!-- Collapse Menu -->
+      <div class="in-page-collapse-toggle">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="isCollapsed = !isCollapsed"
+                [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+          Menu
+        </button>
+      </div>
+      <div class="in-page-nav-menu" [ngbCollapse]="!isCollapsed" [ngClass]="{'hidden': !isCollapsed}">
+        <!-- Team Lineup Heading Navigation -->
+        <div class="page-heading-navigation">
+          <div *ngIf="data.nav.is_home && data.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [routerLink]="[data.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{ data.nav.opp_name | lastTeamName}} Depth Chart</a>
+          </div>
+          <div *ngIf="!data.nav.is_home" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [routerLink]="[data.nav.team_depth_chart_route]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="page-heading-nav-btn">{{ data.nav.team_name | lastTeamName}} Depth Chart</a>
+          </div>
+          <div *ngIf="data.nav.is_home" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [routerLink]="[data.nav.team_depth_chart_route]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="page-heading-nav-btn">{{ data.nav.team_name | lastTeamName}} Depth Chart</a>
+          </div>
+          <div *ngIf="!data.nav.is_home && data.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [routerLink]="[data.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{ data.nav.opp_name | lastTeamName}} Depth Chart</a>
+          </div>
+          <div *ngIf="data.nav.matchup_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appNflMatchupIdPreselect]="data.nav.game_key" [routerLink]="[data.nav.matchup_route]" routerLinkActive="active" class="page-heading-nav-btn">Matchups</a>
+          </div>
+          <!--news commented-->
+          <!--<div *ngIf="data.nav.team_news_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">-->
+            <!--<a [routerLink]="[data.nav.team_news_route]" routerLinkActive="active" class="page-heading-nav-btn">News</a>-->
+          <!--</div>-->
+          <div *ngIf="data.nav.team_stats_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [routerLink]="[data.nav.team_stats_route]" routerLinkActive="active" class="page-heading-nav-btn">Stats</a>
+          </div>
+          <div *ngIf="data.nav.team_snaps_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [routerLink]="[data.nav.team_snaps_route]" routerLinkActive="active" class="page-heading-nav-btn">Snaps</a>
+          </div>
+          <div *ngIf="data.nav.team_roster_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [routerLink]="[data.nav.team_roster_route]" routerLinkActive="active" class="page-heading-nav-btn">Roster</a>
+          </div>
+          <div *ngIf="data.nav.team_injuries_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [routerLink]="[data.nav.team_injuries_route]" routerLinkActive="active" class="page-heading-nav-btn">Injuries</a>
+          </div>
+          <div *ngIf="data.nav.team_schedule_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt last">
+            <a [routerLink]="[data.nav.team_schedule_route]" class="page-heading-nav-btn">Schedule</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 after-heading-margin zero-lg-height smaller-lg-box">
+      <app-ad-component [league]="'nfl'"></app-ad-component>
+    </div>
+  </div>
+  <div class="row">
+    <div *ngIf="bottomContent?.intro_paragraph" class="col-lg-8 col-12 flex-last flex-sm-unordered after-text-margin">
+      <p class="site-pages-content m-0" [innerHtml]="bottomContent.intro_paragraph | safeHtml"></p>
+    </div>
+    <div class="col-12" [ngClass]="{'no-intro-paragraph': !bottomContent?.intro_paragraph}">
+      <div class="pb-3">
+        <app-injuries
+          [isTeamPage]="true"
+          [currentLeague]="'nfl'"
+          [selectedTeamNames]="[data.nav.team_abbr]"
+          [itemsPerPage]="1000"
+          (onApiUpdate)="onApiUpdate($event)"
+        ></app-injuries>
+      </div>
+    </div>
+    <div *ngIf="bottomContent?.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="bottomContent.bottom_header" class="page-heading-two">
+        {{bottomContent.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="bottomContent.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+</div>
+
+
+

@@ -1,0 +1,218 @@
+version: 2
+jobs:
+  build-dev:
+    working_directory: ~/lineupscom/frontend
+    docker:
+      - image: circleci/node:10.14.1
+    steps:
+      - checkout
+      # Restore local dependencies from cache
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          - v1-dependencies-
+      - run:
+          name:  Fix for angular error
+          command: |
+            npm install
+            npm uninstall ajv
+            npm install ajv@6.8.1
+            npm install
+      # Cache local dependencies if they don't exist
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - restore_cache:
+          key: v1-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Build dev application
+          command:
+            npm run build:dev-client
+          no_output_timeout: 45m
+      - run: npm run build:dev-aot
+      - run: npm run build:server:dev
+      - save_cache:
+          key: v1-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - dist
+
+  build-stage:
+    working_directory: ~/lineupscom/frontend
+    docker:
+      - image: circleci/node:10.14.2
+
+    steps:
+      - checkout
+      - run:
+          name:  Fix for angular error
+          command: |
+            npm install
+            npm uninstall ajv
+            npm install ajv@6.8.1
+            npm install
+      - run:
+          name: Build staging application
+          command:
+            npm run build:stage-client
+          no_output_timeout: 45m
+      - run: npm run build:stage-aot
+      - run: npm run build:server:stage
+      - save_cache:
+          key: v1-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}-stage
+          paths:
+            - dist
+
+  build-production:
+    working_directory: ~/lineupscom/frontend
+    docker:
+      - image: circleci/node:10.14.2
+
+    steps:
+      - checkout
+      - run:
+          name:  Fix for angular error
+          command: |
+            npm install
+            npm uninstall ajv
+            npm install ajv@6.8.1
+            npm install
+      - run:
+          name: Build prod application
+          command:
+            npm run build:client
+          no_output_timeout: 45m
+      - run: npm run build:aot
+      - run: npm run build:server:prod
+      - save_cache:
+          key: v1-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}-production
+          paths:
+            - dist
+
+  deploy-dev:
+    working_directory: ~/lineupscom/frontend
+    docker:
+      - image: circleci/node:10.14.2
+    steps:
+      - checkout
+      - run: echo ${CIRCLE_BRANCH}
+      - restore_cache:
+          key: v1-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+      - run: sudo apt-get update
+      - run: sudo apt-get install -y awscli
+      - run: sudo apt-get install python-dev
+      - run: sudo apt-get install build-essential
+      - run: sudo apt-get install python3-pip
+      - run: sudo pip3 install pip -U
+      - run: sudo pip3 install awsebcli --upgrade --ignore-installed six
+      - run: rm -rf node_modules/ && rm -rf package-lock.json && npm cache clean -f && npm i
+      - run: eb deploy lineups-dev-universal-v3
+
+  deploy-stage:
+    working_directory: ~/lineupscom/frontend
+    docker:
+      - image: circleci/node:10.14.2
+    steps:
+      - checkout
+      - run: echo ${CIRCLE_BRANCH}
+      - restore_cache:
+          key: v1-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}-stage
+      - run: sudo apt-get update
+      - run: sudo apt-get install -y awscli
+      - run: sudo apt-get install python-dev
+      - run: sudo apt-get install build-essential
+      - run: sudo apt-get install python3-pip
+      - run: sudo pip3 install pip -U
+      - run: sudo pip3 install awsebcli --upgrade --ignore-installed six
+      - run: rm -rf node_modules/ && rm -rf package-lock.json && npm cache clean -f && npm i
+      - run: eb deploy lineups-staging-universal-v2 --timeout 15
+
+  deploy-production:
+    working_directory: ~/lineupscom/frontend
+    docker:
+      - image: circleci/node:10.14.2
+    steps:
+      - checkout
+      - run: echo ${CIRCLE_BRANCH}
+      - restore_cache:
+          key: v1-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}-production
+      - run: sudo apt-get update
+      - run: sudo apt-get install -y awscli
+      - run: sudo apt-get install python-dev
+      - run: sudo apt-get install build-essential
+      - run: sudo apt-get install python3-pip
+      - run: sudo pip3 install pip -U
+      - run: sudo pip3 install awsebcli --upgrade --ignore-installed six
+      - run: rm -rf node_modules/ && rm -rf package-lock.json && npm cache clean -f && npm i
+      - run: eb deploy lineups-production-universal-v3 --timeout 15
+#      - run: aws configure set preview.cloudfront true
+#      - run: aws cloudfront create-invalidation --cli-input-json "{\"DistributionId\":\"E2CAIO4776LUFJ\",\"InvalidationBatch\":{\"Paths\":{\"Quantity\":1,\"Items\":[\"/*\"]},\"CallerReference\":\"$(date +%s)\"}}"
+
+workflows:
+  version: 2
+  build-deploy-develop:
+    jobs:
+      - build-dev:
+          filters:
+            branches:
+              only: develop
+              ignore: 
+                - stage
+                - master
+                - /^.+/
+      - deploy-dev:
+          requires:
+            - build-dev
+          filters:
+            branches:
+              only: develop
+              ignore: 
+                - stage
+                - master
+                - /^.+/
+
+  build-deploy-stage:
+    jobs:
+      - build-stage:
+          filters:
+            tags:
+                ignore: /(production).+/
+            branches:
+              only: stage
+              ignore:
+                - develop
+                - master
+                - /^.+/
+      - deploy-stage:
+          requires:
+            - build-stage
+          filters:
+            tags:
+                ignore: /(production).+/
+            branches:
+              only: stage
+              ignore: 
+                - develop
+                - master
+                - /^.+/
+
+  build-deploy-production:
+    jobs:
+      - build-production:
+          filters:
+            branches:
+              only: master
+              ignore:
+                - develop
+                - stage
+                - /^.+/
+      - deploy-production:
+          requires:
+            - build-production
+          filters:
+            branches:
+              only: master
+              ignore:
+                - develop
+                - master
+                - /^.+/

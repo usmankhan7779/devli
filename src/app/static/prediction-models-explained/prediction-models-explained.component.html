@@ -1,0 +1,36 @@
+<div class="container-fluid site-pages-wrapper-container">
+  <!-- Breadcrumbs -->
+  <app-breadcrumb></app-breadcrumb>
+  <div class="site-pages-wrapper">
+    <div class="row mb-5">
+      <div class="col-12">
+        <h1 class="site-pages-title">Prediction Models Explained</h1>
+      </div>
+      <div class="col-12">
+        <p class="site-pages-content">
+          The simulation engine is powered by a choice of one of these probability models as follows:
+        </p>
+        <p class="site-pages-content">
+          Given a game state, e.g., “Team X on the drive; 3rd and long; down by 7 points; at the 35 yard line; etc.;“, the model will predict the probability of all possible outcomes at the snap, e.g., “Pass long at target A,B,C,…” or “Field Goal Attempt”, and the simulator will choose one randomly in proportion to its probability, then update the game state accordingly. This process is iterated until the game ends.
+        </p>
+        <p class="site-pages-content">
+          Thousands of simulations per game are computed, giving rise to distributions of all player- and game-level observables, e.g., Player X’s receiving yards or the game total, from which expected values and fair odds are computed.
+        </p>
+        <h5><strong>Logistic Regression Prediction Model</strong></h5>
+        <p class="site-pages-content">
+          Logistic regression is a workhorse parametric model for classification problems in machine-learning. it optimizes the weights of parameters (inputs) together to maximize the likelihood of correct predictions.
+        </p>
+        <h5><strong>Random Forest Prediction Model</strong></h5>
+        <p class="site-pages-content">
+          Random forest is a non-parametric ensemble approach to regression and classification problems. each prediction is effectively a pooled vote from a set of weak models called decision trees, each one trained on slightly different copies of the data and on different inputs.
+        </p>
+        <h5><strong>Basic Prediction Model</strong></h5>
+        <p class="site-pages-content">
+          Basic uses averaged outcomes to weigh predictions. For Example, if Player A gives up a hit 20% of the time and Player B gets a hit 30% of the time, we predict a hit 25% of the time.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+

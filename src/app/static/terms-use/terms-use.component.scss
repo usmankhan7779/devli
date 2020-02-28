@@ -1,0 +1,44 @@
+/**Terms and Conditions**/
+.Terms-Use{
+  float:left;
+  width:100%;
+  margin-top:20px;
+}
+.Terms-Use h1{
+  float:left;
+  width:100%;
+  clear:both;
+  font-family: 'Lato', sans-serif;
+  font-weight:700;
+  font-size:20px;
+}
+.Terms-Use p{
+  float:left;
+  width:100%;
+  font-family: 'Lato', sans-serif;
+  font-size:15px;
+}
+.Terms-Use a, .Terms-Use a:hover, .Terms-Use p a:active, .Terms-Use p a:focus{
+  color:#01afed;
+  text-decoration:none;
+}
+.Terms-Use ul{
+  float:left;
+  width:100%;
+  padding:0px 0px 0px 0px;
+  margin:0px 0px 1rem 0px;
+}
+.Terms-Use ul li{
+  float:left;
+  width:100%;
+  clear:both;
+  font-size:13px;
+  color:#333333;
+  margin-bottom:5px;
+  list-style:none;
+  padding:0px !important;
+}
+.Terms-Use ul li:last-child{
+  margin:0px;
+}
+/**Terms and Conditions End**/

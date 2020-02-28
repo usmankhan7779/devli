@@ -1,0 +1,129 @@
+<!-- Starting Lineups Content -->
+<div class="data-mining content">
+  <!-- Starting Lineup Box Loader -->
+  <!--<div *ngIf="dataMiningData === undefined" class="starting-lineup-loader">-->
+  <!--<img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">-->
+  <!--</div>-->
+  <!-- Page Wrap -->
+  <!--<div *ngIf="dataMiningData !== undefined" class="page-wrap container-fluid">-->
+  <div class="page-wrap container-fluid">
+    <!-- Breadcrumbs -->
+    <app-breadcrumb></app-breadcrumb>
+    <!-- Starting Lineups Page Title -->
+    <div class="team-lineup-heading-wrap col-md-8">
+      <!-- Team Lineup Heading Text-->
+      <div class="team-lineup-heading-text">
+        <!-- Team Lineup Heading Left -->
+        <div class="team-lineup-heading-left">
+          <div class="team-logo" [ngClass]="{
+                     'team-logo-preload': dataMiningData === undefined,
+                     'team-logo-loaded': dataMiningData !== undefined
+                }">
+            <!--<img *ngIf="teamLineup?.team.logo_url !== null" [src]="teamLineup?.team.logo_url" />-->
+          </div>
+          <div class="team-heading-info">
+            <h1 class="team-name">Atlanta Braves Lineup</h1>
+            <h4 class="page-subheading team-meta-info">
+              <!--<span class="team-record">{{teamLineup.team.record.wins}}-{{teamLineup.team.record.losses}},</span>-->
+              <span class="team-record">29-36,</span>
+              <!-- Team Division Rank -->
+              <!--<span class="team-division-rank">{{teamLineup.team.record.division_rank}}GB</span>-->
+              <!--<span class="team-league-and-division"> in {{teamLineup.team.record.league}} {{teamLineup.team.record.division}}</span>-->
+              <span class="team-division-rank">2.5 GB</span>
+              <span class="team-league-and-division"> in NL East</span>
+            </h4>
+          </div>
+          <div class="team-heading-lineup-state participant-lineup-state">
+            <!-- Team Lineup State -->
+            <div *ngIf="true" class="confirmed-lineup">
+              <p class="lineup-state confirmed"><img src="/assets/images/green-check.png" alt="green-check" /> Confirmed</p>
+            </div>
+            <div *ngIf="false" class="projected-lineup">
+              <p class="lineup-state projected"><img src="/assets/images/red-x.png" alt="red-x" /> Projected</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Lineup Heading Right -->
+        <div class="team-lineup-heading-right">
+          <h4 class="opponent-team-name">
+            <!--<span *ngIf="teamLineup?.team.current_game_info.at_or_vs === 'at'" class="team-game-location">at</span>-->
+            <!--<span *ngIf="teamLineup?.team.current_game_info.at_or_vs === 'vs'" class="team-game-location">vs</span>-->
+            <span class="team-game-location">at</span>
+            <!--<span class="opponent-team-name">{{teamLineup?.team.current_game_info.opp_full}}</span>-->
+            <span class="opponent-team-name">Boston Red Sox</span>
+          </h4>
+          <!--<h4 class="event-date">{{teamLineup.team.current_game_info.game_time_dt | date:'shortTime'}} ({{teamLineup.team.current_game_info.game_time_dt | date:'MMM d'}})</h4>-->
+          <h4 class="event-date">8:15PM (June 13)</h4>
+        </div>
+      </div>
+
+      <!-- Team Lineup Heading Navigation -->
+      <div class="page-heading-navigation data-mining">
+        <div class="home-team-tab tab-btn-wrap">
+          <a [routerLink]="'/mlb/lineups/' + activeYear + '/' + teamLineup.team.current_game_info.team_route" [routerLinkActive]="'active'" class="page-heading-nav-btn">{{teamLineup?.team.current_game_info.team_name}} Lineup</a>
+        </div>
+        <div class="away-team-tab tab-btn-wrap">
+          <a [routerLink]="'/mlb/lineups/' + activeYear + '/' + teamLineup.team.current_game_info.opp_route" [routerLinkActive]="'active'" class="page-heading-nav-btn">{{teamLineup?.team.current_game_info.opp_name}} Lineup</a>
+        </div>
+        <div class="tab-btn-wrap">
+          <a class="page-heading-nav-btn">Matchups</a>
+        </div>
+        <!--news commented-->
+        <!--<div class="tab-btn-wrap">-->
+          <!--<a [routerLink]="['/mlb/lineups/' + activeYear + '/' + teamNameParam + '/news']" [routerLinkActive]="'active'" class="page-heading-nav-btn">News</a>-->
+        <!--</div>-->
+        <div class="tab-btn-wrap">
+          <a [routerLink]="['/mlb/lineups/' + activeYear + '/' + teamNameParam + '/data-mining']" [routerLinkActive]="'active'"[routerLinkActive]="'active'" class="page-heading-nav-btn">Data Mining</a>
+        </div>
+        <div class="tab-btn-wrap">
+          <a [routerLink]="['/mlb/lineups/' + activeYear + '/' + teamNameParam + '/roster']" [routerLinkActive]="'active'" class="page-heading-nav-btn">Roster</a>
+        </div>
+        <div class="tab-btn-wrap">
+          <a class="page-heading-nav-btn">Schedule</a>
+        </div>
+      </div>
+
+      <!-- Team Name Label -->
+      <div class="team-name-label">
+        <h2>Braves Players Data Insights</h2>
+      </div>
+
+    </div>
+
+    <!-- Data Mining Content-->
+    <section id="data-mining-content">
+
+      <div *ngFor="let data of dataMiningList; let i = index;" class="starting-lineup-wrapper">
+        <div class="data-mining-dataset-inner" [ngClass]="{'right': i % 2 == 1, 'center': dataMiningList.length === i + 1 && i % 2 == 0 }">
+          <table class="table">
+            <thead class="stats-head">
+            <tr>
+              <th class="stat-full">
+                <div class="team-logo-thumb" [ngClass]="{
+                     'team-logo-preload': dataMiningData === undefined,
+                     'team-logo-loaded': dataMiningData !== undefined
+                }">
+                  <!--<img *ngIf="teamLineup?.team.logo_url !== null" [src]="teamLineup?.team.logo_url" />-->
+                </div>
+                <span class="insight-label">John Smoltz Insights</span>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Table Rows -->
+            <!--<tr *ngFor="let qb of depthChart.away_qb" class="depth-charts-tr">-->
+            <tr *ngFor="let row of data.info" class="depth-charts-tr">
+              <td class="stat-full">
+                <span>{{row}}</span>
+              </td>
+
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+:host {
+  $spacing: 15;
+  .depth-charts-wrapper {
+    margin: 0 -#{$spacing}px 0 -#{$spacing}px;
+    .single-depth-chart-wrapper {
+      margin: 0 #{$spacing}px;
+      display: inline-block;
+      flex-grow: 1;
+      width: calc(100% * (1/4) - 1px);
+      @media (max-width: 1350px) {
+        width: calc(100% * (1/3) - 1px);
+      }
+      @media (max-width: 690px) {
+        width: calc(100% * (1/2) - 1px);
+      }
+    }
+  }
+}
+

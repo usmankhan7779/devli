@@ -1,0 +1,327 @@
+:host {
+  $mobile-resolution: 698px;
+  $mobile-resolution-big: 1320px;
+  $short-name-br-1: 1735px;
+  $short-name-br: 948px;
+  $player-short-name-br: 385px;
+  $hide-pts: 315px;
+  @import '../../../../scss/custom-components/lineup-item';
+  th.hitters-stat-col {
+    width: 215px;
+  }
+  .hitter-data, .pitcher-data {
+    min-width: 155px;
+  }
+  .hitter-table, .pitcher-table {
+    min-width: 284px;
+  }
+  .lineup-foot-stat-col {
+    width: 25%;
+    height: 90px;
+    @media (min-width: 992px) and (max-width: 1150px) {
+      width: 50%;
+    }
+    @media (max-width: 768px) {
+      height: auto;
+      width: 50%;
+    }
+    @media (max-width: 650px) {
+      height: auto;
+      width: 100%;
+    }
+  }
+  .event-mid-stats, .event-lineup-footer-row {
+    overflow: hidden;
+  }
+  .btn.lineup-data-btn {
+    background: #4e4e6a;
+    height: 37px;
+    color: #FFF;
+    font-weight: 500;
+    display: inline-block;
+    line-height: 36px;
+    border-radius: 0;
+    font-size: 14px;
+    padding: 0 23px;
+  }
+  .injuries-wrapper {
+    font-size: 0.8rem;
+    background: #fafafa;
+    padding: 19px 10px 0 10px;
+    p {
+      margin: 0;
+    }
+  }
+  .starting-lineup-box.left {
+    clear: left;
+  }
+  .stand-horizontal-table-wrapper {
+    background-color: white;
+  }
+  .match-odds-btn-wrapper {
+    @media (min-width: 769px) {
+      margin-top: 20px;
+    }
+  }
+
+  .event-top-participants.depth-chart-box-top .event-top-participant-standing {
+    font-size: 16px;
+  }
+  .event-time {
+    padding-right: 0;
+  }
+  .home-participant-content {
+    padding-left: 8px;
+  }
+  .at-symbol {
+    text-align: center;
+    line-height: 5px;
+    font-weight: bold;
+  }
+  .event-mobile-details {
+    display: none;
+  }
+
+  .short-team-name, .mobile-standing {
+    display: none;
+  }
+  .normal-team-name {
+    display: inline-block;
+  }
+
+  @media (max-width: $short-name-br-1) {
+    .event-date-mid {
+      width: 30%;
+      float: left;
+    }
+    th.hitters-stat-col {
+      width: 190px;
+    }
+    .event-top-participants.depth-chart-box-top {
+      height: 91px;
+    }
+    .event-away-participant,
+    .event-home-participant {
+      width: 35%;
+      float: left;
+    }
+  }
+
+  @media (min-width: 992px) and (max-width: $short-name-br-1), (min-width: $mobile-resolution) and (max-width: $short-name-br) {
+    .short-team-name {
+      display: inline-block;
+    }
+    .normal-team-name {
+      display: none;
+    }
+    .event-top-participants.depth-chart-box-top .event-top-participant-standing {
+      font-size: 12px;
+      line-height: 20px;
+    }
+  }
+
+  @media (min-width: 992px) and (max-width: $mobile-resolution-big), (max-width: $mobile-resolution) {
+    .event-mid-row h4, .event-mid-row, .projected-lineup > span {
+      font-size: 14px;
+    }
+    .mobile-standing {
+      display: block;
+      text-align: center;
+      font-size: 11px;
+      margin-top: 8px;
+    }
+  }
+
+  @media (min-width: 992px) and  (max-width: $mobile-resolution-big), (max-width: $mobile-resolution) {
+    .event-top-participants.depth-chart-box-top {
+      padding: 12px 0;
+    }
+    .at-symbol {
+      display: none;
+    }
+    .event-mobile-details {
+      display: block;
+      white-space: nowrap;
+    }
+    .away-participant-wrapper .away-participant-content {
+      display: none;
+    }
+    .home-participant-wrapper .home-participant-content {
+      display: none;
+    }
+    .event-top-participants.depth-chart-box-top .event-participant-logo.away-participant-logo {
+      display: block;
+      margin: 0 auto;
+    }
+    .event-top-participants.depth-chart-box-top .event-participant-logo.home-participant-logo {
+      display: block;
+      margin: 0 auto;
+    }
+    .event-top-participants.depth-chart-box-top .event-participant-logo {
+      top: 6px;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .event-mobile-details {
+      display: none;
+    }
+    .away-participant-wrapper {
+      .away-participant-content {
+        display: inline-block;
+        padding-right: 13px;
+      }
+    }
+    .home-participant-wrapper {
+      .home-participant-content {
+        display: inline-block;
+        padding-left: 13px;
+      }
+    }
+
+    .event-top-participants.depth-chart-box-top .event-participant-logo {
+      top: -16px;
+    }
+
+    .event-top-participants.depth-chart-box-top .event-participant-logo.home-participant-logo,
+    .event-top-participants.depth-chart-box-top .event-participant-logo.away-participant-logo {
+      margin: 0;
+      display: inline-block;
+    }
+    .away-participant-content {
+      text-align: right;
+    }
+    .home-participant-content {
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 678px) {
+    .event-mid-row h4, .event-mid-row, .projected-lineup > span {
+      font-size: 12px;
+    }
+  }
+
+  @media (max-width: $mobile-resolution) {
+    .event-mobile-details {
+      display: block;
+    }
+    .away-participant-wrapper .away-participant-content {
+      display: none;
+    }
+    .home-participant-wrapper .home-participant-content {
+      display: none;
+    }
+    .event-top-participants.depth-chart-box-top .event-participant-logo.away-participant-logo {
+      display: block;
+      margin: 0 auto;
+    }
+    .event-top-participants.depth-chart-box-top .event-participant-logo.home-participant-logo {
+      display: block;
+      margin: 0 auto;
+    }
+    .event-top-participants.depth-chart-box-top .event-participant-logo {
+      top: 6px;
+    }
+    .event-date-mid {
+      width: 33.3333%;
+    }
+    .event-away-participant {
+      width: 33.3333%;
+    }
+    .event-home-participant {
+      width: 33.3333%;
+    }
+  }
+
+  @media (max-width: 530px) {
+    .event-top-participant-record {
+      display: block;
+      .event-top-participant-record-comma{
+        display: none;
+      }
+    }
+    .event-top-participants.depth-chart-box-top {
+      height: 105px;
+    }
+  }
+
+  @media (max-width: 430px) {
+    .event-mid-row h4, .event-mid-row, .projected-lineup > span {
+      font-size: 10px;
+    }
+    .mobile-standing {
+      font-size: 9px;
+    }
+  }
+
+  @media (min-width: 1431px) {
+    .away-participant-stats,
+    .home-participant-stats {
+      margin-bottom: -99999px + 77px;
+      padding-bottom: 99999px;
+      background: #fafafa;
+    }
+    .event-mid-stats {
+      position: relative;
+    }
+    .lineup-data-btn-wrapper {
+      padding: 19px 0;
+      border-bottom: 1px solid #333333;
+      position: absolute;
+      width: 50%;
+      bottom: 0;
+      z-index: 0;
+      border-right: 1px solid #333333;
+    }
+    .home-participant-stats .lineup-data-btn-wrapper {
+      border-right: transparent;
+    }
+  }
+  @media (max-width: 1430px) {
+    .away-participant-stats {
+      width: 100%;
+      border-right: 0;
+    }
+    .home-participant-stats {
+      width: 100%;
+    }
+  }
+  @media (max-width: 991px){
+    .starting-lineup-box.center {
+      float: left;
+    }
+  }
+  .player-short-name {
+    display: none;
+  }
+  @media (max-width: $player-short-name-br) {
+    .player-name {
+      display: none;
+    }
+    .player-short-name {
+      display: inline;
+    }
+    th.hitters-stat-col {
+      width: 155px;
+    }
+  }
+  @media (max-width: 380px){
+    .stand-horizontal-table-wrapper:not(.custom-br) {
+      overflow-x: auto;
+    }
+  }
+  @media (max-width: $hide-pts) {
+    .pts-col {
+      display: none;
+    }
+    .hitter-table, .pitcher-table {
+      min-width: 247px;
+    }
+  }
+  @media (max-width: 355px) {
+    .projected-lineup .lineup-state > span {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,199 @@
+<div class="row">
+  <div class="col-12 table-sect-wrap">
+    <!-- Static Positioned Tabled -->
+    <div class="static-table-wrapper">
+      <table
+        [mfRowsOnPage]="_rowsOnPage" [mfData]="data"
+        [(mfSortBy)]="sortBy"
+        [(mfSortOrder)]="sortOrder"
+        (mfSortByChange)="onSortOrder('by', $event)"
+        (mfSortOrderChange)="onSortOrder('order', $event)"
+        #staticMfDataTable="mfDataTable"
+        [ngClass]="{'three-col': showPos}"
+        class="static-table stats-table table table-bordered multi-table-static bound-to-multi-row-data-table">
+        <tbody>
+        <tr class="t-sub-header static-sub-header">
+          <th class="player-name-col">
+            <mfSorter [by]="(isNewApiFormat ? 'full_name' : 'name')">NAME</mfSorter>
+          </th>
+          <th *ngIf="showPos" class="position-col">
+            <mfSorter by="position">POS</mfSorter>
+          </th>
+          <th class="rating position-col">
+            <mfSorter by="lineups_rating">RTG</mfSorter>
+          </th>
+        </tr>
+        </tbody>
+        <tbody class="static-table-body">
+
+          <ng-template #trStaticTpl let-target="target">
+            <td class="player-name-col text-left">
+              <app-player-link [league]="'nfl'" [playerName]="(isNewApiFormat ? target.full_name : target.name)" [playerUrl]="target.profile_url" [generateShortName]="false"></app-player-link>
+            </td>
+            <td *ngIf="showPos" class="show-border">{{target.position}}</td>
+            <td class="position-col main-border">
+              <span *ngIf="target.lineups_rating != null"><app-rating [value]="target.lineups_rating"></app-rating></span>
+              <span *ngIf="target.lineups_rating == null">N/A</span>
+            </td>
+          </ng-template>
+
+          <ng-template #noPaginationStaticTpl>
+            <tr *ngFor="let target of staticMfDataTable.data">
+              <ng-template [ngTemplateOutlet]="trStaticTpl" [ngTemplateOutletContext]="{target: target}"></ng-template>
+            </tr>
+          </ng-template>
+
+          <ng-container *ngIf="allowPagination; else noPaginationStaticTpl">
+            <tr *ngFor="let target of staticMfDataTable.data | paginate: { id: 'server', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: staticMfDataTable.data.length }">
+              <ng-template [ngTemplateOutlet]="trStaticTpl" [ngTemplateOutletContext]="{target: target}"></ng-template>
+            </tr>
+          </ng-container>
+
+        </tbody>
+      </table>
+    </div>
+    <!-- Horizontal Scrolling-->
+    <div [ngClass]="{'three-col': showPos}"
+         class="horizontal-table-wrapper">
+      <table
+        [mfRowsOnPage]="_rowsOnPage" [mfData]="data"
+        [(mfSortBy)]="sortBy"
+        [(mfSortOrder)]="sortOrder"
+        (mfSortByChange)="onSortOrder('by', $event)"
+        (mfSortOrderChange)="onSortOrder('order', $event)"
+        #mfDataTable="mfDataTable"
+        class="multi-row-data-table has-static-cols t-stripped">
+        <thead>
+        <tr class="t-sub-header">
+          <th width="14%" class="px-3 inner-col-switch">
+            <mfSorter [by]="(isNewApiFormat ? 'full_name' : 'name')">NAME</mfSorter>
+          </th>
+          <th *ngIf="showPos" class=" text-center inner-col-switch">
+            <mfSorter by="position">POS</mfSorter>
+          </th>
+          <th class="text-center inner-col-switch">
+            <mfSorter by="lineups_rating">RTG</mfSorter>
+          </th>
+          <th *ngIf="showTeam" class="text-center">
+            <mfSorter by="team">TEAM</mfSorter>
+          </th>
+          <th *ngIf="!showTeam && showGame" class="text-center">
+            <mfSorter by="game">GAME</mfSorter>
+          </th>
+          <th class="text-center">
+            <mfSorter by="fantasy_position_depth_order">DEPTH</mfSorter>
+          </th>
+          <th *ngFor="let week of weeks; let index = index" class="text-center">
+            <mfSorter *ngIf="index !== currentWeekIndex" [by]="sortWeekFunctions[index]">Wk {{index + 1}}</mfSorter>
+            <mfSorter *ngIf="index === currentWeekIndex" [by]="sortByCurrentWeek">Wk {{index + 1}}</mfSorter>
+          </th>
+          <th class="text-center" *ngIf="showGP">
+            <mfSorter by="played">GP</mfSorter>
+          </th>
+          <th class="text-center">
+            <mfSorter by="total">Total</mfSorter>
+          </th>
+          <th class="text-center">
+            <mfSorter by="average">Avg</mfSorter>
+          </th>
+          <th *ngIf="type === 'targets'" class="text-center">
+            <mfSorter [by]="customSortFns.tmTgt">TM TGT %</mfSorter>
+          </th>
+          <th *ngIf="type === 'snaps'" class="text-center">
+            <mfSorter by="season_snap_percent">TM SNAP %</mfSorter>
+          </th>
+          <th *ngIf="tableType === tableTypes[2]" class="text-center">
+            <mfSorter by="receptions">Catches</mfSorter>
+          </th>
+          <th *ngIf="tableType === tableTypes[5]" class="text-center">
+            <mfSorter [by]="countRushPercentage.bind(this)">Rush %</mfSorter>
+          </th>
+          <th *ngIf="tableType !== tableTypes[1] && tableType !== tableTypes[2] && tableType !== tableTypes[5]" class="text-center">
+            <mfSorter by="receptions">Rec</mfSorter>
+          </th>
+          <th *ngIf="tableType !== tableTypes[1] && tableType !== tableTypes[5]" class="text-center">
+            <mfSorter by="catch_percentage">Catch %</mfSorter>
+          </th>
+          <th class="text-center">
+            <mfSorter by="touchdowns">TD</mfSorter>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+          <ng-template #trTpl let-target="target">
+            <td class="text-left px-3 inner-col-switch">
+              <app-player-link [league]="'nfl'" [playerName]="(isNewApiFormat ? target.full_name : target.name)" [playerUrl]="target.profile_url" [generateShortName]="false"></app-player-link>
+            </td>
+            <td *ngIf="showPos" class="inner-col-switch">
+              <span>{{target.position}}</span>
+            </td>
+            <td class="inner-col-switch">
+              <span *ngIf="target.lineups_rating != null"><app-rating [value]="target.lineups_rating"></app-rating></span>
+              <span *ngIf="target.lineups_rating == null">N/A</span>
+            </td>
+            <td *ngIf="showTeam">
+            <span *ngIf="!target.team_depth_chart_route">
+              {{target.team}}
+            </span>
+              <a *ngIf="target.team_depth_chart_route"
+                 [appPreselectNflDepthChartTeamSeason]="params?.year"
+                 [routerLink]="target.team_depth_chart_route"
+                 class="link-black-underline">
+                {{target.team}}
+              </a>
+            </td>
+            <td *ngIf="!showTeam && showGame">
+              {{target.game}}
+            </td>
+            <td>{{target.fantasy_position_depth_order}}</td>
+            <td *ngFor="let week of weeks; let index = index">
+            <span *ngIf="checkWeek(target, index)">
+              <ng-container [ngSwitch]="_percentageType">
+                <ng-container *ngSwitchCase="'#'">
+                  {{target.weeks[(isNewApiFormat ? index : index + 1 )]}}
+                </ng-container>
+                <ng-container *ngSwitchCase="'%'">
+                  <ng-container *ngIf="target.snap_percentage_by_week || target.receiving_targets_percentage_by_week; let percentageByWeek" class="under-week">
+                    {{percentageByWeek[index]}}%
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  {{target.weeks[(isNewApiFormat ? index : index + 1 )]}}
+                  <span *ngIf="target.snap_percentage_by_week || target.receiving_targets_percentage_by_week; let percentageByWeek" class="under-week">
+                    {{percentageByWeek[index]}}%
+                  </span>
+                </ng-container>
+              </ng-container>
+            </span>
+            </td>
+            <td *ngIf="showGP">{{target.played}}</td>
+            <td>{{target.total | numberWithCommas}}</td>
+            <td>{{target.average}}</td>
+            <td *ngIf="type === 'targets'">
+              {{target.season_target_percent}}
+            </td>
+            <td *ngIf="type === 'snaps'">
+              {{target.season_snap_percent}}
+            </td>
+            <td *ngIf="tableType === tableTypes[5]">{{countRushPercentage(target)}}%</td>
+            <td *ngIf="tableType !== tableTypes[1] && tableType !== tableTypes[5]">{{target.receptions}}</td>
+            <td *ngIf="tableType !== tableTypes[1] && tableType !== tableTypes[5]">{{target.catch_percentage}}%</td>
+            <td>{{target.touchdowns}}</td>
+          </ng-template>
+
+          <ng-template #noPaginationTpl>
+            <tr class="t-content" *ngFor="let target of mfDataTable.data">
+              <ng-template [ngTemplateOutlet]="trTpl" [ngTemplateOutletContext]="{target: target}"></ng-template>
+            </tr>
+          </ng-template>
+
+          <ng-container *ngIf="allowPagination; else noPaginationTpl">
+            <tr class="t-content" *ngFor="let target of mfDataTable.data | paginate: { id: 'server', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: mfDataTable.data.length }">
+              <ng-template [ngTemplateOutlet]="trTpl" [ngTemplateOutletContext]="{target: target}"></ng-template>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

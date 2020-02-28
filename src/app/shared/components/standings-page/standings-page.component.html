@@ -1,0 +1,639 @@
+<ng-template #loadingTpl>
+  <div class="starting-loader">
+    <img class="loader-image" alt="loader-image" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+<ng-template #noneTpl>
+ -
+</ng-template>
+
+<ng-template #nbaTableTpl let-tableData="tableData" let-customSubHeader="customSubHeader" let-logo="logo" let-heading="heading" let-tabType="tabType">
+  <div class="table-sect-wrap">
+    <!-- Static Positioned Tabled -->
+    <div *ngIf="heading">
+      <div class="t-header">
+        <div class="text-left">
+          <img *ngIf="logo" class="league-logo" [src]="logo" alt="{{heading}}">
+          {{heading}}
+        </div>
+      </div>
+    </div>
+
+    <div class="static-table-wrapper">
+      <table
+        [mfRowsOnPage]="10000" [mfData]="tableData"
+        [(mfSortBy)]="sortBy"
+        [(mfSortOrder)]="sortOrder"
+        (mfSortByChange)="onSortBy($event)"
+        (mfSortOrderChange)="onSortOrder($event)"
+        #staticNbaMFTableTpl="mfDataTable"
+        class="static-table stats-table table table-bordered multi-table-static">
+        <thead>
+          <tr class="t-sub-header static-sub-header">
+            <th class="player-name-col">
+              {{customSubHeader ? customSubHeader : 'Team'}}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="static-table-body">
+          <tr *ngFor="let row of staticNbaMFTableTpl.data">
+            <td class="player-name-col">
+              <div class="nowrap">
+                <a [appPreselectNbaLineupTeamSeason]="year" [routerLink]="[row.team_lineup_route || '']" rel="nofollow noopener" class="link-black">
+                  <img [type]="'white'" [appSpriteImg]="'nba'" class="mr-1 logo-sm" [src]="row.white_logo" alt="{{row.city}} {{row.name}}"/>
+                </a>
+                <a [appPreselectNbaLineupTeamSeason]="year" [routerLink]="[row.team_lineup_route || '']" rel="noopener" class="link-black-underline">
+                  <span class="player-name-col-xs">
+                    {{row.name}}
+                  </span>
+                  <span class="player-name-col-lg">
+                    {{row.city}} {{row.name}}
+                  </span>
+                </a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Horizontal Scrolling-->
+    <div class="horizontal-table-wrapper">
+      <table
+        [mfRowsOnPage]="10000" [mfData]="tableData"
+        [(mfSortBy)]="sortBy"
+        [(mfSortOrder)]="sortOrder"
+        (mfSortByChange)="onSortBy($event)"
+        (mfSortOrderChange)="onSortOrder($event)"
+        #nbaMFTableTpl="mfDataTable"
+        class="multi-row-data-table t-stripped">
+        <thead>
+          <tr class="t-sub-header">
+            <th class="text-left inner-col-switch px-3" width="235px">
+              {{customSubHeader ? customSubHeader : 'Team'}}
+            </th>
+            <th class="text-center">
+              <mfSorter by="wins">W</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="losses">L</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="percentage">Pct</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter [by]="sortFunctions['games_behind' + (tabType || '')]">GB</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="conference_wins">Conf</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="division_wins">Div</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="home_wins">Home</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="away_wins">Away</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="last_ten_games_wins">L10</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="streak">Strk</mfSorter>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="t-content" *ngFor="let row of nbaMFTableTpl.data">
+            <td class="inner-col-switch text-left px-3">
+              <div class="nowrap">
+                <a [appPreselectNbaLineupTeamSeason]="year" [routerLink]="[row.team_lineup_route || '']" rel="nofollow noopener" class="link-black">
+                  <img [type]="'white'" [appSpriteImg]="'nba'" class="mr-1 logo-sm" [src]="row.white_logo" alt="{{row.city}} {{row.name}}"/>
+                </a>
+                <a [appPreselectNbaLineupTeamSeason]="year" [routerLink]="[row.team_lineup_route || '']" rel="noopener" class="link-black-underline">
+                  <span class="player-name-col-xs">
+                    {{row.name}}
+                  </span>
+                  <span class="player-name-col-lg">
+                    {{row.city}} {{row.name}}
+                  </span>
+                </a>
+              </div>
+            </td>
+            <td>{{row.wins}}</td>
+            <td>{{row.losses}}</td>
+            <td>{{row.percentage / 100 | number: '1.3-3' | pointZero}}</td>
+            <td>
+              <ng-container *ngIf="row['games_behind' + (tabType || '')] || row['games_behind' + (tabType || '')] === 0; else noneTpl">
+                {{(row['games_behind' + (tabType || '')])}}
+              </ng-container>
+            </td>
+            <td>{{row.conference_wins}}-{{row.conference_losses}}</td>
+            <td>{{row.division_wins}}-{{row.division_losses}}</td>
+            <td>{{row.home_wins}}-{{row.home_losses}}</td>
+            <td>{{row.away_wins}}-{{row.away_losses}}</td>
+            <td>{{row.last_ten_games_wins}}-{{row.last_ten_games_losses}}</td>
+            <td>{{row.streak}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #nflTableTpl let-tableData="tableData" let-customSubHeader="customSubHeader" let-logo="logo" let-heading="heading">
+  <div class="table-sect-wrap">
+    <!-- Static Positioned Tabled -->
+    <div *ngIf="heading">
+      <div class="t-header">
+        <div class="text-left">
+          <img *ngIf="logo" class="league-logo" [src]="logo" alt="{{heading}}">
+          {{heading}}
+        </div>
+      </div>
+    </div>
+
+    <div class="static-table-wrapper">
+      <table
+        [mfRowsOnPage]="10000" [mfData]="tableData"
+        [(mfSortBy)]="sortBy"
+        [(mfSortOrder)]="sortOrder"
+        (mfSortByChange)="onSortBy($event)"
+        (mfSortOrderChange)="onSortOrder($event)"
+        #staticNflMFTableTpl="mfDataTable"
+        class="static-table stats-table table table-bordered multi-table-static">
+        <thead>
+          <tr class="t-sub-header static-sub-header">
+            <th class="player-name-col">
+              {{customSubHeader ? customSubHeader : 'Team'}}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="static-table-body">
+          <tr *ngFor="let row of staticNflMFTableTpl.data">
+            <td class="player-name-col">
+              <div class="nowrap">
+                <a [appPreselectNflDepthChartTeamSeason]="year" [routerLink]="[row.team_depth_chart_route || '']" rel="nofollow noopener" class="link-black">
+                  <img [type]="'white'" [appSpriteImg]="'nfl'" class="mr-1 logo-sm" [src]="row.white_logo" alt="{{row.name}}"/>
+                </a>
+                <a [appPreselectNflDepthChartTeamSeason]="year" [routerLink]="[row.team_depth_chart_route || '']" rel="noopener" class="link-black-underline">
+                  <span class="player-name-col-xs">
+                    {{row.name | lastTeamName}}
+                  </span>
+                  <span class="player-name-col-lg">
+                    {{row.name}}
+                  </span>
+                </a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Horizontal Scrolling-->
+    <div class="horizontal-table-wrapper">
+      <table
+        [mfRowsOnPage]="10000" [mfData]="tableData"
+        [(mfSortBy)]="sortBy"
+        [(mfSortOrder)]="sortOrder"
+        (mfSortByChange)="onSortBy($event)"
+        (mfSortOrderChange)="onSortOrder($event)"
+        #nflMFTableTpl="mfDataTable"
+        class="multi-row-data-table t-stripped">
+        <thead>
+          <tr class="t-sub-header">
+            <th class="text-left inner-col-switch px-3" width="225px">
+              {{customSubHeader ? customSubHeader : 'Team'}}
+            </th>
+            <th class="text-center">
+              <mfSorter by="wins">W</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="losses">L</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="ties">T</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="percentage">Pct</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="points_for">PF</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="points_against">PA</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="net_points">Net Pts</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="home_wins">Home</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="away_wins">Road</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="division_wins">Div</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="conference_wins">Conf</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="streak">Streak</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="last_five_games_wins">Last 5</mfSorter>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="t-content" *ngFor="let row of nflMFTableTpl.data">
+            <td class="inner-col-switch text-left px-3">
+              <div class="nowrap">
+                <a [appPreselectNflDepthChartTeamSeason]="year" [routerLink]="[row.team_depth_chart_route || '']" rel="nofollow noopener" class="link-black">
+                  <img [type]="'white'" [appSpriteImg]="'nfl'" class="mr-1 logo-sm" [src]="row.white_logo" alt="{{row.name}}"/>
+                </a>
+                <a [appPreselectNflDepthChartTeamSeason]="year" [routerLink]="[row.team_depth_chart_route || '']" rel="noopener" class="link-black-underline">
+                  <span class="player-name-col-xs">
+                    {{row.name | lastTeamName}}
+                  </span>
+                  <span class="player-name-col-lg">
+                    {{row.name}}
+                  </span>
+                </a>
+              </div>
+            </td>
+            <td>{{row.wins}}</td>
+            <td>{{row.losses}}</td>
+            <td>{{row.ties}}</td>
+            <td>{{row.percentage | number: '1.3-3' | pointZero}}</td>
+
+            <td>{{row.points_for}}</td>
+            <td>{{row.points_against}}</td>
+            <td>{{row.net_points}}</td>
+
+            <td>{{row.home_wins}}-{{row.home_losses}}</td>
+            <td>{{row.away_wins}}-{{row.away_losses}}</td>
+            <td>{{row.division_wins}}-{{row.division_losses}}</td>
+            <td>{{row.conference_wins}}-{{row.conference_losses}}</td>
+            <td>{{row.streak}}</td>
+            <td>{{row.last_five_games_wins}}-{{row.last_five_games_losses}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #mlbTableTpl let-tableData="tableData" let-customSubHeader="customSubHeader" let-logo="logo" let-heading="heading" let-tabType="tabType">
+  <div class="table-sect-wrap">
+    <!-- Static Positioned Tabled -->
+    <div *ngIf="heading">
+      <div class="t-header">
+        <div class="text-left">
+          <img *ngIf="logo" class="league-logo" [src]="logo" alt="{{heading}}">
+          {{heading}}
+        </div>
+      </div>
+    </div>
+
+    <div class="static-table-wrapper">
+      <table
+        [mfRowsOnPage]="10000" [mfData]="tableData"
+        [(mfSortBy)]="sortBy"
+        [(mfSortOrder)]="sortOrder"
+        (mfSortByChange)="onSortBy($event)"
+        (mfSortOrderChange)="onSortOrder($event)"
+        #staticMlbMFTableTpl="mfDataTable"
+        class="static-table stats-table table table-bordered multi-table-static">
+        <thead>
+          <tr class="t-sub-header static-sub-header">
+            <th class="player-name-col">
+              {{customSubHeader ? customSubHeader : 'Team'}}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="static-table-body">
+          <tr *ngFor="let row of staticMlbMFTableTpl.data">
+            <td class="player-name-col">
+              <div class="nowrap">
+                <a [appPreselectMlbLineupTeamSeason]="year" [routerLink]="[row.team_lineup_route || '']" rel="nofollow noopener" class="link-black">
+                  <img [type]="'white'" [appSpriteImg]="'mlb'" class="mr-1 logo-sm" [src]="row.team_lineup_route | logo : league : 'white'" alt="{{row.name}}"/>
+                </a>
+                <a [appPreselectMlbLineupTeamSeason]="year" [routerLink]="[row.team_lineup_route || '']" rel="noopener" class="link-black-underline">
+                <span class="player-name-col-xs">
+                  {{row.name}}
+                </span>
+                <span class="player-name-col-lg">
+                 {{row.city}} {{row.name}}
+                </span>
+                </a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Horizontal Scrolling-->
+    <div class="horizontal-table-wrapper">
+      <table
+        [mfRowsOnPage]="10000" [mfData]="tableData"
+        [(mfSortBy)]="sortBy"
+        [(mfSortOrder)]="sortOrder"
+        (mfSortByChange)="onSortBy($event)"
+        (mfSortOrderChange)="onSortOrder($event)"
+        #mlbMFTableTpl="mfDataTable"
+        class="multi-row-data-table t-stripped">
+        <thead>
+          <tr class="t-sub-header">
+            <th class="text-left inner-col-switch px-3" width="225px">
+              {{customSubHeader ? customSubHeader : 'Team'}}
+            </th>
+            <th class="text-center">
+              <mfSorter by="wins">W</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="losses">L</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="percentage">Pct</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter [by]="sortFunctions['games_behind' + (tabType || '')]">GB</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="home_wins">Home</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="away_wins">Away</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="runs_scored">RS</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="runs_against">RA</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="run_differential">Diff</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="streak">Strk</mfSorter>
+            </th>
+            <th class="text-center">
+              <mfSorter by="last_ten_games_wins">L10</mfSorter>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="t-content" *ngFor="let row of mlbMFTableTpl.data">
+            <td class="inner-col-switch text-left px-3">
+              <div class="nowrap">
+                <a [appPreselectMlbLineupTeamSeason]="year" [routerLink]="[row.team_lineup_route || '']" rel="nofollow noopener" class="link-black">
+                  <img [type]="'white'" [appSpriteImg]="'mlb'" class="mr-1 logo-sm" [src]="row.team_lineup_route | logo : league : 'white'" alt="{{row.name}}"/>
+                </a>
+                <a [appPreselectMlbLineupTeamSeason]="year" [routerLink]="[row.team_lineup_route || '']" rel="noopener" class="link-black-underline">
+                  <span class="player-name-col-xs">
+                    {{row.name}}
+                  </span>
+                  <span class="player-name-col-lg">
+                    {{row.city}} {{row.name}}
+                  </span>
+                </a>
+              </div>
+            </td>
+            <td>{{row.wins}}</td>
+            <td>{{row.losses}}</td>
+            <td>{{row.percentage | number: '1.3-3' | pointZero}}</td>
+            <td>
+              <ng-container *ngIf="row['games_behind' + (tabType || '')] || row['games_behind' + (tabType || '')] === 0; else noneTpl">
+                {{(row['games_behind' + (tabType || '')])}}
+              </ng-container>
+            </td>
+            <td>{{row.home_wins}}-{{row.home_losses}}</td>
+            <td>{{row.away_wins}}-{{row.away_losses}}</td>
+            <td>{{row.runs_scored}}</td>
+            <td>{{row.runs_against}}</td>
+            <td>{{(row.run_differential || '-') | plus}}</td>
+            <td>{{row.streak}}</td>
+            <td>{{row.last_ten_games_wins}}-{{row.last_ten_games_losses}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-template>
+
+<div *ngIf="data; else loadingTpl" class="container-fluid pb-5">
+  <app-breadcrumb></app-breadcrumb>
+    <div class="row">
+    <div class="col-12 col-lg-8">
+      <h1 class="page-heading">{{data.heading}}</h1>
+      <div *ngIf="data.intro_paragraph" class="hidden-md-down">
+        <p class="site-pages-content" [innerHTML]="data.intro_paragraph | safeHtml"></p>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component [league]="league"></app-ad-component>
+    </div>
+
+    <div class="col-12 flex-last flex-sm-unordered hidden-lg-up" *ngIf="data.intro_paragraph">
+      <p class="site-pages-content" [innerHtml]="data.intro_paragraph | safeHtml"></p>
+    </div>
+
+    <div class="col-12 hidden-sm-up">
+      <div class="grouped-dropdown-wrapper my-0 btn-group not-mobile">
+        <app-dropdown
+          [ddData]="dropdowns"
+          prop="seasons"
+          [className]="'first'"
+          [isSingleSelect]="true"
+          [filterItems]="onSeasonDropdownChange.bind(this)"
+        ></app-dropdown>
+        <app-dropdown
+          [ddData]="dropdowns"
+          [filterItems]="onDropdownChange.bind(this)"
+          prop="tabs"
+          [className]="'last'"
+          isSingleSelect="true"
+        ></app-dropdown>
+      </div>
+    </div>
+    <div class="col-12 hidden-xs-down">
+      <div class="d-flex">
+        <div class="grouped-dropdown-wrapper my-0 not-mobile btn-group mr-3">
+          <app-dropdown
+            [ddData]="dropdowns"
+            prop="seasons"
+            [className]="'last first'"
+            [isSingleSelect]="true"
+            [filterItems]="onSeasonDropdownChange.bind(this)"
+          ></app-dropdown>
+        </div>
+        <div class="toggles-in-page-wrapper my-0">
+          <div class="toggles-in-page-group btn-group toggles-group">
+            <button *ngFor="let tab of dropdowns.tabs; let first = first; let last = last;"
+                    (click)="onButtonGroupClick(tab.prop);"
+                    class="toggle-in-page" [ngClass]="{'active': tab.selected, 'first': first, 'last': last}">{{tab.name}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="row">
+        <ng-container [ngSwitch]="league">
+          <ng-container *ngSwitchCase="'mlb'">
+
+            <ng-container [ngSwitch]="dropdowns.activeTab">
+              <ng-container *ngSwitchCase="'overall'">
+                <div class="col-12">
+                  <ng-template [ngTemplateOutlet]="mlbTableTpl" [ngTemplateOutletContext]="{tabType: '_overall', tableData: tablesData.overall, heading: 'Major League Baseball'}"></ng-template>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'league'">
+                <div class="col-12">
+                  <ng-template [ngTemplateOutlet]="mlbTableTpl" [ngTemplateOutletContext]="{
+                  tabType: '_league',
+                  tableData: tablesData.league.american,
+                  heading:  tablesData.division.american.heading,
+                  logo: tablesData.division.american.league_logo
+                  }"></ng-template>
+                </div>
+                <div class="col-12">
+                  <ng-template [ngTemplateOutlet]="mlbTableTpl" [ngTemplateOutletContext]="{
+                  tabType: '_league',
+                  tableData: tablesData.league.national,
+                  heading:  tablesData.division.national.heading,
+                  logo: tablesData.division.national.league_logo
+                  }"></ng-template>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'division'">
+                <div *ngFor="let standing of mlbStandings; let first = first" class="col-12">
+                  <ng-template [ngTemplateOutlet]="mlbTableTpl" [ngTemplateOutletContext]="{
+                  tableData: tablesData.division.american.standings[standing],
+                  customSubHeader: standing,
+                  heading: first ? tablesData.division.american.heading : false,
+                  logo: first ? tablesData.division.american.league_logo : false
+                  }"></ng-template>
+                </div>
+                <div *ngFor="let standing of mlbStandings; let first = first" class="col-12">
+                  <ng-template [ngTemplateOutlet]="mlbTableTpl" [ngTemplateOutletContext]="{
+                  tableData: tablesData.division.national.standings[standing],
+                  customSubHeader: standing,
+                  heading:  first ? tablesData.division.national.heading : false,
+                  logo: first ? tablesData.division.national.league_logo : false
+                   }"></ng-template>
+                </div>
+              </ng-container>
+            </ng-container>
+
+
+          </ng-container>
+          <ng-container *ngSwitchCase="'nfl'">
+
+            <ng-container [ngSwitch]="dropdowns.activeTab">
+              <ng-container *ngSwitchCase="'overall'">
+                <div class="col-12">
+                  <ng-template [ngTemplateOutlet]="nflTableTpl" [ngTemplateOutletContext]="{tableData: tablesData.overall, heading: 'National Football League'}"></ng-template>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'league'">
+                <div class="col-12">
+                  <ng-template [ngTemplateOutlet]="nflTableTpl" [ngTemplateOutletContext]="{
+                  tableData: tablesData.league.american,
+                  heading:  tablesData.division.american.heading,
+                  logo: logos.nfl.american
+                  }"></ng-template>
+                </div>
+                <div class="col-12">
+                  <ng-template [ngTemplateOutlet]="nflTableTpl" [ngTemplateOutletContext]="{
+                  tableData: tablesData.league.national,
+                  heading:  tablesData.division.national.heading,
+                  logo: logos.nfl.national
+                  }"></ng-template>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'division'">
+                <div *ngFor="let standing of nflStandings; let first = first" class="col-12">
+                  <ng-template [ngTemplateOutlet]="nflTableTpl" [ngTemplateOutletContext]="{
+                  tableData: tablesData.division.american.standings[standing],
+                  customSubHeader: 'AFC ' + standing,
+                  heading: first ? tablesData.division.american.heading : false,
+                  logo: first ? logos.nfl.american : false
+                  }"></ng-template>
+                </div>
+                <div *ngFor="let standing of nflStandings; let first = first" class="col-12">
+                  <ng-template [ngTemplateOutlet]="nflTableTpl" [ngTemplateOutletContext]="{
+                  tableData: tablesData.division.national.standings[standing],
+                  customSubHeader: 'NFC ' + standing,
+                  heading:  first ? tablesData.division.national.heading : false,
+                  logo: first ? logos.nfl.national : false
+                   }"></ng-template>
+                </div>
+              </ng-container>
+            </ng-container>
+
+
+          </ng-container>
+          <ng-container *ngSwitchCase="'nba'">
+
+            <ng-container [ngSwitch]="dropdowns.activeTab">
+              <ng-container *ngSwitchCase="'overall'">
+                <div class="col-12">
+                  <ng-template [ngTemplateOutlet]="nbaTableTpl" [ngTemplateOutletContext]="{tabType: '_overall', tableData: tablesData.overall, heading: 'National Basketball Association'}"></ng-template>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'league'">
+                <div class="col-12">
+                  <ng-template [ngTemplateOutlet]="nbaTableTpl" [ngTemplateOutletContext]="{
+                  tableData: tablesData.league.eastern,
+                  heading:  tablesData.division.eastern.heading,
+                  logo: tablesData.division.eastern.conference_logo
+                  }"></ng-template>
+                </div>
+                <div class="col-12">
+                  <ng-template [ngTemplateOutlet]="nbaTableTpl" [ngTemplateOutletContext]="{
+                  tableData: tablesData.league.western,
+                  heading:  tablesData.division.western.heading,
+                  logo: tablesData.division.western.conference_logo
+                  }"></ng-template>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'division'">
+                <div *ngFor="let standing of nbaEasternStandings; let first = first" class="col-12">
+                  <ng-template [ngTemplateOutlet]="nbaTableTpl" [ngTemplateOutletContext]="{
+                  tabType: '_division',
+                  tableData: tablesData.division.eastern.standings[standing],
+                  customSubHeader: standing,
+                  heading: first ? tablesData.division.eastern.heading : false,
+                  logo: first ? tablesData.division.eastern.conference_logo : false
+                  }"></ng-template>
+                </div>
+                <div *ngFor="let standing of nbaWesternStandings; let first = first" class="col-12">
+                  <ng-template [ngTemplateOutlet]="nbaTableTpl" [ngTemplateOutletContext]="{
+                  tabType: '_division',
+                  tableData: tablesData.division.western.standings[standing],
+                  customSubHeader: standing,
+                  heading:  first ? tablesData.division.western.heading : false,
+                  logo: first ? tablesData.division.western.conference_logo : false
+                   }"></ng-template>
+                </div>
+              </ng-container>
+            </ng-container>
+
+
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+
+    <div *ngIf="data.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="data.bottom_header" class="page-heading-two">
+        {{data.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="data.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+</div>

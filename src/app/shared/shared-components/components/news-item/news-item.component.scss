@@ -1,0 +1,36 @@
+:host {
+  .team-logo-image {
+    $size: 24px;
+    width: $size;
+    height: $size;
+    margin-top: 2px;
+    margin-right: 8px;
+  }
+  .card-title-text {
+    color: #333;
+    font-weight: 600;
+    text-align: left;
+  }
+  .news-item-date {
+    color: #333;
+    font-weight: 400;
+  }
+  ::ng-deep ngb-accordion {
+    .card-header {
+      padding: 3px 20px;
+      a {
+        text-decoration: none;
+      }
+    }
+    button.btn.btn-link {
+      text-decoration: none;
+      height: auto;
+      width: 100%;
+      font-size: 11pt;
+      padding: 0;
+    }
+    .card-body {
+      padding: 10px 20px;
+    }
+  }
+}

@@ -1,0 +1,61 @@
+:host {
+  @media (max-width: 400px) {
+    .multi-row-data-table-wrapper {
+      overflow-x: auto;
+    }
+  }
+  .top-score-section {
+    @media (max-width: 1650px) {
+      & > div {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+      & > div:first-child {
+        padding: 0 20%;
+      }
+      & > div:last-child {
+        margin-top: 20px;
+      }
+    }
+    @media (max-width: 994px) {
+      & > div:first-child {
+        margin-top: 20px;
+        padding: 0 8px;
+      }
+    }
+    @media (max-width: 620px) {
+      ::ng-deep app-game-score {
+        font-size: 11px;
+      }
+    }
+  }
+
+  @media (max-width: 945px) {
+    .grouped-dropdown-wrapper {
+      display: inline-block;
+      width: auto !important;
+      .grouped-dropdown{
+        &.show {
+          .dropdown-menu {
+            width: 100%;
+          }
+        }
+        .grouped-dropdown-btn {
+          width: 100%;
+          border: 1px solid #f1f1f1;
+          &.first {
+            border-bottom-left-radius: 0;
+            border-top-right-radius: 4px;
+          }
+          &.last {
+            border: 1px solid #f1f1f1;
+            border-top-right-radius: 0;
+            border-bottom-left-radius: 4px;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,141 @@
+<!-- Starting Lineups Content -->
+<div class="news content">
+  <!-- Starting Lineup Box Loader -->
+  <div *ngIf="newsData === undefined" class="starting-lineup-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+  <div class="container-fluid" *ngIf="newsData">
+    <app-breadcrumb></app-breadcrumb>
+    <div class="row">
+      <div class="team-lineup-heading-wrap nfl-team-depth-chart-heading col-lg-8 col-12 clearfix">
+        <!-- Team Lineup Heading Text-->
+        <div class="team-lineup-heading-text">
+          <!-- Team Lineup Heading Left -->
+          <div class="team-lineup-heading-left" [ngClass]="{'no-opponent': !newsData.nav.opp_depth_chart_route}">
+            <div class="team-logo with-status">
+              <img [type]="'white'" [appSpriteImg]="'nfl'" align="middle" [src]="newsData.nav.team_logo_white" alt="{{newsData.nav.team_name_full}}"/>
+            </div>
+            <div class="team-heading-info">
+              <app-status
+                side="right"
+                isHeader="true"
+                mobileTitle="{{newsData.nav.team_name_full | lastTeamName}} News"
+                [teamName]="pageHeading"
+                [record]="newsData.nav.team_record + ', ' + newsData.nav.team_rank + ' ' +  newsData.nav.team_league + ' ' +newsData.nav.team_division"
+              >
+              </app-status>
+            </div>
+          </div>
+          <!-- Team Lineup Heading Right -->
+          <div *ngIf="newsData?.nav.opp_depth_chart_route && isDefaultSeason" class="team-lineup-heading-right">
+            <div *ngIf="!newsData.status || (newsData.status.status !== 'In Progress' && newsData.status.status !== 'Final')" class="float-right">
+              <h4 class="opponent-team-name">{{newsData.nav.is_home ? 'vs' : 'at'}} {{newsData.nav.opp_abbr}}</h4>
+              <h4 class="event-date">
+                <app-general-time-format [time]="newsData.nav.matchup_time"></app-general-time-format>
+              </h4>
+            </div>
+            <div *ngIf="newsData.status?.status === 'In Progress'" class="float-right">
+              <span [ngClass]="{'font-bold': newsData.status.away_has_ball}">{{newsData.status.away}} {{newsData.status.away_score}}</span> @ <span [ngClass]="{'font-bold': newsData.status.home_has_ball}">{{newsData.status.home}} {{newsData.status.home_score}}</span>
+              <br>
+              <p class="text-center">
+                {{newsData.status.down}} & {{newsData.status.distance}}, Q{{newsData.status.quarter}} {{newsData.status.time_remaining}}
+              </p>
+            </div>
+            <div *ngIf="newsData.status?.status === 'Final'" class="float-right">
+              <span [ngClass]="{'font-bold': newsData.status.away_score > newsData.status.home_score}">{{newsData.status.away}} {{newsData.status.away_score}}</span> @ <span [ngClass]="{'font-bold': newsData.status.home_score > newsData.status.away_score}">{{newsData.status.home}} {{newsData.status.home_score}}</span>
+              <br>
+              <p class="text-center">Final</p>
+            </div>
+          </div>
+        </div>
+        <!-- Collapse Menu -->
+        <div class="in-page-collapse-toggle">
+          <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="isCollapsed = !isCollapsed"
+                  [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+            Menu
+          </button>
+        </div>
+        <div class="in-page-nav-menu" [ngbCollapse]="!isCollapsed" [ngClass]="{'hidden': !isCollapsed}">
+          <!-- Team Lineup Heading Navigation -->
+          <div class="page-heading-navigation mb-1">
+            <div *ngIf="newsData.nav.is_home && newsData?.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+              <a [appPreselectNflDepthChartTeamSeason]="activeYear" [routerLink]="[newsData?.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{newsData?.nav.opp_name}} Depth Chart</a>
+            </div>
+            <div *ngIf="!newsData.nav.is_home && newsData?.nav.team_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+              <a [appPreselectNflDepthChartTeamSeason]="activeYear" [routerLink]="[newsData?.nav.team_depth_chart_route]" class="page-heading-nav-btn">{{newsData?.nav.team_name}} Depth Chart</a>
+            </div>
+            <div *ngIf="!newsData.nav.is_home && newsData?.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+              <a [appPreselectNflDepthChartTeamSeason]="activeYear" [routerLink]="[newsData?.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{newsData?.nav.opp_name}} Depth Chart</a>
+            </div>
+            <div *ngIf="newsData.nav.is_home && newsData?.nav.team_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+              <a [appPreselectNflDepthChartTeamSeason]="activeYear" [routerLink]="[newsData?.nav.team_depth_chart_route]" class="page-heading-nav-btn">{{newsData?.nav.team_name}} Depth Chart</a>
+            </div>
+            <div *ngIf="newsData?.nav.matchup_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+              <a [appNflMatchupIdPreselect]="newsData?.nav.game_key" [routerLink]="[newsData?.nav.matchup_route]" class="page-heading-nav-btn">Matchups</a>
+            </div>
+            <div *ngIf="newsData.nav.team_news_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+              <a [routerLink]="[newsData.nav.team_news_route]" [routerLinkActive]="'active'" class="page-heading-nav-btn">News</a>
+            </div>
+            <div *ngIf="newsData.nav.team_stats_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+              <a [appPreselectNflStatsTeamSeason]="activeYear" [routerLink]="[newsData.nav.team_stats_route]" routerLinkActive="active" class="page-heading-nav-btn">Stats</a>
+            </div>
+            <div *ngIf="newsData.nav.team_snaps_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+              <a [appPreselectNflSnapsTeamSeason]="activeYear" [routerLink]="[newsData.nav.team_snaps_route]" routerLinkActive="active" class="page-heading-nav-btn">Snaps</a>
+            </div>
+            <div *ngIf="newsData.nav.team_roster_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+              <a  [appPreselectNflRosterTeamSeason]="activeYear" [routerLink]="[newsData.nav.team_roster_route]" class="page-heading-nav-btn">Roster</a>
+            </div>
+            <div *ngIf="newsData.nav.team_injuries_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt last">
+              <a [routerLink]="[newsData.nav.team_injuries_route]" class="page-heading-nav-btn">Injuries</a>
+            </div>
+            <div *ngIf="newsData.nav.team_schedule_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt last">
+              <a [appPreselectNflScheduleTeamSeason]="activeYear" [routerLink]="[newsData.nav.team_schedule_route]" class="page-heading-nav-btn">Schedule</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-4 after-heading-margin zero-lg-height smaller-lg-box">
+        <app-ad-component [league]="'nfl'"></app-ad-component>
+      </div>
+    </div>
+    <div class="row">
+      <div *ngIf="newsData?.intro_paragraph" class="col-lg-8 col-12 mt-4 flex-last flex-sm-unordered">
+        <p class="site-pages-content" [innerHtml]="newsData.intro_paragraph | safeHtml"></p>
+      </div>
+      <div class="col-12">
+        <section id="selected-team-news" class="team-news" *ngIf="newsData !== undefined">
+          <div class="row">
+            <div class="col-md-6 col-sm-12 col-12">
+              <div class="d-flex flex-wrap justify-content-between">
+                <div class="team-name-label mt-4 mr-3">
+                  <h2 class="mb-0">{{newsData.nav.team_name}} News</h2>
+                </div>
+                <div class="align-self-center mt-3 mb-4">
+                  <app-search-input [searchFn]="filterByName.bind(this)" (onDataFiltered)="updateNews($event)"></app-search-input>
+                </div>
+              </div>
+              <ng-container  *ngFor="let newsItem of newsItems | orderBy: 'updated': false;">
+                <app-news-item
+                  class="inner-news-item"
+                  cardLeague="nfl"
+                  [cardTitle]="newsItem.title"
+                  [cardContent]="newsItem.content"
+                  [cardImageRoute]="newsData.nav.team_logo_white"
+                  [cardDate]="newsItem.updated"
+                  [fullLogoUrl]="true"
+                  [borderedLogo]="false"
+                ></app-news-item>
+              </ng-container>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div *ngIf="newsData?.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+        <h2 *ngIf="newsData.bottom_header" class="page-heading-two">
+          {{newsData.bottom_header}}
+        </h2>
+        <p class="site-pages-content" [innerHtml]="newsData.bottom_paragraph | safeHtml"></p>
+      </div>
+    </div>
+  </div>
+</div>

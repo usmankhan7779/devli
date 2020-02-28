@@ -1,0 +1,14 @@
+.main-video-container {
+  @media (min-width: 992px) and (max-width: 1600px) {
+    min-height: 249px !important;
+  }
+  @media (min-width: 992px) and (max-width: 1250px) {
+    min-height: 194px !important;
+  }
+  @media (min-width: 992px) {
+    position: relative;
+    top: -43px;
+    z-index: 1;
+    min-height: 243px !important;
+  }
+}

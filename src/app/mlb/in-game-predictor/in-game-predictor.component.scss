@@ -1,0 +1,4 @@
+:host {
+  @import "../../../scss/custom-components/_responsive-page-nav.scss";
+  @include mobile-navigation();
+}

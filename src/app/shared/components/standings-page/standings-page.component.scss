@@ -1,0 +1,63 @@
+:host {
+  .t-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 1.375rem 0;
+    .league-logo {
+      width: 36px;
+      height: 36px;
+      margin-right: 0.5rem;
+    }
+    @media (max-width: 517px) {
+      font-size: 18px;
+      .league-logo {
+        width: 25px;
+        height: 25px;
+        margin-right: 5px;
+      }
+    }
+  }
+  .table-sect-wrap {
+    margin-bottom: 0;
+  }
+  .league-logo {
+    width: 36px;
+    height: 36px;
+    margin-right: 0.5rem;
+  }
+  table td {
+    vertical-align: middle;
+  }
+  .position-col {
+    border-right: 1px solid #e1e1e1;
+  }
+  @media (max-width: 1650px) {
+    $static-table-width: 195px;
+    .horizontal-table-wrapper .multi-row-data-table .t-content td {
+      font-size: 11px;
+    }
+    .horizontal-table-wrapper th {
+      min-width: 45px;
+    }
+    .table-sect-wrap .static-table {
+      display: block;
+      float: left;
+      max-width: $static-table-width;
+      border: none;
+    }
+    .horizontal-table-wrapper {
+      overflow-x: auto;
+      border-right: 1px solid #ebebec;
+      width: calc(100% - #{$static-table-width});
+    }
+  }
+  @media (max-width: 480px) {
+    $static-table-width: 155px;
+    .table-sect-wrap .static-table {
+      max-width: $static-table-width;
+    }
+    .horizontal-table-wrapper {
+      width: calc(100% - #{$static-table-width});
+    }
+  }
+}

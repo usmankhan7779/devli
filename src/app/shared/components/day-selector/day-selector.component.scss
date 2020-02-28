@@ -1,0 +1,189 @@
+$width: 720px;
+$pre-mobile-breakpoint: 740px;
+$pre-mobile-breakpoint-1: 570px;
+$mobile-breakpoint: 451px;
+$mobile-xs-breakpoint: 374px;
+:host {
+  .day-selector-wrapper-first {
+    position: relative;
+    .day-selector {
+      min-width: 272px;
+    }
+    @media (max-width: 299px) {
+      .day-selector-wrapper-second {
+        overflow: hidden;
+      }
+    }
+  }
+  a.disabled {
+    opacity: 0.5;
+  }
+  ::ng-deep .dropdown-menu {
+    display: block !important;
+    padding: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    @media (max-width: 952px) {
+      left: auto !important;
+      right: 0 !important;
+    }
+    margin-top: 45px;
+  }
+
+  .day-selector {
+    @media (min-width: $width + 32px) {
+      width: $width;
+    }
+    @media (max-width: $pre-mobile-breakpoint) {
+      max-width: 540px;
+    }
+    @media (max-width: $pre-mobile-breakpoint-1) {
+      max-width: 420px;
+    }
+    @media (max-width: $mobile-breakpoint) {
+      max-width: 342px;
+    }
+    @media (max-width: $mobile-xs-breakpoint) {
+      max-width: 280px;
+    }
+    background-color: #fafafa;
+    border-top: 2px solid #ebebec;
+    border-bottom: 2px solid #ebebec;
+  }
+
+  .clearfix {
+    clear: both;
+  }
+
+  .selector-actions-wrap {
+    float: left;
+    position: relative;
+
+    .slider-prev, .slider-next {
+      display: block;
+      float: left;
+      cursor: pointer;
+      height: 54px;
+      width: 60px;
+      text-align: center;
+      line-height: 51px;
+      @media (max-width: $pre-mobile-breakpoint-1) {
+        height: 49px;
+        width: 44px;
+        line-height: 47px;
+      }
+      @media (max-width: $mobile-breakpoint) {
+        height: 45px;
+        width: 30px;
+        line-height: 41px;
+        img {
+          width: 7px;
+        }
+      }
+      &:hover {
+        background-color: #e0e0e4;
+      }
+    }
+  }
+
+  .selector-calendar-wrap {
+    float: left;
+    padding-top: 10px;
+    padding-left: 10px;
+    position: relative;
+  }
+
+  .slider-clip-container {
+    display: block;
+    float: left;
+  }
+
+  .slides {
+    display: block;
+    padding: 0;
+    margin: 0;
+  }
+
+  li.slide {
+    float: left;
+    list-style: none;
+    padding: 8px 0px 7px;
+    border-right: 1px solid #eceeef;
+    color: #666;
+    & *, & {
+      cursor: pointer;
+    }
+
+    &:hover {
+      background-color: #e0e0e4;
+      border-color: #e0e0e4;
+      color: #333333;
+    }
+
+    &.active-day {
+      background-color: #4e4e6a;
+      border-color: #4e4e6a;
+      color: #FFF;
+      transition: ease all 120ms;
+    }
+
+    &:first-child {
+      border-left: 1px solid #eceeef;
+    }
+
+    & > .radio {
+      & > input {
+        display: none;
+      }
+
+      & > label {
+        display: block;
+        width: 75px;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        background-color: transparent;
+        font-size: 16px;
+        text-align: center;
+
+        & > span {
+          display: block;
+          line-height: 15px;
+          font-weight: 600;
+        }
+        @media (max-width: $pre-mobile-breakpoint) {
+          width: 50px;
+        }
+        @media (max-width: $pre-mobile-breakpoint-1) {
+          width: 40px;
+          font-size: 13px;
+        }
+        @media (max-width: $mobile-breakpoint) {
+          width: 34px;
+          font-size: 10px;
+        }
+        @media (max-width: $mobile-xs-breakpoint) {
+          width: 25px;
+          font-size: 10px;
+        }
+      }
+
+      & > input:not([checked]) + label {
+        border: none;
+      }
+    }
+  }
+  @media (max-width: $pre-mobile-breakpoint-1) {
+    .selector-calendar-wrap {
+      padding-left: 5px;
+    }
+    .calendar img {
+      width: 25px;
+    }
+  }
+  @media (max-width: $mobile-breakpoint) {
+    .calendar img {
+      width: 18px;
+    }
+  }
+}

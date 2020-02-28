@@ -1,0 +1,50 @@
+:host {
+  $item_size: 32px;
+  $global_padding: 6px;
+  .game-score {
+    height: $item_size + $global_padding * 2;
+    padding: 6px;
+    border: 1px solid #e1e1e1;
+    border-radius: 2px;
+    & > div:first-child {
+      img {
+        margin: 0 -2px 0 0;
+      }
+    }
+    & > div:last-child {
+      img {
+        margin: 0 -2px 0 10px;
+      }
+    }
+  }
+  .logo {
+    width: $item_size;
+    height: $item_size;
+  }
+
+  .text {
+    line-height: $item_size;
+    padding: 0 $global_padding;
+    margin: 0 1px;
+    &.team-has-ball {
+      border-bottom: 1px solid #02afed;
+      padding: 0;
+      margin: 0 7px;
+    }
+  }
+  .box {
+    text-align: center;
+    min-width: 30px;
+    white-space: nowrap;
+    color: #ffffff;
+    &.red {
+      background-color: #b22028;
+    }
+    &.blue {
+      background-color: #3b5d98;
+    }
+    &.grey {
+      background-color: #ababab;
+    }
+  }
+}

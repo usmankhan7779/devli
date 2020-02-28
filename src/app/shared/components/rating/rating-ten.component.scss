@@ -1,0 +1,29 @@
+:host {
+  @import "../../../../scss/shared/variables/project";
+  .rating {
+    padding: 1px 8px;
+    border-radius: 2px;
+    font-weight: normal;
+
+    &.red {
+      color: $psd-rating-red;
+      background: $psd-rating-red-bg;
+    }
+    &.orange {
+      color: $psd-rating-orange;
+      background: $psd-rating-orange-bg;
+    }
+    &.yellow {
+      color: $psd-rating-yellow;
+      background: $psd-rating-yellow-bg;
+    }
+    &.light-green {
+      color: $psd-rating-light-green;
+      background: $psd-rating-light-green-bg;
+    }
+    &.green {
+      color: $psd-rating-green;
+      background: $psd-rating-green-bg;
+    }
+  }
+}

@@ -1,0 +1,102 @@
+<!-- Starting Lineups Content -->
+<div class="team-lineup content">
+  <!-- Starting Lineup Box Loader -->
+  <div *ngIf="teamLineup === undefined" class="starting-lineup-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+  <!-- Page Wrap -->
+  <div *ngIf="teamLineup !== undefined" class="page-wrap container-fluid pb-5">
+    <!-- Breadcrumbs -->
+    <app-breadcrumb (performActionOnClick)="performActionOnBreadcrumbClick($event)"></app-breadcrumb>
+    <!-- Starting Lineups Page Title -->
+    <div class="row">
+      <div class="clearfix team-lineup-heading-wrap mlb-team-lineup-header col-lg-8 col-12">
+        <!-- Team Lineup Heading Text-->
+        <div class="team-lineup-heading-text">
+          <!-- Team Lineup Heading Left -->
+          <div class="team-lineup-heading-left" [ngClass]="{'no-opponent': !(teamLineup.nav.opp_lineup_route && isDefaultSeason)}">
+            <div class="team-logo">
+              <img [type]="'white'" [appSpriteImg]="'college-football'" align="middle" [src]="teamLineup.nav.team_logo" alt="{{teamLineup.nav.team_name}}"/>
+            </div>
+            <div class="team-heading-info">
+              <h1 class="team-name">
+                <span class="hidden-xs-down">{{pageTitle}}</span>
+                <span class="hidden-sm-up">{{teamLineup.nav.team_name | lastTeamName}} {{pageHeader}}</span>
+              </h1>
+            </div>
+          </div>
+
+          <!-- Team Lineup Heading Right -->
+          <ng-container *ngIf="teamLineup.nav.opp_lineup_route && isDefaultSeason">
+            <div *ngIf="!teamLineup.nav?.status || (teamLineup.nav.status.status !== 'In Progress' && teamLineup.nav.status.status !== 'Final')" class="team-lineup-heading-right" >
+              <div class="float-right">
+                <h4 class="opponent-team-name">
+                  <span *ngIf="!teamLineup?.nav.is_home" class="team-game-location">at</span>
+                  <span *ngIf="teamLineup?.nav.is_home" class="team-game-location">vs</span>
+                  <span class="opponent-team-name">{{teamLineup?.nav.opp_abbr}}</span>
+                </h4>
+                <h4 class="event-date">
+                  <app-general-time-format [time]="teamLineup.nav.matchup_time"></app-general-time-format>
+                </h4>
+                <div *ngIf="pageHeader === 'Lineup' && teamLineup.nav.updated" class="updated-block-mobile">
+                  Updated: <app-general-time-format [time]="teamLineup.nav.updated" [showSeoTime]="true" [showTimeAgo]="true"></app-general-time-format>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="teamLineup.nav.status?.status === 'In Progress'" class="team-lineup-heading-right" >
+              <div class="float-right">
+                <h4 class="opponent-team-name text-center" style="font-weight: normal">
+                  <span>{{teamLineup.nav.is_home ? teamLineup.nav.opp_abbr : teamLineup.nav.team_abbr}} {{teamLineup.nav.status.away_team_score}}</span>
+                  @
+                  <span>{{teamLineup.nav.is_home ? teamLineup.nav.team_abbr : teamLineup.nav.opp_abbr}} {{teamLineup.nav.status.home_team_score}}</span>
+                </h4>
+                <h4 *ngIf="!showHalftime(teamLineup.nav.status)" class="event-date text-center" style="font-weight: normal">
+                  Q{{teamLineup.nav.status.quarter_integer}} {{teamLineup.nav.status.minutes}}:{{teamLineup.nav.status.seconds | number : '2.0-0'}}
+                </h4>
+                <h4 *ngIf="showHalftime(teamLineup.nav.status)" class="event-date text-center" style="font-weight: normal">
+                  Halftime
+                </h4>
+                <div *ngIf="pageHeader === 'Lineup' && teamLineup.nav.updated" class="updated-block-mobile">
+                  Updated: <app-general-time-format [time]="teamLineup.nav.updated" [showSeoTime]="true" [showTimeAgo]="true"></app-general-time-format>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="teamLineup.nav.status?.status === 'Final'" class="team-lineup-heading-right" >
+              <div class="float-right">
+                <h4 class="opponent-team-name text-center" style="font-weight: normal">
+                  <span [ngClass]="{'font-bold': isWinner(teamLineup.nav.status.away_team_score, teamLineup.nav.status.home_team_score)}">{{teamLineup.nav.is_home ? teamLineup.nav.opp_abbr : teamLineup.nav.team_abbr}} {{teamLineup.nav.status.away_team_score}}</span>
+                  @
+                  <span [ngClass]="{'font-bold': isWinner(teamLineup.nav.status.home_team_score, teamLineup.nav.status.away_team_score)}">{{teamLineup.nav.is_home ? teamLineup.nav.team_abbr : teamLineup.nav.opp_abbr}} {{teamLineup.nav.status.home_team_score}}</span>
+                  <span class="final-text-mobile">Final</span>
+                </h4>
+                <h4 style="font-weight: normal" class="event-date text-center final-text-normal">Final</h4>
+                <div *ngIf="pageHeader === 'Lineup' && teamLineup.nav.updated" class="updated-block-mobile">
+                  Updated: <app-general-time-format [time]="teamLineup.nav.updated" [showSeoTime]="true" [showTimeAgo]="true"></app-general-time-format>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <!-- Collapse Menu -->
+        <div class="in-page-collapse-toggle">
+          <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="isCollapsed = !isCollapsed"
+                  [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+            Menu
+          </button>
+        </div>
+        <div class="in-page-nav-menu" [ngbCollapse]="!isCollapsed" [ngClass]="{'hidden': !isCollapsed}">
+          <!-- Team Lineup Heading Navigation -->
+          <div class="page-heading-navigation">
+            <div *ngIf="teamLineup.nav.team_roster_route" class="tab-btn-wrap last">
+              <a [routerLink]="[teamLineup.nav.team_roster_route]"
+                 [class.active]="isLinkActive(teamLineup.nav.team_roster_route)"
+                 class="page-heading-nav-btn">Roster</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ROUTER OUTLET -->
+    <router-outlet></router-outlet>
+  </div>
+</div>

@@ -1,0 +1,449 @@
+<div class="row mt-2 mlb-in-game-predictor">
+  <div class="col-12">
+    <div class="top-section d-flex justify-content-between">
+      <div>
+        <app-team-score-game></app-team-score-game>
+      </div>
+      <div>
+        <app-at-bat-prediction></app-at-bat-prediction>
+      </div>
+      <div>
+        <app-next-play
+          [pass]="55"
+          [rush]="45"
+          [actual]="'Matt Ryan passes 10 yards down middle to Julio Jones.'"
+          [model]="'Matt Ryan passes 10 yards down middle to Julio Jones.'"
+        ></app-next-play>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-12 col-xl-9">
+        <app-win-probability-chart></app-win-probability-chart>
+      </div>
+      <div class="col-12 col-sm-8 mt-4 mt-xl-0 col-xl-3">
+        <table class="multi-row-data-table final-score-prediction-table">
+          <colgroup colspan="2"></colgroup>
+          <tbody>
+            <tr class="t-sub-header">
+              <th colspan="2" scope="colgroup" class="text-center">Final Score Prediction </th>
+            </tr>
+            <tr class="t-content">
+              <td class="no-border big-team-name blue">
+                <img class="table-logo" src="assets/images/mlb/logos/white/atlanta-braves-white.svg" alt="">
+                ATL 4
+              </td>
+              <td class="big-team-name red">
+                <img class="table-logo" src="assets/images/mlb/logos/white/los-angeles-dodgers-white.svg" alt="">
+                LAD 6
+              </td>
+            </tr>
+            <tr class="t-content">
+              <td class="probability" colspan="2"><strong>84% Probability</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-12">
+        <h6 class="section-header">Score Predictions</h6>
+      </div>
+      <div class="col-12">
+        <div class="multi-row-data-table-wrapper">
+          <table class="multi-row-data-table t-stripped">
+            <thead>
+            <tr class="t-sub-header">
+              <th class="text-center">Teams</th>
+              <th class="text-center">1</th>
+              <th class="text-center">2</th>
+              <th class="text-center">3</th>
+              <th class="text-center">4</th>
+              <th class="text-center">5</th>
+              <th class="text-center">6</th>
+              <th class="text-center">7</th>
+              <th class="text-center">8</th>
+              <th class="text-center">9</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="t-content">
+              <td>
+                <img class="table-logo" src="/assets/images/nfl/logos/white/atlanta-falcons-white.svg" alt="">
+                ATL
+              </td>
+              <td>3</td>
+              <td>3</td>
+              <td>3</td>
+              <td>3</td>
+              <td>3</td>
+              <td>3</td>
+              <td>3</td>
+              <td>3</td>
+              <td>3</td>
+            </tr>
+            <tr class="t-content">
+              <td>
+                <img class="table-logo" src="/assets/images/nfl/logos/white/new-england-patriots-white.svg" alt="">
+                NE
+              </td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+            </tr>
+            <tr class="t-content">
+              <td>
+              </td>
+              <td>87% Prob</td>
+              <td>87% Prob</td>
+              <td>87% Prob</td>
+              <td>87% Prob</td>
+              <td>87% Prob</td>
+              <td>87% Prob</td>
+              <td>87% Prob</td>
+              <td>87% Prob</td>
+              <td>87% Prob</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-1">
+      <div class="col-12 col-md-6">
+        <h6 class="section-header">Walk Predictions</h6>
+        <div class="multi-row-data-table-wrapper">
+          <table class="multi-row-data-table t-stripped">
+            <thead>
+            <tr class="t-sub-header">
+              <th class="text-center">Teams</th>
+              <th class="text-center">Actual</th>
+              <th class="text-center">Model</th>
+              <th class="text-center">Difference</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="t-content">
+              <td>
+                <img class="table-logo" src="assets/images/mlb/logos/white/atlanta-braves-white.svg" alt="">
+                ATL
+              </td>
+              <td>3 Walks</td>
+              <td>3 Walks</td>
+              <td>-2</td>
+            </tr>
+            <tr class="t-content">
+              <td>
+                <img class="table-logo" src="assets/images/mlb/logos/white/los-angeles-dodgers-white.svg" alt="">
+                LAD
+              </td>
+              <td>3 Walks</td>
+              <td>3 Walks</td>
+              <td>-2</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <h6 class="section-header">Strikeout Predictions</h6>
+        <div class="multi-row-data-table-wrapper">
+          <table class="multi-row-data-table t-stripped">
+            <thead>
+            <tr class="t-sub-header">
+              <th class="text-center">Teams</th>
+              <th class="text-center">Actual</th>
+              <th class="text-center">Model</th>
+              <th class="text-center">Difference</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="t-content">
+              <td>
+                <img class="table-logo" src="assets/images/mlb/logos/white/atlanta-braves-white.svg" alt="">
+                ATL
+              </td>
+              <td>3 SO</td>
+              <td>3 SO</td>
+              <td>-2</td>
+            </tr>
+            <tr class="t-content">
+              <td>
+                <img class="table-logo" src="assets/images/mlb/logos/white/los-angeles-dodgers-white.svg" alt="">
+                LAD
+              </td>
+              <td>3 SO</td>
+              <td>3 SO</td>
+              <td>-2</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-1">
+      <div class="col-12 col-md-6">
+        <h6 class="section-header">Hit Predictions</h6>
+        <div class="multi-row-data-table-wrapper">
+          <table class="multi-row-data-table t-stripped">
+            <thead>
+            <tr class="t-sub-header">
+              <th class="text-center">Teams</th>
+              <th class="text-center">Actual</th>
+              <th class="text-center">Model</th>
+              <th class="text-center">Difference</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="t-content">
+              <td>
+                <img class="table-logo" src="assets/images/mlb/logos/white/atlanta-braves-white.svg" alt="">
+                ATL
+              </td>
+              <td>3 Hits</td>
+              <td>3 Hits</td>
+              <td>-2</td>
+            </tr>
+            <tr class="t-content">
+              <td>
+                <img class="table-logo" src="assets/images/mlb/logos/white/los-angeles-dodgers-white.svg" alt="">
+                LAD
+              </td>
+              <td>3 Hits</td>
+              <td>3 Hits</td>
+              <td>-2</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <h6 class="section-header">Multi- Hit Predictions</h6>
+        <div class="multi-row-data-table-wrapper">
+          <table class="multi-row-data-table t-stripped">
+            <thead>
+            <tr class="t-sub-header">
+              <th class="text-center">Teams</th>
+              <th class="text-center">Actual</th>
+              <th class="text-center">Model</th>
+              <th class="text-center">Difference</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="t-content">
+              <td>
+                <img class="table-logo" src="assets/images/mlb/logos/white/atlanta-braves-white.svg" alt="">
+                ATL
+              </td>
+              <td>3 Hits</td>
+              <td>3 Hits</td>
+              <td>-2</td>
+            </tr>
+            <tr class="t-content">
+              <td>
+                <img class="table-logo" src="assets/images/mlb/logos/white/los-angeles-dodgers-white.svg" alt="">
+                LAD
+              </td>
+              <td>3 Hits</td>
+              <td>3 Hits</td>
+              <td>-2</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-1">
+      <div class="col-12 col-md-6">
+        <h6 class="section-header">Home Run Predictions</h6>
+        <div class="multi-row-data-table-wrapper">
+          <table class="multi-row-data-table t-stripped">
+            <thead>
+            <tr class="t-sub-header">
+              <th class="text-center">Teams</th>
+              <th class="text-center">Actual</th>
+              <th class="text-center">Model</th>
+              <th class="text-center">Difference</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="t-content">
+              <td>
+                <img class="table-logo" src="assets/images/mlb/logos/white/atlanta-braves-white.svg" alt="">
+                ATL
+              </td>
+              <td>3 HR</td>
+              <td>3 HR</td>
+              <td>-2</td>
+            </tr>
+            <tr class="t-content">
+              <td>
+                <img class="table-logo" src="assets/images/mlb/logos/white/los-angeles-dodgers-white.svg" alt="">
+                LAD
+              </td>
+              <td>3 HR</td>
+              <td>3 HR</td>
+              <td>-2</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-12 col-md-6">
+        <div class="multi-row-data-table-wrapper">
+          <table class="multi-row-data-table mb-0">
+            <colgroup span="8" align="left">
+              <col span="1" width="32%">
+              <col span="7">
+            </colgroup>
+            <tbody class="no-border-bottom">
+              <tr class="t-header">
+                <th colspan="8" scope="colgroup" class="text-left padded">
+                  <img class="table-header-logo" src="assets/images/mlb/logos/white/atlanta-braves-white.svg" alt="">
+                  <span class="table-header-team">Atlanta Braves</span>
+                </th>
+              </tr>
+              <tr class="t-sub-header">
+                <th class="padded" >Pitchers</th>
+                <th class="text-center">IP</th>
+                <th class="text-center">H</th>
+                <th class="text-center">R</th>
+                <th class="text-center">ER</th>
+                <th class="text-center">BB</th>
+                <th class="text-center">SO</th>
+                <th class="text-center">ERA</th>
+              </tr>
+              <tr class="t-content">
+                <td class="padded text-left">John Smoltz</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+            </tbody>
+        </table>
+          <table class="multi-row-data-table t-stripped">
+            <thead>
+              <tr class="t-sub-header">
+                <th class="padded" width="32%">Hitters</th>
+                <th class="text-center">POS</th>
+                <th class="text-center">AB</th>
+                <th class="text-center">RH</th>
+                <th class="text-center">RBI</th>
+                <th class="text-center">BB</th>
+                <th class="text-center">SO</th>
+                <th class="text-center">ERA</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="t-content">
+                <td class="padded text-left">John Smoltz</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+              <tr class="t-content bold">
+                <td class="padded text-left">Total</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+            </tbody>
+        </table>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="multi-row-data-table-wrapper">
+          <table class="multi-row-data-table mb-0">
+            <colgroup span="8" align="left">
+              <col span="1" width="32%">
+              <col span="7">
+            </colgroup>
+            <tbody class="no-border-bottom">
+              <tr class="t-header">
+                <th colspan="8" scope="colgroup" class="text-left padded">
+                  <img class="table-header-logo" src="assets/images/mlb/logos/white/los-angeles-dodgers-white.svg" alt="">
+                  <span class="table-header-team">Los Angeles Dodgerss</span>
+                </th>
+              </tr>
+              <tr class="t-sub-header">
+                <th class="padded" >Pitchers</th>
+                <th class="text-center">IP</th>
+                <th class="text-center">H</th>
+                <th class="text-center">R</th>
+                <th class="text-center">ER</th>
+                <th class="text-center">BB</th>
+                <th class="text-center">SO</th>
+                <th class="text-center">ERA</th>
+              </tr>
+              <tr class="t-content">
+                <td class="padded text-left">John Smoltz</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+            </tbody>
+        </table>
+          <table class="multi-row-data-table t-stripped">
+            <thead>
+              <tr class="t-sub-header">
+                <th class="padded" width="32%">Hitters</th>
+                <th class="text-center">POS</th>
+                <th class="text-center">AB</th>
+                <th class="text-center">RH</th>
+                <th class="text-center">RBI</th>
+                <th class="text-center">BB</th>
+                <th class="text-center">SO</th>
+                <th class="text-center">ERA</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="t-content">
+                <td class="padded text-left">John Smoltz</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+              <tr class="t-content bold">
+                <td class="padded text-left">Total</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+            </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+:host {
+
+  .friends-list {
+    .friend-item {
+      margin-bottom: 25px;
+      .img-container {
+        -ms-flex-item-align: center !important;
+        -ms-grid-row-align: center !important;
+        align-self: center !important;
+        width: 90px;
+        margin: 0 20px;
+        min-width: 90px;
+        img {
+          width: 100%;
+        }
+      }
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+  .fbschedules {
+    background: #222222;
+    padding: 1px 6px 4px 5px;
+  }
+
+}

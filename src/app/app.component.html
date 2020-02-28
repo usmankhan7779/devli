@@ -1,0 +1,11 @@
+<app-navbar *ngIf="!openedInIframe && showNavbar"></app-navbar>
+<div [hidden]="!showNavbar">
+  <ng-template #scorebarContainer></ng-template>
+</div>
+<!--score-bar loads dynamically see app.component.ts-->
+<!--<app-score-bar *ngIf="showNavbar && showScoreBar"></app-score-bar>-->
+<router-outlet></router-outlet>
+<app-footer *ngIf="!openedInIframe && showNavbar"></app-footer>
+
+<app-spinner></app-spinner>
+

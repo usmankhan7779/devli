@@ -1,0 +1,71 @@
+<div class="container-fluid" [ngClass]="league">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+    <div class="col-12">
+      <h1 class="page-heading">{{teamsData.heading}}</h1>
+    </div>
+
+    <div *ngIf="ddData" class="col-12">
+      <div class="d-flex top-dd-wrapper">
+        <div class="dd-wrapper">
+          <div class="grouped-dropdown-wrapper">
+            <app-dropdown
+              [ddData]="ddData"
+              [filterItems]="onDdChange.bind(this)"
+              [className]="'first last'"
+              prop="conference"
+              name="Conferences"
+            ></app-dropdown>
+          </div>
+        </div>
+        <div class="search-input-wrapper">
+          <app-search-input #searchInput [placeholder]="'Search Teams'" [className]="'search-next-to-dd'" [searchFn]="filterByName.bind(this)" (onDataFiltered)="updateTeams($event)"></app-search-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="row">
+        <div *ngIf="teamsData.intro_paragraph" class="col-12 flex-last flex-sm-unordered">
+          <p class="site-pages-content" [innerHtml]="teamsData.intro_paragraph | safeHtml"></p>
+        </div>
+        <div class="col-12">
+          <div class="row">
+
+            <div *ngFor="let leagueItem of filteredTeamsData" class="col-12">
+              <div class="row">
+                <div *ngIf="leagueItem.heading" class="col-12 after-heading-margin">
+                  <div class="d-flex">
+                    <img *ngIf="leagueItem.heading_logo" class="mr-3 league-logo" [src]="leagueItem.heading_logo" alt="{{leagueItem.heading}}">
+                    <div class="align-self-center">
+                      <h2 class="league-name">{{leagueItem.heading}}</h2>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="league-items-top-level-wrapper">
+                    <div class="d-flex flex-wrap league-items-wrapper">
+                      <div class="after-heading-margin app-team-list-item-container-wrapper" *ngFor="let teamListItem of leagueItem.divisions">
+                        <div class="app-team-list-item-container">
+                          <app-team-list-item [item]="teamListItem" [league]="league"></app-team-list-item>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div *ngIf="teamsData.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+          <h2 *ngIf="teamsData.bottom_header" class="page-heading-two">
+            {{teamsData.bottom_header}}
+          </h2>
+          <p class="site-pages-content" [innerHtml]="teamsData.bottom_paragraph | safeHtml"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

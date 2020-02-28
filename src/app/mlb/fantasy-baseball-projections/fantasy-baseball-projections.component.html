@@ -1,0 +1,643 @@
+<ng-template #loadingTpl>
+  <div class="starting-lineup-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+
+<div class="container-fluid pb-5" *ngIf="totalItems != undefined; else loadingTpl;">
+  <!-- Breadcrumbs -->
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+
+    <div class="col-12 col-lg-8">
+      <h1 class="page-heading">MLB Fantasy Baseball Projections</h1>
+      <div *ngIf="introParagraph" class="hidden-md-down">
+        <p class="site-pages-content" [innerHTML]="introParagraph | safeHtml"></p>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component [league]="'mlb'"></app-ad-component>
+    </div>
+
+    <div *ngIf="introParagraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+      <p class="site-pages-content" [innerHtml]="introParagraph | safeHtml"></p>
+    </div>
+
+    <div class="col-12">
+      <!-- Collapse Menu -->
+      <div class="in-page-dropdown-toggle">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="dropdownCollapsed = !dropdownCollapsed"
+                [attr.aria-expanded]="!dropdownCollapsed" aria-controls="collapseExample">
+          <i class="fa fa-bars dropdown-icon" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="in-page-dropdown-menu" [ngbCollapse]="!dropdownCollapsed" [ngClass]="{'hidden-dropdown': !dropdownCollapsed}">
+        <!-- Grouped Dropdown -->
+        <div class="d-flex justify-content-start top-dd-wrapper">
+          <div class="d-flex top-dd-wrapper-deep">
+            <div class="grouped-dropdown-wrapper mr-2">
+              <app-dropdown
+                [ddData]="ddData"
+                [filterItems]="onDropdownChange.bind(this)"
+                prop="fantasy"
+                className="first last"
+                isSingleSelect="true"
+              ></app-dropdown>
+              <!--<div ngbDropdown class="grouped-dropdown dropdown ">-->
+                <!--<button type="button" class="grouped-dropdown-btn btn btn-secondary first px-3" id="main-dropdown" ngbDropdownToggle>-->
+                  <!--<span class="pr-0 pr-sm-3">{{activeMainRadio}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />-->
+                <!--</button>-->
+                <!--<div class="dropdown-menu" aria-labelledby="main-dropdown">-->
+                  <!--<div *ngFor="let radio of mainRadios;">-->
+                    <!--<button-->
+                      <!--[ngClass]="{'dd-active-btn': isTabActive(radio, 'main')}"-->
+                      <!--(click)="onRadioClick(radio, 'main')"-->
+                      <!--class="dropdown-item">-->
+                      <!--<span>{{radio}}</span>-->
+                    <!--</button>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</div>-->
+            </div>
+            <div class="grouped-dropdown-wrapper show-mobile">
+              <div ngbDropdown class="grouped-dropdown dropdown ">
+                <button type="button" class="grouped-dropdown-btn btn btn-secondary first px-3" id="secondary-dropdown" ngbDropdownToggle>
+                  <span class="pr-0 pr-sm-3">{{activeSecondaryRadio}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="secondary-dropdown">
+                  <div *ngFor="let radio of secondaryRadios;">
+                    <button
+                      [ngClass]="{'dd-active-btn': isTabActive(radio, 'secondary')}"
+                      (click)="onRadioClick(radio, 'secondary')"
+                      class="dropdown-item">
+                      <span>{{radio}}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--<div class="toggles-in-page-wrapper m-0 show-desktop">-->
+              <!--<div class="toggles-in-page-group btn-group toggles-group float-left m-0">-->
+                <!--<ng-container-->
+                  <!--*ngFor="let radio of mainRadios; let first = first; let last = last;"-->
+                <!--&gt;-->
+                  <!--<button-->
+                    <!--type="button"-->
+                    <!--class="toggle-in-page"-->
+                    <!--(click)="onRadioClick(radio, 'main')"-->
+                    <!--[ngClass]="{'active': isTabActive(radio, 'main'), 'first': first, 'last': last}">-->
+                    <!--<span>{{radio}}</span>-->
+                  <!--</button>-->
+                <!--</ng-container>-->
+              <!--</div>-->
+            <!--</div>-->
+
+            <div class="toggles-in-page-wrapper m-0 show-desktop">
+              <div class="toggles-in-page-group btn-group toggles-group float-left m-0">
+                <ng-container
+                  *ngFor="let radio of secondaryRadios; let first = first; let last = last;"
+                >
+                  <button
+                    type="button"
+                    class="toggle-in-page"
+                    (click)="onRadioClick(radio, 'secondary')"
+                    [ngClass]="{'active': isTabActive(radio, 'secondary'), 'first': first, 'last': last}">
+                    <span>{{radio}}</span>
+                  </button>
+                </ng-container>
+              </div>
+            </div>
+            <div class="search-input-wrapper-top">
+              <div class="search-input-wrapper">
+                <div>
+                  <div class="input-group">
+                    <input type="text" class="form-control hide-placeholder" [ngModel]="searchModel" (ngModelChange)="filterByName($event)" placeholder="Search Players" aria-describedby="filter-by-player">
+                    <span class="input-group-addon" id="filter-by-player">
+                  <i class="fa fa-search" aria-hidden="true"></i>
+                </span>
+                  </div>
+                </div>
+              </div>
+              <div class="mobile-page-dd">
+                <div class="grouped-dropdown-wrapper btn-group mb-3">
+                  <app-dropdown
+                    [ddData]="ddData"
+                    [filterItems]="onItemsPerPageChange.bind(this)"
+                    prop="items_per_page"
+                    [totalItems]="totalItems"
+                    [isSingleSelect]="true"
+                    className="first last"
+                  ></app-dropdown>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-start pagination-wrapper">
+            <div class="full-screen-page-dd">
+              <div class="grouped-dropdown-wrapper btn-group mb-3">
+                <app-dropdown
+                  [ddData]="ddData"
+                  [totalItems]="totalItems"
+                  [filterItems]="onItemsPerPageChange.bind(this)"
+                  prop="items_per_page"
+                  [isSingleSelect]="true"
+                  className="first last"
+                ></app-dropdown>
+              </div>
+            </div>
+            <div>
+              <pagination-controls [maxSize]="5" (pageChange)="onPageChange($event)" id="browserPagination"></pagination-controls>
+            </div>
+            <div class="ml-auto">
+              <div class="float-right">
+                <button type="button" (click)="onCsvShow()" class="btn btn-primary csv-btn">Show {{csvShowed ? 'Table' : ' CSV'}}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Grouped Dropdown -->
+    </div>
+    <div class="col-12">
+      <div class="row" [hidden]="csvShowed">
+        <div *ngIf="activeSecondaryRadio === secondaryRadios[0]" class="col-12 table-sect-wrap">
+          <!-- Static Positioned Tabled -->
+          <div class="static-table-wrapper">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="dataToShow"
+              [(mfSortBy)]="sortByFantasy"
+              [(mfSortOrder)]="sortOrderFantasy"
+              (mfSortByChange)="onSortOrder('sortByFantasy', 'sortOrderFantasy', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('sortByFantasy', 'sortOrderFantasy', 'order', $event)"
+              #staticMfTable="mfDataTable"
+              class="static-table stats-table table table-bordered multi-table-static">
+              <thead>
+              <tr class="t-header static-row-header">
+                <th colspan="2" class="text-center main-border static-t-header">Players</th>
+              </tr>
+              <tr class="t-sub-header static-sub-header">
+                <th class="player-name-col">
+                  <mfSorter by="full_name">Name</mfSorter>
+                </th>
+                <th class="position-col">
+                  <mfSorter [by]="'position.' + ddData.activeFantasy">Pos</mfSorter>
+                </th>
+              </tr>
+              </thead>
+              <tbody class="static-table-body">
+              <tr *ngFor="let player of staticMfTable.data | paginate: { id: 'browserPagination', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
+                <td class="player-name-col text-left">
+                  <app-player-link [league]="'mlb'" [playerName]="player.full_name" [playerUrl]="player.profile_url"></app-player-link>
+                </td>
+                <td class="position-col main-border">
+                  {{player.position[ddData.activeFantasy]}}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Horizontal Scrolling-->
+          <div class="horizontal-table-wrapper">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="dataToShow"
+              [(mfSortBy)]="sortByFantasy"
+              [(mfSortOrder)]="sortOrderFantasy"
+              (mfSortByChange)="onSortOrder('sortByFantasy', 'sortOrderFantasy', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('sortByFantasy', 'sortOrderFantasy', 'order', $event)"
+              #mfTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="6">
+                <col span="1" width="13%" class="inner-col-switch">
+                <col span="5" class="inner-col-switch">
+              </colgroup>
+              <colgroup span="7"></colgroup>
+              <colgroup span="3"></colgroup>
+              <colgroup span="1"></colgroup>
+              <colgroup span="4"></colgroup>
+              <tbody>
+              <tr class="t-header">
+                <th colspan="6" scope="colgroup" class="text-center main-border inner-col-switch">Players</th>
+                <th colspan="4" class="text-center inner-col-show main-border"></th>
+                <th colspan="7" scope="colgroup" class="text-center main-border">Games</th>
+                <th colspan="3" scope="colgroup" class="text-center main-border">Opposing Team</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border"></th>
+                <th colspan="4" scope="colgroup" class="text-center">Peformance</th>
+              </tr>
+              <tr class="t-sub-header">
+                <!-- Inner Col Switch-->
+                <th scope="col" class="px-3 inner-col-switch">
+                  <mfSorter by="full_name">Name</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch">
+                  <mfSorter [by]="'position.' + ddData.activeFantasy">Pos</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch">
+                  <mfSorter by="batting_order">Order</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch">
+                  <mfSorter [by]="'projections.' + ddData.activeFantasy + '_cash'">Projection</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch">
+                  <mfSorter [by]="ddData.activeFantasy + '_salary'">Salary</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch main-border">
+                  <mfSorter [by]="ddData.activeFantasy + '_pointsPerK'">Pts/$1k</mfSorter>
+                </th>
+                <!-- END: Inner Col Switch -->
+                <!-- Add Inner Col Show -->
+                <th scope="col" class="text-center inner-col-show">
+                  <mfSorter by="batting_order">Order</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-show">
+                  <mfSorter [by]="'projections.' + ddData.activeFantasy + '_cash'">Projection</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-show">
+                  <mfSorter [by]="ddData.activeFantasy + '_salary'">Salary</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-show main-border">
+                  <mfSorter [by]="ddData.activeFantasy + '_pointsPerK'">Pts/$1k</mfSorter>
+                </th>
+                <!-- END: Inner Col Show-->
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="team">Teams</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="rain">Rain</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="wind">Wind</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="moneyline">Moneyline</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="opp_team_runs">Opp Run Total</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="park_factor">Park Factor</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="theory">Theory</mfSorter>
+                </th>
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="opp_woba">WOBA vs. Hand</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="opp_iso">ISO vs. Hand</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="opp_k">K% vs. Hand</mfSorter>
+                </th>
+
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="era">ERA</mfSorter>
+                </th>
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="avg_innings">Avg. Innings</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter [by]="'points_min.' + ddData.activeFantasy">Floor L10</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter [by]="'points_max.' + ddData.activeFantasy">Ceiling L10</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter [by]="'consistency.' + ddData.activeFantasy">Consistency</mfSorter>
+                </th>
+              </tr>
+              <tr class="t-content" *ngFor="let player of mfTable.data | paginate: { id: 'browserPagination', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
+                <td class="text-left px-3 inner-col-switch">
+                  <app-player-link [league]="'nba'" [playerName]="player.full_name" [playerUrl]="player.profile_url"></app-player-link>
+                </td>
+                <td class="inner-col-switch">
+                  {{player.position[ddData.activeFantasy]}}
+                </td>
+                <td>{{player.batting_order}}</td>
+                <td>{{player.projections[ddData.activeFantasy + '_cash']}}</td>
+                <td>{{player[ddData.activeFantasy + '_salary'] | currency:'USD':'symbol':'4.0-0'}}</td>
+                <td class="main-border">
+                  <app-color-badge [value]="player[ddData.activeFantasy + '_pointsPerK']" [colorValues]="player.is_pitcher ? colorConfig.pointsPerK.pitcher : colorConfig.pointsPerK.notPitcher"></app-color-badge>
+                </td>
+
+                <td>
+                  <a class="link-black-underline" [ngClass]="{'bold': player.away_team === player.team}" [routerLink]="player.away_url">
+                    {{player.away_team}}
+                  </a>
+                  @
+                  <a class="link-black-underline" [ngClass]="{'bold': player.home_team === player.team}" [routerLink]="player.home_url">
+                    {{player.home_team}}
+                  </a>
+                </td>
+                <td>{{player.rain}}<span *ngIf="player.rain !== 'Dome'">%</span></td>
+                <td>
+                  <app-color-badge [isPitcher]="player.is_pitcher" [value]="player.wind" [wind]="{wind: player.wind, wind_deg: player.wind_deg}"></app-color-badge>
+                </td>
+                <td>
+                  <app-color-badge [value]="player.moneyline" [reverse]="true" [colorValues]="colorConfig.moneyline"></app-color-badge>
+                </td>
+                <td>
+                  <app-color-badge [value]="player.opp_team_runs" [reverse]="true" [colorValues]="colorConfig.team_runs"></app-color-badge>
+                </td>
+                <td>{{player.park_factor}}</td>
+                <td class="main-border">
+                  <app-color-badge [value]="player.theory" [colorValues]="colorConfig.theory"></app-color-badge>
+                </td>
+
+                <td>
+                  <app-color-badge [value]="player.opp_woba" [reverse]="true" [colorValues]="colorConfig.opp_woba"></app-color-badge>
+                </td>
+                <td>
+                  <app-color-badge [value]="player.opp_iso" [reverse]="true" [colorValues]="colorConfig.opp_iso"></app-color-badge>
+                </td>
+                <td class="main-border">
+                  <app-color-badge [value]="player.opp_k" [colorValues]="colorConfig.opp_k"></app-color-badge>
+                </td>
+
+                <td class="main-border">{{player.era}}</td>
+
+                <td>{{player.avg_innings}}</td>
+                <td>{{player.points_min[ddData.activeFantasy]}}</td>
+                <td>{{player.points_max[ddData.activeFantasy]}}</td>
+                <td>
+                  <app-color-badge [value]="player.consistency[ddData.activeFantasy] + '%'" [colorValues]="player.is_pitcher ? colorConfig.consistency.pitcher : colorConfig.consistency.notPitcher"></app-color-badge>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div *ngIf="activeSecondaryRadio !== secondaryRadios[0]" class="col-12 table-sect-wrap">
+          <!-- Static Positioned Tabled -->
+          <div class="static-table-wrapper">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="dataToShow"
+              [(mfSortBy)]="sortByFantasy"
+              [(mfSortOrder)]="sortOrderFantasy"
+              (mfSortByChange)="onSortOrder('sortByFantasy', 'sortOrderFantasy', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('sortByFantasy', 'sortOrderFantasy', 'order', $event)"
+              #staticMfTable="mfDataTable"
+              class="static-table stats-table table table-bordered multi-table-static">
+              <thead>
+              <tr class="t-header static-row-header">
+                <th colspan="2" class="text-center main-border static-t-header">Players</th>
+              </tr>
+              <tr class="t-sub-header static-sub-header">
+                <th class="player-name-col">
+                  <mfSorter by="full_name">Name</mfSorter>
+                </th>
+                <th class="position-col">
+                  <mfSorter [by]="'position.' + ddData.activeFantasy">Pos</mfSorter>
+                </th>
+              </tr>
+              </thead>
+              <tbody class="static-table-body">
+              <tr *ngFor="let player of staticMfTable.data | paginate: { id: 'browserPagination', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
+                <td class="player-name-col text-left">
+                  <app-player-link [league]="'mlb'" [playerName]="player.full_name" [playerUrl]="player.profile_url"></app-player-link>
+                </td>
+                <td class="position-col main-border">
+                  {{player.position[ddData.activeFantasy]}}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Horizontal Scrolling-->
+          <div class="horizontal-table-wrapper">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="dataToShow"
+              [(mfSortBy)]="sortByFantasy"
+              [(mfSortOrder)]="sortOrderFantasy"
+              (mfSortByChange)="onSortOrder('sortByFantasy', 'sortOrderFantasy', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('sortByFantasy', 'sortOrderFantasy', 'order', $event)"
+              #mfTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="6">
+                <col span="1" width="13%" class="inner-col-switch">
+                <col span="5" class="inner-col-switch">
+              </colgroup>
+              <colgroup span="7"></colgroup>
+              <colgroup span="4"></colgroup>
+              <colgroup span="6"></colgroup>
+              <tbody>
+              <tr class="t-header">
+                <th colspan="6" scope="colgroup" class="text-center main-border inner-col-switch">Players</th>
+                <th colspan="4" class="text-center inner-col-show main-border"></th>
+                <th colspan="7" scope="colgroup" class="text-center main-border">Games</th>
+                <th colspan="4" scope="colgroup" class="text-center main-border">Opposing Pitcher</th>
+                <th colspan="6" scope="colgroup" class="text-center">Peformance</th>
+              </tr>
+              <tr class="t-sub-header">
+                <!-- Inner Col Switch-->
+                <th scope="col" class="px-3 inner-col-switch">
+                  <mfSorter by="full_name">Name</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch">
+                  <mfSorter [by]="'position.' + ddData.activeFantasy">Pos</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch">
+                  <mfSorter by="batting_order">Order</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch">
+                  <mfSorter [by]="'projections.' + ddData.activeFantasy + '_cash'">Projection</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch">
+                  <mfSorter [by]="ddData.activeFantasy + '_salary'">Salary</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-switch main-border">
+                  <mfSorter [by]="ddData.activeFantasy + '_pointsPerK'">Pts/$1k</mfSorter>
+                </th>
+                <!-- END: Inner Col Switch -->
+                <!-- Add Inner Col Show -->
+                <th scope="col" class="text-center inner-col-show">
+                  <mfSorter by="batting_order">Order</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-show">
+                  <mfSorter [by]="'projections.' + ddData.activeFantasy + '_cash'">Projection</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-show">
+                  <mfSorter [by]="ddData.activeFantasy + '_salary'">Salary</mfSorter>
+                </th>
+                <th scope="col" class="text-center inner-col-show main-border">
+                  <mfSorter [by]="ddData.activeFantasy + '_pointsPerK'">Pts/$1k</mfSorter>
+                </th>
+                <!-- END: Inner Col Show-->
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="team">Teams</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="rain">Rain</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="wind">Wind</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="moneyline">Moneyline</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="team_runs">Run Total</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="park_factor">Park Factor</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="theory">Theory</mfSorter>
+                </th>
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="opp_pitcher_name_hand">Name - Hand</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="opp_pitcher_woba">WOBA vs. Hand</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="opp_pitcher_hr_9">HR/9 vs. Hand</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="opp_pitcher_k">K% vs. Hand</mfSorter>
+                </th>
+
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="woba">WOBA vs. Hand</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="iso">ISO vs. Hand</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="wrc">WRC+ vs. Hand</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter [by]="'points_min.' + ddData.activeFantasy">Floor L60</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter [by]="'points_max.' + ddData.activeFantasy">Ceiling L60</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter [by]="'consistency.' + ddData.activeFantasy">Consistency</mfSorter>
+                </th>
+              </tr>
+              <tr class="t-content" *ngFor="let player of mfTable.data | paginate: { id: 'browserPagination', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
+                <td class="text-left px-3 inner-col-switch">
+                  <app-player-link [league]="'nba'" [playerName]="player.full_name" [playerUrl]="player.profile_url"></app-player-link>
+                </td>
+                <td class="inner-col-switch">
+                  {{player.position[ddData.activeFantasy]}}
+                </td>
+                <td>{{player.batting_order}}</td>
+                <td>{{player.projections[ddData.activeFantasy + '_cash']}}</td>
+                <td>{{player[ddData.activeFantasy + '_salary'] | currency:'USD':'symbol':'4.0-0'}}</td>
+                <td class="main-border">
+                  <app-color-badge [value]="player[ddData.activeFantasy + '_pointsPerK']" [colorValues]="player.is_pitcher ? colorConfig.pointsPerK.pitcher : colorConfig.pointsPerK.notPitcher"></app-color-badge>
+                </td>
+
+
+                <td>
+                  <a class="link-black-underline" [ngClass]="{'bold': player.away_team === player.team}" [routerLink]="player.away_url">
+                    {{player.away_team}}
+                  </a>
+                  @
+                  <a class="link-black-underline" [ngClass]="{'bold': player.home_team === player.team}" [routerLink]="player.home_url">
+                    {{player.home_team}}
+                  </a>
+                </td>
+                <td>{{player.rain}}<span *ngIf="player.rain !== 'Dome'">%</span></td>
+                <td>
+                  <app-color-badge [isPitcher]="player.is_pitcher" [value]="player.wind" [wind]="{wind: player.wind, wind_deg: player.wind_deg}"></app-color-badge>
+                </td>
+                <td>
+                  <app-color-badge [value]="player.moneyline" [reverse]="true" [colorValues]="colorConfig.moneyline"></app-color-badge>
+                </td>
+                <td>
+                  <app-color-badge [value]="player.team_runs" [reverse]="true" [colorValues]="colorConfig.team_runs"></app-color-badge>
+                </td>
+                <td>{{player.park_factor}}</td>
+                <td class="main-border">
+                  <app-color-badge [value]="player.theory" [colorValues]="colorConfig.theory"></app-color-badge>
+                </td>
+
+                <td>{{player.opp_pitcher_name_hand}}</td>
+                <td>
+                  <app-color-badge [value]="player.opp_pitcher_woba" [colorValues]="colorConfig.woba"></app-color-badge>
+                </td>
+                <td>
+                  <app-color-badge [value]="player.opp_pitcher_hr_9" [colorValues]="colorConfig.opp_pitcher_hr_9"></app-color-badge>
+                </td>
+                <td class="main-border">
+                  <app-color-badge [value]="player.opp_pitcher_k" [reverse]="true" [colorValues]="colorConfig.opp_pitcher_k"></app-color-badge>
+                </td>
+
+                <td>
+                  <app-color-badge [value]="player.woba" [colorValues]="colorConfig.woba"></app-color-badge>
+                </td>
+                <td>
+                  <app-color-badge [value]="player.iso" [colorValues]="colorConfig.iso"></app-color-badge>
+                </td>
+                <td>
+                  <app-color-badge [value]="player.wrc" [colorValues]="colorConfig.wrc"></app-color-badge>
+                </td>
+                <td>
+                  {{player.points_min[ddData.activeFantasy]}}
+                </td>
+                <td>
+                  {{player.points_max[ddData.activeFantasy]}}
+                </td>
+                <td>
+                  <app-color-badge [value]="player.consistency[ddData.activeFantasy] + '%'" [colorValues]="player.is_pitcher ? colorConfig.consistency.pitcher : colorConfig.consistency.notPitcher"></app-color-badge>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="row" [hidden]="!csvShowed">
+        <div class="col-12">
+          <p class="csv-text" >
+            {{csvText}}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <h2 class="page-heading-two">Differentiating Between Formats</h2>
+      <p class="mb-0">
+        When it comes to fantasy MLB, there are a few different formats of play. The season-long leagues involve deeper considerations than daily contests, due to the consistencies players hold. For example, the season-long player might select an AAA player off waivers if news clears that he is on his way to the show. The season-long mindset is to account for long-term variances and take a flyer on the younger prospects working their way to the major leagues. This creates a common ground between daily fantasy and season-long play: consistency in research. The season-long player isn't going to opt in on a prospect hailing from a winning organization due to the fact the team won't need that player until late-season call ups. Instead, the season-long player will look to organizations that are out of the playoff hunt or teams that are projected to lack depth and a winning record. The same goes for daily fantasy play. You aren't going to take an over-priced catcher on a team that might afford that player 3-4 at-bats when you can select a low-priced guy from a game with a highly projected run total. More at-bats leads to the increased chances that player has to score for your team. Whatever the case may be, there are consistencies and inconsistencies that can be drawn from each playing format.
+      </p>
+    </div>
+    <div class="col-12">
+      <h2 class="page-heading-two">
+        Positioning Within Lineups
+      </h2>
+      <p class="mb-0">
+        A second important factor in lineup construction is finding where players are positioned. Most teams release their daily lineups hours before that night's contest, affording the user time to do their research. When it comes to playing on DraftKings or FanDuel, there is a monetary value associated with each player. For pitchers, this evaluation is scaled immensely, favoring the all-star players over the spot-start callups. The same goes for a hitter, with the values favoring the player with the higher averages and numbers with more at-bats under their belt. The place where a player is hitting can make a huge difference in terms of their production and at-bats. For example, some teams allot their best hitters to the leadoff position. As a leadoff hitter, this player starts the game with no RBI chances, aside from the homerun ball. When this same player is utilized at the 3 or 4 slot, they have the opportunity to see ducks on the pond when they step to the plate. The positioning a player is handed is something to team with overall salary you have for construction. Finding players in good spots is something that can lead to successful lineup construction.
+      </p>
+    </div>
+    <div class="col-12">
+      <h2 class="page-heading-two">
+        Non-Statistical Factors
+      </h2>
+      <p>
+        One of the major advantages fantasy players now possess is the ability to check weather forecasts and wind speeds via applications of website usage. This readily available information can make for a boom or bust lineup. If the forecast looks gloom, a player might be inclined to defer to a different game for player selection. Some prefer the competitive advantage of taking a chance on a game with low player ownership. You also have to take the affects of the weather into consideration. If it is a late pattern, the game might be able to exceed the 5 innings needed to make the contest official. Remember, if a game does not go 5 innings, the postponement with result in nullifying any statistics achieved during that game. This is a useful tool when looking at weather factors.
+      </p>
+      <p class="mb-0">
+        Ballpark types are also something to take into consideration. For example, Coors Field is known as one of the best hitters' parks and usually favors the long ball. This is due to elevation factors. The major daily fantasy providers also utilize this knowledge when constructing salary numbers for a given day. Stadiums with a short porch in given sections favor the left and right-handed hitters. The design of the field or the depth in certain pockets can favor the game of players within the league. This is a factor that must be considered when selecting your lineup on a daily basis.
+      </p>
+    </div>
+    <div class="col-12">
+      <h2 class="page-heading-two">
+        Finding the Gems
+      </h2>
+      <p>
+        When players are called up or making their first start on the mound, they usually carry a low price point. This is due to being untested within the league. To get called up, the player would be performing at a high level within the lower leagues. These call-ups are not via fluke or by chance, which is something to take note of. Being that thee are usually younger players, pitchers especially hold an advantage. Most of the league's talents have yet to face these players, utilizing game film and historical numbers as the only variants to predict these pitchers. The same goes for pitching the up-and-coming prospects. There is only so much data to go off, giving the user the competitive advantage to selecting matchups that would favor the game of the recent team addition. Players coming off injury or the disabled list are also worth a look in both fantasy formats. Tracking these individuals and their progressions are something the user can do to give them an advantage over the competition.
+      </p>
+    </div>
+  </div>
+</div>

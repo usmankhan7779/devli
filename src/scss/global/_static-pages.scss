@@ -1,0 +1,37 @@
+.site-pages-wrapper {
+  float: left;
+  width: 100%;
+  padding: 0 20px;
+}
+.site-pages-title {
+  float: left;
+  width: 100%;
+  color: #333333;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  font-size: 30px;
+  margin-top: 2px;
+  margin-bottom: 20px;
+}
+.site-pages-content {
+  float: left;
+  width: 100%;
+  font-family: 'Lato', sans-serif;
+  color: #333333;
+  font-size: 15px;
+  line-height: 20px;
+  &.match-styling {
+    h2, h4 {
+      font-size: 24px;
+      font-weight: 600;
+      margin: 24px 0;
+    }
+  }
+}
+@media (max-width: 700px) {
+  .bottom-seo-section-iframe-700br p.site-pages-content {
+    iframe {
+      width: 100% !important;
+    }
+  }
+}

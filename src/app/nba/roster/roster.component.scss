@@ -1,0 +1,32 @@
+:host {
+  table td {
+    vertical-align: middle;
+  }
+  .position-col {
+    border-right: 1px solid #e1e1e1;
+  }
+  @media (min-width: 551px) and (max-width: 1650px) {
+    $static-table-width: 317px;
+    .static-table {
+      max-width: $static-table-width;
+    }
+    .horizontal-table-wrapper {
+      width: calc(100% - #{$static-table-width});
+      .multi-row-data-table .t-content {
+        &:first-child {
+          height: 71px;
+        }
+        height: 70px;
+      }
+    }
+    ::ng-deep .image-player-name-td app-player-link .pl-img-wrapper img {
+      width: 45px;
+      height: 62px;
+    }
+  }
+  @media (max-width: 1650px) {
+    .horizontal-table-wrapper .multi-row-data-table .t-content td {
+      font-size: 11px;
+    }
+  }
+}

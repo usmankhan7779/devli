@@ -1,0 +1,60 @@
+:host {
+  .img-container {
+    text-align: center;
+    padding: 10px 5px;
+    .park-img-wrapper {
+      position: relative;
+      .wind-container {
+        width: 197px;
+        height: 173px;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        bottom: 0;
+        margin-left: -98px;
+        .wind-content {
+          margin-top: 27px;
+          span {
+            position: absolute;
+            width: 78px;
+            font-weight: bold;
+            color: black;
+            z-index: 2;
+            line-height: 73px;
+            font-size: 15px;
+          }
+          img {
+            z-index: 1;
+            width: 78px;
+            position: relative;
+          }
+        }
+      }
+    }
+  }
+  .heading-container {
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.3rem;
+  }
+  .additional-info-container {
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 35px;
+    height: 120px;
+    margin-bottom: 10px;
+  }
+  th {
+    background-color: #f3f3f3;
+    text-align: center;
+  }
+  td {
+    text-align: center;
+  }
+  tr:not(:last-child) {
+    border-bottom: 1px solid white;
+  }
+  .park-factor-wrapper {
+    border: 1px solid #d5e0e8;
+  }
+}

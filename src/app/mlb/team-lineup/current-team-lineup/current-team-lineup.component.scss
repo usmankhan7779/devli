@@ -1,0 +1,193 @@
+@import "../../../../scss/bootstrap-customization/custom-mixins";
+:host {
+  .updated-date-time-block-wrapper {
+    @include flex-row-mixin();
+    .updated-date-time-block {
+      margin-left: auto;
+    }
+    @media (min-width: 992px) and (max-width: 1100px), (max-width: 775px) {
+      .updated-date-time-block {
+        display: none;
+      }
+      @include flex-column-mixin();
+    }
+  }
+
+  .page-heading-right-dropdown {
+    display: inline-block;
+    float: right;
+    margin-top: 24px;
+  }
+  .page-heading-right-dropdown .dropdown-menu {
+    left: -54px;
+  }
+
+  .player-position {
+    width: 55px;
+  }
+
+  .col-table .col-table-wrapper {
+    width: 16.66%;
+  }
+
+  .starting-hitters-data {
+    margin-top: 28px;
+  }
+
+  .news-link {
+    float: right;
+    margin-right: 19px;
+    position: relative;
+    top: -1px;
+    img {
+      width: 15px;
+      height: 17px;
+      opacity: 0.85;
+    }
+  }
+
+  .yearly {
+    border-right: 1px solid #e0e0e4;
+  }
+
+  .bench-hitter-table-wrapper {
+    margin-top: 28px;
+  }
+
+  //.team-lineup {
+  //  .table-sect-wrap {
+  //    .static-table {
+  //      th {
+  //        &.player-name-col {
+  //          padding-top: 6px;
+  //          padding-bottom: 4px;
+  //          font-size: 14px;
+  //        }
+  //        &.position-col {
+  //          padding-top: 6px;
+  //          padding-bottom: 4px;
+  //          font-size: 14px;
+  //        }
+  //      }
+  //    }
+  //  }
+  //}
+
+  .static-table {
+    th {
+      &.player-name-col {
+        padding-top: 6px;
+        padding-bottom: 4px;
+        font-size: 14px;
+      }
+      &.position-col {
+        padding-top: 6px;
+        padding-bottom: 4px;
+        font-size: 14px;
+      }
+    }
+    td {
+      &.player-name-col {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        font-size: 14px;
+      }
+      &.position-col {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        font-size: 14px;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 1100px) {
+    .page-actions-wrapper {
+      min-width: 100%;
+    }
+  }
+
+  @media only screen and (max-width: 1100px) {
+    .col-table .col-table-wrapper {
+      width: 33.3%;
+    }
+  }
+
+  @media only screen and (max-width: 800px) {
+    .col-table .col-table-wrapper {
+      width: 50%;
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    .heading-action-cta-wrapper {
+      display: block;
+      margin: auto;
+      float: none;
+    }
+  }
+
+  @media (max-width: 550px) {
+    .static-table {
+      th {
+        &.player-name-col {
+          padding-top: 6px;
+          padding-bottom: 4px;
+          font-size: 13px;
+        }
+        &.position-col {
+          padding-top: 6px;
+          padding-bottom: 4px;
+          font-size: 13px;
+        }
+      }
+      td {
+        &.player-name-col {
+          padding-top: 8px;
+          padding-bottom: 8px;
+          font-size: 12px;
+        }
+        &.position-col {
+          padding-top: 8px;
+          padding-bottom: 8px;
+          font-size: 13px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .static-table {
+      th {
+        &.player-name-col {
+          padding-top: 6px;
+          padding-bottom: 4px;
+          font-size: 13px;
+        }
+        &.position-col {
+          padding-top: 6px;
+          padding-bottom: 4px;
+          font-size: 13px;
+        }
+      }
+      td {
+        &.player-name-col {
+          padding-top: 8px;
+          padding-bottom: 7px;
+          font-size: 13px;
+        }
+        &.position-col {
+          padding-top: 8px;
+          padding-bottom: 7px;
+          font-size: 13px;
+        }
+      }
+    }
+  }
+
+  @media only screen and (max-width: 420px) {
+    .col-table .col-table-wrapper {
+      width: 100%;
+    }
+  }
+
+}

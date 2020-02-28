@@ -1,0 +1,138 @@
+<div class="row mt-2">
+  <div class="col-12">
+    <div class="row top-score-section mb-3">
+      <div class="px-2">
+        <app-game-score [data]="data.current"></app-game-score>
+      </div>
+      <div class="col-xl-7 ml-auto">
+        <div class="multi-row-data-table-wrapper custom-width ">
+          <app-score-prediction-table
+            league="nfl"
+            [homeTeamName]="data.current.home_team"
+            [homeFinalScorePrediction]="data.final_score_prediction_home"
+            [homeFirstHalfScorePrediction]="data.first_half_score_prediction_home"
+            [homeLogo]="data.current.home_team_logo"
+            [awayTeamName]="data.current.away_team"
+            [awayFinalScorePrediction]="data.final_score_prediction_away"
+            [awayFirstHalfScorePrediction]="data.first_half_score_prediction_away"
+            [awayLogo]="data.current.away_team_logo"
+            [showAt]="true"
+          ></app-score-prediction-table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-container *ngIf="dataToShow">
+    <div class="col-12">
+      <div class="grouped-dropdown-wrapper btn-group">
+        <app-dropdown
+          [ddData]="dataDropdowns"
+          [filterItems]="filterItems.bind(this)"
+          prop="books"
+          name="Books"
+          isSingleSelect="true"
+          className="first"
+        ></app-dropdown>
+        <app-dropdown
+          [ddData]="dataDropdowns"
+          [filterItems]="filterItems.bind(this)"
+          isSingleSelect="true"
+          prop="bet_categories"
+          name="Bet Categories"
+        ></app-dropdown>
+        <app-dropdown
+          [ddData]="dataDropdowns"
+          [filterItems]="filterItems.bind(this)"
+          prop="probabilities"
+          name="Probability"
+        ></app-dropdown>
+        <app-dropdown
+          [ddData]="dataDropdowns"
+          [filterItems]="filterItems.bind(this)"
+          prop="ev_ranges"
+          name="EV"
+        ></app-dropdown>
+        <app-dropdown
+          [ddData]="dataDropdowns"
+          [filterItems]="filterItems.bind(this)"
+          prop="dollar_ranges"
+          type="dollar"
+          className="last"
+        ></app-dropdown>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="multi-row-data-table-wrapper">
+        <table class="multi-row-data-table t-stripped">
+          <thead>
+            <tr class="t-sub-header">
+              <th class="text-center">Bets</th>
+              <th class="text-center">{{getSelectedBook()}}</th>
+              <th class="text-center">Lineups</th>
+              <th class="text-center">Probablity</th>
+              <th class="text-center">EV</th>
+              <th class="text-center">$$$$$</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="t-content" *ngFor="let bet of dataToShow">
+              <td>{{bet.title}}</td>
+              <td>
+                <div>
+                  {{bet.bookToShow.away.display_value}}
+                </div>
+                <div>
+                  {{bet.bookToShow.home.display_value}}
+                </div>
+              </td>
+              <td>
+                <div>
+                  {{bet.lineupsBook.away.display_value}}
+                </div>
+                <div>
+                  {{bet.lineupsBook.home.display_value}}
+                </div>
+              </td>
+              <td>
+                <div>
+                  <app-rating [value]="bet.away_probability" percentage="true"></app-rating>
+                </div>
+                <div style="margin-top: 2px;">
+                  <app-rating [value]="bet.home_probability" percentage="true"></app-rating>
+                </div>
+              </td>
+              <td>
+                <div>
+                  {{bet.bookToShow.away.expected_value | plus}}
+                </div>
+                <div>
+                  {{bet.bookToShow.home.expected_value | plus}}
+                </div>
+              </td>
+              <td>
+                <div class="dollar-container popover-container popover-nowrap">
+                  <app-dollars
+                    triggers="mouseenter:mouseleave"
+                    [ngbPopover]="bet.bookToShow.away.kelly"
+                    [amount]="bet.bookToShow.away.dollar_signs"
+                    [type]="'teal'"
+                    [color]="bet.bookToShow.away.hex">
+                  </app-dollars>
+                </div>
+                <div class="mt-1 dollar-container popover-container popover-nowrap">
+                  <app-dollars
+                    triggers="mouseenter:mouseleave"
+                    [ngbPopover]="bet.bookToShow.home.kelly"
+                    [amount]="bet.bookToShow.home.dollar_signs"
+                    [type]="'teal'"
+                    [color]="bet.bookToShow.home.hex">
+                  </app-dollars>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+</div>

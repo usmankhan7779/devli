@@ -1,0 +1,220 @@
+<ng-template #loading>
+  <div class="starting-loader">
+    <img class="loader-image" alt="loader-image" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+<div *ngIf="homeData; else loading" class="container-fluid pb-3 pb-sm-5">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+    <div class="col-12">
+      <h1 class="page-heading">{{homeData.heading}}</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div *ngIf="isDefaultYear && homeData.intro_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <p class="site-pages-content" [innerHtml]="homeData.intro_paragraph | safeHtml"></p>
+    </div>
+    <div class="col-12">
+      <div class="grouped-dropdown-wrapper btn-group mb-3">
+        <div ngbDropdown class="grouped-dropdown dropdown">
+          <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="main-dropdown" ngbDropdownToggle>
+            <span class="pr-0 pr-sm-3">{{displayCurrentYearDD(homeData.year)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down"/>
+          </button>
+          <div class="dropdown-menu" aria-labelledby="main-dropdown">
+            <div *ngFor="let season of homeData.seasons_dropdown;">
+              <button
+                [ngClass]="{'dd-active-btn': homeData.year === season.year}"
+                (click)="onYearDdChange(season)"
+                class="dropdown-item">
+                <span>{{season.name}}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-9">
+
+      <div *ngIf="isDefaultYear && articles.length" class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-12">
+              <h5 class="after-heading-margin text-center text-sm-left">
+                <strong>
+                  <a class="link-black-underline" target="_blank" rel="noopener" href="https://www.lineups.com/articles/nfl/">NFL News & Articles</a>
+                </strong>
+              </h5>
+            </div>
+            <div class="col-12 d-flex short-articles-wrapper league-page">
+              <app-short-wp-article *ngFor="let article of articles" [wpSmBlogItem]="article"></app-short-wp-article>
+            </div>
+          </div>
+          <div class="col-12 border-bottom my-4"></div>
+        </div>
+      </div>
+
+      <div *ngIf="isDefaultYear && bettingArticles.length" class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-12">
+              <h5 class="after-heading-margin text-center text-sm-left">
+                <strong>
+                  <a class="link-black-underline" target="_blank" rel="noopener" href="https://www.lineups.com/betting/nfl-picks/">NFL Betting News & Articles</a>
+                </strong>
+              </h5>
+            </div>
+            <div class="col-12 d-flex short-articles-wrapper league-page">
+              <app-short-wp-article *ngFor="let article of bettingArticles" [wpSmBlogItem]="article"></app-short-wp-article>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 border-bottom my-4"></div>
+      </div>
+
+      <div *ngIf="isDefaultYear && podcasts.length" class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-12">
+              <h5 class="after-heading-margin text-center text-sm-left">
+                <strong>
+                  <!--<a class="link-black-underline" target="_blank" rel="noopener" href="https://www.lineups.com/podcasts/sharp-edges-sports-betting/">NFL Podcasts</a>-->
+                  NFL Podcasts
+                </strong>
+              </h5>
+            </div>
+            <div class="col-12 d-flex short-articles-wrapper league-page">
+              <app-short-wp-article *ngFor="let podcast of podcasts" [wpSmBlogItem]="podcast"></app-short-wp-article>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 border-bottom my-4"></div>
+      </div>
+
+      <div *ngIf="homeData?.matchup_link?.text" class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-12">
+              <h5 class="after-heading-margin text-center text-sm-left">
+                <strong>
+                  <a class="link-black-underline" [routerLink]="homeData.matchup_link.url">{{homeData.matchup_link.text}}</a>
+                </strong>
+              </h5>
+            </div>
+            <div class="col-12">
+              <ng-template #noMatchups>
+                <div>
+                  No NFL Matchups Today
+                </div>
+              </ng-template>
+              <ng-container *ngIf="homeData.matchup_routes?.length; else noMatchups">
+                <app-vertical-list-6-xl-col [linkClass]="'link-black-underline mobile-margin'" [data]="homeData.matchup_routes" linkToAll="/nfl/matchups" textToAll="See All Matchups"></app-vertical-list-6-xl-col>
+              </ng-container>
+            </div>
+          </div>
+          <div class="col-12 border-bottom my-4"></div>
+        </div>
+      </div>
+
+      <div *ngIf="homeData?.stat_links?.length" class="row">
+        <div class="col-12">
+          <div class="row top-targets-links">
+            <div *ngFor="let statLink of homeData.stat_links" class="col-12 col-md-6 col-lg-6 col-xl-3 mb-3">
+              <h5 *ngIf="statLink.header_url && statLink.header" class="mb-3 text-center text-md-left mt-md-0">
+                  <a class="link-black-underline" [routerLink]="statLink.header_url">
+                    <strong>
+                      {{statLink.header}}
+                    </strong>
+                  </a>
+              </h5>
+              <div class="row">
+                <div *ngFor="let subLink of statLink.contents" class="col-12 text-center text-md-left">
+                  <a *ngIf="subLink.text" class="link-black-underline mobile-margin" [routerLink]="[subLink.url]">{{subLink.text}}</a>
+                  <h5 *ngIf="subLink.header" class="mb-3 text-center text-md-left mt-md-0">
+                    <a class="link-black-underline" [routerLink]="[subLink.url]">
+                      <strong>{{subLink.header}}</strong>
+                    </a>
+                  </h5>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="homeData?.schedule_link?.text && homeData?.schedule_link?.url" class="col-12 col-md-6 col-lg-6 col-xl-3 mb-3">
+              <h5 class="mb-3 text-center text-md-left mt-md-0">
+                  <a class="link-black-underline" [routerLink]="homeData.schedule_link.url">
+                    <strong>
+                      {{homeData.schedule_link.text}}
+                    </strong>
+                  </a>
+              </h5>
+              <div class="row">
+                <div class="col-12 text-center text-md-left">
+                  <a class="link-black-underline mobile-margin" [routerLink]="[homeData.see_all_schedule_link.url]">{{homeData.see_all_schedule_link.text}}</a>
+                </div>
+                <div class="col-12 text-center text-md-left">
+                  <a class="link-black-underline mobile-margin" [routerLink]="['/nfl/schedule/' + getYearForLink() + 'strength-of-schedule']">Strength of Schedule</a>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="homeData?.roster_link?.text && homeData?.roster_link?.url" class="col-12 col-md-6 col-lg-6 col-xl-3 mb-3">
+              <h5 class="mb-3 text-center text-md-left mt-md-0">
+                  <a class="link-black-underline" [routerLink]="homeData.roster_link.url">
+                    <strong>
+                      {{homeData.roster_link.text}}
+                    </strong>
+                  </a>
+              </h5>
+              <h5 *ngIf="homeData?.team_snaps_routes" class="mb-3 text-center text-md-left mt-md-0">
+                <a class="link-black-underline" [routerLink]="'/nfl/snap-counts'">
+                  <strong>
+                    Team Snap Counts
+                  </strong>
+                </a>
+              </h5>
+              <h5 *ngIf="homeData?.news_routes && homeData?.news_link?.url" class="mb-3 text-center text-md-left mt-md-0">
+                <a class="link-black-underline" [routerLink]="homeData.news_link.url">
+                  <strong>
+                    {{homeData.news_link.text}}
+                  </strong>
+                </a>
+              </h5>
+              <h5 *ngIf="homeData?.injury_routes && homeData?.injuries_route" class="mb-3 text-center text-md-left mt-md-0">
+                <a class="link-black-underline" [routerLink]="homeData.injuries_route">
+                  <strong>
+                    Team Injuries
+                  </strong>
+                </a>
+              </h5>
+            </div>
+          </div>
+          <div class="col-12 border-bottom mb-4 mt-1"></div>
+        </div>
+      </div>
+
+      <div *ngIf="homeData?.depth_chart_routes?.length && homeData?.depth_chart_link?.text" class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-12">
+              <h5 class="after-heading-margin text-center text-sm-left">
+                <strong>
+                  <a *ngIf="homeData.depth_chart_link.url" class="link-black-underline" [routerLink]="homeData.depth_chart_link.url">{{homeData.depth_chart_link.text}}</a>
+                  <span *ngIf="!homeData.depth_chart_link.url">{{homeData.depth_chart_link.text}}</span>
+                </strong>
+              </h5>
+            </div>
+            <div class="col-12">
+              <div class="d-flex flex-wrap team-gateway-item-wrapper">
+                <app-team-gateway-item
+                  *ngFor="let team of homeData.depth_chart_routes | orderBy: 'name'"
+                  (urlClicked)="setDepthChartTeamSeason($event)"
+                  [showTeamShortName]="true"
+                  [league]="'nfl'"
+                  [team]="team"
+                ></app-team-gateway-item>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

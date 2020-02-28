@@ -1,0 +1,60 @@
+<table class="multi-row-data-table mb-0 final-score">
+  <thead>
+  <tr class="t-sub-header">
+    <th class="text-center">
+      First Half Score Prediction
+    </th>
+    <th class="text-center">
+      Final Score Prediction
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr class="t-content">
+    <td>
+      <div>
+        <div class="team-container" [ngClass]="{'mr-0': showAt}">
+          <span class="score-team-name">
+            <img class="logo" [type]="'white'" [appSpriteImg]="league" [src]="awayLogo" alt="{{awayTeamName}}">
+            {{awayTeamName}}
+          </span>
+          <span>{{awayFirstHalfScorePrediction}}</span>
+        </div>
+        <span class="mx-2" [hidden]="!showAt">@</span>
+        <div class="team-container">
+          <span class="score-team-name">
+            <img class="logo" [type]="'white'" [appSpriteImg]="league" [src]="homeLogo" alt="{{homeTeamName}}">
+            {{homeTeamName}}
+          </span>
+          <span>{{homeFirstHalfScorePrediction}}</span>
+        </div>
+      </div>
+      <!--<div>-->
+      <!--<span>85% Probability</span>-->
+      <!--</div>-->
+    </td>
+    <td>
+      <div>
+        <div class="team-container" [ngClass]="{'mr-0': showAt}">
+            <span class="score-team-name">
+              <img class="logo" [type]="'white'" [appSpriteImg]="league" [src]="awayLogo" alt="{{awayTeamName}}">
+              {{awayTeamName}}
+            </span>
+          <span>{{awayFinalScorePrediction}}</span>
+        </div>
+        <span class="mx-2" [hidden]="!showAt">@</span>
+        <div class="team-container">
+            <span class="score-team-name">
+              <img class="logo" [type]="'white'" [appSpriteImg]="league" [src]="homeLogo" alt="{{homeTeamName}}">
+              {{homeTeamName}}
+            </span>
+          <span>{{homeFinalScorePrediction}}</span>
+        </div>
+      </div>
+      <!--<div>-->
+      <!--<span>85% Probability</span>-->
+      <!--</div>-->
+    </td>
+  </tr>
+  </tbody>
+</table>

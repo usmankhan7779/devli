@@ -1,0 +1,33 @@
+:host {
+  align-self: center;
+  margin-left: auto;
+  .ng-twitter-btn-wrapper {
+    display: none;
+    max-height: 28px;
+  }
+  &.hide-label {
+    max-width: 138px;
+    overflow: hidden;
+    padding-right: 10px;
+    border-radius: 3px;
+    border: 1px solid #1c94e0;
+    background: #1c94e0;
+    pointer-events: none;
+    &:hover, &:focus, &:active {
+      background-color: #0c7abf;
+      border-color: #0c7abf;
+      .ng-twitter-btn-wrapper {
+        background-color: #0c7abf;
+      }
+    }
+    .ng-twitter-btn-wrapper {
+      pointer-events: auto;
+      max-width: 71px;
+      overflow: hidden;
+    }
+  }
+  &.next-line-full-width {
+    width: 100%;
+    margin-top: 1.125rem;
+  }
+}

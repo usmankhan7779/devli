@@ -1,0 +1,19 @@
+.team-gateway-item-wrapper {
+  margin: 0 -5px -30px -5px;
+  min-width: 530px;
+  & > div, & > app-team-gateway-item {
+    padding: 5px 0;
+    width: 271px;
+    margin: 0 5px 30px 5px;
+    line-height: 42px;
+    @media (max-width: 1500px) {
+      width: 235px;
+      line-height: 34px;
+    }
+  }
+  @media (max-width: 531px) {
+    -ms-flex-pack: center;
+    justify-content: center;
+    min-width: initial;
+  }
+}

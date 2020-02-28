@@ -1,0 +1,26 @@
+<div class="row">
+  <div *ngFor="let container of cap; let n = index;let firstContainer = first;" class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 text-center text-sm-left" [ngClass]="{
+            'hidden-lg-down': n === 4 || n === 5,
+            'hidden-md-down': n === 3,
+            'hidden-sm-down': n === 2,
+            'hidden-xs-down': n === 1
+            }">
+    <ng-container *ngFor="let item of data | orderBy:'name'; let i = index;let first = first; let last = last">
+      <ng-container *ngIf="i > (firstContainer ? -1 : (itemsPerColToChange * n - 1)) && i < (itemsPerColToChange * (n + 1))">
+        <div>
+          <a (click)="onUrlClick()" [ngClass]="linkClass" [routerLink]="[item.url || '']">{{item.name}}</a>
+        </div>
+        <div>
+          <div *ngIf="last && textToAll && linkToAll">
+            <a [routerLink]="[linkToAll || '']">{{textToAll}}</a>
+          </div>
+          <div *ngIf="last && textToAll2 && linkToAll2">
+            <a [routerLink]="[linkToAll2 || '']">{{textToAll2}}</a>
+          </div>
+        </div>
+      </ng-container>
+
+    </ng-container>
+  </div>
+</div>
+

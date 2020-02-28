@@ -1,0 +1,40 @@
+<div>
+  <div class="team-logo-container d-flex flex-nowrap justify-content-start align-items-center">
+    <span class="logo-container">
+      <img [type]="'white'" [appSpriteImg]="league" [src]="team.white_logo" alt="{{team.name}}">
+    </span>
+    <span [ngStyle]="{'color': team.primary_hex}" class="team-txt">
+      {{team.name}}
+    </span>
+  </div>
+  <ul class="team-link-container">
+    <li *ngIf="team.url && league === 'nfl'">
+      <a (click)="onUrlClick()" class="link-black-underline" [routerLink]="[team.url]"><span *ngIf="showTeamShortName">{{team.name | lastTeamName}}</span> Depth Chart</a>
+    </li>
+    <li *ngIf="team.url && (league === 'mlb' || league === 'nba')">
+      <a (click)="onUrlClick()" class="link-black-underline" [routerLink]="[team.url]"><span *ngIf="showTeamShortName">{{team.name | lastTeamName}}</span> Starting Lineup</a>
+    </li>
+    <li *ngIf="team.depth_chart_route && league === 'nba'">
+      <a (click)="onUrlClick('depth_chart_route')" class="link-black-underline" [routerLink]="[team.depth_chart_route]"><span *ngIf="showTeamShortName">{{team.name | lastTeamName}}</span> Depth Chart</a>
+    </li>
+    <li *ngIf="team.schedule_route">
+      <a (click)="onUrlClick('schedule_route')" class="link-black-underline" [routerLink]="[team.schedule_route]"><span *ngIf="showTeamShortName">{{team.name | lastTeamName}}</span> Schedule</a>
+    </li>
+    <li *ngIf="team.roster_route">
+      <a (click)="onUrlClick('roster_route')" class="link-black-underline" [routerLink]="[team.roster_route]"><span *ngIf="showTeamShortName">{{team.name | lastTeamName}}</span> Roster</a>
+    </li>
+    <li *ngIf="team.stats_route">
+      <a (click)="onUrlClick('stats_route')" class="link-black-underline" [routerLink]="[team.stats_route]"><span *ngIf="showTeamShortName">{{team.name | lastTeamName}}</span> Stats</a>
+    </li>
+    <li *ngIf="team.snap_counts_route">
+      <a (click)="onUrlClick('snap_counts_route')" class="link-black-underline" [routerLink]="[team.snap_counts_route]"><span *ngIf="showTeamShortName">{{team.name | lastTeamName}}</span> Snap Counts</a>
+    </li>
+    <!--<li *ngIf="team.news_route">-->
+      <!--<a class="link-black-underline" [routerLink]="[team.news_route]">News</a>-->
+    <!--</li>-->
+    <li *ngIf="team.injuries_route">
+      <a class="link-black-underline" [routerLink]="[team.injuries_route]"><span *ngIf="showTeamShortName">{{team.name | lastTeamName}}</span> Injuries</a>
+    </li>
+  </ul>
+</div>
+

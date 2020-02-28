@@ -1,0 +1,77 @@
+<div class="schedule-page content container-fluid">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex flex-wrap after-heading-margin">
+        <div>
+          <h1 class="page-heading mb-0">{{scheduleData.heading}}</h1>
+        </div>
+        <!--<app-twitter-follow-btn></app-twitter-follow-btn>-->
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="after-text-margin">
+        <div class="grouped-dropdown-wrapper btn-group mb-0">
+          <app-dropdown
+            [ddData]="ddData"
+            prop="seasons"
+            [className]="'first last'"
+            [linksOnly]="true"
+          ></app-dropdown>
+        </div>
+        <div *ngIf="scheduleData.intro_paragraph" class="pretable-text" [innerHtml]="scheduleData.intro_paragraph | safeHtml"></div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="multi-row-data-table-wrapper">
+        <table
+          [mfRowsOnPage]="10000" [mfData]="scheduleData.data"
+          #scheduleTable="mfDataTable"
+          [(mfSortBy)]="sortBy"
+          [(mfSortOrder)]="sortOrder"
+          class="multi-row-data-table t-stripped">
+          <thead>
+            <tr class="t-sub-header">
+              <th class="text-center" *ngFor="let row of scheduleData.column_headers" [ngClass]="scheduleData.header_map[row]">
+                <mfSorter [by]="sortFunctions[row]">{{row}}</mfSorter>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr class="t-content" *ngFor="let row of scheduleTable.data">
+            <td *ngFor="let columnHeader of scheduleData.column_headers">
+              <ng-container [ngSwitch]="columnHeader">
+
+                <ng-container *ngSwitchCase="'Team'">
+                  <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[row.depth_chart_route]" class="link-black-underline" style="white-space: nowrap">
+                    {{row[scheduleData.header_map[columnHeader]]}}
+                  </a>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'Schedule'">
+                  <a [routerLink]="[row.schedule_route]" class="link-black-underline" style="white-space: nowrap">
+                    {{row.team | lastTeamName}} Schedule
+                  </a>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'Notes'">
+                  <div class="text-center px-1">
+                  {{row[scheduleData.header_map[columnHeader]]}}
+                  </div>
+                </ng-container>
+
+                <ng-container *ngSwitchDefault>
+                  {{row[scheduleData.header_map[columnHeader]] | showPercentage : scheduleData.header_map[columnHeader] : '_pct'}}
+                </ng-container>
+
+              </ng-container>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+</div>

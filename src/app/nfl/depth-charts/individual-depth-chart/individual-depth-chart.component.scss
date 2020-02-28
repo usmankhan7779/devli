@@ -1,0 +1,592 @@
+@import "../../../../scss/bootstrap-customization/custom-mixins";
+@import "../../../../scss/custom-components/responsive-page-nav";
+@import "../../../../scss/shared/variables/project";
+
+:host {
+  @include mobile-navigation($nfl-nav-breakdown-1, $nfl-nav-breakdown-2, $nfl-nav-breakdown-3);
+  $depth-pos-col-width: 175px;
+  $depth-pos-col-width-sm: 63px;
+  $table-sm-styles-breakpoint: 1650px;
+  $table-breakpoint-value: 1280 - 1; // screen min res - 1;
+  $table-breakpoint: $table-breakpoint-value + 0px;
+  $table-scale-breakpoint-value: 1550;
+  $table-scale-breakpoint: $table-scale-breakpoint-value + 0px;
+  $field-height: 515px;
+  .individual-depth-chart {
+    ::ng-deep .nav-header app-status .app-status .media-body {
+      h1 {
+        font-size: 28px;
+      }
+    }
+  }
+  .bottom-image-row {
+    margin-left: 90px;
+  }
+
+  .long-image-item-pl-name {
+    &.too-long-pl-name {
+      display: none;
+      & + span.short-image-item-pl-name {
+        display: inline;
+      }
+    }
+  }
+
+  .static-table-active-pos {
+    border: 2px solid #02afee;
+    border-right: 0;
+  }
+  .horizontal-table-active-pos {
+    border: 2px solid #02afee;
+    border-left: 3px solid #02afee;
+    @media (max-width: $table-sm-styles-breakpoint) {
+      border-left: 0;
+    }
+  }
+
+  .football-image-wrapper table tr td.player-td .player-td-content,
+  .defense-image-section table tr td:not(:first-child) {
+    text-align: left;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .offense-player-cap {
+    text-align: center;
+    font-size: 30px;
+    margin-top: 10px;
+    @media (max-width: 1750px) {
+      font-size: 25px;
+    }
+    @media (max-width: 1650px) {
+      font-size: 20px;
+    }
+  }
+  .player-list-wrapper {
+    margin: 0 -10px 0 -10px;
+  }
+
+  .bar-chart-wrapper {
+    width: 75%;
+    ::ng-deep app-graph-table {
+      .chart-wrapper {
+        height: 221px;
+        margin-top: 0 !important;
+        padding-top: 5px;
+        margin-bottom: 3px;
+        padding-bottom: 3px;
+      }
+    }
+    &.o-line-chart {
+      ::ng-deep app-graph-table {
+        .chart-wrapper {
+          height: 255px;
+        }
+      }
+    }
+  }
+
+
+  .active-offense-section {
+    .position-badge {
+      font-weight: bold;
+      text-align: center;
+      &.is-single-player {
+        @media (min-width: $table-scale-breakpoint-value + 1px) {
+          margin-top: 16px;
+        }
+        & > div {
+          display: none;
+        }
+      }
+      & > div {
+        display: inline-block;
+        background-color: #eaeaeb;
+        padding: 0 10px;
+        margin: 4px 0;
+        font-weight: normal;
+      }
+    }
+    .player-list-wrapper {
+
+    }
+  }
+
+  .mid-image-row {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .image-row-four-items {
+    text-align: center;
+    .image-item {
+      margin: 0 40px;
+      &:first-child {
+        margin-left: 0;
+      }
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+  .image-row-four-closer-items {
+    text-align: center;
+    .image-item {
+      margin: 0 20px;
+      &:first-child {
+        margin-left: 0;
+      }
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+  .short-image-item-pl-name, .long-offense-pl-name, .long-defense-pl-name {
+    display: none;
+  }
+  .image-item {
+    display: inline-block;
+    vertical-align: top;
+    background: white;
+    width: 160px;
+    margin: 0 10px 0 10px;
+    border: 2px solid #ebebec;
+    &.qb-right {
+      margin-right: 100px;
+    }
+    &.qb-left {
+      margin-left: 100px;
+    }
+    &.qb {
+      position: relative;
+      top: -47px;
+    }
+    &.rb {
+      margin-top: 29px;
+    }
+    &.image-item-active-hover {
+      border: 2px solid $psd-primary;
+    }
+    .fake-t-header {
+      font-size: 15px;
+    }
+    .short-depth-pos-name {
+      display: none;
+    }
+    .image-items-wrapper > div {
+      font-size: 13px;
+      .image-item-pl-name {
+        white-space: nowrap;
+        font-size: 13px;
+        &.long-name {
+          font-size: 11px;
+        }
+      }
+      border-bottom: 1px solid #ebebec;
+      padding: 5px 10px;
+      text-align: left;
+      &.active-payer-box {
+        outline: 2px solid $psd-primary;
+        border-bottom: 1px solid white;
+      }
+    }
+  }
+
+  .page-mobile-main-tabs {
+    display: none;
+  }
+  .page-main-tabs {
+    display: inline-block;
+    margin-left: 10px;
+  }
+
+  .football-field-bg {
+    background: url("/assets/images/nfl/football-field.png") no-repeat;
+    position: relative;
+    background-size: cover;
+    padding: 17px 0;
+    width: inherit;
+    height: inherit;
+    min-height: $field-height;
+    overflow: hidden;
+  }
+
+  .horizontal-table-wrapper.no-border {
+    border-right: none !important;
+  }
+
+  .updated-date-time-block {
+    margin-left: auto;
+  }
+
+  .dropdown-item {
+    cursor: pointer;
+  }
+
+  .stat-wrapper {
+    margin: 0;
+  }
+
+  #last-week-lineup {
+    .table-content-header {
+      margin-bottom: 10px;
+    }
+  }
+
+  table td.player-name-col,
+  table td.position-col {
+    vertical-align: middle;
+  }
+
+  tr {
+    td.player-td {
+      .player-td-content {
+        width: 100%;
+        height: 100%;
+        padding: 4px;
+        white-space: nowrap;
+        @media (max-width: $table-scale-breakpoint) {
+          padding: 2px;
+        }
+      }
+      &.active-player-td {
+        .player-td-content {
+          outline: 2px solid $psd-primary !important;
+        }
+      }
+    }
+    &.horizontal-table-active-pos {
+      td.player-td {
+        .player-td-content {
+          width: 100%;
+          height: 100%;
+          padding: 4px;
+          @media (max-width: $table-scale-breakpoint) {
+            padding: 2px;
+          }
+        }
+      }
+      td.depth-pos-col.inner-col-switch {
+        padding-left: 5px;
+      }
+    }
+  }
+
+
+  .football-image-wrapper table tr.t-sub-header th {
+    font-size: 1rem;
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
+  th.depth-pos-col {
+    padding-bottom: 6px !important;
+    font-size: 1rem;
+  }
+  td.depth-pos-col {
+    font-weight: bold;
+  }
+
+  .depth-pos-col {
+    padding: 0 6px;
+    width: $depth-pos-col-width;
+    white-space: nowrap;
+    text-align: left;
+    .short-depth-pos-name {
+      display: none;
+    }
+  }
+
+
+
+
+  .offense-image-section {
+    .inline-image-content {
+      display: none;
+    }
+    overflow: hidden;
+    @include flex-row-mixin();
+    @media (min-width: $table-breakpoint + 1) {
+      .offense-image-wrapper {
+        margin-right: 20px;
+      }
+      .offense-image-table-wrapper {
+        margin-left: auto;
+        display: block;
+        height: $field-height;
+        flex: 1;
+        min-width: 563px;
+        .football-image-wrapper.display-table-row, .offense-player-cap {
+          display: block;
+        }
+      }
+    }
+  }
+  .football-field-container {
+    min-width: 935px;
+    max-width: 935px;
+  }
+
+  @media (min-width: $table-scale-breakpoint + 1) {
+    .offense-image-section:not(.defense-image-section) {
+      height: 516px;
+    }
+  }
+
+  @media (min-width: $table-breakpoint + 1) and (max-width: $table-scale-breakpoint) {
+    .offense-image-section {
+      &:not(.defense-image-section) {
+        &, .offense-image-table-wrapper, .offense-image-wrapper {
+          height: 377px;
+        }
+      }
+
+      &.defense-image-section {
+        &, .offense-image-table-wrapper, .offense-image-wrapper {
+          height: 464px;
+        }
+      }
+
+      .offense-image-wrapper {
+        width: 682.55px;
+        margin-right: 10px;
+      }
+      .offense-image-table-wrapper {
+        padding-right: 3px;
+      }
+      .table-sect-wrap .static-table-wrapper .static-table-body tr,
+      .multi-row-data-table .t-content,
+      .multi-row-data-table .t-sub-header {
+        height: auto;
+      }
+    }
+    .position-badge {
+      height: 23px;
+      & > div {
+        font-size: 11px;
+        margin: 0;
+        position: relative;
+        top: -3px;
+      }
+      &.is-single-player {
+        margin-top: 0;
+        height: 10px;
+      }
+    }
+    .football-field-container {
+      transform: scale(0.73);
+      transform-origin: top left;
+    }
+
+    .bar-chart-wrapper ::ng-deep app-graph-table .chart-wrapper {
+      height: 186px;
+    }
+
+    .bar-chart-wrapper.o-line-chart ::ng-deep app-graph-table .chart-wrapper {
+      height: 208px;
+    }
+
+    .offense-image-table-wrapper .fake-t-header {
+      font-size: 13px;
+      height: 23px;
+      line-height: 20px;
+    }
+    .offense-image-table-wrapper table td {
+      height: 23px;
+    }
+    .offense-image-table-wrapper table td,
+    .offense-image-table-wrapper table td .short-offense-pl-name,
+    .offense-image-table-wrapper table td .short-defense-pl-name {
+      font-size: 10px !important;
+    }
+    .offense-image-table-wrapper table td.depth-pos-col {
+      font-size: 9px !important;
+    }
+    .offense-image-table-wrapper table tr.t-sub-header th {
+      height: 25px;
+      font-size: 9px;
+      padding-top: 3px;
+      padding-bottom: 3px !important;
+    }
+    .offense-image-table-wrapper ::ng-deep app-offense-payer-box .bottom-section {
+      line-height: 16px !important;
+    }
+    .offense-image-table-wrapper ::ng-deep app-offense-payer-box .player-box-item .player-image-wrapper {
+      height: 55px !important;
+    }
+    .offense-image-table-wrapper ::ng-deep app-offense-payer-box .player-box-item.active-player .player-image-wrapper {
+      height: 67px !important;
+    }
+    .offense-image-table-wrapper ::ng-deep app-offense-payer-box .player-box-item.o-line .player-image-wrapper {
+      height: 77px !important;
+    }
+    .offense-image-table-wrapper ::ng-deep app-offense-payer-box .player-box-item.active-player.o-line .player-image-wrapper {
+      height: 88px !important;
+    }
+  }
+
+  @media (min-width: 968px) and (max-width: $table-breakpoint), (min-width: 2270px) {
+    .football-image-wrapper {
+      table {
+        .long-offense-pl-name {
+          display: inline;
+        }
+        .short-offense-pl-name {
+          display: none;
+        }
+      }
+    }
+  }
+
+  @media (min-width: 820px) and (max-width: $table-breakpoint), (min-width: 1800px) {
+    .football-image-wrapper {
+      table {
+        .long-defense-pl-name {
+          display: inline;
+        }
+        .short-defense-pl-name {
+          display: none;
+        }
+      }
+    }
+  }
+
+  @media (min-width: $table-breakpoint) and (max-width: 1760px) {
+    .long-offense-pl-name, .short-offense-pl-name, .long-defense-pl-name, .short-defense-pl-name {
+      font-size: 14px;
+    }
+  }
+
+  .player-td-content.long-table-name {
+    .long-offense-pl-name, .short-offense-pl-name, .long-defense-pl-name, .short-defense-pl-name {
+      @media (max-width: 2020px) {
+        font-size: 13px;
+      }
+      @media (max-width: 1840px) {
+        font-size: 12px;
+      }
+      @media (max-width: 1800px) {
+        font-size: 11px;
+      }
+      @media (max-width: 1750px) {
+        font-size: 10px;
+      }
+    }
+  }
+
+
+
+  @media (max-width: $table-breakpoint) {
+    .offense-image-section {
+      @include flex-column-mixin();
+      .offense-image-wrapper {
+        margin-bottom: 20px;
+      }
+    }
+    .football-image-wrapper {
+      table {
+        .t-content td {
+          font-size: 14px !important;
+        }
+      }
+      .static-table {
+        display: block;
+        float: left;
+        max-width: $depth-pos-col-width;
+        border: none;
+      }
+      .horizontal-table-wrapper {
+        overflow-x: auto;
+        border-right: 1px solid #ebebec;
+        width: calc(100% - #{$depth-pos-col-width});
+      }
+    }
+  }
+
+  @media (max-width: 968px) {
+    .football-image-wrapper {
+      table {
+        .t-content td {
+          font-size: 12px !important;
+        }
+      }
+    }
+    .short-image-item-pl-name {
+      display: inline;
+    }
+    .long-image-item-pl-name {
+      display: none;
+    }
+    .offense-image-section .offense-image-wrapper {
+      min-width: initial;
+      max-width: initial;
+      height: auto;
+      .football-field-bg {
+        display: none;
+      }
+      .inline-image-content {
+        display: block;
+      }
+    }
+    .image-item {
+      width: 137px;
+      margin: 0 5px 5px 0;
+      .long-depth-pos-name {
+        display: none;
+      }
+      .short-depth-pos-name {
+        display: block;
+      }
+    }
+  }
+
+  @media (max-width: 650px) {
+    .page-mobile-main-tabs {
+      display: block;
+    }
+    .page-main-tabs {
+      display: none;
+    }
+  }
+  @media (max-width: $table-sm-styles-breakpoint) and (min-width: $table-breakpoint), (max-width: 636px) {
+    .depth-pos-col {
+      width: $depth-pos-col-width-sm;
+      vertical-align: middle;
+      text-align: center;
+      .long-depth-pos-name {
+        display: none;
+      }
+      .short-depth-pos-name {
+        display: inline;
+      }
+    }
+    .football-image-wrapper {
+      .static-table {
+        max-width: $depth-pos-col-width-sm;
+      }
+      .horizontal-table-wrapper {
+        width: calc(100% - #{$depth-pos-col-width-sm});
+      }
+    }
+  }
+
+  .updated-date-time-block-wrapper {
+    @include flex-row-mixin();
+    @media (min-width: 1101px) and (max-width: 1180px), (max-width: 800px) {
+      .updated-date-time-block.next-to-dd {
+        font-size: 12px;
+        ::ng-deep app-general-time-format {
+          .date {
+            display: none;
+          }
+        }
+      }
+    }
+    @media (min-width: 992px) and (max-width: 1100px), (max-width: 775px) {
+      .updated-date-time-block {
+        display: none;
+      }
+      @include flex-column-mixin();
+    }
+  }
+}
+

@@ -1,0 +1,19 @@
+:host {
+  .multi-row-data-table {
+    table-layout: auto;
+    td {
+      padding: 0 5px;
+    }
+  }
+  .team-col {
+    text-align: left;
+  }
+  @media (max-width: 1200px) {
+    .multi-row-data-table-wrapper.custom-width {
+      overflow-x: auto;
+      table {
+        min-width: 1168px;
+      }
+    }
+  }
+}

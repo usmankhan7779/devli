@@ -1,0 +1,52 @@
+:host {
+  .logo {
+    height: 32px;
+    vertical-align: text-bottom;
+  }
+  .final-score  {
+    .team-container {
+      display: inline-block;
+      &:first-child {
+        margin-right: 20px;
+      }
+    }
+    font-size: 16px;
+    font-weight: bold;
+    td {
+      padding: 4px 0;
+    }
+    .logo {
+      height: 25px;
+      vertical-align: bottom;
+    }
+    .score-team-name {
+      margin-right: 10px;
+    }
+  }
+  @media only screen and (max-width: 1500px) and (min-width: 550px) {
+    .final-score.multi-row-data-table .t-content * {
+      font-size: 16px;
+    }
+  }
+  @media (max-width: 550px) {
+    .final-score.multi-row-data-table .t-content * {
+      //font-size: 16px;
+      .logo {
+        height: 17px;
+      }
+    }
+  }
+  @media (max-width: 374px) {
+    table {
+      min-width: 250px;
+      .logo {
+        display: none;
+      }
+    }
+  }
+  @media (max-width: 1790px) {
+    .logo {
+      height: 26px;
+    }
+  }
+}

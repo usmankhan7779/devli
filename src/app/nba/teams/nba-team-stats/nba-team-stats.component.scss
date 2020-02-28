@@ -1,0 +1,183 @@
+@import "../../../../scss/custom-components/responsive-page-nav";
+@import '../../../../scss/bootstrap-customization/custom-mixins';
+@import '../../../../scss/shared/variables/project';
+:host {
+  $first-break: 650px;
+  @include mobile-navigation($nfl-nav-breakdown-1, $nfl-nav-breakdown-2, $nfl-nav-breakdown-3);
+
+  .multi-row-data-table {
+    table-layout: auto;
+    .t-sub-header {
+      th {
+        min-width: 35px;
+        white-space: nowrap;
+        width: 1%;
+        &:not(.custom-formatting) {
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+
+  .player-name-col {
+    max-width: 160px !important;
+    min-width: 160px !important;
+    text-align: left;
+    padding-left: 15px;
+    padding-right: 15px;
+    @media (max-width: 1500px) {
+      max-width: 120px !important;
+      min-width: 120px !important;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+  .player-name-col-td {
+    text-align: left;
+    padding: 0 10px;
+    max-width: 160px !important;
+    min-width: 160px !important;
+    @media (max-width: 1500px) {
+      max-width: 120px !important;
+      min-width: 120px !important;
+    }
+  }
+
+  .team-intro {
+    font-size: 1rem;
+    flex-flow: row nowrap;
+    .csv-text:not(:last-child) {
+      margin-right: 7rem;
+    }
+    @media (max-width: 1500px) {
+      font-size: 15px;
+    }
+    @media (max-width: 1300px) {
+      justify-content: space-between;
+      .csv-text:not(:last-child) {
+        margin-right: 0;
+      }
+    }
+    @media (max-width: 1050px) {
+      font-size: 14px;
+    }
+    @media (max-width: 940px) {
+      flex-flow: row wrap;
+      .csv-text {
+        flex: 1;
+        flex-basis: 50%;
+        margin: 10px 0;
+      }
+    }
+    @media (max-width: 720px) {
+      @include flex-column-mixin();
+      .csv-text:not(:first-child):not(:last-child) {
+        margin: 15px 0;
+      }
+    }
+  }
+  .leader-container {
+    overflow: hidden;
+  }
+  .leader-box-wrapper {
+    margin: 0 -30px;
+    .leader-box {
+      margin: 0 30px 10px 30px;
+      min-width: 170px;
+      h5 {
+        background-color: $psd-primary;
+        font-weight: bold;
+        margin: 0;
+        padding: 5px 10px;
+        text-align: center;
+        color: #fff;
+      }
+      .leader-image-wrapper {
+        float: left;
+        width: 65px;
+        height: 90px;
+        margin-right: 5px;
+        img {
+          width: 65px;
+          height: 90px;
+        }
+      }
+      .leader-content-wrapper {
+        float: left;
+        font-size: 0.74rem;
+        .leader-name {
+          font-size: 1rem;
+        }
+      }
+    }
+    @media (max-width: 1200px) {
+      margin: 0 -15px;
+      .leader-box {
+        margin: 0 15px 10px 15px;
+      }
+    }
+  }
+
+  .position-dd {
+    display: none;
+  }
+
+  .top-action-section {
+    @include flex-row-mixin();
+    @media (max-width: $first-break) {
+      @include flex-column-mixin();
+    }
+  }
+
+  .action-section {
+    .in-page-dropdown-menu {
+      margin-right: 10px;
+    }
+    @include flex-row-mixin();
+    @media (max-width: $first-break) {
+      .in-page-dropdown-menu {
+        margin-right: 0;
+      }
+      .position-tab-bar {
+        display: none !important;
+      }
+      .position-dd {
+        display: block;
+      }
+      @include flex-column-mixin();
+    }
+  }
+
+  @media (max-width: 1250px) {
+    .multi-row-data-table-wrapper.custom-width.big-table {
+      overflow-x: auto;
+      table {
+        min-width: 1201px;
+      }
+    }
+  }
+  @media (max-width: 1050px) {
+    .multi-row-data-table-wrapper.custom-width.special-team-table {
+      overflow-x: auto;
+      table {
+        min-width: 1001px;
+      }
+    }
+  }
+  @media (max-width: 1150px) {
+    .multi-row-data-table-wrapper.custom-width.medium-table {
+      overflow-x: auto;
+      table {
+        min-width: 1101px;
+      }
+    }
+  }
+  @media (max-width: 950px) {
+    .multi-row-data-table-wrapper.custom-width.small-table {
+      overflow-x: auto;
+      table {
+        min-width: 901px;
+      }
+    }
+  }
+}

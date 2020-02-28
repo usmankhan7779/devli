@@ -1,0 +1,126 @@
+.ownership-content {
+  padding: 1rem 1rem 3rem;
+}
+
+.ownership-actions-wrap {
+  margin-top: 1.5rem;
+
+  & > div {
+    float: left;
+    margin-right: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    &:last-child {
+      margin-right: 0;
+      margin-bottom: calc(1.5rem - 10px);
+    }
+  }
+
+  &:after {
+    display: block;
+    clear: both;
+    content: '';
+  }
+
+  .grouped-dropdown-wrapper {
+    box-shadow: 0 2px 16px rgba(193, 193, 193, 0.35);
+    margin-bottom: 0px;
+
+    .grouped-dropdown .grouped-dropdown-btn {
+      padding: 9px 34px;
+      border-color: #ddd;
+      margin-left: 0px;
+    }
+  }
+
+  .toggles-in-page-wrapper {
+    box-shadow: 0 2px 16px rgba(193, 193, 193, 0.35);
+    margin-top: 0px;
+
+    .toggles-in-page-group .toggle-in-page {
+      min-width: 80px;
+      border-width: 1px;
+      margin-left: 0px;
+      border-color: #ddd;
+
+      &:not(:last-child) {
+        border-right: none;
+      }
+    }
+
+    .toggles-in-page-group.toggles-group {
+      padding: 0px !important;
+      background: transparent !important;
+    }
+  }
+}
+
+table {
+  width: 100%;
+  min-width: 600px;
+  border: 1px solid #eceeef;
+
+  .left-align {
+    text-align: left;
+  }
+
+  thead {
+    background-color: #ebebec;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 30px;
+
+    th {
+      vertical-align: middle;
+      text-align: center;
+      padding: 0;
+    }
+  }
+
+  tbody {
+    tr {
+      &:even {
+        background-color: #fafafa;
+      }
+
+      &:odd {
+        background-color: #fff;
+      }
+    }
+
+    td {
+      padding: 0 1rem;
+      border-top: none;
+      border-left: 1px solid #eceeef;
+      text-align: center;
+      font-size: 16px;
+      line-height: 35px;
+
+      &.gpp-avg {
+        background: #2bb673;
+        color: white;
+      }
+
+      &.rate {
+        background: transparent !important;
+
+        span {
+          display: inline-block;
+          width: 50px;
+
+          &.green {
+            background-color: #dff4ea;
+            color: #2bb673;
+            line-height: 25px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.table-container {
+  overflow: auto;
+  overflow-y: hidden;
+  min-height: 400px;
+}

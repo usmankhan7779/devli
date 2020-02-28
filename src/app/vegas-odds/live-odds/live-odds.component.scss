@@ -1,0 +1,48 @@
+@import '../../../scss/bootstrap-customization/custom-mixins';
+
+:host {
+  $big-table-shortname-breakdown: 920px;
+  $mobile-view-breakdown: 864px;
+
+  .text-next-to-dds {
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .mobile-odds-view {
+    display: none;
+  }
+
+  .desktop-odds-view {
+    margin-bottom: 20px;
+  }
+
+  .glossary-content-wrapper {
+    h5 {
+      font-size: 18px;
+    }
+    .glossary-content {
+      white-space: pre-line;
+      font-size: 13px;
+    }
+  }
+
+  @media (max-width: $mobile-view-breakdown) {
+    .mobile-odds-view {
+      display: block;
+    }
+    .desktop-odds-view {
+      display: none;
+    }
+  }
+
+  @media (max-width: 650px) {
+    .filter-container {
+      @include flex-column-mixin();
+    }
+    .text-next-to-dds {
+      margin-top: 15px;
+    }
+  }
+
+}

@@ -1,0 +1,196 @@
+@import "../../../../scss/shared/variables/project";
+@import "../../../../scss/bootstrap-customization/custom-mixins";
+:host {
+  $first-breakpoint: 974px;
+  $second-breakpoint: 830px;
+  $hide-pagination: 786px;
+  $third-breakpoint: 650px;
+  $table-max-width: 940px;
+  $table-breakpoint: 880px;
+  $table-min-width: 612px;
+
+  .history-icon {
+    line-height: 20px;
+    padding: 3px 0;
+    font-size: 15px;
+    color: #ebebec;
+    &.active {
+      &:hover {
+        color: #6f6f6f;
+      }
+      color: #9c9c9c;
+      cursor: pointer;
+    }
+  }
+
+  .multi-row-data-table-wrapper {
+    max-width: $table-max-width;
+
+    min-width: 0;
+    margin: 0 auto;
+
+    .rating-col, .pos-col {
+      width: 70px;
+    }
+    .team-col, .player-name-col {
+      width: 230px;
+    }
+    @media (max-width: $table-breakpoint) {
+      .multi-row-data-table .t-content *, .multi-row-data-table .t-content th[scope="row"] {
+        font-size: 11px;
+      }
+      .multi-row-data-table .t-sub-header *, .multi-row-data-table .t-single-header * {
+        font-size: 0.6rem;
+      }
+      max-width: 620px;
+      .rating-col, .pos-col {
+        width: 50px;
+      }
+      .team-col, .player-name-col {
+        width: 180px;
+      }
+      .history-icon {
+        line-height: 11px;
+      }
+    }
+    @media (max-width: 543px) {
+      .rating-col, .pos-col {
+        width: 40px;
+      }
+      .team-col, .player-name-col {
+        width: 170px;
+      }
+    }
+  }
+
+  .top-dd-wrapper {
+    @include flex-row-mixin();
+    .pagination-wrapper {
+      margin-left: auto;
+    }
+    @media (max-width: $third-breakpoint) {
+      @include flex-column-mixin();
+    }
+  }
+
+  .search-input-wrapper {
+    &.normal-view {
+      display: block;
+      margin-left: auto;
+      padding-left: 20px;
+    }
+    &.mobile-view {
+      display: none;
+    }
+    @media (max-width: $third-breakpoint) {
+      &.normal-view {
+        display: none;
+      }
+      &.mobile-view {
+        display: block;
+      }
+    }
+  }
+  .top-search-wrapper {
+    max-width: $table-max-width;
+    flex: 1;
+    margin-left: calc((100% - #{$table-max-width + 1}) / 2);
+
+    @media (max-width: $first-breakpoint) {
+      margin-left: 0;
+    }
+    @media (max-width: $third-breakpoint) {
+      @include flex-column-mixin();
+      .search-input-wrapper {
+        margin: 0 0 1rem 0;
+      }
+    }
+  }
+
+  .college-football-players-page-wrapper {
+    $cfb-table-max-width: 740px;
+    .multi-row-data-table-wrapper {
+      max-width: $cfb-table-max-width;
+    }
+    .top-search-wrapper {
+      max-width: $cfb-table-max-width;
+      flex: 1;
+      margin-left: calc((100% - #{$cfb-table-max-width + 1}) / 2);
+      @media (max-width: 987px) {
+        margin-left: 0;
+      }
+      @media (max-width: $hide-pagination) {
+        max-width: 100%;
+      }
+
+    }
+    @media (max-width: $table-breakpoint) {
+      .multi-row-data-table-wrapper {
+        max-width: 550px;
+      }
+    }
+    @media (max-width: 581px) {
+      .multi-row-data-table-wrapper.custom-width {
+        overflow-x: auto;
+        table {
+          min-width: 519px;
+        }
+      }
+    }
+  }
+
+  .pagination-wrapper {
+    min-width: 345px;
+    @include flex-row-mixin();
+
+    @media (max-width: $second-breakpoint) {
+      min-width: 300px;
+    }
+
+    @media (max-width: $hide-pagination) {
+      min-width: 0;
+      .pagination-controls-wrapper {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: $third-breakpoint) {
+      margin-bottom: 1.125rem;
+    }
+
+  }
+
+
+  .pagination-wrapper ::ng-deep .ngx-pagination {
+    padding: 0 !important;
+    text-align: center;
+    @media (max-width: $second-breakpoint) {
+      font-size: 12px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .pagination-controls-wrapper {
+      font-size: 11px;
+    }
+  }
+
+
+  .players-page-wrapper:not(.college-football-players-page-wrapper) {
+    @media (max-width: 633px) {
+      .player-name-col {
+        width: 150px;
+      }
+    }
+    @media (max-width: $table-min-width + 49px) {
+        .multi-row-data-table-wrapper.custom-width {
+        overflow-x: auto;
+        table {
+          min-width: $table-min-width;
+        }
+      }
+    }
+  }
+}
+
+

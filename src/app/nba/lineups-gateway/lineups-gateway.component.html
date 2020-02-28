@@ -1,0 +1,98 @@
+<!-- Starting Lineup Box Loader -->
+<ng-template #loadingView>
+  <div class="starting-lineup-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<ng-template #noLineups>
+  <div *appBrowserIf="depthChartsList?.length"  class="col-12 before-text-margin">
+    <div class="d-flex justify-content-center flex-wrap depth-charts-wrapper">
+      <div *ngFor="let teamDepthChart of depthChartsList" class="single-depth-chart-wrapper">
+        <app-depth-chart-single-item [startersOnly]="true" [posKeys]="posKeys" [posKeysArr]="posKeysArr" [depthChart]="teamDepthChart"></app-depth-chart-single-item>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div class="container-fluid pb-5" *ngIf="!loading; else loadingView">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+
+    <div class="col-12 col-lg-8">
+      <div class="after-heading-margin">
+          <h1 class="page-heading after-heading-margin">
+            <span class="hidden-xs-down">{{pageTitle}}</span>
+            <span class="hidden-sm-up">NBA Lineups</span>
+          </h1>
+      </div>
+      <div *ngIf="introParagraph" class="hidden-md-down">
+        <p class="site-pages-content" [innerHTML]="introParagraph | safeHtml"></p>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component [league]="'nba'"></app-ad-component>
+    </div>
+
+    <div *ngIf="introParagraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+      <p class="site-pages-content" [innerHtml]="introParagraph | safeHtml"></p>
+    </div>
+
+
+
+    <div class="col-12" *ngIf="!hideTabs && lineups?.length">
+      <div class="tabs-wrapper">
+        <div class="main-tabs">
+          <div class="toggles-in-page-wrapper mt-0">
+            <div class="toggles-in-page-group btn-group toggles-group">
+              <button (click)="showDepthChartsView = false" class="toggle-in-page first" [ngClass]="{'active': !showDepthChartsView}">Today's Lineups</button>
+              <button (click)="showDepthChartsView = true" class="toggle-in-page last" [ngClass]="{'active': showDepthChartsView}">All Teams</button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!showDepthChartsView" class="secondary-tabs">
+          <div class="toggles-in-page-wrapper mt-0">
+            <!-- Action Header Button Group -->
+            <div class="toggles-in-page-group btn-group toggles-group">
+              <button (click)="onButtonGroupClick('groupOne', 'sportActionActive')" class="toggle-in-page first" [ngClass]="{'active': groupOne.sportActionActive}">Projected Stats</button>
+              <button (click)="onButtonGroupClick('groupOne', 'draftKingsActionActive')" class="toggle-in-page" [ngClass]="{'active': groupOne.draftKingsActionActive}">DraftKings</button>
+              <button (click)="onButtonGroupClick('groupOne', 'fanDuelActionActive')" class="toggle-in-page last" [ngClass]="{'active': groupOne.fanDuelActionActive}">FanDuel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!showDepthChartsView" class="daily-fantasy-text">
+        <p class="site-pages-content">
+          For full detailed player projections, see our <a [routerLink]="['/nba/nba-fantasy-basketball-projections']">Daily Fantasy Basketball Projections</a> page.
+        </p>
+      </div>
+    </div>
+
+    <div class="col-12" *ngIf="!showDepthChartsView && lineups?.length; else noLineups">
+      <!-- Starting Lineups Results -->
+      <div class="lineups-gateway-results">
+        <!-- Starting Lineup Box - Repeated -->
+          <app-lineup-item
+            *ngFor="let lineup of lineups; let i = index;"
+            [index]="i"
+            [lineup]="lineup"
+            [lineupsLength]="lineups.length"
+            [sportActionActive]="groupOne.sportActionActive"
+            [draftKingsActionActive]="groupOne.draftKingsActionActive"
+            [fanDuelActionActive]="groupOne.fanDuelActionActive"
+          ></app-lineup-item>
+      </div>
+    </div>
+
+    <div *ngIf="bottomParagraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="bottomHeader" class="page-heading-two">
+        {{bottomHeader}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="bottomParagraph | safeHtml"></p>
+    </div>
+
+  </div>
+
+</div>

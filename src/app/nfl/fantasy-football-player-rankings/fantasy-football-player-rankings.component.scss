@@ -1,0 +1,252 @@
+@import '../../../scss/bootstrap-customization/custom-mixins';
+@import '../../../scss/shared/variables/project';
+:host {
+  $main-break: 1280px;
+  $second-break: 680px;
+  $third-break: 435px;
+
+  $table-br: 1084px;
+  $table-min-width: 1035px;
+
+  $standard-spacing: 1.125rem;
+
+  .multi-row-data-table {
+    table-layout: auto;
+  }
+
+  .col-name {
+    min-width: 150px;
+  }
+
+  table.multi-row-data-table {
+    .t-sub-header {
+      height: 34px;
+      th {
+        border-right: 1px solid #e1e1e1;
+        &:last-child {
+          border-right: none;
+        }
+        font-size: 14px;
+        padding: 5px 2px;
+        @media (max-width: 1500px) {
+          font-size: 0.6rem;
+        }
+      }
+    }
+  }
+
+  @media (max-width: $table-br) {
+    .multi-row-data-table-wrapper.custom-width {
+      overflow-x: auto;
+      table {
+        min-width: $table-min-width;
+      }
+    }
+  }
+
+  tr:nth-child(even) .lineups-fantasy-points-col {
+    background-color: #e0f2ff8a;
+  }
+  tr:nth-child(odd) .lineups-fantasy-points-col {
+    background-color: #f0f9ff80;
+  }
+
+  .tier-row {
+    height: 26px;
+    td {
+      border-right: 1px solid #e1e1e1;
+      &:last-child {
+        border-right: none;
+      }
+      &.tier-text {
+        color: black;
+        font-weight: bold;
+        font-size: 14px;
+        padding: 5px 2px;
+        text-align: center;
+        @media (max-width: 1500px) {
+          font-size: 0.6rem;
+        }
+      }
+    }
+    $color-dif-percentage: 3%;
+    $color-dif-light: 2;
+    $color-dif-dark: 2;
+    &.position {
+      &.tier-5 {
+        background-color: $tier-7-color;
+      }
+      &.tier-4 {
+        background-color: $tier-5-color;
+      }
+      &.tier-3 {
+        background-color: $tier-4-color;
+      }
+      &.tier-2 {
+        background-color: $tier-2-color;
+      }
+      &.tier-1 {
+        background-color: $tier-1-color;
+      }
+    }
+    &.overall {
+      &.tier-7 {
+        background-color: $tier-7-color;
+      }
+      &.tier-6 {
+        background-color: $tier-6-color;
+      }
+      &.tier-5 {
+        background-color: $tier-5-color;
+      }
+      &.tier-4 {
+        background-color: $tier-4-color;
+      }
+      &.tier-3 {
+        background-color: $tier-3-color;
+    }
+      &.tier-2 {
+        background-color: $tier-2-color;
+      }
+      &.tier-1 {
+        background-color: $tier-1-color;
+      }
+    }
+  }
+
+  .team-logo-mini {
+    width: 1.2rem;
+    height: 1.2rem;
+    vertical-align: middle;
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-top: -2px;
+  }
+  .team-name-short, .top-dd-wrapper {
+    display: none;
+  }
+  @media (max-width: 1643px) {
+    .team-name-full {
+      display: none;
+    }
+    .team-name-short {
+      display: inline;
+    }
+  }
+
+  .history-icon {
+    line-height: 17px;
+    padding: 3px 0;
+    font-size: 15px;
+    color: #ebebec;
+    @media (max-width: 1500px) {
+      line-height: 10px;
+    }
+    &.active {
+      &:hover {
+        color: #6f6f6f;
+      }
+      color: #9c9c9c;
+      cursor: pointer;
+    }
+  }
+
+  .mobile-page-dd {
+    display: none;
+  }
+  .full-screen-page-dd {
+    display: block;
+  }
+  .grouped-dropdown-wrapper {
+    margin-bottom: 0;
+  }
+  .pagination-wrapper ::ng-deep .ngx-pagination {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .first-section-nav {
+    @include flex-row-mixin();
+    .pagination-wrapper {
+      margin-left: auto;
+    }
+    @media (max-width: $main-break) {
+      .top-dd-wrapper {
+        display: block;
+      }
+      .toggles-in-page-wrapper {
+        display: none;
+      }
+    }
+    @media (max-width: $second-break) {
+      @include flex-column-mixin();
+      .pagination-wrapper {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .pagination-wrapper {
+    @include flex-row-mixin();
+    @media (max-width: $third-break) {
+      @include flex-column-mixin();
+    }
+  }
+
+  @media (max-width: $second-break) {
+    .hidden-dropdown {
+      display: none;
+    }
+    .first-section-nav {
+      @include flex-column-mixin();
+      .grouped-dropdown-wrapper {
+        margin-right: 0;
+      }
+    }
+    .full-screen-page-dd {
+      display: none;
+    }
+    .mobile-page-dd {
+      display: block;
+    }
+    .pagination-wrapper {
+      margin: 1.125rem auto 0 auto !important;
+    }
+    .pagination-wrapper ::ng-deep .ngx-pagination {
+      padding: 0 !important;
+      text-align: center;
+      font-size: 13px;
+    }
+    .top-dd-wrapper-deep {
+      margin-bottom: $standard-spacing;
+    }
+    ::ng-deep .grouped-dropdown-wrapper {
+      margin: 0;
+      display: inline-block;
+      width: 100%;
+      .grouped-dropdown-btn {
+        border-radius: 0 !important;
+        border-left: 0 !important;
+        border-right: 0 !important;
+      }
+      .grouped-dropdown.show .dropdown-menu {
+        width: 100%;
+      }
+    }
+
+    .in-page-dropdown-toggle {
+      display: block;
+      margin-bottom: 20px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+      button {
+        width: 30px;
+        height: 30px;
+        padding: 0;
+      }
+    }
+  }
+
+  @media (max-width: $third-break) {
+  }
+}

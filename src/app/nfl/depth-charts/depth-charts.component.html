@@ -1,0 +1,126 @@
+<!-- Starting Lineups Content -->
+<div class="depth-charts-content content">
+  <div class="page-wrap">
+    <!-- Breadcrumbs -->
+    <app-breadcrumb></app-breadcrumb>
+    <!-- Starting Lineups Page Title -->
+    <div class="row">
+
+      <div class="col-12 col-lg-8">
+        <div #containerEl class="d-flex flex-wrap after-heading-margin">
+          <div>
+            <h1 #headingEl class="page-heading m-0">
+              <span class="hidden-xs-down">{{pageTitle}}</span>
+              <span class="hidden-sm-up">NFL Depth Charts</span>
+            </h1>
+          </div>
+          <app-twitter-follow-btn [textElement]="headingEl" [containerElement]="containerEl"></app-twitter-follow-btn>
+        </div>
+        <div *ngIf="introParagraph" class="hidden-md-down">
+          <p class="site-pages-content mb-0" [innerHTML]="introParagraph | safeHtml"></p>
+        </div>
+      </div>
+      <div class="col-12 col-lg-4 gateway-video-container">
+        <app-ad-component [league]="'nfl'"></app-ad-component>
+      </div>
+
+      <div *ngIf="introParagraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+        <p class="site-pages-content" [innerHtml]="introParagraph | safeHtml"></p>
+      </div>
+
+      <div class="col-12 after-text-margin" *ngIf="depthChartsList?.length">
+        <div class="main-tabs">
+          <div class="toggles-in-page-wrapper mt-0">
+            <div class="toggles-in-page-group btn-group toggles-group">
+              <button (click)="showDepthChartsAlternativeView = true" class="toggle-in-page first" [ngClass]="{'active': showDepthChartsAlternativeView}">Basic</button>
+              <button (click)="showDepthChartsAlternativeView = false" class="toggle-in-page last" [ngClass]="{'active': !showDepthChartsAlternativeView}">Detailed</button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="false" class="secondary-tabs">
+          <div *ngIf="false" class="toggles-in-page-wrapper">
+            <!-- Action Header Button Group -->
+            <div class="toggles-in-page-group btn-group toggles-group">
+              <button (click)="onSportAction()" class="toggle-in-page first" [ngClass]="{'active': sportActionActive}">Sport</button>
+              <button *ngIf="false" (click)="onFantasyAction()" class="toggle-in-page last" [ngClass]="{'active': fantasyActionActive}">Fantasy</button>
+            </div>
+            <!-- Action Header Button Group -->
+            <div class="toggles-in-page-group btn-group toggles-group toggles-group-mid" [hidden]="!fantasyActionActive">
+              <button *ngIf="false" (click)="onDraftKingsAction()" class="toggle-in-page first" [ngClass]="{'active': draftKingsActionActive}">DraftKings</button>
+              <button *ngIf="false" (click)="onFanDuelAction()" class="toggle-in-page" [ngClass]="{'active': fanDuelActionActive}">FanDuel</button>
+              <button *ngIf="false" (click)="onYahooAction()" class="toggle-in-page last" [ngClass]="{'active': yahooActionActive}">Yahoo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <!-- Depth Charts Heading Actions -->
+
+        <!-- Starting Depth Charts Results -->
+        <div class="depth-charts-results">
+          <!-- Starting Lineup Box Loader -->
+          <div *ngIf="loading; else depthChartsView" class="starting-lineup-loader">
+            <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+          </div>
+          <!-- Starting Lineup Box - Repeated -->
+          <ng-template #depthChartsView>
+            <ng-container *ngIf="!showDepthChartsAlternativeView && depthChartsList?.length; else deptchartsAlternativeView;">
+              <div *ngFor="let depthChart of depthChartsList; let i = index;" class="depth-chart-wrapper">
+                <app-depth-chart-single-item
+                  [index]="i"
+                  [depthChart]="depthChart"
+                  [totalItemsLength]="depthChartsList.length"
+                  [fantasyActionActive]="fantasyActionActive"
+                  [sportActionActive]="sportActionActive"
+                  [yahooActionActive]="yahooActionActive"
+                  [draftKingsActionActive]="draftKingsActionActive"
+                  [fanDuelActionActive]="fanDuelActionActive"
+                ></app-depth-chart-single-item>
+              </div> <!-- End Lineups Loop -->
+            </ng-container>
+            <ng-template #deptchartsAlternativeView>
+              <div class="row" *ngIf="alternativeDps?.length; else noDepthCharts">
+                <div class="col-12">
+                  <div class="d-flex justify-content-center alt-depth-charts-wrapper flex-wrap before-heading-margin">
+                    <div *ngFor="let teamDepthChart of alternativeDps" class="alt-depth-chart-wrapper">
+                      <app-alternative-depth-chart-view [depthChart]="teamDepthChart"></app-alternative-depth-chart-view>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template #noDepthCharts>
+              <h3 class="text-center mt-0 mb-3">No Games Today</h3>
+
+              <div *appBrowserIf="depthChartsRouteList?.length" class="row">
+                <div class="col-xl-9 col-12">
+                  <div class="row">
+                    <div class="col-12">
+                      <h5 class="mb-3 text-center text-sm-left">
+                        <strong>
+                          <span>Team Depth Charts</span>
+                        </strong>
+                      </h5>
+                    </div>
+                    <div class="col-12">
+                      <app-vertical-list-6-xl-col [linkClass]="'link-black-underline mobile-margin'" [data]="depthChartsRouteList"></app-vertical-list-6-xl-col>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </ng-template>
+          </ng-template>
+        </div>
+      </div>
+      <div *ngIf="bottomParagraph" class="col-12 flex-last flex-sm-unordered">
+        <h2 *ngIf="bottomHeading" class="page-heading-two">
+          {{bottomHeading}}
+        </h2>
+        <p class="site-pages-content" [innerHtml]="bottomParagraph | safeHtml"></p>
+      </div>
+    </div>
+  </div>
+</div>

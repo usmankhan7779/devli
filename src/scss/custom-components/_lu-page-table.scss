@@ -1,0 +1,181 @@
+.stand-horizontal-table-wrapper:not(.custom-br) {
+  overflow-x: scroll;
+  width: 100%;
+}
+
+.table-row {
+  width: 100%;
+  margin: auto;
+}
+
+.bullpen-pitcher-table-wrapper,
+.bench-hitters-table-wrapper {
+  margin-top: 28px;
+}
+
+mfsorter {
+  position: relative;
+  a span.icon {
+    position: absolute;
+    top: 2px;
+  }
+}
+
+.multi-row-static-table {
+  td {
+    padding: 9px 0;
+    border-bottom: none;
+    border-top: none;
+  }
+  &.static-table {
+    border-bottom: 1px solid #eceeef;
+  }
+}
+// Min-Width on Columns
+// (For Horizontal Scrolling)
+.med-col {
+  min-width: 115px;
+}
+.lg-col {
+  min-width: 260px;
+}
+.position-col {
+  min-width: 60px;
+}
+.player-name-col {
+  min-width: 180px;
+}
+
+.med-lg-col {
+  min-width: 180px;
+}
+
+.static-table {
+  .static-row-header {
+    min-width: 400px;
+    h5 {
+      width: 100%;
+      background: #ebebec;
+    }
+  }
+
+  .t-sub-header.static-sub-header {
+    background-color: #F3F3F3;
+    th {
+      padding: 10px 0;
+      background: #F3F3F3;
+      border-color: #F3F3F3;
+      border-bottom: 0;
+      font-size: 12px;
+      font-weight: 600;
+      color: #292b2c;
+      &.player-name-col {
+        padding-left: 5px;
+      }
+    }
+  }
+  .static-table-body {
+    border-top: 1px solid transparent;
+    td {
+      border: none;
+    }
+  }
+}
+
+.inner-col-show {
+  display: none;
+}
+
+.static-table.multi-table-static {
+  //border-right: 2px solid #eceeef;
+}
+
+.table-sect-wrap {
+  margin-bottom: 20px;
+}
+
+.col-12.dropdowns {
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 1651px) {
+  .static-table-wrapper {
+    display: none;
+    overflow-x: scroll;
+  }
+  .horizontal-table-wrapper.yearly {
+    overflow-x: scroll;
+  }
+  .horizontal-table-wrapper {
+    width: 100%;
+  }
+  .stats-table {
+    th {
+      min-width: 80px;
+    }
+  }
+}
+
+@media (max-width: 1650px) {
+  @import './fixed-table';
+}
+
+@media (max-width: 1100px) {
+  .table-mob-full {
+    &.col-4 {
+      min-width: 100%;
+      max-width: 100%;
+    }
+  }
+}
+
+@media (max-width: 550px) {
+  .horizontal-table-wrapper {
+    width: calc(100% - 220px);
+  }
+  .static-table {
+    width: 220px;
+    &.three-col, &.four-col {
+      width: auto;
+    }
+    .position-col,
+    .player-name-col {
+      font-size: 13px;
+    }
+    th {
+      padding: 5px 10px;
+    }
+    td {
+      padding: 8px 10px;
+    }
+    .player-name-col {
+      min-width: 160px;
+    }
+  }
+  .stats-table {
+    thead {
+      td, th {
+        font-size: 13px;
+        padding: 5px 10px;
+      }
+    }
+    td, th {
+      font-size: 13px;
+      padding: 8px 10px;
+    }
+  }
+}
+
+@media (min-width: 481px) {
+  .player-name-col-xs {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .player-name-col-to-hide-on-xs {
+    display: none;
+  }
+  @import './fixed-table-mobile';
+}

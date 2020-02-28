@@ -1,0 +1,177 @@
+.table-sect-wrap {
+
+  &.large-table-wrapper {
+    .static-table-wrapper {
+      display: block !important;
+      overflow-x: visible !important;
+    }
+  }
+
+  &.scrollbar-margin {
+    border-right: 1px solid #ebebec;
+    .horizontal-table-wrapper {
+      border-right: none;
+      margin-bottom: -17px;
+    }
+  }
+
+  .static-table {
+    &.multi-table-static {
+      th.player-name-col {
+        padding-left: 16px;
+      }
+      tr {
+        td.player-name-col {
+          border-right: 1px solid #e1e1e1;
+        }
+        td:last-child {
+          border-right: 0;
+        }
+      }
+    }
+    th {
+      &.player-name-col,
+      &.game-col,
+      &.position-col {
+        padding-top: 10px;
+        padding-bottom: 9px;
+      }
+    }
+    .player-name-col {
+      font-size: 12px;
+    }
+    .game-col {
+      font-size: 12px;
+    }
+    .position-col {
+      font-size: 12px;
+    }
+  }
+  .static-table-wrapper {
+    .static-table-body {
+      border-left: 1px solid #e1e1e1;
+      border-bottom: 1px solid #e1e1e1;
+      tr {
+        height: 36px;
+      }
+      td {
+        padding-top: 4px;
+        padding-bottom: 4px;
+      }
+    }
+  }
+}
+.full-table {
+  min-width: 100%;
+  max-width: 100%;
+}
+.static-table {
+  display: block;
+  float: left;
+  max-width: 240px;
+  &.three-col {
+    max-width: 300px;
+  }
+  &.four-col {
+    max-width: 380px;
+  }
+  border: none;
+  //border-bottom: 15px solid #ebebec;
+  .position-col {
+    min-width: 60px;
+    max-width: 60px;
+  }
+  .player-name-col {
+    min-width: 180px;
+  }
+  .show-border {
+    border-right: 1px solid #e1e1e1 !important;
+  }
+}
+.inner-col-switch {
+  display: none;
+}
+.inner-col-show {
+  display: table-cell;
+}
+.toggles-group .inner-col-show {
+  display: block;
+}
+.horizontal-table-wrapper {
+  overflow-x: auto;
+  border-right: 1px solid #ebebec;
+  width: calc(100% - 240px);
+  &.three-col {
+    width: calc(100% - 300px);
+  }
+  &.four-col {
+    width: calc(100% - 380px);
+  }
+  .multi-row-data-table {
+    table-layout: auto;
+    margin-bottom: 0;
+    .t-sub-header th, .t-sub-header th mfsorter a {
+      font-size: 12px;
+      padding: 10px 0;
+    }
+    .t-content td {
+      font-size: 12px;
+    }
+  }
+  th {
+    min-width: 80px;
+    &.med-lg-col {
+      min-width: 180px;
+    }
+    &.med-col {
+      min-width: 115px;
+    }
+    &.lg-col {
+      min-width: 260px;
+    }
+    &.position-col {
+      min-width: 60px;
+    }
+    &.player-name-col {
+      min-width: 180px;
+    }
+    &.inner-col-switch {
+      display: none;
+    }
+  }
+  td {
+    &.med-lg-col {
+      min-width: 180px;
+    }
+    &.inner-col-switch {
+      display: none;
+    }
+  }
+
+  .stats-table {
+    border-right: none;
+    th {
+      min-width: 80px;
+      &.med-col {
+        min-width: 115px;
+      }
+      &.lg-col {
+        min-width: 260px;
+      }
+      &.position-col {
+        min-width: 60px;
+      }
+      &.player-name-col {
+        min-width: 180px;
+      }
+      &.inner-col-switch {
+        display: none;
+      }
+    }
+    td {
+      &.inner-col-switch {
+        display: none;
+      }
+    }
+  }
+}

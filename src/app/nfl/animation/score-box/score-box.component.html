@@ -1,0 +1,21 @@
+<ng-container *ngIf="game">
+  <span [style.background]="game.colors[game.homeTeam]" [style.color]="game.textColors[game.homeTeam]">
+    <span *ngIf="game.play && (game.play.offenseTeam === game.homeTeam)" class="possession" [style.background]="game.textColors[game.homeTeam]"></span> {{ game.homeTeam }}
+  </span>
+  <span class="score">
+    {{ game.score[game.homeTeam] }}
+  </span>
+  <span [style.background]="game.colors[game.awayTeam]" [style.color]="game.textColors[game.awayTeam]">
+    <span *ngIf="game.play && (game.play.offenseTeam === game.awayTeam)" class="possession" [style.background]="game.textColors[game.awayTeam]"></span> {{ game.awayTeam }}
+  </span>
+  <span class="score">
+    {{ game.score[game.awayTeam] }}
+  </span>
+  <span class="info">
+    {{ (game.play && game.play.down) || '--' }}
+  </span>
+  <span class="info">
+    {{ (game.play && game.play.timeAndQuarter) || '--' }}
+  </span>
+</ng-container>
+

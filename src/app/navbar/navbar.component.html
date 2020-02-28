@@ -1,0 +1,370 @@
+<ng-template #navbarDdItem let-link="link">
+  <a (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item" [routerLink]="[link.internalLink]">{{link.title}}</a>
+</ng-template>
+<ng-template #navbarDdExternalItem let-link="link">
+  <a (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item" [href]="link.link">{{link.title}}</a>
+</ng-template>
+
+<ng-template #navbarDdDiffLinks let-link="link">
+  <ng-container *ngIf="link.link">
+    <ng-template [ngTemplateOutlet]="navbarDdExternalItem" [ngTemplateOutletContext]="{link: link}"></ng-template>
+  </ng-container>
+  <ng-container *ngIf="link.internalLink">
+    <ng-template [ngTemplateOutlet]="navbarDdItem" [ngTemplateOutletContext]="{link: link}"></ng-template>
+  </ng-container>
+</ng-template>
+
+<nav class="navbar navbar-inverse navbar-toggleable-md bg-primary">
+  <div class="navbar-brand">
+    <a  [routerLink]="['/']">
+      <img src="/assets/images/logo/lineups-logo-white-blue.svg" width="120px" class="d-inline-block align-top" alt="lineups">
+    </a>
+  </div>
+
+  <div class="collapse-menu" [ngClass]="{'open-menu': !isNavbarCollapsed, 'closed-menu': isNavbarCollapsed}">
+    <!-- Menu Collapse Toggle -->
+
+    <div class="mobile-social">
+      <ul>
+        <li class="nav-item mobile-view social-nav twitter">
+          <a class="nav-link mobile-white-hover-opacity" aria-label="Twitter" href="https://twitter.com/lineups" rel="noopener" target="_blank">
+            <i class="fa fa-twitter" aria-hidden="true"></i>
+          </a>
+        </li>
+        <li class="nav-item mobile-view social-nav facebook">
+          <a class="nav-link mobile-white-hover-opacity" aria-label="Facebook" href="https://www.facebook.com/lineups" rel="noopener" target="_blank">
+            <i class="fa fa-facebook-f" aria-hidden="true"></i>
+          </a>
+        </li>
+        <li class="nav-item mobile-view social-nav youtube">
+          <a class="nav-link mobile-white-hover-opacity" aria-label="Youtube" href="https://www.youtube.com/c/Lineups" rel="noopener" target="_blank">
+            <i class="fa fa-youtube-play" aria-hidden="true"></i>
+          </a>
+        </li>
+        <li class="nav-item mobile-view social-nav microphone">
+          <a class="nav-link mobile-white-hover-opacity" aria-label="Itunes" href="https://itunes.apple.com/us/artist/Lineups/1451080395" rel="noopener" target="_blank">
+            <i class="fa fa-microphone" aria-hidden="true"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <button (click)="isNavbarCollapsed = !isNavbarCollapsed" [attr.aria-expanded]="!isNavbarCollapsed"
+            class="navbar-toggler navbar-toggler-right nav-menu-mobile-btn mobile-white-hover-opacity" type="button"
+            aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      <!--<i class="fa fa-bars" aria-hidden="true"></i>-->
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar top-bar"></span>
+      <span class="icon-bar middle-bar"></span>
+      <span class="icon-bar bottom-bar"></span>
+    </button>
+  </div>
+
+  <!-- Collapsed Menu -->
+  <div [ngClass]="{'open-menu': !isNavbarCollapsed, 'closed-menu': isNavbarCollapsed}" id="navbarContent" class="navbar-collapse">
+    <ul class="navbar-nav mr-auto main-ul">
+
+      <!--Premium-->
+      <!--<li class="nav-item hidden-lg-up mobile-premium-btn">-->
+        <!--<a (click)="onNavbarClose()" href="https://www.lineups.com/betting/dashboard/" rel="nofollow noopener" target="_blank">-->
+          <!--Premium-->
+        <!--</a>-->
+      <!--</li>-->
+
+      <!--NFL-->
+      <li class="nav-item with-hover dropdown mobile-white-hover-opacity separated-left-right-dd" [ngClass]="{'mark-as-active': isActiveNav('nfl')}">
+        <div class="plus-minus-container">
+          <a class="nav-link dropdown-toggle" (click)="onOpenDD('nfl', nflDDElement)" id="navbar-dropdown-2" data-toggle="dropdown" aria-haspopup="true"
+             aria-expanded="false">NFL</a>
+          <div class="plus-minus-sign" (click)="onOpenDD('nfl', nflDDElement, true)">
+            <i class="fa fa-minus" aria-hidden="true"></i>
+            <i class="fa fa-plus" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div #nflDDElement class="dropdown-menu navbar-dropdown-menu" aria-labelledby="navbar-dropdown-2">
+          <a (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item hidden-lg-up"
+             [routerLink]="['/nfl']">NFL
+          </a>
+          <div>
+            <a (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item" *ngFor="let item of nflDropdownItemsLeft; let i = index;"
+               [routerLink]="[item.link]">{{item.title}}
+            </a>
+          </div>
+          <div>
+            <a (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item" *ngFor="let item of nflDropdownItemsRight; let i = index;"
+               [routerLink]="[item.link]">{{item.title}}
+            </a>
+          </div>
+        </div>
+      </li>
+      <!--NBA-->
+      <li class="nav-item with-hover dropdown mobile-white-hover-opacity separated-left-right-dd" [ngClass]="{'mark-as-active': isActiveNav('nba')}">
+        <div class="plus-minus-container">
+          <a class="nav-link dropdown-toggle" (click)="onOpenDD('nba', nbaDDElement)" id="navbar-dropdown-3" data-toggle="dropdown" aria-haspopup="true"
+             aria-expanded="false">NBA</a>
+          <div class="plus-minus-sign" (click)="onOpenDD('nba', nbaDDElement, true)">
+            <i class="fa fa-minus" aria-hidden="true"></i>
+            <i class="fa fa-plus" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div #nbaDDElement class="dropdown-menu navbar-dropdown-menu" aria-labelledby="navbar-dropdown-3">
+          <a (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item hidden-lg-up"
+             [routerLink]="['/nba']">NBA
+          </a>
+          <div>
+            <a (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item" *ngFor="let item of nbaDropdownItemsLeft; let i = index;"
+               [routerLink]="[item.link]">{{item.title}}
+            </a>
+          </div>
+          <div>
+            <a (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item" *ngFor="let item of nbaDropdownItemsRight; let i = index;"
+               [routerLink]="[item.link]">{{item.title}}
+            </a>
+          </div>
+        </div>
+      </li>
+      <!--MLB-->
+      <li class="nav-item with-hover dropdown mobile-white-hover-opacity separated-left-right-dd" [ngClass]="{'mark-as-active': isActiveNav('mlb')}">
+        <div class="plus-minus-container">
+          <a class="nav-link dropdown-toggle" (click)="onOpenDD('mlb', mlbDDElement)" id="navbar-dropdown-1" data-toggle="dropdown" aria-haspopup="true"
+             aria-expanded="false">MLB</a>
+          <div class="plus-minus-sign" (click)="onOpenDD('mlb', mlbDDElement, true)">
+            <i class="fa fa-minus" aria-hidden="true"></i>
+            <i class="fa fa-plus" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div #mlbDDElement class="dropdown-menu navbar-dropdown-menu" aria-labelledby="navbar-dropdown-1">
+          <a (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item hidden-lg-up"
+             [routerLink]="['/mlb']">MLB
+          </a>
+          <div>
+            <a (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item" *ngFor="let item of mlbDropdownItemsLeft; let i = index;"
+               [routerLink]="[item.link]">{{item.title}}
+            </a>
+          </div>
+          <div>
+            <a (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item" *ngFor="let item of mlbDropdownItemsRight; let i = index;"
+               [routerLink]="[item.link]">{{item.title}}
+            </a>
+          </div>
+        </div>
+      </li>
+      <!--CFB-->
+      <!--<li class="nav-item with-hover dropdown mobile-white-hover-opacity" [ngClass]="{'mark-as-active': isActiveNav('college-football')}">-->
+        <!--<div class="plus-minus-container">-->
+          <!--<a class="nav-link dropdown-toggle" (click)="onOpenDD('college-football', cfbDDElement)" id="navbar-dropdown-cfb" data-toggle="dropdown" aria-haspopup="true"-->
+             <!--aria-expanded="false">CFB</a>-->
+          <!--<div class="plus-minus-sign" (click)="onOpenDD('college-football', cfbDDElement, true)">-->
+            <!--<i class="fa fa-minus" aria-hidden="true"></i>-->
+            <!--<i class="fa fa-plus" aria-hidden="true"></i>-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<div #cfbDDElement class="dropdown-menu navbar-dropdown-menu" aria-labelledby="navbar-dropdown-cfb">-->
+          <!--<a (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item hidden-lg-up"-->
+             <!--[routerLink]="['/college-football']">CFB-->
+          <!--</a>-->
+          <!--<a class="dropdown-item navbar-dropdown-item hidden-lg-up" style="pointer-events: none">-->
+
+          <!--</a>-->
+          <!--<a (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item" *ngFor="let item of cfbDropdownItems; let i = index;"-->
+             <!--[routerLink]="[item.link]">{{item.title}}-->
+          <!--</a>-->
+        <!--</div>-->
+      <!--</li>-->
+      <!--ARTICLES-->
+      <li class="nav-item with-hover dropdown mobile-white-hover-opacity separated-left-right-dd">
+        <div class="plus-minus-container">
+          <a href="https://www.lineups.com/articles/" class="nav-link dropdown-toggle" (click)="onOpenDD('articles', blogDDElement)" id="navbar-dropdown-blog" data-toggle="dropdown" aria-haspopup="true"
+             aria-expanded="false">Articles</a>
+          <div class="plus-minus-sign" (click)="onOpenDD('articles', blogDDElement, true)">
+            <i class="fa fa-minus" aria-hidden="true"></i>
+            <i class="fa fa-plus" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div #blogDDElement class="dropdown-menu navbar-dropdown-menu" aria-labelledby="navbar-dropdown-blog">
+          <a rel="nofollow" (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item hidden-lg-up betting-link"
+             href="https://www.lineups.com/articles/">Articles
+          </a>
+          <div>
+            <ng-container *ngFor="let link of blogLinksLeft">
+              <ng-template [ngTemplateOutlet]="navbarDdDiffLinks" [ngTemplateOutletContext]="{link: link}"></ng-template>
+            </ng-container>
+          </div>
+          <div>
+            <ng-container *ngFor="let link of blogLinksRight">
+              <ng-template [ngTemplateOutlet]="navbarDdDiffLinks" [ngTemplateOutletContext]="{link: link}"></ng-template>
+            </ng-container>
+          </div>
+        </div>
+      </li>
+      <!--PODCASTS-->
+      <li class="nav-item with-hover dropdown mobile-white-hover-opacity separated-left-right-dd">
+        <div class="plus-minus-container">
+          <a href="https://www.lineups.com/podcasts/" class="nav-link dropdown-toggle" (click)="onOpenDD('podcasts', podcastsDDElement)" id="navbar-dropdown-podcasts" data-toggle="dropdown" aria-haspopup="true"
+             aria-expanded="false">Podcasts</a>
+          <div class="plus-minus-sign" (click)="onOpenDD('podcasts', podcastsDDElement, true)">
+            <i class="fa fa-minus" aria-hidden="true"></i>
+            <i class="fa fa-plus" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div #podcastsDDElement class="dropdown-menu navbar-dropdown-menu" aria-labelledby="navbar-dropdown-podcasts">
+          <a rel="nofollow" (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item hidden-lg-up betting-link"
+             href="https://www.lineups.com/podcasts/">Podcasts
+          </a>
+          <div>
+            <a *ngFor="let link of podcastsLinksLeft" (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item" [href]="link.link">{{link.title}}</a>
+          </div>
+          <div>
+            <a *ngFor="let link of podcastsLinksRight" (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item" [href]="link.link">{{link.title}}</a>
+          </div>
+        </div>
+      </li>
+
+      <!--BETTING-->
+      <li [hidden]="isActiveNav('sports-scholarship')" class="nav-item with-hover dropdown mobile-white-hover-opacity betting-dd">
+        <div class="plus-minus-container">
+          <a href="https://www.lineups.com/betting/" class="nav-link dropdown-toggle" (click)="onOpenDD('betting', bettingDDElement)" id="navbar-dropdown-betting" data-toggle="dropdown" aria-haspopup="true"
+             aria-expanded="false"><div>Betting</div></a>
+          <div class="plus-minus-sign" (click)="onOpenDD('betting', bettingDDElement, true)">
+            <i class="fa fa-minus" aria-hidden="true"></i>
+            <i class="fa fa-plus" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div #bettingDDElement class="dropdown-menu navbar-dropdown-menu" aria-labelledby="navbar-dropdown-betting">
+          <a rel="nofollow" (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item hidden-lg-up betting-link"
+             href="https://www.lineups.com/betting/">Betting
+          </a>
+          <div>
+            <ng-container *ngFor="let link of bettingLinksLeft">
+              <ng-template [ngTemplateOutlet]="navbarDdExternalItem" [ngTemplateOutletContext]="{link: link}"></ng-template>
+            </ng-container>
+          </div>
+          <div>
+            <ng-container *ngFor="let link of bettingLinksRight">
+              <ng-template [ngTemplateOutlet]="navbarDdExternalItem" [ngTemplateOutletContext]="{link: link}"></ng-template>
+            </ng-container>
+          </div>
+        </div>
+      </li>
+
+      <!--FANDUEL-->
+      <li [hidden]="isActiveNav('sports-scholarship')" class="nav-item with-hover dropdown mobile-white-hover-opacity fanduel-dd">
+        <div class="plus-minus-container">
+          <a href="https://www.lineups.com/fanduel-sportsbook-promo/" class="nav-link dropdown-toggle" (click)="onOpenDD('fanduel', fanduelDDElement)" id="navbar-dropdown-fanduel" data-toggle="dropdown" aria-haspopup="true"
+             aria-expanded="false">FanDuel Sportsbook</a>
+          <div class="plus-minus-sign" (click)="onOpenDD('fanduel', fanduelDDElement, true)">
+            <i class="fa fa-minus" aria-hidden="true"></i>
+            <i class="fa fa-plus" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div #fanduelDDElement class="dropdown-menu navbar-dropdown-menu fanduel-reverse" aria-labelledby="navbar-dropdown-fanduel">
+          <a rel="nofollow" (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item hidden-lg-up betting-link"
+             href="https://www.lineups.com/fanduel-sportsbook-promo/">FanDuel Sportsbook
+          </a>
+          <div>
+            <a *ngFor="let link of fanduelLinksLeft" (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item" [href]="link.link">{{link.title}}</a>
+          </div>
+          <div>
+            <!--<a *ngFor="let link of fanduelLinksRight" (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item" [href]="link.link">{{link.title}}</a>-->
+          </div>
+        </div>
+      </li>
+
+      <!--DRAFTKINGS-->
+      <li [hidden]="isActiveNav('sports-scholarship')" class="nav-item with-hover dropdown mobile-white-hover-opacity draftkings-dd">
+        <div class="plus-minus-container">
+          <a href="https://www.lineups.com/draftkings-sportsbook-promo-code/" class="nav-link dropdown-toggle" (click)="onOpenDD('draftkings', draftkingsDDElement)" id="navbar-dropdown-draftkings" data-toggle="dropdown" aria-haspopup="true"
+             aria-expanded="false">DraftKings Sportsbook</a>
+          <div class="plus-minus-sign" (click)="onOpenDD('draftkings', draftkingsDDElement, true)">
+            <i class="fa fa-minus" aria-hidden="true"></i>
+            <i class="fa fa-plus" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div #draftkingsDDElement class="dropdown-menu navbar-dropdown-menu draftkings-reverse" aria-labelledby="navbar-dropdown-draftkings">
+          <a rel="nofollow" (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item hidden-lg-up betting-link"
+             href="https://www.lineups.com/draftkings-sportsbook-promo-code/">DraftKings Sportsbook
+          </a>
+          <div>
+            <a *ngFor="let link of draftkingsLinksLeft" (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item" [href]="link.link">{{link.title}}</a>
+          </div>
+          <div>
+            <!--<a *ngFor="let link of draftkingsLinksRight" (click)="onNavbarClose()" class="dropdown-item navbar-dropdown-item" [href]="link.link">{{link.title}}</a>-->
+          </div>
+        </div>
+      </li>
+
+      <!--Premium-->
+      <!--<li class="nav-item hidden-md-down">-->
+        <!--<a (click)="onNavbarClose()" class="premium-btn" href="https://www.lineups.com/betting/dashboard/" rel="nofollow noopener" target="_blank">-->
+          <!--Premium-->
+        <!--</a>-->
+      <!--</li>-->
+
+    </ul>
+
+    <div class="navbar-nav ml-auto wide-right">
+      <form name="search-form" class="form-inline search">
+        <input class="form-control" type="text" placeholder="Search">
+      </form>
+      <ul class="navbar-nav">
+        <li class="nav-item social-nav twitter">
+          <a class="nav-link" aria-label="Twitter" href="https://twitter.com/lineups" rel="noopener" target="_blank">
+            <i class="fa fa-twitter" aria-hidden="true"></i>
+          </a>
+        </li>
+        <li class="nav-item social-nav facebook">
+          <a class="nav-link" aria-label="Facebook" href="https://www.facebook.com/lineups" rel="noopener" target="_blank">
+            <i class="fa fa-facebook-f" aria-hidden="true"></i>
+          </a>
+        </li>
+        <li class="nav-item social-nav youtube">
+          <a class="nav-link" aria-label="Youtube" href="https://www.youtube.com/c/Lineups" rel="noopener" target="_blank">
+            <i class="fa fa-youtube-play" aria-hidden="true"></i>
+          </a>
+        </li>
+        <li class="nav-item social-nav microphone">
+          <a class="nav-link" aria-label="Itunes" href="https://itunes.apple.com/us/artist/Lineups/1451080395" rel="noopener" target="_blank">
+            <i class="fa fa-microphone" aria-hidden="true"></i>
+          </a>
+        </li>
+        <!--<li class="nav-item social-nav instagram">-->
+          <!--<a class="nav-link" aria-label= href="https://www.instagram.com/lineups/" rel="noopener" target="_blank">-->
+            <!--<i class="fa fa-instagram" aria-hidden="true"></i>-->
+          <!--</a>-->
+        <!--</li>-->
+
+        <!--<li class="nav-item sign-up hidden-md-down">-->
+          <!--<a class="nav-link" href="javascript:void(0)" *ngIf="!_authService.isLoggedIn()" (click)="openSignupModal()">Sign Up</a>-->
+        <!--</li>-->
+        <!--<li class="nav-item s-l-divider hidden-md-down">-->
+          <!--<span *ngIf="!_authService.isLoggedIn()">|</span>-->
+        <!--</li>-->
+        <!--<li class="nav-item log-in hidden-md-down">-->
+          <!--<a class="nav-link" href="javascript:void(0)" *ngIf="!_authService.isLoggedIn()" (click)="openLoginModal()">Log In</a>-->
+        <!--</li>-->
+        <!--<li class="nav-item user hidden-md-down mt-3" *ngIf="_authService.isLoggedIn()">-->
+          <!--<div ngbDropdown class="dropdown" id="userDropdown">-->
+            <!--<button type="button" id="dropdown1" ngbDropdownToggle>-->
+              <!--<img src="/assets/images/icon-user-white.svg" alt="user"/>-->
+            <!--</button>-->
+            <!--<div class="dropdown-menu" aria-labelledby="dropdown1">-->
+              <!--<div class="dropdown-btn-wrap">-->
+                <!--&lt;!&ndash;<a class="dropdown-item" href="javascript:void(0)" [routerLink]="['/account']">My Account</a>&ndash;&gt;-->
+                <!--<a class="dropdown-item" href="javascript:void(0)" (click)="logOut()">Log Out</a>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</li>-->
+        <!--<li class="nav-item log-in py-2 hidden-lg-up" *ngIf="!_authService.isLoggedIn()">-->
+          <!--<a class="pr-1 mobile-white-hover-opacity" href="javascript:void(0)" style="text-decoration: none" (click)="openSignupModal()">Sign Up</a> <span style="color: white">|</span> <a class="pl-1 mobile-white-hover-opacity" style="text-decoration: none" href="javascript:void(0)" (click)="openLoginModal()">Log In</a>-->
+          <!--&lt;!&ndash; <a class="pl-1" *ngIf="_authService.isLoggedIn()" href="javascript:void(0)" (click)="logOut()">Log Out</a> &ndash;&gt;-->
+        <!--</li>-->
+        <!--<li class="nav-item py-2 hidden-lg-up" *ngIf="_authService.isLoggedIn()">-->
+          <!--&lt;!&ndash;<a class="pr-1" href="javascript:void(0)" [routerLink]="['/account']">My Account</a> <span style="color: white">|</span> &ndash;&gt;-->
+          <!--<a class="mobile-white-hover-opacity" href="javascript:void(0)" style="text-decoration: none" (click)="logOut()">Log Out</a>-->
+        <!--</li>-->
+      </ul>
+    </div>
+  </div>
+
+</nav>

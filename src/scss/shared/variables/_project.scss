@@ -1,0 +1,155 @@
+
+//NFL Breakdown
+
+$nfl-nav-breakdown-1:575px;
+$nfl-nav-breakdown-2:1292px;
+$nfl-nav-breakdown-3: 1164px;
+
+// PSD Sizes
+$psd-gutter-width-base: 16px;
+
+
+$tier-1-color: #72aa4d;
+$tier-2-color: #89c268;
+$tier-3-color: #a8cf90;
+$tier-4-color: #fed86b;
+$tier-5-color: #fce69c;
+$tier-6-color: #fcf3d2;
+$tier-7-color: #f74c50;
+
+
+// PSD colors
+
+$win-prob-box-dark-red: #ff4d53;
+$win-prob-box-red: #ef8788;
+$win-prob-box-light-red: #fcb8b9;
+$win-prob-box-yellow: #ffd06a;
+$win-prob-box-light-green: #9dcb8d;
+$win-prob-box-green: #8bc55f;
+$win-prob-box-dark-green: #6aa748;
+
+
+/*
+  Footer Sizing
+*/
+$footer-height: 302px;
+$footer-md-height: 414px;
+$footer-sm-height: 686px;
+$footer-xs-height: 1062px;
+
+$footer-md-breakpoint: 1260px + 17px;
+$footer-sm-breakpoint: 962px + 17px;
+$footer-xs-breakpoint: 481px + 17px;
+
+
+$psd-primary: #01afed;
+
+$psd-blue-gray: #8a8a9c;
+$psd-blue-gray-dark: #4e4e6a;
+
+$psd-green: #79d15d;
+
+$psd-teal: #2bb673;
+
+$psd-red: #e14747;
+
+$psd-orange-deep: #f96c3e;
+
+$psd-amber: #e3b71f;
+
+
+
+/*
+Buttons
+*/
+$psd-btn-orange-deep-border:             #f15a29;
+$psd-btn-blue-gray-dark-border:          #434360;
+$psd-btn-blue-border:             			#0aa7df;
+$psd-btn-teal-border:             			#1e975c;
+$psd-btn-grey-light-color: 							#626263;
+$psd-btn-grey-light-bg: 								#f5f5f6;
+$psd-btn-blue-gray-border:             	#6d6d86;
+
+$psd-btn-border-radius: 0.15rem;
+
+$btn-amber-color:              			white;
+$btn-amber-bg:                 			$psd-amber;
+$btn-amber-border:             			darken($btn-amber-bg, 5%);
+
+$btn-orange-deep-color:              white;
+$btn-orange-deep-bg:                 $psd-orange-deep;
+$btn-orange-deep-border:             $psd-btn-orange-deep-border;
+
+$btn-blue-gray-dark-color:           white;
+$btn-blue-gray-dark-bg:              $psd-blue-gray-dark;
+$btn-blue-gray-dark-border:          $psd-btn-blue-gray-dark-border;
+
+$btn-green-color:              			white;
+$btn-green-bg:                 			$psd-green;
+$btn-green-border:             			darken($btn-green-bg, 8%);
+
+$btn-blue-color:              			white;
+$btn-blue-bg:                 			$psd-primary;
+$btn-blue-border:                   $psd-btn-blue-border;
+
+$btn-teal-color:              			white;
+$btn-teal-bg:                 			$psd-teal;
+$btn-teal-border:             			$psd-btn-teal-border;
+
+$btn-red-color:              			white;
+$btn-red-bg:                 			$psd-red;
+$btn-red-border:             			darken($btn-red-bg, 8%);
+
+$btn-grey-light-icon:              	$psd-blue-gray;
+$btn-grey-light-color:              $psd-btn-grey-light-color;
+$btn-grey-light-bg:      						$psd-btn-grey-light-bg;
+$btn-grey-light-border:             $btn-grey-light-bg;
+
+$btn-blue-gray-color:              			white;
+$btn-blue-gray-bg:                 			$psd-blue-gray;
+$btn-blue-gray-border:             			$psd-btn-blue-gray-border;
+
+
+
+/*
+Rating labels (used in tables)
+*/
+
+// Colors
+$psd-rating-green: #000000;
+$psd-rating-green-bg: #6da54c;
+
+$psd-rating-light-green: #000000;
+$psd-rating-light-green-bg: #a3c787;
+
+$psd-rating-yellow: #000000;
+$psd-rating-yellow-bg: #fdd86d;
+
+$psd-rating-orange: #000000;
+$psd-rating-orange-bg: #fff3cd;
+
+$psd-rating-red: #000000;
+$psd-rating-red-bg: #fd4f58;
+
+// Sizes
+$psd-rating-label-width: 1.9rem;
+$psd-rating-label-height: 1.52rem;
+$psd-rating-border-radius: 0.2rem;
+
+$psd-light-gray: #ebebec;
+$psd-lightest-gray: #fafafa; // f.e. table rows bg
+$dark-purple: #4e4e6a;
+$dark-purple-hover: rgb(103, 103, 120);
+$light-gray: #f0f0f1;
+$light-gray-hover: #dbdbdc;
+$lu-blue: #01afed;
+$lu-med-purple: rgb(138, 138, 156);
+$lu-med-purple-hover: rgb(103, 103, 120);
+
+
+// Fonts
+$lu-font-family: "Lato", Roboto, "Helvetica Neue", Arial, sans-serif;
+$lu-font-family-alt: "Raleway", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+// Transitions
+$lu-btn-transition: ease all 120ms;

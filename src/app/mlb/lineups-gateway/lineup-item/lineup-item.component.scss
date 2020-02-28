@@ -1,0 +1,262 @@
+:host {
+  @import '../../../../scss/custom-components/lineup-item';
+  .event-participant-logo {
+    position: relative;
+    top: -18px;
+  }
+  .event-top-participants {
+    height: 55px;
+  }
+  .event-wind.mlb app-matchup-win-prop-box {
+    position: relative;
+    top: -6px;
+  }
+  .mobile-win-prop {
+    margin-top: -8px;
+  }
+  .starting-lineup-wrapper {
+    .home-participant-content, .away-participant-content {
+      position: relative;
+      top: -8px;
+    }
+    .event-top-participant-name {
+      margin-bottom: 6px;
+    }
+    .event-top-participant-standing {
+      font-size: 16px;
+    }
+  }
+  .odds-text {
+    font-weight: normal;
+    font-size: 1rem;
+    line-height: 19px;
+    &.left {
+      float: left;
+      padding-right: 10px;
+    }
+    &.right {
+      float: right;
+      padding-left: 10px;
+    }
+  }
+  .event-top-info h6, .event-top-info h6.event-risk {
+    font-size: 1rem;
+  }
+  .event-top-info .event-time {
+    margin-top: 20px;
+  }
+  .short-team-name, .mobile-win-prop {
+    display: none;
+  }
+
+  .event-wind-content {
+    max-height: 16px;
+    display: inline-block;
+    span {
+      margin-right: 15px;
+      display: block;
+    }
+    img.wind-direction-arrow {
+      width: 11px;
+      position: relative;
+      top: -13px;
+      display: block;
+      float: right;
+    }
+  }
+
+  .lineup-foot-stat-col {
+    width: 25%;
+    @media (min-width: 992px) and (max-width: 1150px) {
+      width: 50%;
+    }
+    @media (max-width: 768px) {
+      height: auto;
+      width: 50%;
+    }
+  }
+  @media (min-width: 992px) and (max-width: 1320px), (max-width: 700px) {
+    .event-wind.mlb app-matchup-win-prop-box {
+      top: -10px;
+    }
+    .hitter-data, .pitcher-data {
+      min-width: 150px;
+    }
+    .short-team-name {
+      display: inline;
+    }
+    .origin-team-name {
+      display: none;
+    }
+    .starting-lineup-wrapper .event-top-participant-standing {
+      font-size: 12px;
+    }
+    .lineup-state {
+      font-size: 12px;
+    }
+    .event-participant-logo.mlb-gateway {
+      top: -16px;
+    }
+  }
+  @media (min-width: 992px) and (max-width: 1070px), (max-width: 550px) {
+    .event-top-participant-rank {
+      display: none;
+    }
+    .event-home-participant, .event-wind.mlb, .event-away-participant {
+      width: 33.3%;
+    }
+  }
+
+  @media (min-width: 992px) and (max-width: 1250px), (max-width: 650px) {
+    .away-participant-stats {
+      width: 100%;
+      border-right: none;
+    }
+    .home-participant-stats {
+      width: 100%;
+    }
+    .horizontal-table-wrapper {
+      overflow-x: hidden;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .progress-styles {
+      padding-top: 0;
+    }
+    .starting-lineup-box-head .event-top-info {
+      height: auto;
+      padding-bottom: 20px;
+    }
+  }
+
+  @media (max-width: 450px) {
+    .event-participants {
+      width: 100%;
+      & > div {
+        width: 100%;
+      }
+      & > div.mx-2 {
+        width: 14px;
+      }
+    }
+    .mobile-win-prop {
+      display: block;
+      &.away-mob-win-prop {
+        float: left;
+        margin-left: 11px;
+      }
+      &.home-mob-win-prop {
+        float: right;
+        margin-right: 11px;
+      }
+    }
+    .event-top-participants {
+      display: none;
+    }
+    .odds-text {
+      font-size: 12px;
+      display: block;
+      line-height: 11px;
+      padding-top: 4px;
+      &.left {
+        float: none;
+        text-align: right;
+        padding-right: 0;
+      }
+      &.right {
+        float: none;
+        text-align: left;
+        padding-left: 0;
+      }
+    }
+    .starting-lineup-box-head .event-top-info {
+      height: auto;
+    }
+    .mobile-dome {
+      .event-wind.mlb {
+        display: none;
+      }
+    }
+    .starting-lineup-wrapper .event-top-info h6:last-child {
+      margin-bottom: 0;
+    }
+
+    .event-wind.mlb {
+      width: 100%;
+    }
+    .participant-away-state-mobile {
+      display: block;
+    }
+    .participant-away-state-mobile .lineup-state {
+      margin-bottom: 5px;
+    }
+    .event-top-participants {
+      height: auto;
+    }
+    .event-wind.mlb {
+      margin-top: 0;
+      margin-bottom: 24px;
+    }
+    .event-away-participant {
+      margin: auto;
+      display: none;
+      width: 100%;
+      height: 140px;
+    }
+    .away-participant-content {
+      text-align: center;
+      display: block;
+      margin: auto;
+      padding-right: 0;
+      padding-top: 40px;
+    }
+    .away-participant-logo {
+      display: block;
+      margin: auto;
+    }
+    .away-participant-logo.event-participant-logo.mlb-gateway {
+      top: -155px;
+    }
+    .event-home-participant {
+      width: 100%;
+      display: none;
+    }
+    .away-participant-logo {
+      display: block;
+      margin: auto;
+    }
+    .home-participant-content {
+      display: block;
+      margin: auto;
+      padding-left: 0;
+      text-align: center;
+      padding-top: 40px;
+    }
+    .home-participant-logo {
+      display: block;
+      margin: auto;
+    }
+    .home-participant-logo.event-participant-logo.mlb-gateway {
+      top: 20px;
+    }
+    .away-participant-stats {
+      width: 100%;
+      border-right: 0;
+    }
+    .home-participant-stats {
+      width: 100%;
+    }
+  }
+  @media (max-width: 350px) {
+    .event-lineup-footer-row {
+      width: 100%;
+    }
+  }
+  @media (max-width: 357px) {
+    .event-top-info h6, .event-top-info h6.event-risk, .event-participants {
+      font-size: 15px;
+    }
+  }
+}
+

@@ -1,0 +1,83 @@
+<ng-template #loading>
+  <div class="starting-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<div class="container-fluid pb-5">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+    <div class="col-12 col-lg-8">
+      <h1 class="page-heading after-heading-margin">{{data.heading}}</h1>
+
+      <div class="hidden-md-down" *ngIf="data.intro_paragraph">
+        <p class="site-pages-content" [innerHtml]="data.intro_paragraph | safeHtml"></p>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component [league]="currentLeague"></app-ad-component>
+    </div>
+
+    <div class="col-12 flex-last mt-sm-0 mt-3 flex-sm-unordered hidden-lg-up" *ngIf="data.intro_paragraph">
+      <p class="site-pages-content" [innerHtml]="data.intro_paragraph | safeHtml"></p>
+    </div>
+
+    <div class="col-12">
+      <div class="d-flex top-dd-wrapper">
+        <div>
+          <div class="grouped-dropdown-wrapper after-heading-margin btn-group">
+            <div ngbDropdown class="grouped-dropdown dropdown">
+              <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="main-dropdown" ngbDropdownToggle>
+                <span class="pr-0 pr-sm-3">{{displayCurrentYearDD(currentYear)}}</span> <img class="down-arrow" alt="down-arrow" src="/assets/images/arrow-down.png" />
+              </button>
+              <div class="dropdown-menu" aria-labelledby="main-dropdown">
+                <div *ngFor="let season of data.seasons_dropdown;">
+                  <button
+                    [ngClass]="{'dd-active-btn': currentYear === season.year}"
+                    (click)="onYearDdChange(season)"
+                    class="dropdown-item">
+                    <span>{{season.name}}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="currentLeague === 'college-football'" class="search-input-wrapper">
+          <app-search-input #searchInput [placeholder]="'Search Teams'" [className]="'search-next-to-dd'" [searchFn]="filterByName.bind(this)" (onDataFiltered)="updateTeams($event)"></app-search-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div *ngIf="data && rostersToShow; else loading" class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-12">
+                  <h5 class="after-heading-margin text-center text-sm-left"><strong>Team Rosters</strong></h5>
+                </div>
+                <div class="col-12">
+                  <div class="d-flex flex-wrap beauty-logo-team-link-wrapper college-football-rosters">
+                    <app-beauty-logo-team-link (urlClicked)="onUrlClicked()" [league]="currentLeague" *ngFor="let team of rostersToShow | orderBy: 'name'" [name]="team.name" [url]="team.url" [hex]="team.primary_hex" [logo]="team.white_logo"></app-beauty-logo-team-link>
+                  </div>
+                  <!--<app-vertical-list-6-xl-col (urlClicked)="onUrlClicked()" [linkClass]="'link-black-underline mobile-margin'" [data]="data.roster_routes"></app-vertical-list-6-xl-col>-->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="data?.bottom_paragraph" class="page-bottom-content col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="data.bottom_header" class="page-heading-two">
+        {{data.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="data.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+
+</div>

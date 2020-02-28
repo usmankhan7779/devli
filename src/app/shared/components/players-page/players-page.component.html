@@ -1,0 +1,183 @@
+<ng-template #NaTpl><span>N/A</span></ng-template>
+<ng-template #loadingTpl>
+  <div class="starting-lineup-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+<ng-template #noNewsTpl>
+  <div *ngIf="currentLeague !== 'cfb'" class="popover-container popover-nowrap d-inline">
+    <i placement="bottom" ngbPopover="No News" triggers="mouseenter:mouseleave" class="fa fa-file-text history-icon float-right mr-2" aria-hidden="true"></i>
+  </div>
+</ng-template>
+<div *ngIf="playersData; else loadingTpl" class="container-fluid players-page-wrapper" [ngClass]="{'college-football-players-page-wrapper': currentLeague === 'cfb'}">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+    <div class="col-12 col-lg-8">
+      <div #containerEl class="d-flex flex-wrap after-heading-margin">
+        <div>
+          <h1 #headingEl class="page-heading m-0">
+            {{currentLeague | uppercase}} Players
+          </h1>
+        </div>
+        <app-twitter-follow-btn [textElement]="headingEl" [containerElement]="containerEl"></app-twitter-follow-btn>
+      </div>
+      <div *ngIf="introParagraph" class="hidden-md-down">
+        <p class="site-pages-content" [innerHTML]="introParagraph | safeHtml"></p>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component [league]="currentLeague"></app-ad-component>
+    </div>
+
+    <div *ngIf="introParagraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+      <p class="site-pages-content" [innerHtml]="introParagraph | safeHtml"></p>
+    </div>
+
+    <div class="mb-4 col-12" *ngIf="ddData">
+      <div class="d-flex justify-content-start top-dd-wrapper">
+        <!-- Grouped Dropdown -->
+        <div class="d-flex justify-content-start top-search-wrapper">
+          <div>
+            <div class="grouped-dropdown-wrapper btn-group">
+              <app-dropdown
+                [ddData]="ddData"
+                [filterItems]="filterItems.bind(this, true)"
+                prop="positions"
+                name="Positions"
+                className="first"
+              ></app-dropdown>
+
+              <app-dropdown
+                [ddData]="ddData"
+                [filterItems]="filterItems.bind(this, true)"
+                prop="teams"
+                name="Teams"
+                className="last"
+                [showTeamLogo]="this.currentLeague !== 'cfb'"
+                [teamLogoType]="'white'"
+                [league]="currentLeague"
+                [isSingleSelect]="false"
+                [lastTeamNameMinWidth]="this.currentLeague !== 'cfb' ? 786 : null"
+                [lastTeamNameMaxWidth]="this.currentLeague !== 'cfb' ? 980 : null"
+              ></app-dropdown>
+
+            </div>
+          </div>
+          <div class="search-input-wrapper normal-view">
+            <app-search-input [className]="'search-next-to-dd'" (onDataFiltered)="filterByName($event)"></app-search-input>
+          </div>
+        </div>
+        <div class="d-flex justify-content-start pagination-wrapper">
+          <div class="d-flex per-page-section-wrapper">
+            <div class="search-input-wrapper mobile-view">
+              <app-search-input [className]="'search-next-to-dd'" (onDataFiltered)="filterByName($event)"></app-search-input>
+            </div>
+            <!--<div>-->
+              <!--<div class="grouped-dropdown-wrapper btn-group">-->
+                <!--<div ngbDropdown class="grouped-dropdown dropdown">-->
+                  <!--<button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="items-per-page-dropdown" ngbDropdownToggle>-->
+                    <!--<span class="pr-0 pr-sm-3">{{itemsPerPage}} Per Page</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />-->
+                  <!--</button>-->
+                  <!--<div class="dropdown-menu" aria-labelledby="items-per-page-dropdown">-->
+                    <!--<div class="dropdown-btn-wrap" (click)="setItemsPerPage(50)">-->
+                      <!--<a [ngClass]="{'dd-active-btn': itemsPerPage === 50}" class="dropdown-item">50</a>-->
+                    <!--</div>-->
+                    <!--<div class="dropdown-btn-wrap" (click)="setItemsPerPage(100)">-->
+                      <!--<a [ngClass]="{'dd-active-btn': itemsPerPage === 100}" class="dropdown-item">100</a>-->
+                    <!--</div>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</div>-->
+          </div>
+          <div class="pagination-controls-wrapper ml-auto">
+            <pagination-controls [maxSize]="5" (pageChange)="onPageChange($event)" id="server"></pagination-controls>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="multi-row-data-table-wrapper custom-width">
+            <table
+              [mfRowsOnPage]="10000" [mfDataApi]="playersData.results"
+              [(mfSortBy)]="sortBy"
+              [(mfSortOrder)]="sortOrder"
+              (mfSortByChange)="onSortOrder('by', $event)"
+              (mfSortOrderChange)="onSortOrder('order', $event)"
+              #playersTable="mfDataApiTable"
+              class="multi-row-data-table t-stripped custom-font">
+              <thead>
+              <tr class="t-sub-header">
+                <th class="text-center player-name-col">
+                  <mfSorterApi by="full_name">Name</mfSorterApi>
+                </th>
+                <th class="text-center pos-col">
+                  <mfSorterApi by="position">Position</mfSorterApi>
+                </th>
+                <th class="text-center pos-col">
+                  <mfSorterApi by="jersey">Number</mfSorterApi>
+                </th>
+                <ng-container *ngIf="currentLeague !== 'cfb'">
+                  <th class="text-center rating-col">
+                    <mfSorterApi by="lineups_rating">Rating</mfSorterApi>
+                  </th>
+                  <th class="text-center">
+                    <mfSorterApi by="team">Team {{currentLeague === 'nfl' ? 'Depth Chart' : 'Lineup'}}</mfSorterApi>
+                  </th>
+                </ng-container>
+                <th class="text-center">
+                  <mfSorterApi by="team_roster_route">Team Roster</mfSorterApi>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr class="t-content" *ngFor="let player of playersTable.data | paginate: { id: 'server', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
+                <td class="text-left px-3">
+                  <app-player-link [league]="currentLeague" [playerName]="player[props.full_name]" [playerUrl]="(player.team && (player.team_depth_chart_route || player.team_lineup_route)) ? player.profile_url : null" [generateShortName]="false"></app-player-link>
+                  <!--news commented-->
+                  <!--<i *ngIf="player.has_news; else noNewsTpl;" (click)="onPlayerHistoryClick(player.has_news, player.player_id)" class="fa fa-file-text history-icon float-right mr-2 active" aria-hidden="true"></i>-->
+                </td>
+                <td>{{player.position}}</td>
+                <td>{{player.jersey}}</td>
+                <ng-container *ngIf="currentLeague !== 'cfb'">
+                  <td>
+                  <app-rating *ngIf="player.lineups_rating != null; else NaTpl" [value]="player.lineups_rating"></app-rating>
+                </td>
+                <td class="text-left px-3">
+                  <div *ngIf="player.team && player.team_depth_chart_route || player.team_lineup_route" class="nowrap">
+                    <a class="link-black" rel="nofollow" [routerLink]="player.team_depth_chart_route || player.team_lineup_route">
+                      <img [type]="'white'" [appSpriteImg]="currentLeague" class="mr-1 logo-sm" [src]="player.white_logo" alt="{{player.team}}">
+                    </a>
+                    <a class="link-black-underline" [routerLink]="player.team_depth_chart_route || player.team_lineup_route">
+                      <span class="hidden-lg-down">{{player.team}}</span>
+                      <span class="hidden-xl-up">{{player.team | lastTeamName}}</span>
+                    </a>
+                  </div>
+                </td>
+                </ng-container>
+                <td class="text-left px-3">
+                  <div *ngIf="player.team && player.team_roster_route" class="nowrap">
+                    <a class="link-black" rel="nofollow" [routerLink]="player.team_roster_route">
+                      <img [type]="'white'" [appSpriteImg]="currentLeague" class="mr-1 logo-sm" [src]="player.white_logo || player.team_logo" alt="{{player.team}}">
+                    </a>
+                    <a class="link-black-underline" [routerLink]="player.team_roster_route">
+                      {{player.team | lastTeamName : ' ' : currentLeague !== 'cfb'}} Roster
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="bottomParagraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="bottomHeader" class="page-heading-two">
+        {{bottomHeader}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="bottomParagraph | safeHtml"></p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+:host {
+  .under-week {
+    display: block;
+    font-size: 0.8rem;
+    @media (max-width: 1650px) {
+      font-size: 0.6rem;
+    }
+  }
+  @media (max-width: 480px) {
+    .table-sect-wrap {
+      .static-table {
+        td {
+          height: 54px;
+        }
+        app-rating {
+          position: relative;
+          top: 0;
+        }
+      }
+    }
+  }
+}

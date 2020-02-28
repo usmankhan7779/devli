@@ -1,0 +1,62 @@
+<ng-template #loadingTpl>
+  <div class="starting-lineup-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<div class="container-fluid pb-3 before-text-margin" *ngIf="depthChartsList && !loading; else loadingTpl">
+  <div class="row">
+    <div class="col-12 multi-row-data-table-wrapper">
+        <table class="multi-row-data-table t-stripped" [mfRowsOnPage]="10000" [mfData]="depthChartsList" mfSortBy="nav.team_name_full" mfSortOrder="asc" #teamsTable="mfDataTable">
+          <thead>
+            <tr class="t-sub-header">
+              <th class="text-center matchup-col">
+                <mfSorter by="nav.team_name_full">Team</mfSorter>
+              </th>
+              <th class="text-center">
+                PG
+              </th>
+              <th class="text-center">
+                SG
+              </th>
+              <th class="text-center">
+                SF
+              </th>
+              <th class="text-center">
+                PF
+              </th>
+              <th class="text-center">
+                C
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="t-content" *ngFor="let teamData of teamsTable.data">
+
+              <td [ngStyle]="{
+    'background-color': teamData.primary_hex,
+    'border-color': teamData.primary_hex
+    }" class="text-left pl-2">
+                <div class="nowrap">
+                  <a [routerLink]="[teamData.nav.team_depth_chart_route || '']" rel="nofollow" class="link-black logo-link-container">
+                    <img [type]="'white'" [appSpriteImg]="'nba'" class="mr-1 logo-sm" [src]="teamData.nav.team_logo_white" alt="{{teamData.nav.team_name_full}}"/>
+                  </a>
+                  <a style="color: white;" [routerLink]="[teamData.nav.team_depth_chart_route || '']" class="link-black-underline">
+                    <span class="player-name-col-xs">
+                      {{teamData.team_name}}
+                    </span>
+                    <span class="player-name-col-lg">
+                      {{teamData.nav.team_name_full}}
+                    </span>
+                  </a>
+                </div>
+                </td>
+              <td *ngFor="let player of teamData.players">
+                <app-player-link [league]="'nba'" [playerName]="player.name" [playerUrl]="player.profile_url"></app-player-link>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  </div>
+</div>

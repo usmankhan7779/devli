@@ -1,0 +1,95 @@
+<div class="container-fluid  pb-5">
+  <app-breadcrumb></app-breadcrumb>
+
+  <div class="row">
+    <div class="col-12 col-lg-8">
+      <div #containerEl class="d-flex flex-wrap after-heading-margin">
+        <div>
+          <h1 #headingEl class="page-heading m-0">
+            {{pageTitle}}
+          </h1>
+        </div>
+        <app-twitter-follow-btn [textElement]="headingEl" [containerElement]="containerEl"></app-twitter-follow-btn>
+      </div>
+      <div *ngIf="data.intro_paragraph" class="hidden-md-down">
+        <p class="site-pages-content" [innerHTML]="data.intro_paragraph | safeHtml"></p>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component [league]="'nfl'"></app-ad-component>
+    </div>
+
+    <div *ngIf="data.intro_paragraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+      <p class="site-pages-content" [innerHtml]="data.intro_paragraph | safeHtml"></p>
+    </div>
+
+    <div class="col-12">
+      <div class="in-page-dropdown-toggle">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="dropdownCollapsed = !dropdownCollapsed"
+                [attr.aria-expanded]="!dropdownCollapsed" aria-controls="collapseExample">
+          <i class="fa fa-bars dropdown-icon" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="in-page-dropdown-menu" [ngbCollapse]="!dropdownCollapsed" [ngClass]="{'hidden-dropdown': !dropdownCollapsed}">
+        <div class="first-section-nav d-flex">
+          <div class="grouped-dropdown-wrapper btn-group">
+            <div ngbDropdown class="grouped-dropdown dropdown">
+              <button type="button" class="grouped-dropdown-btn btn btn-secondary first px-3" id="season-dd" ngbDropdownToggle>
+                <span class="pr-0 pr-sm-3">{{params.year | handleLeagueYear: 'nfl'}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+              </button>
+              <div class="dropdown-menu" aria-labelledby="season-dd">
+                <div *ngFor="let season of ddData.seasons;">
+                  <button
+                    [ngClass]="{'dd-active-btn': params.year === season.year}"
+                    (click)="onYearDdChange(season)"
+                    class="dropdown-item">
+                    <span>{{season.name}}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <app-dropdown
+              [ddData]="ddData"
+              [filterItems]="onDdChange.bind(this)"
+              [isSingleSelect]="true"
+              prop="seasonTypeDropdown"
+            ></app-dropdown>
+            <app-dropdown
+              [ddData]="ddData"
+              [filterItems]="onDdChange.bind(this)"
+              [isSingleSelect]="true"
+              prop="conferenceDropdown"
+            ></app-dropdown>
+            <app-dropdown
+              *ngIf="ddData.activeConference !== null"
+              [ddData]="ddData"
+              [filterItems]="onDdChange.bind(this)"
+              [isSingleSelect]="true"
+              prop="divisionDropdown"
+            ></app-dropdown>
+            <app-dropdown
+              [ddData]="ddData"
+              [filterItems]="onStatTypeDdChange.bind(this)"
+              [isSingleSelect]="true"
+              prop="statsType"
+            ></app-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12" *ngFor="let row of data.subheadings">
+      <h2 class="page-heading-two">{{row.title}}</h2>
+      <div class="d-flex flex-wrap leader-list-wrapper">
+        <div *ngFor="let itemName of row.api_keys; let index = index;" class="leader-list-item-container team-leader-list-wrapper">
+          <app-stats-leader-list (teamWasClicked)="preselectTeamSeason($event)" (onViewMoreClick)="onViewMoreClick($event)" [league]="'nfl'" [isTeamLeaderList]="true" [leadersData]="data[itemName]" [cardHeader]="row.sub_titles[index]"></app-stats-leader-list>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="data?.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="data.bottom_header" class="page-heading-two">
+        {{data.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="data.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+</div>

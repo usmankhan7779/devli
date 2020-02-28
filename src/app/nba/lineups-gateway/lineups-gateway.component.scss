@@ -1,0 +1,80 @@
+:host {
+  @import '../../../scss/custom-components/lineups-gateway';
+  $standard-spacing: 1.125rem;
+  .depth-charts-wrapper {
+    margin: 0 -15px;
+    .single-depth-chart-wrapper {
+      width: 240px;
+      margin: 0 15px 10px 15px;
+    }
+  }
+  .main-tabs, .secondary-tabs {
+    display: inline-block;
+  }
+
+  .tabs-wrapper {
+    display: inline-block;
+    margin-bottom: $standard-spacing / 2;
+    margin-right: 15px;
+  }
+
+  .daily-fantasy-text {
+    display: inline-block;
+    vertical-align: middle;
+    p {
+      margin: $standard-spacing / 2 0;
+    }
+  }
+
+  .lineups-gateway-results {
+    margin-top: $standard-spacing / 2;
+  }
+
+  .secondary-tabs {
+    margin-left: 35px;
+  }
+  @media only screen and (max-width: 674px) {
+    .secondary-tabs {
+      margin-left: 10px;
+    }
+    .toggles-in-page-wrapper .toggles-in-page-group {
+      &.toggles-group-mid {
+        margin-top: 0;
+        margin-left: 10px;
+        margin-right: 0;
+      }
+      .toggle-in-page {
+        min-width: 40px;
+        font-size: 11px;
+        height: 27px;
+        line-height: 0;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 512px) {
+    .secondary-tabs {
+      margin-left: 5px;
+    }
+    .toggles-in-page-wrapper .toggles-in-page-group {
+      &.toggles-group-mid {
+        margin-left: 5px;
+      }
+      .toggle-in-page {
+        min-width: 30px;
+        font-size: 10px;
+      }
+    }
+  }
+  @media only screen and (max-width: 473px) {
+    .main-tabs, .secondary-tabs {
+      display: block;
+      width: 100%;
+    }
+    .secondary-tabs {
+      margin-top: $standard-spacing;
+      margin-left: 0;
+    }
+  }
+
+}

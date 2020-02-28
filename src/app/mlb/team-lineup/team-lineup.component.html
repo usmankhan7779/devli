@@ -1,0 +1,137 @@
+<ng-template #teamLink>
+  <a [routerLink]="[teamLineup.nav.team_lineup_route]"
+     [ngClass]="{
+      'long-lineup-team-name': teamLineup.nav.team_name.length > 10,
+      'active': isLinkActive(teamLineup.nav.team_lineup_route)
+     }"
+     [appPreselectMlbLineupTeamSeason]="activeYear"
+     class="page-heading-nav-btn">{{teamLineup.nav.team_name}} Lineup</a>
+</ng-template>
+
+<ng-template #oppTeamLink>
+  <a [routerLink]="[teamLineup.nav.opp_lineup_route]"
+     [appPreselectMlbLineupTeamSeason]="activeYear"
+     [ngClass]="{
+      'long-lineup-team-name': teamLineup.nav.opp_name.length > 10,
+      'active': isLinkActive(teamLineup.nav.opp_lineup_route)
+     }"
+     class="page-heading-nav-btn">{{teamLineup?.nav.opp_name}} Lineup</a>
+</ng-template>
+
+
+<!-- Starting Lineups Content -->
+<div class="team-lineup content">
+  <!-- Starting Lineup Box Loader -->
+  <div *ngIf="teamLineup === undefined" class="starting-lineup-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+  <!-- Page Wrap -->
+  <div *ngIf="teamLineup !== undefined" class="page-wrap container-fluid">
+      <!-- Breadcrumbs -->
+      <app-breadcrumb (performActionOnClick)="performActionOnBreadcrumbClick($event)"></app-breadcrumb>
+      <!-- Starting Lineups Page Title -->
+      <div class="row">
+        <div class="team-lineup-heading-wrap mlb-team-lineup-header col-lg-8 col-12">
+        <!-- Team Lineup Heading Text-->
+          <div class="team-lineup-heading-text">
+            <!-- Team Lineup Heading Left -->
+            <div class="team-lineup-heading-left">
+              <div class="team-logo">
+                <img [type]="'white'" [appSpriteImg]="'mlb'" align="middle" [src]="teamLineup.nav.team_logo_white" alt="{{teamLineup.nav.team_name}}"/>
+              </div>
+              <div class="team-heading-info">
+                <h1 class="team-name">
+                  <span class="hidden-xs-down">{{pageTitle}}</span>
+                  <span class="hidden-sm-up">{{teamLineup.nav.team_name | lastTeamName}} {{pageName}}</span>
+                </h1>
+                <h4 class="page-subheading team-meta-info">
+                  <span class="team-record">{{teamLineup.nav.team_record}},</span>
+                  <!-- Team Division Rank -->
+                  <span class="team-division-rank">{{teamLineup.nav.team_rank}}</span>
+                  <span class="team-league-and-division"> in {{teamLineup.nav.team_league}} {{teamLineup.nav.team_division}}</span>
+                </h4>
+              </div>
+              <div *ngIf="pageName === 'Lineup' && (teamLineup.nav.lineup_confirmed || teamLineup.nav.lineup_confirmed === false)" class="team-heading-lineup-state participant-lineup-state">
+                <!-- Team Lineup State -->
+                <div *ngIf="teamLineup.nav.lineup_confirmed" class="confirmed-lineup">
+                  <p class="lineup-state confirmed nowrap"><img src="/assets/images/green-check.png" alt="green-check"/>
+                    <span class="lineup-confirmed-name">Confirmed</span>
+                    <span class="short-lineup-confirmed-name">Conf</span>
+                  </p>
+                </div>
+                <div *ngIf="teamLineup.nav.lineup_confirmed === false" class="projected-lineup">
+                  <p class="lineup-state projected nowrap"><img src="/assets/images/red-x.png" alt="red-x" />
+                    <span class="lineup-confirmed-name">Projected</span>
+                    <span class="short-lineup-confirmed-name">Proj</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <app-team-lineup-heading-right *ngIf="teamLineup.nav.opp_abbr && isDefaultSeason" [nav]="teamLineup.nav" [showUpdated]="true"></app-team-lineup-heading-right>
+          </div>
+          <!-- Collapse Menu -->
+          <div class="in-page-collapse-toggle">
+            <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="isCollapsed = !isCollapsed"
+                    [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+              Menu
+            </button>
+          </div>
+          <div class="in-page-nav-menu" [ngbCollapse]="!isCollapsed" [ngClass]="{'hidden': !isCollapsed}">
+            <!-- Team Lineup Heading Navigation -->
+            <div class="page-heading-navigation">
+              <div *ngIf="teamLineup.nav.is_home && teamLineup.nav.opp_lineup_route" class="home-team-tab tab-btn-wrap">
+                <ng-container *ngTemplateOutlet="oppTeamLink"></ng-container>
+              </div>
+              <div *ngIf="teamLineup.nav.is_home && teamLineup.nav.team_lineup_route" class="away-team-tab tab-btn-wrap">
+                <ng-container *ngTemplateOutlet="teamLink"></ng-container>
+              </div>
+              <div *ngIf="!teamLineup.nav.is_home && teamLineup.nav.team_lineup_route" class="home-team-tab tab-btn-wrap">
+                <ng-container *ngTemplateOutlet="teamLink"></ng-container>
+              </div>
+              <div *ngIf="!teamLineup.nav.is_home && teamLineup.nav.opp_lineup_route" class="away-team-tab tab-btn-wrap">
+                <ng-container *ngTemplateOutlet="oppTeamLink"></ng-container>
+              </div>
+
+              <div *ngIf="teamLineup.nav.matchup_route" class="tab-btn-wrap">
+                <a [appMlbMatchupIdPreselect]="teamLineup.nav.game_id" [routerLink]="[teamLineup.nav.matchup_route]"
+                   class="page-heading-nav-btn">Matchups</a>
+              </div>
+              <!--news commented-->
+              <!--<div *ngIf="teamLineup.nav.team_news_route" class="tab-btn-wrap">-->
+                <!--<a [routerLink]="[teamLineup.nav.team_news_route]"-->
+                   <!--[appPreselectMlbNewsTeamSeason]="activeYear"-->
+                   <!--[routerLinkActive]="'active'"-->
+                   <!--class="page-heading-nav-btn">News</a>-->
+              <!--</div>-->
+              <div *ngIf="teamLineup.nav.team_roster_route" class="tab-btn-wrap">
+                <a [routerLink]="[teamLineup.nav.team_roster_route]"
+                   [appPreselectMlbRosterTeamSeason]="activeYear"
+                   [routerLinkActive]="'active'"
+                   class="page-heading-nav-btn">Roster</a>
+              </div>
+              <div *ngIf="teamLineup.nav.team_injuries_route" class="tab-btn-wrap">
+                <a [routerLink]="[teamLineup.nav.team_injuries_route]"
+                   [routerLinkActive]="'active'"
+                   class="page-heading-nav-btn">Injuries</a>
+              </div>
+              <div *ngIf="teamLineup.nav.team_schedule_route" class="tab-btn-wrap last">
+                <a [appPreselectMlbScheduleTeamSeason]="activeYear" [routerLink]="[teamLineup.nav.team_schedule_route]" class="page-heading-nav-btn">Schedule</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-4 after-text-margin zero-lg-height">
+          <app-ad-component [league]="'mlb'"></app-ad-component>
+        </div>
+        <!--<div class="col-lg-4 hidden-md-down heading-betting-card-wrapper">-->
+          <!--<app-betting-card-wrapper-with-controls-->
+            <!--[league]="'mlb'"-->
+            <!--[status]="teamLineup.nav.status"-->
+            <!--[cards]="teamLineup.bet_cards"-->
+            <!--[gameId]="teamLineup.nav.game_id"></app-betting-card-wrapper-with-controls>-->
+        <!--</div>-->
+      </div>
+      <!-- ROUTER OUTLET -->
+      <router-outlet></router-outlet>
+  </div>
+</div>

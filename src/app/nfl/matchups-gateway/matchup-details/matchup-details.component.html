@@ -1,0 +1,974 @@
+<ng-template #awayLogoName>
+  <div class="nowrap" *ngIf="!awayRedirectUrl; else awayLogoNameLink">
+    <img [type]="'white'" [appSpriteImg]="'nfl'" class="mr-1 logo-sm" [src]="'/assets/images/nfl/logos/white/' + data.header.away.away_route + '-white.svg'" alt="{{data.header.away.away_full_name}}">
+    <span class="hidden-lg-down">{{data.header.away.away_full_name}}</span>
+    <span class="hidden-xl-up">{{data.header.away.away_full_name | lastTeamName}}</span>
+  </div>
+</ng-template>
+
+<ng-template #awayLogoNameLink>
+  <div class="nowrap">
+    <a [appPreselectNflDepthChartTeamSeason]="ddData?.activeSeason" [routerLink]="'/' + awayRedirectUrl" class="link-black" rel="nofollow">
+      <img [type]="'white'" [appSpriteImg]="'nfl'" class="mr-1 logo-sm" [src]="'/assets/images/nfl/logos/white/' + data.header.away.away_route + '-white.svg'" alt="{{data.header.away.away_full_name}}">
+    </a>
+    <a [appPreselectNflDepthChartTeamSeason]="ddData?.activeSeason" [routerLink]="'/' + awayRedirectUrl" class="link-black-underline" rel="nofollow">
+      <span class="hidden-lg-down">{{data.header.away.away_full_name}}</span>
+      <span class="hidden-xl-up">{{data.header.away.away_full_name | lastTeamName}}</span>
+    </a>
+  </div>
+</ng-template>
+
+<ng-template #homeLogoName>
+  <div class="nowrap" *ngIf="!homeRedirectUrl; else homeLogoNameLink">
+    <img [type]="'white'" [appSpriteImg]="'nfl'" class="mr-1 logo-sm" [src]="'/assets/images/nfl/logos/white/' + data.header.home.home_route + '-white.svg'" alt="{{data.header.home.home_full_name}}">
+    <span class="hidden-lg-down">{{data.header.home.home_full_name}}</span>
+    <span class="hidden-xl-up">{{data.header.home.home_full_name | lastTeamName}}</span>
+  </div>
+</ng-template>
+
+<ng-template #homeLogoNameLink>
+  <div class="nowrap">
+    <a [appPreselectNflDepthChartTeamSeason]="ddData?.activeSeason" [routerLink]="'/' + homeRedirectUrl" class="link-black" rel="nofollow">
+      <img [type]="'white'" [appSpriteImg]="'nfl'" class="mr-1 logo-sm" [src]="'/assets/images/nfl/logos/white/' + data.header.home.home_route + '-white.svg'" alt="{{data.header.home.home_full_name}}">
+    </a>
+    <a [appPreselectNflDepthChartTeamSeason]="ddData?.activeSeason" [routerLink]="'/' + homeRedirectUrl" class="link-black-underline" rel="nofollow">
+      <span class="hidden-lg-down">{{data.header.home.home_full_name}}</span>
+      <span class="hidden-xl-up">{{data.header.home.home_full_name | lastTeamName}}</span>
+    </a>
+  </div>
+</ng-template>
+
+
+
+<div class="matchup-datails" *ngIf="data">
+
+  <div class="row">
+    <div class="col-12">
+      <div class="row anchor-block-wrapper">
+        <div class="col-12" [ngClass]="isIndMatchupPage ? 'col-lg-8' : 'col-lg-12'">
+          <div *ngIf="isIndMatchupPage" class="grouped-dropdown-wrapper btn-group">
+
+            <div ngbDropdown class="grouped-dropdown dropdown">
+              <button type="button" class="grouped-dropdown-btn btn btn-secondary first px-3" id="year-dropdown" ngbDropdownToggle>
+                <span class="pr-0">{{handleYear(ddData.seasonDd[ddData.activeSeason].season)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+              </button>
+              <div class="dropdown-menu" aria-labelledby="year-dropdown">
+                <div *ngFor="let gameSeason of data.games_dropdown;">
+                  <button
+                    [ngClass]="{'dd-active-btn': ddData.activeSeason === gameSeason.season}"
+                    (click)="onYearDdChange(gameSeason)"
+                    class="dropdown-item">
+                    <span>{{handleYear(gameSeason.season)}}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div ngbDropdown class="grouped-dropdown dropdown">
+              <button type="button" class="grouped-dropdown-btn btn btn-secondary last px-3" id="game-dropdown" ngbDropdownToggle>
+        <span *ngIf="ddData.seasonDd[ddData.activeSeason]?.games[ddData.activeGameId]; let activeGame" class="pr-0">
+          {{activeGame.away_team}} @ {{activeGame.home_team}} ({{activeGame.date_time | amTimeZone | amDateFormat: 'M/D h:mm a' | lowercase}})
+        </span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+              </button>
+              <div class="dropdown-menu" aria-labelledby="game-dropdown">
+                <div *ngFor="let game of ddData.activeGamesDD | orderBy: 'date_time': false;">
+                  <button
+                    [ngClass]="{'dd-active-btn': ddData.activeGameId === game.game_key}"
+                    (click)="onTeamDdChange(game)"
+                    class="dropdown-item">
+            <span>
+              {{game.away_team}} @ {{game.home_team}} ({{game.date_time | amTimeZone | amDateFormat: 'M/D h:mm a' | lowercase}})
+            </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-inline-block anchor-block">
+            <p>
+              <a pageScroll href="#odds-comparison">
+                <span class="short-anchor-names">Odds</span>
+                <span class="long-anchor-names">Odds Comparison</span>
+              </a> |
+              <ng-container>
+                <a pageScroll href="#team-splits">
+                  <span class="short-anchor-names">Splits</span>
+                  <span class="long-anchor-names">Bet Splits</span>
+                </a> |
+              </ng-container>
+              <a pageScroll href="#scoring">
+                Scoring
+              </a> |
+              <a pageScroll href="#last-five">
+                <span class="short-anchor-names">L5 Meet</span>
+                <span class="long-anchor-names">Last 5 Meetings</span>
+              </a> |
+              <a pageScroll href="#away-last">
+                <span class="short-anchor-names">{{data.header.details.home_short}}</span>
+                <span class="long-anchor-names">{{data.header.away.away_full_name | lastTeamName}}</span>
+                <span class="short-anchor-names">L5</span>
+                <span class="long-anchor-names">Last 5</span>
+              </a> |
+              <a pageScroll href="#home-last">
+                <span class="short-anchor-names">{{data.header.details.home_short}}</span>
+                <span class="long-anchor-names">{{data.header.home.home_full_name | lastTeamName}}</span>
+                <span class="short-anchor-names">L5</span>
+                <span class="long-anchor-names">Last 5</span>
+              </a>
+            </p>
+          </div>
+          <div *ngIf="data.nav.updated" class="updated-date-time-block next-to-dd" [ngClass]="{'with-action-dds': isIndMatchupPage}">
+            Updated: <app-general-time-format [time]="data.nav.updated"></app-general-time-format>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="isIndMatchupPage && data.intro_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <p class="site-pages-content" [innerHtml]="data.intro_paragraph | safeHtml"></p>
+    </div>
+    <div class="col-12">
+      <div>
+        <div class="row">
+          <div *ngIf="isIndMatchupPage" class="col-12">
+            <h2 class="page-heading-two">Matchup</h2>
+          </div>
+          <div class="col-12">
+            <app-matchup [season]="ddData?.activeSeason" [noFollow]="noFollow" [isIndividual]="true" [nav]="data.nav" [header]="data.header" [status]="data.status" [gateway]="data.gateway" [isIndividualPage]="isIndMatchupPage"></app-matchup>
+          </div>
+        </div>
+
+        <ng-container *ngIf="article">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="page-heading-two">{{data.header.away.away_full_name}} at {{data.header.home.home_full_name}} Preview</h2>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-8 col-12 d-flex after-heading-margin">
+              <app-short-wp-article style="width: 100%;max-width: 100%;" [wpSmBlogItem]="article" [showFirstParagraph]="true"></app-short-wp-article>
+            </div>
+          </div>
+        </ng-container>
+
+        <div class="row" id="odds-comparison">
+          <div class="col-12">
+            <h2 class="page-heading-two">Odds Comparison</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-lg-6">
+            <div class="row">
+              
+              <!--<div class="col-12">-->
+                <!--<div class="multi-row-data-table-wrapper custom-width odds-comparison-table mb-0">-->
+                  <!--<table class="multi-row-data-table t-stripped">-->
+                    <!--<colgroup span="1">-->
+                      <!--<col span="1" class="static-width-header"/>-->
+                    <!--</colgroup>-->
+                    <!--<colgroup span="6"></colgroup>-->
+                    <!--<tbody>-->
+                    <!--<tr class="t-main-header">-->
+                      <!--<th class="text-center" colspan="7" scope="colgroup">Vegas vs. Lineups.com Odds</th>-->
+                    <!--</tr>-->
+                    <!--<tr class="t-header">-->
+                      <!--<td class="static-width-header"></td>-->
+                      <!--<th colspan="3" scope="colgroup" class="text-center main-border">-->
+                        <!--<ng-container *ngTemplateOutlet="awayLogoNameLink"></ng-container>-->
+                      <!--</th>-->
+                      <!--<th colspan="3" scope="colgroup" class="text-center">-->
+                        <!--<ng-container *ngTemplateOutlet="homeLogoNameLink"></ng-container>-->
+                      <!--</th>-->
+                    <!--</tr>-->
+                    <!--<tr class="t-sub-header">-->
+                      <!--<td></td>-->
+                      <!--<th scope="col" class="text-center">Vegas</th>-->
+                      <!--<th scope="col" class="text-center lineups-th">Lineups<span class="hidden-xs-down">.com</span></th>-->
+                      <!--<th scope="col" class="text-center main-border">Difference</th>-->
+                      <!--<th scope="col" class="text-center">Vegas</th>-->
+                      <!--<th scope="col" class="text-center lineups-th">Lineups<span class="hidden-xs-down">.com</span></th>-->
+                      <!--<th scope="col" class="text-center">Difference</th>-->
+                    <!--</tr>-->
+                    <!--<tr class="t-content">-->
+                      <!--<th scope="row">Moneyline</th>-->
+                      <!--<td>{{data.odds_comparison.basic.moneyline.vegas_away | plus}}</td>-->
+                      <!--<td class="lineups-td">{{data.odds_comparison.basic.moneyline.lineups_away | plus}}</td>-->
+                      <!--<td class="main-border">{{data.odds_comparison.basic.moneyline.difference_away}}</td>-->
+                      <!--<td>{{data.odds_comparison.basic.moneyline.vegas_home | plus}}</td>-->
+                      <!--<td class="lineups-td">{{data.odds_comparison.basic.moneyline.lineups_home | plus}}</td>-->
+                      <!--<td>{{data.odds_comparison.basic.moneyline.difference_home}}</td>-->
+                    <!--</tr>-->
+                    <!--<tr class="t-content">-->
+                      <!--<th scope="row">Spread</th>-->
+                      <!--<td>{{data.odds_comparison.basic.spread.vegas_away | plus}}</td>-->
+                      <!--<td class="lineups-td">{{data.odds_comparison.basic.spread.lineups_away | plus}}</td>-->
+                      <!--<td class="main-border">{{data.odds_comparison.basic.spread.difference_away}}</td>-->
+                      <!--<td>{{data.odds_comparison.basic.spread.vegas_home | plus}}</td>-->
+                      <!--<td class="lineups-td">{{data.odds_comparison.basic.spread.lineups_home | plus}}</td>-->
+                      <!--<td>{{data.odds_comparison.basic.spread.difference_home}}</td>-->
+                    <!--</tr>-->
+                    <!--<tr class="t-content">-->
+                      <!--<th scope="row">Totals</th>-->
+                      <!--<td>{{data.odds_comparison.basic.totals.vegas_away}}</td>-->
+                      <!--<td class="lineups-td">{{data.odds_comparison.basic.totals.lineups_away}}</td>-->
+                      <!--<td class="main-border">{{data.odds_comparison.basic.totals.difference_away}}</td>-->
+                      <!--<td>{{data.odds_comparison.basic.totals.vegas_home}}</td>-->
+                      <!--<td class="lineups-td">{{data.odds_comparison.basic.totals.lineups_home}}</td>-->
+                      <!--<td>{{data.odds_comparison.basic.totals.difference_home}}</td>-->
+                    <!--</tr>-->
+                    <!--<tr class="t-content">-->
+                      <!--<th scope="row" style="padding-right: 12px;">Win Probability</th>-->
+                      <!--<td>{{data.odds_comparison.basic.win_prob.vegas_away}}%</td>-->
+                      <!--<td class="lineups-td">-->
+                        <!--<app-matchup-win-prop-box [likeRating]="data.odds_comparison.basic.win_prob.lineups_away"></app-matchup-win-prop-box>-->
+                      <!--</td>-->
+                      <!--<td class="main-border">{{data.odds_comparison.basic.win_prob.difference_away}}%</td>-->
+                      <!--<td>{{data.odds_comparison.basic.win_prob.vegas_home}}%</td>-->
+                      <!--<td class="lineups-td">-->
+                        <!--<app-matchup-win-prop-box [likeRating]="data.odds_comparison.basic.win_prob.lineups_home"></app-matchup-win-prop-box>-->
+                      <!--</td>-->
+                      <!--<td>{{data.odds_comparison.basic.win_prob.difference_home}}%</td>-->
+                    <!--</tr>-->
+                    <!--</tbody>-->
+                  <!--</table>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div class="col-12">-->
+                <!--<div class="multi-row-data-table-wrapper custom-width small-table">-->
+                  <!--<table class="multi-row-data-table t-stripped">-->
+                    <!--<colgroup span="1">-->
+                      <!--<col span="1" class="static-width-header"/>-->
+                    <!--</colgroup>-->
+                    <!--<colgroup span="4"></colgroup>-->
+                    <!--<tbody>-->
+                    <!--<tr class="t-header">-->
+                      <!--<th colspan="5" scope="colgroup" class="text-center">Over/Under</th>-->
+                    <!--</tr>-->
+                    <!--<tr class="t-sub-header">-->
+                      <!--<td></td>-->
+                      <!--<th scope="col" class="text-center">Vegas</th>-->
+                      <!--<th scope="col" class="text-center lineups-th">Lineups<span class="hidden-xs-down">.com</span></th>-->
+                      <!--<th scope="col" class="text-center">Difference</th>-->
+                      <!--<td></td>-->
+                    <!--</tr>-->
+                    <!--<tr class="t-content">-->
+                      <!--<th scope="row">Over/Under</th>-->
+                      <!--<td>{{data.odds_comparison.over_under.vegas}}</td>-->
+                      <!--<td class="lineups-td">{{data.odds_comparison.over_under.lineups | number : '1.0-1'}}</td>-->
+                      <!--<td>{{data.odds_comparison.over_under.difference}}</td>-->
+                      <!--<td></td>-->
+                    <!--</tr>-->
+                    <!--</tbody>-->
+                  <!--</table>-->
+                <!--</div>-->
+              <!--</div>-->
+
+              <div class="col-12">
+                <div class="multi-row-data-table-wrapper custom-width big-odds-table">
+                  <table class="multi-row-data-table t-stripped mb-0">
+                    <colgroup span="1">
+                      <col span="1" width="29%"/>
+                    </colgroup>
+                    <colgroup span="5"></colgroup>
+                    <tbody>
+                    <tr class="t-main-header">
+                      <th colspan="6" scope="colgroup" class="text-center">Over/Under History</th>
+                    </tr>
+                    <tr class="t-sub-header">
+                      <th class="padded table-select" ngbRadioGroup [(ngModel)]="radio.ou">
+                        <label ngbButtonLabel>
+                          <span>Season</span>
+                          <input ngbButton type="radio" value="season"> <span>|</span>
+                        </label>
+                        <label ngbButtonLabel>
+                          <span>Last 3</span>
+                          <input ngbButton type="radio" value="last3"> <span>|</span>
+                        </label>
+                        <label ngbButtonLabel>
+                          <span>Last 5</span>
+                          <input ngbButton type="radio" value="last5">
+                        </label>
+                      </th>
+                      <th scope="col" class="text-center">Over/Under</th>
+                      <th scope="col" class="text-center">Home</th>
+                      <th scope="col" class="text-center">Away</th>
+                      <th scope="col" class="text-center">Grass</th>
+                      <th scope="col" class="text-center">Turf</th>
+                    </tr>
+                    <tr class="t-content">
+                      <th scope="row">
+                        <ng-container *ngTemplateOutlet="awayLogoName"></ng-container>
+                      </th>
+                      <td>{{data.odds_comparison.ou.away[radio.ou].ou}}</td>
+                      <td>{{data.odds_comparison.ou.away[radio.ou].home}}</td>
+                      <td>{{data.odds_comparison.ou.away[radio.ou].away}}</td>
+                      <td>{{data.odds_comparison.ou.away[radio.ou].grass}}</td>
+                      <td>{{data.odds_comparison.ou.away[radio.ou].turf}}</td>
+                    </tr>
+                    <tr class="t-content">
+                      <th scope="row">
+                        <ng-container *ngTemplateOutlet="homeLogoName"></ng-container>
+                      </th>
+                      <td>{{data.odds_comparison.ou.home[radio.ou].ou}}</td>
+                      <td>{{data.odds_comparison.ou.home[radio.ou].home}}</td>
+                      <td>{{data.odds_comparison.ou.home[radio.ou].away}}</td>
+                      <td>{{data.odds_comparison.ou.home[radio.ou].grass}}</td>
+                      <td>{{data.odds_comparison.ou.home[radio.ou].turf}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <table class="multi-row-data-table t-stripped">
+                    <colgroup span="1">
+                      <col span="1" width="29%"/>
+                    </colgroup>
+                    <colgroup span="6"></colgroup>
+                    <tbody>
+                    <tr class="t-header">
+                      <th colspan="1" scope="colgroup" class="text-center"></th>
+                      <th colspan="3" scope="colgroup" class="text-center main-border">
+                        <ng-container *ngTemplateOutlet="awayLogoNameLink"></ng-container>
+                      </th>
+                      <th colspan="3" scope="colgroup" class="text-center">
+                        <ng-container *ngTemplateOutlet="homeLogoNameLink"></ng-container>
+                      </th>
+                    </tr>
+                    <tr class="t-sub-header">
+                      <td scope="col" class="padded"><strong>Line</strong></td>
+                      <th scope="col" class="text-center">Overall</th>
+                      <th scope="col" class="text-center">Home</th>
+                      <th scope="col" class="text-center main-border">Away</th>
+                      <th scope="col" class="text-center">Overall</th>
+                      <th scope="col" class="text-center">Home</th>
+                      <th scope="col" class="text-center">Away</th>
+                    </tr>
+                    <tr *ngFor="let ouHistory of data.odds_comparison.ou_history | orderBy:'order'" class="t-content">
+                      <th scope="row">{{ouHistory.range}}</th>
+                      <td>{{ouHistory.away.overall.win}}-{{ouHistory.away.overall.loss}}-{{ouHistory.away.overall.push}}</td>
+                      <td>{{ouHistory.away.home.win}}-{{ouHistory.away.home.loss}}-{{ouHistory.away.home.push}}</td>
+                      <td class="main-border">{{ouHistory.away.away.win}}-{{ouHistory.away.away.loss}}-{{ouHistory.away.away.push}}</td>
+                      <td>{{ouHistory.home.overall.win}}-{{ouHistory.home.overall.loss}}-{{ouHistory.home.overall.push}}</td>
+                      <td>{{ouHistory.home.home.win}}-{{ouHistory.home.home.loss}}-{{ouHistory.home.home.push}}</td>
+                      <td>{{ouHistory.home.away.win}}-{{ouHistory.home.away.loss}}-{{ouHistory.home.away.push}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-6">
+            <div class="row">
+              <div class="col-12">
+                <div class="multi-row-data-table-wrapper custom-width big-odds-table">
+                  <table class="multi-row-data-table t-stripped mb-0">
+                    <colgroup span="1">
+                      <col span="1" width="29%">
+                    </colgroup>
+                    <colgroup span="5"></colgroup>
+                    <tbody>
+                    <tr class="t-main-header">
+                      <th colspan="6" scope="colgroup" class="text-center">Against the Spread(ATS) History</th>
+                    </tr>
+                    <tr class="t-sub-header">
+                      <th class="padded table-select" ngbRadioGroup [(ngModel)]="radio.ats">
+                        <label ngbButtonLabel>
+                          <span>Season</span>
+                          <input ngbButton type="radio" value="season"> <span>|</span>
+                        </label>
+                        <label ngbButtonLabel>
+                          <span>Last 3</span>
+                          <input ngbButton type="radio" value="last3"> <span>|</span>
+                        </label>
+                        <label ngbButtonLabel>
+                          <span>Last 5</span>
+                          <input ngbButton type="radio" value="last5">
+                        </label>
+                      </th>
+                      <th scope="col" class="text-center">ATS</th>
+                      <th scope="col" class="text-center">Home</th>
+                      <th scope="col" class="text-center">Away</th>
+                      <th scope="col" class="text-center">Grass</th>
+                      <th scope="col" class="text-center">Turf</th>
+                    </tr>
+                    <tr class="t-content">
+                      <th scope="row">
+                        <ng-container *ngTemplateOutlet="awayLogoName"></ng-container>
+                      </th>
+                      <td>{{data.odds_comparison.ats.away[radio.ats].ats}}</td>
+                      <td>{{data.odds_comparison.ats.away[radio.ats].home}}</td>
+                      <td>{{data.odds_comparison.ats.away[radio.ats].away}}</td>
+                      <td>{{data.odds_comparison.ats.away[radio.ats].grass}}</td>
+                      <td>{{data.odds_comparison.ats.away[radio.ats].turf}}</td>
+                    </tr>
+                    <tr class="t-content">
+                      <th scope="row">
+                        <ng-container *ngTemplateOutlet="homeLogoName"></ng-container>
+                      </th>
+                      <td>{{data.odds_comparison.ats.home[radio.ats].ats}}</td>
+                      <td>{{data.odds_comparison.ats.home[radio.ats].home}}</td>
+                      <td>{{data.odds_comparison.ats.home[radio.ats].away}}</td>
+                      <td>{{data.odds_comparison.ats.home[radio.ats].grass}}</td>
+                      <td>{{data.odds_comparison.ats.home[radio.ats].turf}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <table class="multi-row-data-table t-stripped">
+                    <colgroup span="1">
+                      <col span="1" width="29%"/>
+                    </colgroup>
+                    <colgroup span="6"></colgroup>
+                    <tbody>
+                    <tr class="t-header">
+                      <th colspan="1" scope="colgroup" class="text-center"></th>
+                      <th colspan="3" scope="colgroup" class="text-center main-border">
+                        <ng-container *ngTemplateOutlet="awayLogoNameLink"></ng-container>
+                      </th>
+                      <th colspan="3" scope="colgroup" class="text-center">
+                        <ng-container *ngTemplateOutlet="homeLogoNameLink"></ng-container>
+                      </th>
+                    </tr>
+                    <tr class="t-sub-header">
+                      <td scope="col" class="padded"><strong>Line</strong></td>
+                      <th scope="col" class="text-center">Overall</th>
+                      <th scope="col" class="text-center">Home</th>
+                      <th scope="col" class="text-center main-border">Away</th>
+                      <th scope="col" class="text-center">Overall</th>
+                      <th scope="col" class="text-center">Home</th>
+                      <th scope="col" class="text-center">Away</th>
+                    </tr>
+                    <tr *ngFor="let ouHistory of data.odds_comparison.spread_history | orderBy:'order'" class="t-content">
+                      <th scope="row">{{ouHistory.range}}</th>
+                      <td>{{ouHistory.away.overall.win}}-{{ouHistory.away.overall.loss}}-{{ouHistory.away.overall.push}}</td>
+                      <td>{{ouHistory.away.home.win}}-{{ouHistory.away.home.loss}}-{{ouHistory.away.home.push}}</td>
+                      <td class="main-border">{{ouHistory.away.away.win}}-{{ouHistory.away.away.loss}}-{{ouHistory.away.away.push}}</td>
+                      <td>{{ouHistory.home.overall.win}}-{{ouHistory.home.overall.loss}}-{{ouHistory.home.overall.push}}</td>
+                      <td>{{ouHistory.home.home.win}}-{{ouHistory.home.home.loss}}-{{ouHistory.home.home.push}}</td>
+                      <td>{{ouHistory.home.away.win}}-{{ouHistory.home.away.loss}}-{{ouHistory.home.away.push}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="row" id="team-splits">
+            <div class="col-12">
+              <h2 class="page-heading-two">Bet Splits</h2>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 col-lg-6">
+              <div class="multi-row-data-table-wrapper custom-width medium-table">
+                <table class="multi-row-data-table t-stripped">
+                  <colgroup span="5">
+                    <col span="1" class="static-width-header">
+                    <col span="4">
+                  </colgroup>
+                  <tbody>
+                  <tr class="t-header">
+                    <th colspan="5" scope="colgroup" class="text-center">
+                      <ng-container *ngTemplateOutlet="awayLogoNameLink"></ng-container>
+                    </th>
+                  </tr>
+                  <tr class="t-sub-header">
+                    <td></td>
+                    <th scope="col" class="text-center">Record</th>
+                    <th scope="col" class="text-center">Win %</th>
+                    <th scope="col" class="text-center">Cover Spread %</th>
+                    <th scope="col" class="text-center">Avg Point Totals</th>
+                  </tr>
+                  <tr *ngFor="let row of data.odds_comparison.record_groups.away | orderBy:'order'" class="t-content">
+                    <th scope="row">{{row.title}}</th>
+                    <td>{{row.wins}}-{{row.losses}}</td>
+                    <td>{{row.win_pct}}%</td>
+                    <td>{{row.cover_spread}}</td>
+                    <td>{{row.avg_point_totals}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6">
+              <div class="multi-row-data-table-wrapper custom-width medium-table">
+                <table class="multi-row-data-table t-stripped">
+                  <colgroup span="5">
+                    <col span="1" class="static-width-header">
+                    <col span="4">
+                  </colgroup>
+                  <tbody>
+                  <tr class="t-header">
+                    <th colspan="5" scope="colgroup" class="text-center">
+                      <ng-container *ngTemplateOutlet="homeLogoNameLink"></ng-container>
+                    </th>
+                  </tr>
+                  <tr class="t-sub-header">
+                    <td></td>
+                    <th scope="col" class="text-center">Record</th>
+                    <th scope="col" class="text-center">Win %</th>
+                    <th scope="col" class="text-center">Cover Spread %</th>
+                    <th scope="col" class="text-center">Avg Point Totals</th>
+                  </tr>
+                  <tr *ngFor="let row of data.odds_comparison.record_groups.home | orderBy:'order'" class="t-content">
+                    <th scope="row">{{row.title}}</th>
+                    <td>{{row.wins}}-{{row.losses}}</td>
+                    <td>{{row.win_pct}}%</td>
+                    <td>{{row.cover_spread}}</td>
+                    <td>{{row.avg_point_totals}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" id="scoring">
+          <div class="col-12">
+            <h2 class="page-heading-two">Scoring</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-lg-6">
+            <div class="row">
+              <div class="col-12">
+                <div class="multi-row-data-table-wrapper custom-width scoring-table">
+                  <table class="multi-row-data-table t-stripped">
+                    <colgroup span="1">
+                      <col span="1" width="29%"/>
+                    </colgroup>
+                    <colgroup span="5"></colgroup>
+                    <tbody>
+                    <tr class="t-header">
+                      <th colspan="6" scope="colgroup" class="text-center">Offense Scoring (Home)</th>
+                    </tr>
+                    <tr class="t-sub-header">
+                      <th class="padded table-select" ngbRadioGroup [(ngModel)]="radio.scoring.offense.home">
+                        <label ngbButtonLabel>
+                          <span>Season</span>
+                          <input ngbButton type="radio" value="season"> <span>|</span>
+                        </label>
+                        <label ngbButtonLabel>
+                          <span>Last 3</span>
+                          <input ngbButton type="radio" value="last3"> <span>|</span>
+                        </label>
+                        <label ngbButtonLabel>
+                          <span>Last 5</span>
+                          <input ngbButton type="radio" value="last5">
+                        </label>
+                      </th>
+                      <th scope="col" class="text-center">Total</th>
+                      <th scope="col" class="text-center">1st Quarter</th>
+                      <th scope="col" class="text-center">2nd Quarter</th>
+                      <th scope="col" class="text-center">3rd Quarter</th>
+                      <th scope="col" class="text-center">4th Quarter</th>
+                    </tr>
+                    <tr class="t-content">
+                      <th scope="row">
+                        <ng-container *ngTemplateOutlet="awayLogoName"></ng-container>
+                      </th>
+                      <td>{{data.scoring.offense_scoring.home.away[radio.scoring.offense.home].total}}</td>
+                      <td>{{data.scoring.offense_scoring.home.away[radio.scoring.offense.home].first}}</td>
+                      <td>{{data.scoring.offense_scoring.home.away[radio.scoring.offense.home].second}}</td>
+                      <td>{{data.scoring.offense_scoring.home.away[radio.scoring.offense.home].third}}</td>
+                      <td>{{data.scoring.offense_scoring.home.away[radio.scoring.offense.home].fourth}}</td>
+                    </tr>
+                    <tr class="t-content">
+                      <th scope="row">
+                        <ng-container *ngTemplateOutlet="homeLogoName"></ng-container>
+                      </th>
+                      <td>{{data.scoring.offense_scoring.home.home[radio.scoring.offense.home].total}}</td>
+                      <td>{{data.scoring.offense_scoring.home.home[radio.scoring.offense.home].first}}</td>
+                      <td>{{data.scoring.offense_scoring.home.home[radio.scoring.offense.home].second}}</td>
+                      <td>{{data.scoring.offense_scoring.home.home[radio.scoring.offense.home].third}}</td>
+                      <td>{{data.scoring.offense_scoring.home.home[radio.scoring.offense.home].fourth}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="multi-row-data-table-wrapper custom-width scoring-table">
+                  <table class="multi-row-data-table t-stripped">
+                    <colgroup span="1">
+                      <col span="1" width="29%"/>
+                    </colgroup>
+                    <colgroup span="5"></colgroup>
+                    <tbody>
+                    <tr class="t-header">
+                      <th colspan="6" scope="colgroup" class="text-center">Defense Scoring Allowed (Away)</th>
+                    </tr>
+                    <tr class="t-sub-header">
+                      <th class="padded table-select" ngbRadioGroup [(ngModel)]="radio.scoring.defense.away">
+                        <label ngbButtonLabel>
+                          <span>Season</span>
+                          <input ngbButton type="radio" value="season"> <span>|</span>
+                        </label>
+                        <label ngbButtonLabel>
+                          <span>Last 3</span>
+                          <input ngbButton type="radio" value="last3"> <span>|</span>
+                        </label>
+                        <label ngbButtonLabel>
+                          <span>Last 5</span>
+                          <input ngbButton type="radio" value="last5">
+                        </label>
+                      </th>
+                      <th scope="col" class="text-center">Total</th>
+                      <th scope="col" class="text-center">1st Quarter</th>
+                      <th scope="col" class="text-center">2nd Quarter</th>
+                      <th scope="col" class="text-center">3rd Quarter</th>
+                      <th scope="col" class="text-center">4th Quarter</th>
+                    </tr>
+                    <tr class="t-content">
+                      <th scope="row">
+                        <ng-container *ngTemplateOutlet="awayLogoName"></ng-container>
+                      </th>
+                      <td>{{data.scoring.defense_scoring.away.away[radio.scoring.defense.away].total}}</td>
+                      <td>{{data.scoring.defense_scoring.away.away[radio.scoring.defense.away].first}}</td>
+                      <td>{{data.scoring.defense_scoring.away.away[radio.scoring.defense.away].second}}</td>
+                      <td>{{data.scoring.defense_scoring.away.away[radio.scoring.defense.away].third}}</td>
+                      <td>{{data.scoring.defense_scoring.away.away[radio.scoring.defense.away].fourth}}</td>
+                    </tr>
+                    <tr class="t-content">
+                      <th scope="row">
+                        <ng-container *ngTemplateOutlet="homeLogoName"></ng-container>
+                      </th>
+                      <td>{{data.scoring.defense_scoring.away.home[radio.scoring.defense.away].total}}</td>
+                      <td>{{data.scoring.defense_scoring.away.home[radio.scoring.defense.away].first}}</td>
+                      <td>{{data.scoring.defense_scoring.away.home[radio.scoring.defense.away].second}}</td>
+                      <td>{{data.scoring.defense_scoring.away.home[radio.scoring.defense.away].third}}</td>
+                      <td>{{data.scoring.defense_scoring.away.home[radio.scoring.defense.away].fourth}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-6">
+            <div class="row">
+              <div class="col-12">
+                <div class="multi-row-data-table-wrapper custom-width scoring-table">
+                  <table class="multi-row-data-table t-stripped">
+                    <colgroup span="1">
+                      <col span="1" width="29%"/>
+                    </colgroup>
+                    <colgroup span="5"></colgroup>
+                    <tbody>
+                    <tr class="t-header">
+                      <th colspan="6" scope="colgroup" class="text-center">Offense Scoring (Away)</th>
+                    </tr>
+                    <tr class="t-sub-header">
+                      <th class="padded table-select" ngbRadioGroup [(ngModel)]="radio.scoring.offense.away">
+                        <label ngbButtonLabel>
+                          <span>Season</span>
+                          <input ngbButton type="radio" value="season"> <span>|</span>
+                        </label>
+                        <label ngbButtonLabel>
+                          <span>Last 3</span>
+                          <input ngbButton type="radio" value="last3"> <span>|</span>
+                        </label>
+                        <label ngbButtonLabel>
+                          <span>Last 5</span>
+                          <input ngbButton type="radio" value="last5">
+                        </label>
+                      </th>
+                      <th scope="col" class="text-center">Total</th>
+                      <th scope="col" class="text-center">1st Quarter</th>
+                      <th scope="col" class="text-center">2nd Quarter</th>
+                      <th scope="col" class="text-center">3rd Quarter</th>
+                      <th scope="col" class="text-center">4th Quarter</th>
+                    </tr>
+                    <tr class="t-content">
+                      <th scope="row">
+                        <ng-container *ngTemplateOutlet="awayLogoName"></ng-container>
+                      </th>
+                      <td>{{data.scoring.offense_scoring.away.away[radio.scoring.offense.away].total}}</td>
+                      <td>{{data.scoring.offense_scoring.away.away[radio.scoring.offense.away].first}}</td>
+                      <td>{{data.scoring.offense_scoring.away.away[radio.scoring.offense.away].second}}</td>
+                      <td>{{data.scoring.offense_scoring.away.away[radio.scoring.offense.away].third}}</td>
+                      <td>{{data.scoring.offense_scoring.away.away[radio.scoring.offense.away].fourth}}</td>
+                    </tr>
+                    <tr class="t-content">
+                      <th scope="row">
+                        <ng-container *ngTemplateOutlet="homeLogoName"></ng-container>
+                      </th>
+                      <td>{{data.scoring.offense_scoring.away.home[radio.scoring.offense.away].total}}</td>
+                      <td>{{data.scoring.offense_scoring.away.home[radio.scoring.offense.away].first}}</td>
+                      <td>{{data.scoring.offense_scoring.away.home[radio.scoring.offense.away].second}}</td>
+                      <td>{{data.scoring.offense_scoring.away.home[radio.scoring.offense.away].third}}</td>
+                      <td>{{data.scoring.offense_scoring.away.home[radio.scoring.offense.away].fourth}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="multi-row-data-table-wrapper custom-width scoring-table">
+                  <table class="multi-row-data-table t-stripped">
+                    <colgroup span="1">
+                      <col span="1" width="29%"/>
+                    </colgroup>
+                    <colgroup span="5"></colgroup>
+                    <tbody>
+                    <tr class="t-header">
+                      <th colspan="6" scope="colgroup" class="text-center">Defense Scoring Allowed (Home)</th>
+                    </tr>
+                    <tr class="t-sub-header">
+                      <th class="padded table-select" ngbRadioGroup [(ngModel)]="radio.scoring.defense.home">
+                        <label ngbButtonLabel>
+                          <span>Season</span>
+                          <input ngbButton type="radio" value="season"> <span>|</span>
+                        </label>
+                        <label ngbButtonLabel>
+                          <span>Last 3</span>
+                          <input ngbButton type="radio" value="last3"> <span>|</span>
+                        </label>
+                        <label ngbButtonLabel>
+                          <span>Last 5</span>
+                          <input ngbButton type="radio" value="last5">
+                        </label>
+                      </th>
+                      <th scope="col" class="text-center">Total</th>
+                      <th scope="col" class="text-center">1st Quarter</th>
+                      <th scope="col" class="text-center">2nd Quarter</th>
+                      <th scope="col" class="text-center">3rd Quarter</th>
+                      <th scope="col" class="text-center">4th Quarter</th>
+                    </tr>
+                    <tr class="t-content">
+                      <th scope="row">
+                        <ng-container *ngTemplateOutlet="awayLogoName"></ng-container>
+                      </th>
+                      <td>{{data.scoring.defense_scoring.home.away[radio.scoring.defense.home].total}}</td>
+                      <td>{{data.scoring.defense_scoring.home.away[radio.scoring.defense.home].first}}</td>
+                      <td>{{data.scoring.defense_scoring.home.away[radio.scoring.defense.home].second}}</td>
+                      <td>{{data.scoring.defense_scoring.home.away[radio.scoring.defense.home].third}}</td>
+                      <td>{{data.scoring.defense_scoring.home.away[radio.scoring.defense.home].fourth}}</td>
+                    </tr>
+                    <tr class="t-content">
+                      <th scope="row">
+                        <ng-container *ngTemplateOutlet="homeLogoName"></ng-container>
+                      </th>
+                      <td>{{data.scoring.defense_scoring.home.home[radio.scoring.defense.home].total}}</td>
+                      <td>{{data.scoring.defense_scoring.home.home[radio.scoring.defense.home].first}}</td>
+                      <td>{{data.scoring.defense_scoring.home.home[radio.scoring.defense.home].second}}</td>
+                      <td>{{data.scoring.defense_scoring.home.home[radio.scoring.defense.home].third}}</td>
+                      <td>{{data.scoring.defense_scoring.home.home[radio.scoring.defense.home].fourth}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" id="last-five">
+          <div class="col-12">
+            <h2 class="page-heading-two">Last 5 Meetings</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="multi-row-data-table-wrapper custom-width big-table-wrapper">
+              <table class="multi-row-data-table t-stripped">
+                <colgroup span="4" align="center">
+                  <col span="1">
+                  <col span="1" width="12%">
+                  <col span="2">
+                </colgroup>
+                <colgroup span="5"></colgroup>
+                <colgroup span="5"></colgroup>
+                <tbody>
+                <tr class="t-header">
+                  <th colspan="4" scope="colgroup" class="text-center main-border">Game</th>
+                  <th colspan="5" scope="colgroup" class="text-center main-border">
+                    <ng-container *ngTemplateOutlet="awayLogoNameLink"></ng-container>
+                  </th>
+                  <th colspan="5" scope="colgroup" class="text-center">
+                    <ng-container *ngTemplateOutlet="homeLogoNameLink"></ng-container>
+                  </th>
+                </tr>
+                <tr class="t-sub-header">
+                  <td class="padded"><strong>Date</strong></td>
+                  <th scope="col" class="text-center">Score</th>
+                  <th scope="col" class="text-center">Spread</th>
+                  <th scope="col" class="text-center main-border">Over/Under</th>
+
+                  <th scope="col" class="text-center">Total Yds</th>
+                  <th scope="col" class="text-center">Rush Yds</th>
+                  <th scope="col" class="text-center">Pass Yds</th>
+                  <th scope="col" class="text-center">Rush TDs</th>
+                  <th scope="col" class="text-center main-border">Pass TDs</th>
+
+                  <th scope="col" class="text-center">Total Yds</th>
+                  <th scope="col" class="text-center">Rush Yds</th>
+                  <th scope="col" class="text-center">Pass Yds</th>
+                  <th scope="col" class="text-center">Rush TDs</th>
+                  <th scope="col" class="text-center">Pass TDs</th>
+                </tr>
+                <tr *ngFor="let last of data.last_five_meetings | orderBy:'date_time':false" class="t-content">
+                  <td>{{last.date_time | amTimeZone | amDateFormat: 'M/D/YY'}}</td>
+                  <td>{{last.score}}</td>
+                  <td>{{last.spread}}</td>
+                  <td class="main-border">{{last.over_under}} points</td>
+
+                  <td>{{last.away_yards}}</td>
+                  <td>{{last.away_rush_yards}}</td>
+                  <td>{{last.away_pass_yards}}</td>
+                  <td>{{last.away_rush_td}}</td>
+                  <td class="main-border">{{last.away_pass_td}}</td>
+
+                  <td>{{last.home_yards}}</td>
+                  <td>{{last.home_rush_yards}}</td>
+                  <td>{{last.home_pass_yards}}</td>
+                  <td>{{last.home_rush_td}}</td>
+                  <td>{{last.home_pass_td}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="row" id="away-last">
+          <div class="col-12">
+            <h2 class="page-heading-two">{{data.header.away.away_full_name}} Last 5 Matchups</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="multi-row-data-table-wrapper custom-width big-table-wrapper">
+              <table class="multi-row-data-table t-stripped">
+                <colgroup span="4" align="center">
+                  <col span="1">
+                  <col span="1" width="12%">
+                  <col span="2">
+                </colgroup>
+                <colgroup span="5"></colgroup>
+                <colgroup span="5"></colgroup>
+                <tbody>
+                <tr class="t-header">
+                  <th colspan="4" scope="colgroup" class="text-center main-border">Game</th>
+                  <th colspan="5" scope="colgroup" class="text-center main-border">
+                    <ng-container *ngTemplateOutlet="awayLogoNameLink"></ng-container>
+                  </th>
+                  <th colspan="5" scope="colgroup" class="text-center">Opponent</th>
+                </tr>
+                <tr class="t-sub-header">
+                  <td class="padded"><strong>Date</strong></td>
+                  <th scope="col" class="text-center">Score</th>
+                  <th scope="col" class="text-center">Spread</th>
+                  <th scope="col" class="text-center main-border">Over/Under</th>
+
+                  <th scope="col" class="text-center">Total</th>
+                  <th scope="col" class="text-center">Rush Yds</th>
+                  <th scope="col" class="text-center">Pass Yds</th>
+                  <th scope="col" class="text-center">Rush TDs</th>
+                  <th scope="col" class="text-center main-border">Pass TDs</th>
+
+                  <th scope="col" class="text-center">Total</th>
+                  <th scope="col" class="text-center">Rush Yds</th>
+                  <th scope="col" class="text-center">Pass Yds</th>
+                  <th scope="col" class="text-center">Rush TDs</th>
+                  <th scope="col" class="text-center">Pass TDs</th>
+                </tr>
+                <tr *ngFor="let lastFive of data.five.away | orderBy:'date_time':false" class="t-content">
+                  <td>{{lastFive.date_time | amTimeZone | amDateFormat: 'M/D/YY'}}</td>
+                  <td>{{lastFive.score}}</td>
+                  <td>{{lastFive.spread}}</td>
+                  <td class="main-border">{{lastFive.over_under}} points</td>
+
+                  <td>{{lastFive.team_yards}}</td>
+                  <td>{{lastFive.team_rush_yards}}</td>
+                  <td>{{lastFive.team_pass_yards}}</td>
+                  <td>{{lastFive.team_rush_td}}</td>
+                  <td class="main-border">{{lastFive.team_pass_td}}</td>
+
+                  <td>{{lastFive.opp_yards}}</td>
+                  <td>{{lastFive.opp_rush_yards}}</td>
+                  <td>{{lastFive.opp_pass_yards}}</td>
+                  <td>{{lastFive.opp_rush_td}}</td>
+                  <td>{{lastFive.opp_pass_td}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="row" id="home-last">
+          <div class="col-12">
+            <h2 class="page-heading-two">{{data.header.home.home_full_name}} Last 5 Matchups</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="multi-row-data-table-wrapper custom-width big-table-wrapper">
+              <table class="multi-row-data-table t-stripped">
+                <colgroup span="4" align="center">
+                  <col span="1">
+                  <col span="1" width="12%">
+                  <col span="2">
+                </colgroup>
+                <colgroup span="5"></colgroup>
+                <colgroup span="5"></colgroup>
+                <tbody>
+                <tr class="t-header">
+                  <th colspan="4" scope="colgroup" class="text-center main-border">Game</th>
+                  <th colspan="5" scope="colgroup" class="text-center main-border">
+                    <ng-container *ngTemplateOutlet="homeLogoNameLink"></ng-container>
+                  </th>
+                  <th colspan="5" scope="colgroup" class="text-center">Opponent</th>
+                </tr>
+                <tr class="t-sub-header">
+                  <td class="padded"><strong>Date</strong></td>
+                  <th scope="col" class="text-center">Score</th>
+                  <th scope="col" class="text-center">Spread</th>
+                  <th scope="col" class="text-center main-border">Over/Under</th>
+
+                  <th scope="col" class="text-center">Total</th>
+                  <th scope="col" class="text-center">Rush Yds</th>
+                  <th scope="col" class="text-center">Pass Yds</th>
+                  <th scope="col" class="text-center">Rush TDs</th>
+                  <th scope="col" class="text-center main-border">Pass TDs</th>
+
+                  <th scope="col" class="text-center">Total</th>
+                  <th scope="col" class="text-center">Rush Yds</th>
+                  <th scope="col" class="text-center">Pass Yds</th>
+                  <th scope="col" class="text-center">Rush TDs</th>
+                  <th scope="col" class="text-center">Pass TDs</th>
+                </tr>
+                <tr *ngFor="let lastFive of data.five.home | orderBy:'date_time':false" class="t-content">
+                  <td>{{lastFive.date_time | amTimeZone | amDateFormat: 'M/D/YY'}}</td>
+                  <td>{{lastFive.score}}</td>
+                  <td>{{lastFive.spread}}</td>
+                  <td class="main-border">{{lastFive.over_under}} points</td>
+
+                  <td>{{lastFive.team_yards}}</td>
+                  <td>{{lastFive.team_rush_yards}}</td>
+                  <td>{{lastFive.team_pass_yards}}</td>
+                  <td>{{lastFive.team_rush_td}}</td>
+                  <td class="main-border">{{lastFive.team_pass_td}}</td>
+
+                  <td>{{lastFive.opp_yards}}</td>
+                  <td>{{lastFive.opp_rush_yards}}</td>
+                  <td>{{lastFive.opp_pass_yards}}</td>
+                  <td>{{lastFive.opp_rush_td}}</td>
+                  <td>{{lastFive.opp_pass_td}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="isIndMatchupPage && data.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="data.bottom_header" class="page-heading-two">
+        {{data.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="data.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+</div>
+
+

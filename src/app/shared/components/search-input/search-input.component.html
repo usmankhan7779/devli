@@ -1,0 +1,6 @@
+<div class="input-group" [ngClass]="className">
+  <input type="text" class="form-control hide-placeholder" [ngModel]="searchModel" (ngModelChange)="onFilter($event)" [placeholder]="placeholder" aria-describedby="filter-by">
+  <span class="input-group-addon" id="filter-by">
+    <i class="fa fa-search" aria-hidden="true"></i>
+  </span>
+</div>

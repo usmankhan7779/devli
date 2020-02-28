@@ -1,0 +1,19 @@
+.diff-box {
+  color: white;
+  position: absolute;
+  width: 100%;
+  width: calc(100% + 2px);
+  height: 80%;
+  top: -80%;
+  left: -1px;
+  @-moz-document url-prefix() {
+    left: -2px;
+  }
+  &.red {
+    background-color: red;
+  }
+  &.green {
+    background-color: green;
+  }
+}
+

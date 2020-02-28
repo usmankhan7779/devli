@@ -1,0 +1,302 @@
+@import '../../../scss/bootstrap-customization/custom-mixins';
+:host {
+  @import '../../../scss/custom-components/fixed-table';
+
+  $main-break: 1882px;
+  $first-break: 1015px;
+  $second-break: 886px;
+  $third-break: 435px;
+
+  $standard-spacing: 1.125rem;
+
+  .csv-button {
+    margin-left: 10px !important;
+    @media (max-width: $second-break) {
+      margin-bottom: $standard-spacing !important;
+    }
+  }
+
+  .search-input-wrapper {
+    margin: 0 20px $standard-spacing 20px;
+    @media (max-width: $first-break) {
+      margin: 0 0 $standard-spacing 30px;
+    }
+    @media (max-width: $second-break) {
+      margin: 0;
+    }
+    .input-group {
+      height: 35px;
+      max-width: 175px;
+      margin-left: auto;
+    }
+  }
+
+  .mobile-page-dd {
+    display: none;
+  }
+  .full-screen-page-dd {
+    display: block;
+  }
+
+  .pagination-wrapper ::ng-deep .ngx-pagination {
+    padding: 0 !important;
+  }
+
+  .top-dd-wrapper {
+    @include flex-row-mixin();
+    .pagination-wrapper, .search-input-wrapper-top {
+      margin-left: auto;
+    }
+    @media (max-width: $main-break) {
+      @include flex-column-mixin();
+    }
+    @media (max-width: $second-break) {
+      .pagination-wrapper, .search-input-wrapper-top {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .pagination-wrapper {
+    @include flex-row-mixin();
+    @media (max-width: $third-break) {
+      @include flex-column-mixin();
+    }
+  }
+
+  .player-type-dds {
+    display: none;
+  }
+
+  .player-type-tabs {
+    display: block;
+  }
+
+  .first-section-nav {
+    .player-type-tabs, .grouped-dropdown-wrapper {
+      margin-right: 16px;
+    }
+    @media (max-width: $main-break) {
+      .player-type-tabs {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .second-section-nav {
+    flex: 1;
+    margin-left: auto;
+    @include flex-row-mixin();
+    @media (max-width: $main-break) {
+      margin-left: initial;
+    }
+    @media (max-width: $first-break) {
+      @include flex-column-mixin();
+    }
+  }
+
+
+  @media (max-width: $second-break) {
+    .first-section-nav, .top-dd-wrapper-deep {
+      @include flex-column-mixin();
+    }
+    .first-section-nav {
+      .grouped-dropdown-wrapper {
+        margin-right: 0;
+      }
+    }
+    .csv-button-wrapper {
+      margin-left: auto;
+    }
+    .mobile-page-dd {
+      display: block;
+    }
+    .full-screen-page-dd {
+      display: none;
+    }
+    .search-input-wrapper-top {
+      margin-top: $standard-spacing;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      .search-input-wrapper {
+        width: 50%;
+        padding-right: 5px;
+        .input-group {
+          max-width: 100%;
+        }
+      }
+      .mobile-page-dd {
+        width: 50%;
+        padding-left: 5px;
+      }
+    }
+    .pagination-wrapper ::ng-deep .ngx-pagination {
+      padding: 0 !important;
+      text-align: center;
+      font-size: 13px;
+    }
+    .top-dd-wrapper-deep {
+      margin-bottom: $standard-spacing;
+    }
+    ::ng-deep .grouped-dropdown-wrapper {
+      margin: 0;
+      display: inline-block;
+      width: 100%;
+      .grouped-dropdown-btn {
+        border-radius: 0 !important;
+        border-left: 0 !important;
+        border-right: 0 !important;
+      }
+      .grouped-dropdown.show .dropdown-menu {
+        width: 100%;
+      }
+    }
+
+    .in-page-dropdown-toggle {
+      display: block;
+      margin-bottom: 20px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+      button {
+        width: 30px;
+        height: 30px;
+        padding: 0;
+      }
+    }
+    .hidden-dropdown {
+      display: none;
+    }
+    .player-type-dds {
+      display: block;
+    }
+    .player-type-tabs {
+      display: none;
+    }
+  }
+
+  .static-table-wrapper {
+    display: block !important;
+    overflow-x: visible !important;
+    .static-table .static-sub-header th {
+
+    }
+  }
+  .horizontal-table-wrapper .multi-row-data-table .t-sub-header th {
+    font-size: 13px;
+  }
+  .horizontal-table-wrapper .multi-row-data-table .t-content td, .static-table .static-table-body tr td {
+    vertical-align: middle;
+    font-size: 16px;
+    @media (max-width: 1650px) {
+      font-size: 12px;
+    }
+  }
+
+  .table-sect-wrap .static-table td.player-name-col {
+    padding: 0!important;
+    padding-left: 10px !important;
+  }
+
+  @media (min-width: 1650px) {
+    $static-table-width: 380px;
+    .static-table {
+      &.three-col {
+        max-width: $static-table-width;
+      }
+      th {
+        min-width: 80px;
+      }
+      .player-name-col {
+        min-width: 220px;
+      }
+      .pos-col {
+        min-width: 50px;
+      }
+      .rating-col {
+        min-width: 50px;
+      }
+      .team-col {
+        min-width: 60px;
+      }
+    }
+    .stats-table {
+      .game-col {
+        min-width: 85px;
+        max-width: 85px;
+      }
+      .position-col {
+        min-width: 50px;
+        max-width: 50px;
+      }
+    }
+    .horizontal-table-wrapper.three-col {
+      width: calc(100% - #{$static-table-width}) !important;
+    }
+    .player-name-col, .position-col {
+      font-size: 1rem;
+    }
+    .table-sect-wrap .static-table {
+      td.position-col {
+        font-size: 1rem;
+      }
+      td.player-name-col {
+        font-size: 0.9375rem !important;
+      }
+    }
+    .multi-row-data-table {
+      .t-content td {
+        font-size: 1rem;
+      }
+    }
+  }
+  @media (max-width: 1650px) {
+    .rating-col {
+      max-width: 30px;
+      min-width: 30px;
+    }
+    .table-sect-wrap .static-table td.player-name-col {
+      font-size: 12px !important;
+    }
+  }
+  @media (max-width: $third-break) {
+    .search-input-wrapper-top {
+      .search-input-wrapper {
+        width: 100%;
+        padding: 0;
+      }
+    }
+    .mobile-page-dd {
+      display: none;
+    }
+    .full-screen-page-dd {
+      display: block;
+    }
+  }
+  @media (max-width: 480px) {
+    @import '../../../scss/custom-components/fixed-table-mobile';
+    .table-sect-wrap {
+      .static-table {
+        th {
+          padding: 10px 0;
+          font-size: 12px;
+        }
+        td {
+          height: 54px;
+        }
+        .rating-col, .team-col {
+          max-width: 45px;
+          min-width: 45px;
+        }
+        .pos-col {
+          max-width: 40px;
+          min-width: 40px;
+        }
+        .player-name-col {
+          min-width: 120px;
+          max-width: 120px;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+:host {
+  @import "../../../../scss/custom-components/schedule";
+  .table {
+    min-width: 1250px;
+  }
+}

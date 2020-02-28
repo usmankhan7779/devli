@@ -1,0 +1,14 @@
+@import "../../../../scss/custom-components/responsive-page-nav";
+:host {
+  @include mobile-navigation();
+  .individual-matchup {
+    margin-top: 0;
+    .in-page-collapse-toggle {
+      top: 0;
+      margin-bottom: 20px;
+    }
+  }
+  .page-heading-navigation {
+    margin-top: 10px;
+  }
+}

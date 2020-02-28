@@ -1,0 +1,23 @@
+
+<ng-container *ngIf="(status === true || status === false)">
+  <span
+    class="status"
+    [ngClass]="{
+      'confirmed': status === true,
+      'rejected': status === false,
+      'alt-view': altView,
+      'short-name-allowed': allowShortNames,
+      'short-name-only': onlyShortNames
+     }"
+  >
+    <ng-container *ngIf="!hideText">
+      <span class="short-status-name">
+        {{status === false ? 'Proj' : 'Conf'}}
+      </span>
+      <span class="status-name">
+        {{status === false ? 'Projected' : 'Confirmed'}}
+      </span>
+    </ng-container>
+  </span>
+</ng-container>
+

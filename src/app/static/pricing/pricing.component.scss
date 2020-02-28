@@ -1,0 +1,699 @@
+.pricing-value-wrapper-outer {
+  width: 100%;
+  margin: auto;
+  display: table;
+  border-top: solid 1px #f1f1f1;
+}
+.pricing-value-wrapper {
+  width: 100%;
+  margin: auto;
+  display: table;
+}
+.custom-wrapper {
+  width: 80%;
+  margin: auto;
+  display: table;
+}
+.pricing-value-top-area {
+  float: left;
+  width: 100%;
+  margin-bottom: 40px;
+}
+.price-title {
+  float: left;
+  width: 100%;
+  color: #01afed;
+  text-align: center;
+  text-transform: uppercase;
+  margin: 40px 0px;
+
+  font-family: Raleway,Roboto,Helvetica Neue,Arial,sans-serif;
+  font-weight: 700;
+  letter-spacing: .28rem;
+  font-style: normal;
+}
+.pricing-betting-fantasy {
+  float: left;
+  width: 100%;
+  text-align: center;
+}
+.pricing-betting-fantasy ul.main-tabs {
+  float: none;
+  display: block;
+  border: none;
+  text-align: center;
+  margin-bottom: 30px;
+}
+.pricing-betting-fantasy ul.main-tabs li {
+  float: none;
+  display: inline-block;
+  border: solid 1px #ebebec;
+  margin: 0px 0px 0px -5px;
+  font-family: 'Lato', sans-serif;
+  font-weight: 600 !important;
+}
+.pricing-betting-fantasy ul.main-tabs li a {
+  border: none;
+  float: left;
+  width: 200px;
+  color: #333333;
+  font-size: 17px;
+  padding: 8px 0px;
+  border-radius: 0px;
+  box-shadow: 0px 2px 3px #f3f3f3;
+}
+.pricing-betting-fantasy ul.main-tabs li a.active {
+  background: #01afed;
+  color: #fff;
+  box-shadow: 0px 2px 3px #01afed;
+}
+.tabs-contents {
+  float: left;
+  width: 100%;
+  clear: both;
+}
+.tabs-contents > .active, .inner-tabs-contents .active {
+  opacity: 1;
+}
+.monthly-pricing-list {
+  float: none;
+  display: block;
+  border: none;
+  text-align: center;
+}
+.monthly-pricing-list li {
+  float: none;
+  display: inline-block;
+  border: none;
+  margin: 0px 0px 0px -5px;
+  font-weight: 700;
+  font-family: 'Lato', sans-serif;
+}
+.monthly-pricing-list li a.nav-link {
+  border: none;
+  color: #aaaaaa;
+  border-bottom: solid 2px #e1e1e1;
+  padding-left: 35px;
+  padding-right: 35px;
+  transition: ease all 0.12s;
+}
+.monthly-pricing-list li a.nav-link:hover {
+  border-bottom: solid 2px rgb(191, 208, 214);
+  color: #767a7f;
+}
+.monthly-pricing-list li a.nav-link.active {
+  color: #01afed;
+  border-color: #01afed;
+  border-bottom: 2px solid;
+}
+.inner-tabs-contents .tab-pane {
+}
+.inner-tabs-contents-title {
+  float: left;
+  width: 100%;
+  text-align: center;
+  font-size: 38px;
+  color: #333333;
+  margin: 40px 0px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+}
+.inner-tabs-contents-price-items-wrap {
+  margin: auto;
+  display: block;
+  width: 80%;
+  margin-top: 40px;
+}
+.inner-tabs-contents-price-items {
+  float: left;
+  width: 47%;
+  border: solid 1px #e1e1e1;
+  border-radius: 5px;
+}
+.inner-tabs-contents-price-items:nth-child(2n+2) {
+  float: right;
+}
+.inner-tabs-contents-price-items-title {
+  background: #d9f3fc;
+  border-radius: 5px 5px 0px 0px;
+  color: #01afed;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  padding: 25px 0px;
+  margin: 0px;
+  font-family: 'Lato', sans-serif;
+}
+.inner-tabs-contents-price-items-price {
+  float: left;
+  width: 100%;
+  text-align: center;
+  color: #333333;
+  margin: 35px 0px 0px 0px;
+  padding-bottom: 27px;
+  border-bottom: solid 1px #e1e1e1;
+  font-family: 'Lato', sans-serif;
+}
+.inner-tabs-contents-price-items-price span {
+  margin: auto;
+  display: block;
+  font-size: 60px;
+  line-height: 60px;
+}
+.inner-tabs-contents-price-items-price-save {
+  float: left;
+  width: 100%;
+  text-align: center;
+  color: #01afed;
+  font-weight: 700;
+  font-family: 'Lato', sans-serif;
+}
+.inner-tabs-contents-price-items-price span sup {
+  font-size: 24px;
+  top: -24px !important;
+}
+.inner-tabs-contents-price-items-price span sub {
+  font-size: 24px;
+  bottom: 2px !important;
+}
+.inner-tabs-contents-price-items-content {
+  float: left;
+  width: 100%;
+  padding: 0px 30px;
+}
+.inner-tabs-contents-price-items-content-title {
+  float: left;
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  color: #333333;
+  font-weight: 700;
+  margin: 28px 0px 18px 0px;
+  font-family: 'Lato', sans-serif;
+}
+.inner-tabs-contents-price-items-content-features {
+  float: left;
+  width: 100%;
+  clear: both;
+  list-style: none;
+  padding: 0px;
+  margin: 0px 0px 22px 0px;
+}
+.inner-tabs-contents-price-items-content-features li {
+  float: left;
+  width: 100%;
+  font-size: 16px;
+  font-family: 'Lato', sans-serif;
+}
+.inner-tabs-contents-price-items-content-features li:before {
+  font-family: 'FontAwesome';
+  content: '\f00d';
+  color: #e14747;
+  margin-right: 20px;
+}
+.inner-tabs-contents-price-items-content-features li.yes:before {
+  font-family: 'FontAwesome';
+  content: '\f00c';
+  color: #79d15d;
+}
+.top-space {
+  margin-top: 55px;
+}
+.start-winning-btn {
+  float: left;
+  width: 100%;
+  background: #01afed;
+  color: #fff !important;
+  border-radius: 2px;
+  padding: 7px 0px;
+  text-align: center;
+  font-weight: 600;
+  position: relative;
+  margin-bottom: 26px;
+  box-shadow: 0px 3px 4px #c9eefb;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+}
+.start-winning-btn:after {
+  font-family: 'FontAwesome';
+  content: '\f0da';
+  position: absolute;
+  right: 15px;
+  top: 8px;
+}
+.start-winning-btn:hover, .start-winning-btn:active, .start-winning-btn:focus {
+  text-decoration: none;
+  color: #fff;
+}
+.price-Compare-Benefits {
+  float: left;
+  width: 100%;
+  clear: both;
+  margin-bottom: 40px;
+}
+.price-Compare-Benefits-item {
+  float: left;
+  width: 32%;
+  padding-top: 30px;
+  margin-right: 2%;
+  border: solid 1px #e1e1e1;
+  box-shadow: 0px 4px 14px rgba(180, 187, 195, 0.24);
+  text-align: center;
+  border-radius: 4px;
+}
+.price-Compare-Benefits-item:nth-child(3n+3) {
+  margin-right: 0px;
+}
+.price-Compare-Benefits-list li.stand-padding {
+  padding-top: 2px !important;
+}
+.price-Compare-Benefits-list li.empty-space {
+  padding: 10px;
+}
+.price-Compare-Benefits-item:first-child {
+  background: #fafafa;
+  border-color: #fafafa;
+  box-shadow: none;
+  text-align: left !important;
+}
+.price-Compare-Benefits-item-title {
+  float: left;
+  width: 100%;
+  text-align: center;
+  color: #01afed;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0px;
+  font-family: 'Lato', sans-serif;
+}
+.price-Compare-Benefits-list {
+  float: left;
+  width: 100%;
+  clear: both;
+  padding: 0px;
+  margin: 0px;
+  list-style: none;
+}
+.price-Compare-Benefits-list li.benefit-title {
+  font-size: 18px;
+  font-weight: 700;
+  padding-top: 25px;
+  font-family: 'Lato', sans-serif;
+}
+.price-Compare-Benefits-list li {
+  float: left;
+  width: 100%;
+  border-bottom: solid 1px #f1f1f1;
+  color: #333333;
+  font-size: 15px;
+  padding: 5px 15px;
+  font-family: 'Lato', sans-serif;
+}
+.price-Compare-Benefits-list li:last-child {
+  border: none;
+}
+.price-Compare-Benefits-list li.yes:before, .price-Compare-Benefits-list li.benefit-title.yes:before {
+  font-family: 'FontAwesome';
+  content: '\f00c' !important;
+  color: #79d15d;
+  margin-right: 20px;
+}
+.price-Compare-Benefits-list li:before, .price-Compare-Benefits-list li.benefit-title.no:before {
+  font-family: 'FontAwesome';
+  content: '\f00d' !important;
+  color: #e14747;
+  font-size: 15px !important;
+  margin-right: 20px;
+}
+.price-Compare-Benefits-item:first-child li:before {
+  content: '' !important;
+  margin: 0px !important;
+}
+.price-Compare-Benefits-list li.benefit-title:before, .price-Compare-Benefits-list li.no-item:before {
+  content: '' !important;
+}
+.border-none {
+  border: none !important;
+}
+.pricing-faq-section {
+  float: left;
+  width: 100%;
+  clear: both;
+  margin-bottom: 55px;
+}
+.pricing-faq-section .card-body {
+  padding-left: 42px;
+  padding-top: 10px;
+  color: #3d4244;
+}
+.pricing-faq-section .card {
+  border: none;
+  border-bottom: solid 1px #e1e1e1;
+  border-radius: 0px;
+  padding-bottom: 26px;
+  margin-bottom: 26px;
+}
+.pricing-faq-section .card-header {
+  padding: 0px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333333;
+}
+.pricing-faq-section .card-header a, .pricing-faq-section .card-header a:hover, .pricing-faq-section .card-header a:active, .pricing-faq-section .card-header a:focus {
+  font-size: 20px;
+  font-size: 700;
+  color: #333333;
+  float: left;
+  width: 100%;
+  padding-left:40px;
+  position:relative;
+  text-decoration: none;
+  font-family: 'Lato', sans-serif;
+}
+.pricing-faq-section .card-header a:before {
+  font-family: 'FontAwesome';
+  color: #01afed;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  float: left;
+  font-size: 28px;
+  font-weight: bold;
+  margin-top: 2px;
+  position:absolute;
+  left:0;
+  top:0;
+}
+.pricing-faq-section .card-header a[aria-expanded=false]:before {
+  content: '+';
+}
+.pricing-faq-section .card-header a[aria-expanded=true]:before {
+  content: '-';
+}
+.pricing-faq-section .card .card-block {
+  padding-bottom: 8px;
+  padding-left: 40px;
+  padding-right: 40px;
+  font-size: 16px;
+  color: #333333;
+  line-height: 28px;
+  font-family: 'Lato', sans-serif;
+}
+// Plus Accordion
+.plus-accordion-full::before {
+  content: none;
+}
+.pricing-faq-section .card-header a.plus-accordion-full {
+  padding-left: 0;
+}
+.pricing-accordion {
+  .card-header {
+    background-color: #FFF;
+    border-radius: 0;
+    border: none;
+  }
+}
+// END: Plus Accordion
+.pricing-sub-footer {
+  border-top: 1px solid #eee;
+  .custom-wrapper {
+    .col-12 {
+      margin: 0;
+    }
+    .col-3 {
+      padding-bottom: 20px;
+    }
+  }
+}
+.terms-foot-wrap {
+  .terms-link {
+    width: 100%;
+    .a-link {
+      text-decoration: none !important;
+      height: 22px;
+      margin: auto;
+      margin-bottom: 4px;
+      font-size: 15px;
+      &:hover {
+        color: #0aa7df;
+        border-color: #0aa7df;
+      }
+    }
+  }
+}
+.sub-foot-head {
+  color: #AAA;
+  text-align: center;
+  margin-top: 33px;
+  font-size: 16px;
+  width: 100%;
+}
+
+.cc-image-wrap {
+  width: 60px;
+  display: inline-block;
+  margin: 11px 10px;
+  &.first {
+    margin-left: 0;
+  }
+  &.last {
+    margin-right: 0;
+  }
+}
+.cc-foot-wrapper {
+  margin: auto;
+  display: block;
+  width: 230px;
+}
+.aws-foot-logo {
+  img {
+    max-width: 140px;
+    margin-top: -3px;
+    float: right;
+  }
+}
+.stripe-foot-logo {
+  img {
+    max-width: 78px;
+    margin-top: 15px;
+  }
+}
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  .price-title {
+    font-size: 27px;
+    margin: 50px 0px 33px 0px;
+  }
+  .pricing-betting-fantasy ul.main-tabs li a {
+    font-size: 15px;
+  }
+  .monthly-pricing-list li {
+    font-size: 14px;
+  }
+  .inner-tabs-contents-title {
+    font-size: 27px;
+  }
+  .inner-tabs-contents-price-items-title {
+    font-size: 20px;
+  }
+  .inner-tabs-contents-price-items-price span {
+    font-size: 45px;
+    line-height: 45px;
+  }
+  .inner-tabs-contents-price-items-price span sup {
+    font-size: 16px;
+    top: -20px !important;
+  }
+  .inner-tabs-contents-price-items-price-save {
+    font-size: 13px;
+  }
+  .inner-tabs-contents-price-items-content-title {
+    font-size: 16px;
+  }
+  .inner-tabs-contents-price-items-content-features li:before {
+    margin-right: 10px;
+  }
+  .inner-tabs-contents-price-items-content-features li {
+    font-size: 13px;
+  }
+  .price-Compare-Benefits-item-title {
+    font-size: 20px;
+  }
+  .price-Compare-Benefits-list li.benefit-title {
+    font-size: 13px;
+  }
+  .price-Compare-Benefits-list li {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+  .pricing-faq-section .card-header a, .pricing-faq-section .card-header a:hover, .pricing-faq-section .card-header a:active, .pricing-faq-section .card-header a:focus {
+    font-size: 17px;
+  }
+  .pricing-faq-section .card-header a:before {
+    margin-right: 20px;
+  }
+  .pricing-faq-section .card .card-block {
+    padding-left: 40px;
+    padding-right: 40px;
+    font-size: 12px;
+    line-height: 20px;
+  }
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  .price-title {
+    font-size: 24px;
+    margin: 40px 0px 23px 0px;
+  }
+  .pricing-betting-fantasy ul.main-tabs li a {
+    font-size: 13px;
+  }
+  .monthly-pricing-list li {
+    font-size: 13px;
+  }
+  .inner-tabs-contents-title {
+    font-size: 24px;
+  }
+  .inner-tabs-contents-price-items-title {
+    font-size: 18px;
+  }
+  .inner-tabs-contents-price-items-price span {
+    font-size: 45px;
+    line-height: 45px;
+  }
+  .inner-tabs-contents-price-items-price span sup {
+    font-size: 16px;
+    top: -20px !important;
+  }
+  .inner-tabs-contents-price-items-price-save {
+    font-size: 13px;
+  }
+  .inner-tabs-contents-price-items-content-title {
+    font-size: 16px;
+  }
+  .inner-tabs-contents-price-items-content-features li:before {
+    margin-right: 10px;
+  }
+  .inner-tabs-contents-price-items-content-features li {
+    font-size: 13px;
+  }
+  .price-Compare-Benefits-item-title {
+    font-size: 18px;
+  }
+  .price-Compare-Benefits-list li.benefit-title {
+    font-size: 11px;
+    padding: 5px 7px;
+  }
+  .price-Compare-Benefits-list li {
+    font-size: 11px;
+    padding: 5px 10px;
+    height: 50px;
+    overflow: hidden;
+  }
+  .pricing-faq-section .card-header a, .pricing-faq-section .card-header a:hover, .pricing-faq-section .card-header a:active, .pricing-faq-section .card-header a:focus {
+    font-size: 17px;
+  }
+  .pricing-faq-section .card-header a:before {
+    margin-right: 20px;
+  }
+  .pricing-faq-section .card .card-block {
+    padding-left: 40px;
+    padding-right: 40px;
+    font-size: 12px;
+    line-height: 20px;
+  }
+  .pricing-value-wrapper, .custom-wrapper {
+    width: 90%;
+  }
+  .inner-tabs-contents-price-items-wrap {
+    width: 100%;
+  }
+}
+@media only screen and (min-width: 1px) and (max-width: 767px) {
+  .price-title {
+    font-size: 18px;
+    margin: 40px 0px 23px 0px;
+  }
+  .pricing-betting-fantasy ul.main-tabs li {
+    width: 50%;
+  }
+  .pricing-betting-fantasy ul.main-tabs li a {
+    font-size: 13px;
+    width: 100%;
+  }
+  .monthly-pricing-list li {
+    width: 100%;
+    font-size: 13px;
+  }
+  .monthly-pricing-list li a {
+    padding-left: 0px;
+    padding-right: 0px;
+    text-align: left;
+  }
+  .inner-tabs-contents-title {
+    font-size: 18px;
+    margin: 30px 0px;
+  }
+  .inner-tabs-contents-price-items-title {
+    font-size: 18px;
+  }
+  .inner-tabs-contents-price-items {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  .inner-tabs-contents-price-items-price span {
+    font-size: 45px;
+    line-height: 45px;
+  }
+  .inner-tabs-contents-price-items-price span sup {
+    font-size: 16px;
+    top: -20px !important;
+  }
+  .inner-tabs-contents-price-items-price-save {
+    font-size: 13px;
+  }
+  .inner-tabs-contents-price-items-content-title {
+    font-size: 16px;
+  }
+  .inner-tabs-contents-price-items-content-features li:before {
+    margin-right: 10px;
+  }
+  .inner-tabs-contents-price-items-content-features li {
+    font-size: 13px;
+  }
+  .price-Compare-Benefits-item {
+    width: 100%;
+    margin: 0px 0px 15px 0px !important;
+  }
+  .pricing-faq-section .card-header a, .pricing-faq-section .card-header a:hover, .pricing-faq-section .card-header a:active, .pricing-faq-section .card-header a:focus {
+    font-size: 12px;
+  }
+  .pricing-faq-section .card-header a:before {
+    margin-right: 8px;
+    font-size: 19px;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    margin-top: -1px;
+  }
+  .pricing-faq-section .card {
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+  }
+  .pricing-value-wrapper{
+    width: 90%;
+  }
+  .custom-wrapper{
+    width: 100%;
+  }
+  .pricing-faq-section .card .card-block {
+    padding-left: 24px;
+    padding-right: 24px;
+    font-size: 12px;
+    padding-bottom: 0px;
+  }
+  .inner-tabs-contents-price-items-wrap {
+    width: 100%;
+  }
+}

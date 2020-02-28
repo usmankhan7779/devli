@@ -1,0 +1,17 @@
+<div #weekSelector class="week-selector">
+  <div #swiperView class="swiper-container" [swiper]="config">
+    <div class="swiper-wrapper">
+      <a class="swiper-slide slide" [ngClass]="{'active-week': _selectedWeek === week.no}" *ngFor="let week of weeks">
+        <label class="radio-label" for="field-{{week.no}}" (click)="selectWeek(week)">
+          Week <span>{{week.no}}</span>
+        </label>
+      </a>
+    </div>
+    <div class="swiper-button-prev selector-left-btn selector-btn">
+      <i class="fa fa-angle-left" aria-hidden="true"></i>
+    </div>
+    <div class="swiper-button-next selector-right-btn selector-btn">
+      <i class="fa fa-angle-right" aria-hidden="true"></i>
+    </div>
+  </div>
+</div>

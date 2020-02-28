@@ -1,0 +1,71 @@
+@import "../../scss/shared/variables/project";
+
+:host {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: $footer-height;
+  @media (max-width: $footer-md-breakpoint) {
+    height: $footer-md-height;
+  }
+  @media (max-width: $footer-sm-breakpoint) {
+    height: $footer-sm-height;
+  }
+  @media (max-width: $footer-xs-breakpoint) {
+    height: $footer-xs-height;
+  }
+  &, .footer-content {
+    background-color: $psd-primary;
+  }
+  display: flex;
+  color: white;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2.2rem 0 1.6rem;
+
+  .footer-content {
+    text-align: center;
+  }
+
+  .contain {
+    .footer-col {
+      margin-bottom: 15px;
+      h4, a {
+        color: white;
+        padding: 0 15px;
+      }
+      h4 {
+        font-size: 1rem;
+        font-weight: bold;
+        text-align: left;
+        a {
+          padding: 0;
+        }
+      }
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        li {
+          text-align: left;
+        }
+      }
+      @media (max-width: $footer-md-breakpoint) {
+        flex: 1 1 25%;
+      }
+      @media (max-width: $footer-sm-breakpoint) {
+        flex: 1 1 50%;
+      }
+      @media (max-width: $footer-xs-breakpoint) {
+        flex: 1 1 100%;
+      }
+    }
+  }
+
+  .footer-brand {
+    width: 10.3rem;
+    height: 2.1rem;
+    margin: 1.1rem 0;
+  }
+}

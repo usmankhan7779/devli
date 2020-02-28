@@ -1,0 +1,164 @@
+<ng-template #statusSideTpl let-showSeoTime="showSeoTime">
+  <div class="align-self-xl-end status-side" *ngIf="!hideStatus && (date || status)">
+    <span class="stadium-name" *ngIf="league === 'nba' && stadium && (!status || (status.status !== 'In Progress' && status.status !== 'Final'))">
+      {{stadium}}
+    </span>
+    <p class="font-bold" *ngIf="!status || (status.status !== 'In Progress' && status.status !== 'Final')">
+      <app-general-time-format [time]="date"></app-general-time-format>
+    </p>
+    <ng-container [ngSwitch]="league">
+      <ng-container *ngSwitchCase="'nba'">
+        <p class="text-right" *ngIf="status?.status === 'Final'">
+          <span [ngClass]="{'font-bold': status.away_team_score > status.home_team_score}">{{awayTeamShort}} {{status.away_team_score}}</span> @ <span [ngClass]="{'font-bold': status.home_team_score > status.away_team_score}">{{homeTeamShort}} {{status.home_team_score}}</span>
+        </p>
+        <p class="text-right"  *ngIf="status?.status === 'In Progress'">
+          <span>{{awayTeamShort}} {{status.away_team_score}}</span> @ <span>{{homeTeamShort}} {{status.home_team_score}}</span>
+        </p>
+        <p class="text-right" *ngIf="status?.status === 'In Progress' && !showHalftime(status)">
+          <span *ngIf="stadium" class="hidden-sm-down"><span>{{stadium}}</span>,</span> Q{{status.quarter_integer}} {{status.minutes}}:{{status.seconds | number : '2.0-0'}}
+        </p>
+        <p class="text-right" *ngIf="status?.status === 'In Progress' && showHalftime(status)">
+          <span *ngIf="stadium" class="hidden-sm-down"><span>{{stadium}}</span>,</span> Halftime
+        </p>
+      </ng-container>
+      <ng-container *ngSwitchCase="'nfl'">
+        <p *ngIf="additionalInfo && (!status || (status.status !== 'Final' && status.status !== 'In Progress' && status.status !== 'Postponed'))" class="event-risk text-right">
+            <span *ngIf="additionalInfo.rain && additionalInfo.rain !== 'N/A'">
+            {{additionalInfo.rain}}% Rain
+            </span>
+            <span *ngIf="additionalInfo.wind && additionalInfo.rain && additionalInfo.rain !== 'N/A' && additionalInfo.wind !== 'N/A'">,</span>
+            <span *ngIf="additionalInfo.wind && additionalInfo.wind !== 'N/A'">
+            Wind: {{additionalInfo.wind}} MPH<span *ngIf="stadium" class="hidden-sm-down">, <span>{{stadium}}</span></span>
+            </span>
+        </p>
+        <p *ngIf="status?.status === 'In Progress'" class="text-right">
+          <span [ngClass]="{'font-bold': status.away_has_ball}">{{status.away}} {{status.away_score}}</span> @ <span [ngClass]="{'font-bold': status.home_has_ball}">{{status.home}} {{status.home_score}}</span>
+        </p>
+        <p *ngIf="status?.status === 'Final'" class="text-right">
+          <span [ngClass]="{'font-bold': status.away_score > status.home_score}">{{status.away}} {{status.away_score}}</span> @ <span [ngClass]="{'font-bold': status.home_score > status.away_score}">{{status.home}} {{status.home_score}}</span>
+        </p>
+        <p *ngIf="status?.status === 'In Progress'" class="text-right">
+          {{status.down}} & {{status.distance}}, Q{{status.quarter}} {{status.time_remaining}}<span *ngIf="stadium" class="hidden-sm-down">, <span>{{stadium}}</span></span>
+        </p>
+      </ng-container>
+      <ng-container *ngSwitchCase="'mlb'">
+
+        <p *ngIf="additionalInfo && !additionalInfo.dome_text && (!status || (status.status !== 'Final' && status.status !== 'In Progress' && status.status !== 'Postponed'))" class="event-risk">
+          {{additionalInfo.rain}}% Rain, {{additionalInfo.risk}},
+          <span class="event-wind-content">
+            <span class="wind-speed">{{additionalInfo.forecast_wind_speed}} mph</span>
+            <img class="wind-direction-arrow" [style.transform]="'rotate(' + additionalInfo.forecast_wind_direction + 'deg)'" src="/assets/images/arrow.png" alt="weather"/>
+          </span>
+        </p>
+        <p *ngIf="additionalInfo?.dome_text && (!status || (status.status !== 'Final' && status.status !== 'In Progress' && status.status !== 'Postponed'))">
+          {{additionalInfo.dome_text}}
+        </p>
+
+        <p *ngIf="status && status.status === 'In Progress'">
+          <span [ngClass]="{'font-bold': status.away_is_batting}">{{awayTeamShort}} {{status.away_team_runs}}</span> @ <span [ngClass]="{'font-bold': status.home_is_batting}">{{homeTeamShort}} {{status.home_team_runs}}</span>
+        </p>
+
+        <p *ngIf="status && status.status === 'Final'">
+          <span [ngClass]="{'font-bold': isWinner(status.away_team_runs, status.home_team_runs)}">{{awayTeamShort}} {{status.away_team_runs}}</span> @ <span [ngClass]="{'font-bold': isWinner(status.home_team_runs, status.away_team_runs)}">{{homeTeamShort}} {{status.home_team_runs}}</span>
+        </p>
+
+        <p *ngIf="status && status.status === 'In Progress'">
+          {{status.inning_half === 'B' ? 'Bottom' : 'Top'}} {{status.inning}}, {{status.outs}} {{status.outs === '1' || status.outs === 1  ? 'Out': 'Outs'}}
+        </p>
+
+      </ng-container>
+    </ng-container>
+    <p *ngIf="status?.status === 'Final'" [ngClass]="stadium && (league === 'nba' || league === 'nfl') ? 'text-right' : 'text-center'">
+      <span *ngIf="stadium && (league === 'nba' || league === 'nfl')" class="hidden-sm-down"><span>{{stadium}}</span>,</span> Final
+    </p>
+    <p *ngIf="updated" class="updated-text-mobile">
+      Updated: <app-general-time-format [showDay]="false" [time]="updated" [showTimeAgo]="true" [showSeoTime]="showSeoTime"></app-general-time-format>
+    </p>
+  </div>
+</ng-template>
+
+<ng-template #awayTeamNameTpl>
+  <span *ngIf="!awayTeamUrl; else awayTeamLinkTpl">
+    {{awayTeamName | lastTeamName : ' ' : allowShortNames}}
+  </span>
+</ng-template>
+
+<ng-template #awayTeamLinkTpl>
+  <a class="team-link" (click)="onTeamLinkClick()" [routerLink]="[awayTeamUrl]">
+    {{awayTeamName | lastTeamName : ' ' : allowShortNames}}
+  </a>
+</ng-template>
+
+<ng-template #homeTeamNameTpl>
+  <span *ngIf="!homeTeamUrl; else homeTeamLinkTpl">
+    {{homeTeamName | lastTeamName : ' ' : allowShortNames}}
+  </span>
+</ng-template>
+<ng-template #homeTeamLinkTpl>
+  <a class="team-link" (click)="onTeamLinkClick()" [routerLink]="[homeTeamUrl]">
+    {{homeTeamName | lastTeamName : ' ' : allowShortNames}}
+  </a>
+</ng-template>
+
+
+<ng-template #homeContent>
+  <a *ngIf="homeTeamUrl" (click)="onTeamLinkClick()" [routerLink]="[homeTeamUrl]" rel="nofollow">
+    <img [type]="isBorderedLogos ? 'bordered' : 'white'" [appSpriteImg]="league" class="d-flex matchup-home-logo matchup-logo" [src]="homeTeamLogoSrc" alt="{{homeTeamName}}">
+  </a>
+  <img *ngIf="!homeTeamUrl" [type]="isBorderedLogos ? 'bordered' : 'white'" [appSpriteImg]="league" class="d-flex matchup-home-logo matchup-logo" [src]="homeTeamLogoSrc" alt="{{homeTeamName}}">
+  <div class="media-body">
+    <h4 class="mt-0">
+      <ng-container *ngTemplateOutlet="homeTeamNameTpl"></ng-container>
+    </h4>
+    <span class="team-details">{{homeTeamDetails}}</span>
+  </div>
+</ng-template>
+
+<ng-template #awayContent>
+  <div class="media-body text-right">
+    <h4 class="mt-0">
+      <ng-container *ngTemplateOutlet="awayTeamNameTpl"></ng-container>
+    </h4>
+    <span class="team-details">{{awayTeamDetails}}</span>
+  </div>
+  <a *ngIf="awayTeamUrl" (click)="onTeamLinkClick()" [routerLink]="[awayTeamUrl]" rel="nofollow">
+    <img [type]="isBorderedLogos ? 'bordered' : 'white'" [appSpriteImg]="league" class="d-flex matchup-away-logo matchup-logo" [src]="awayTeamLogoSrc" alt="{{awayTeamName}}">
+  </a>
+  <img *ngIf="!awayTeamUrl" [type]="isBorderedLogos ? 'bordered' : 'white'" [appSpriteImg]="league" class="d-flex matchup-away-logo matchup-logo" [src]="awayTeamLogoSrc" alt="{{awayTeamName}}">
+</ng-template>
+
+<ng-template #componentContent>
+  <div class="away-team-content team-content">
+    <div class="media">
+      <ng-container *ngTemplateOutlet="awayContent"></ng-container>
+    </div>
+  </div>
+  <div class="text-center divider">
+    at
+    <div class="status-side-mobile">
+      <ng-template [ngTemplateOutlet]="statusSideTpl" [ngTemplateOutletContext]="{showSeoTime: false}"></ng-template>
+    </div>
+  </div>
+  <div class="home-team-content team-content">
+    <div class="media">
+      <ng-container *ngTemplateOutlet="homeContent"></ng-container>
+    </div>
+  </div>
+</ng-template>
+
+
+<div class="row matchup-heading-component {{league}}" [ngClass]="{'mobile-styles': mobileView}">
+  <div class="col-12">
+    <div class="d-flex matchup-heading-wrapper" [ngClass]="{'has-weather': additionalInfo && !additionalInfo.dome_text && (!status || (status.status !== 'Final' && status.status !== 'In Progress' && status.status !== 'Postponed'))}">
+      <div class="d-flex matchup-heading" [ngClass]="{'justify-content-center': align === 'center'}">
+        <ng-container *ngTemplateOutlet="componentContent"></ng-container>
+      </div>
+      <ng-template [ngTemplateOutlet]="statusSideTpl" [ngTemplateOutletContext]="{showSeoTime: true}"></ng-template>
+      <div *ngIf="updated" class="updated-date-time-block updated-text">
+        Updated: <app-general-time-format [showDay]="false" [time]="updated"></app-general-time-format>
+      </div>
+    </div>
+  </div>
+</div>
+
+

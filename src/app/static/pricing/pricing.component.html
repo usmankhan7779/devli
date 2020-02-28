@@ -1,0 +1,595 @@
+<div class="pricing-value-wrapper-outer">
+  <div class="pricing-value-wrapper">
+    <div class="pricing-value-top-area">
+      <div class="container-fluid">
+        <!-- Breadcrumbs -->
+        <app-breadcrumb></app-breadcrumb>
+        <h1 class="site-pages-title">Pricing</h1>
+      </div>
+      <h1 class="price-title">Data Science Tools to Help You Win</h1>
+      <div class="pricing-betting-fantasy">
+        <ul class="nav nav-tabs main-tabs" role="tablist">
+          <li class="nav-item"><a class="nav-link" [ngClass]="{'active': lineupsBettingActive}" (click)="onLineupsBetting()" role="tab" data-toggle="tab">Lineups Betting</a></li>
+          <li class="nav-item"><a class="nav-link" [ngClass]="{'active': lineupsDailyFantasyActive}" (click)="onLineupsDailyFantasy()" role="tab" data-toggle="tab">Lineups Daily Fantasy</a></li>
+        </ul>
+      </div>
+      <div class="tab-content tabs-contents">
+        <!-- Betting Pricing Menu + Content -->
+        <div role="tabpanel"
+             class="tab-pane fade"
+             [ngClass]="{'active': lineupsBettingActive, 'in': lineupsBettingActive}"
+             id="lineups-betting">
+          <ul class="nav nav-tabs monthly-pricing-list" role="tablist">
+            <li class="nav-item"><a class="nav-link" (click)="onThreeDayTab()" [ngClass]="{'active': threeDayTabActive}">3 Day Pass</a></li>
+            <li class="nav-item"><a class="nav-link" (click)="onMonthlyTab()" [ngClass]="{'active': monthlyTabActive}">Monthly</a></li>
+            <li class="nav-item"><a class="nav-link" (click)="onSixMonthTab()" [ngClass]="{'active': sixMonthTabActive}">6 Months (Save 16%)</a></li>
+            <li class="nav-item"><a class="nav-link" (click)="onYearlyTab()" [ngClass]="{'active': yearlyTabActive}">Yearly (Save 30%)</a></li>
+          </ul>
+          <!-- Betting Pricing Data-->
+          <div class="tab-content inner-tabs-contents">
+            <!-- X Day Pass Data-->
+            <div *ngIf="threeDayTabActive" class="tab-pane fade" [ngClass]="{'in': threeDayTabActive, 'active': threeDayTabActive}" id="DayPass">
+              <div class="inner-tabs-contents-price-items-wrap">
+                <div class="custom-wrapper">
+                  <div class="inner-tabs-contents-price-items">
+                    <h1 class="inner-tabs-contents-price-items-title">Premium</h1>
+                    <div class="inner-tabs-contents-price-items-price"> <span><sup>$</sup>49.99<sub>/3 days</sub></span>
+                      <p class="inner-tabs-contents-price-items-price-save">&nbsp;</p>
+                    </div>
+                    <div class="inner-tabs-contents-price-items-content">
+                      <h1 class="inner-tabs-contents-price-items-content-title">What’s included:</h1>
+                      <ul class="inner-tabs-contents-price-items-content-features">
+                        <li class="yes">All Sports</li>
+                        <li class="yes">Bet Predictor (Game Bets Only)</li>
+                        <li class="yes">Machine Learning Model Predictions</li>
+                        <li class="yes">Real-Time Odds (Pre-Game Only)</li>
+                        <li>In Game Bet Predictor (Live Betting Predictions)</li>
+                        <li>Prop Bet Predictions</li>
+                        <li>Daily Hot Bet Report via Email</li>
+                        <li>Daily Contrarian Bet Report via Emal</li>
+                      </ul>
+                      <a (click)="onStartWinning(bettingPlanOptions.three_day_premium)" class="start-winning-btn">Start Winning</a> </div>
+                  </div>
+                  <div class="inner-tabs-contents-price-items">
+                    <h1 class="inner-tabs-contents-price-items-title">Sharp</h1>
+                    <div class="inner-tabs-contents-price-items-price"> <span><sup>$</sup>69.99<sub>/3 days</sub></span>
+                      <p class="inner-tabs-contents-price-items-price-save">&nbsp;</p>
+                    </div>
+                    <div class="inner-tabs-contents-price-items-content">
+                      <h1 class="inner-tabs-contents-price-items-content-title">What’s included:</h1>
+                      <ul class="inner-tabs-contents-price-items-content-features">
+                        <li class="yes">All Sports</li>
+                        <li class="yes">Bet Predictor (Game Bets & Prop Bets)</li>
+                        <li class="yes">In Game Bet Predictor (Live Betting Predictions)</li>
+                        <li class="yes">Machine Learning Model Predictions</li>
+                        <li class="yes">Prop Bet Predictions</li>
+                        <li class="yes">Real-Time Odds</li>
+                        <li class="yes">Daily Hot Bet Report via Email</li>
+                        <li class="yes">Daily Contrarian Bet Report via Emal</li>
+                      </ul>
+                      <a (click)="onStartWinning(bettingPlanOptions.three_day_sharp)" class="start-winning-btn">Start Winning</a> </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Monthly Savings Data-->
+            <div *ngIf="monthlyTabActive" class="tab-pane fade" [ngClass]="{'in': monthlyTabActive, 'active': monthlyTabActive}" id="Monthlypass">
+              <div class="inner-tabs-contents-price-items-wrap">
+                <div class="custom-wrapper">
+                  <div class="inner-tabs-contents-price-items">
+                    <h1 class="inner-tabs-contents-price-items-title">Premium</h1>
+                    <div class="inner-tabs-contents-price-items-price"> <span><sup>$</sup>199.00<sub>/month</sub></span>
+                      <p class="inner-tabs-contents-price-items-price-save">&nbsp;</p>
+                    </div>
+                    <div class="inner-tabs-contents-price-items-content">
+                      <h1 class="inner-tabs-contents-price-items-content-title">What’s included:</h1>
+                      <ul class="inner-tabs-contents-price-items-content-features">
+                        <li class="yes">All Sports</li>
+                        <li class="yes">Bet Predictor (Game Bets Only)</li>
+                        <li class="yes">Machine Learning Model Predictions</li>
+                        <li class="yes">Real-Time Odds (Pre-Game Only)</li>
+                        <li>In Game Bet Predictor (Live Betting Predictions)</li>
+                        <li>Prop Bet Predictions</li>
+                        <li>Daily Hot Bet Report via Email</li>
+                        <li>Daily Contrarian Bet Report via Emal</li>
+                      </ul>
+                      <a (click)="onStartWinning(bettingPlanOptions.monthly_premium)" class="start-winning-btn">Start Winning</a> </div>
+                  </div>
+                  <div class="inner-tabs-contents-price-items">
+                    <h1 class="inner-tabs-contents-price-items-title">Sharp</h1>
+                    <div class="inner-tabs-contents-price-items-price"> <span><sup>$</sup>299.00<sub>/month</sub></span>
+                      <p class="inner-tabs-contents-price-items-price-save">&nbsp;</p>
+                    </div>
+                    <div class="inner-tabs-contents-price-items-content">
+                      <h1 class="inner-tabs-contents-price-items-content-title">What’s included:</h1>
+                      <ul class="inner-tabs-contents-price-items-content-features">
+                        <li class="yes">All Sports</li>
+                        <li class="yes">Bet Predictor (Game Bets & Prop Bets)</li>
+                        <li class="yes">In Game Bet Predictor (Live Betting Predictions)</li>
+                        <li class="yes">Machine Learning Model Predictions</li>
+                        <li class="yes">Prop Bet Predictions</li>
+                        <li class="yes">Real-Time Odds</li>
+                        <li class="yes">Daily Hot Bet Report via Email</li>
+                        <li class="yes">Daily Contrarian Bet Report via Emal</li>
+                      </ul>
+                      <a (click)="onStartWinning(bettingPlanOptions.monthly_sharp)" class="start-winning-btn">Start Winning</a> </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- X Months Savings-->
+            <div *ngIf="sixMonthTabActive" class="tab-pane fade" [ngClass]="{'in': sixMonthTabActive, 'active': sixMonthTabActive}" id="MonthsSave">
+              <div class="inner-tabs-contents-price-items-wrap">
+                <div class="custom-wrapper">
+                  <div class="inner-tabs-contents-price-items">
+                    <h1 class="inner-tabs-contents-price-items-title">Premium</h1>
+                    <div class="inner-tabs-contents-price-items-price"> <span><sup>$</sup>999.99<sub>/6 months</sub></span>
+                      <p class="inner-tabs-contents-price-items-price-save">Save $194 (16% off)</p>
+                    </div>
+                    <div class="inner-tabs-contents-price-items-content">
+                      <h1 class="inner-tabs-contents-price-items-content-title">What’s included:</h1>
+                      <ul class="inner-tabs-contents-price-items-content-features">
+                        <li class="yes">All Sports</li>
+                        <li class="yes">Bet Predictor (Game Bets Only)</li>
+                        <li class="yes">Machine Learning Model Predictions</li>
+                        <li class="yes">Real-Time Odds (Pre-Game Only)</li>
+                        <li>In Game Bet Predictor (Live Betting Predictions)</li>
+                        <li>Prop Bet Predictions</li>
+                        <li>Daily Hot Bet Report via Email</li>
+                        <li>Daily Contrarian Bet Report via Emal</li>
+                      </ul>
+                      <a (click)="onStartWinning(bettingPlanOptions.six_month_premium)" class="start-winning-btn">Start Winning</a> </div>
+                  </div>
+                  <div class="inner-tabs-contents-price-items">
+                    <h1 class="inner-tabs-contents-price-items-title">Sharp</h1>
+                    <div class="inner-tabs-contents-price-items-price"> <span><sup>$</sup>1,499.99<sub>/6 months</sub></span>
+                      <p class="inner-tabs-contents-price-items-price-save">Save $294 (16% off)</p>
+                    </div>
+                    <div class="inner-tabs-contents-price-items-content">
+                      <h1 class="inner-tabs-contents-price-items-content-title">What’s included:</h1>
+                      <ul class="inner-tabs-contents-price-items-content-features">
+                        <li class="yes">All Sports</li>
+                        <li class="yes">Bet Predictor (Game Bets & Prop Bets)</li>
+                        <li class="yes">In Game Bet Predictor (Live Betting Predictions)</li>
+                        <li class="yes">Machine Learning Model Predictions</li>
+                        <li class="yes">Prop Bet Predictions</li>
+                        <li class="yes">Real-Time Odds</li>
+                        <li class="yes">Daily Hot Bet Report via Email</li>
+                        <li class="yes">Daily Contrarian Bet Report via Emal</li>
+                      </ul>
+                      <a (click)="onStartWinning(bettingPlanOptions.six_month_sharp)" class="start-winning-btn">Start Winning</a> </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Yearly Savings Data-->
+            <div *ngIf="yearlyTabActive" class="tab-pane fade" [ngClass]="{'in': yearlyTabActive, 'active': yearlyTabActive}" id="YearlySave">
+              <div class="inner-tabs-contents-price-items-wrap">
+                <div class="custom-wrapper">
+                  <div class="inner-tabs-contents-price-items">
+                    <h1 class="inner-tabs-contents-price-items-title">Premium</h1>
+                    <div class="inner-tabs-contents-price-items-price"> <span><sup>$</sup>1,649.99<sub>/year</sub></span>
+                      <p class="inner-tabs-contents-price-items-price-save">Save $750 (30% off)</p>
+                    </div>
+                    <div class="inner-tabs-contents-price-items-content">
+                      <h1 class="inner-tabs-contents-price-items-content-title">What’s included:</h1>
+                      <ul class="inner-tabs-contents-price-items-content-features">
+                        <li class="yes">All Sports</li>
+                        <li class="yes">Bet Predictor (Game Bets Only)</li>
+                        <li class="yes">Machine Learning Model Predictions</li>
+                        <li class="yes">Real-Time Odds (Pre-Game Only)</li>
+                        <li>In Game Bet Predictor (Live Betting Predictions)</li>
+                        <li>Prop Bet Predictions</li>
+                        <li>Daily Hot Bet Report via Email</li>
+                        <li>Daily Contrarian Bet Report via Emal</li>
+                      </ul>
+                      <a (click)="onStartWinning(bettingPlanOptions.yearly_premium)" class="start-winning-btn">Start Winning</a> </div>
+                  </div>
+                  <div class="inner-tabs-contents-price-items">
+                    <h1 class="inner-tabs-contents-price-items-title">Sharp</h1>
+                    <div class="inner-tabs-contents-price-items-price"> <span><sup>$</sup>2,499.99<sub>/year</sub></span>
+                      <p class="inner-tabs-contents-price-items-price-save">Save $1,087 (30% off)</p>
+                    </div>
+                    <div class="inner-tabs-contents-price-items-content">
+                      <h1 class="inner-tabs-contents-price-items-content-title">What’s included:</h1>
+                      <ul class="inner-tabs-contents-price-items-content-features">
+                        <li class="yes">All Sports</li>
+                        <li class="yes">Bet Predictor (Game Bets & Prop Bets)</li>
+                        <li class="yes">In Game Bet Predictor (Live Betting Predictions)</li>
+                        <li class="yes">Machine Learning Model Predictions</li>
+                        <li class="yes">Prop Bet Predictions</li>
+                        <li class="yes">Real-Time Odds</li>
+                        <li class="yes">Daily Hot Bet Report via Email</li>
+                        <li class="yes">Daily Contrarian Bet Report via Emal</li>
+                      </ul>
+                      <a (click)="onStartWinning(bettingPlanOptions.yearly_sharp)" class="start-winning-btn">Start Winning</a> </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Compare Premium & Sharp -->
+          <div class="pricing-value-wrapper-outer top-space">
+            <div class="pricing-value-wrapper">
+              <h1 class="inner-tabs-contents-title">Compare Benefits</h1>
+              <div class="custom-wrapper">
+                <div class="price-Compare-Benefits">
+                  <div class="price-Compare-Benefits-item">
+                    <h1 class="price-Compare-Benefits-item-title">Benefits</h1>
+                    <ul class="price-Compare-Benefits-list">
+                      <li class="benefit-title">Machine Learning Models</li>
+                      <li>Six Propreitary Models Tested for Accuracy</li>
+                      <li>Linear Regression</li>
+                      <li>Decision Trees</li>
+                      <li>Random Forest</li>
+                      <li>Naive Bayes</li>
+                      <li>ML Consensus</li>
+                      <li class="benefit-title">Real-Time Odds</li>
+                      <li>Track Real-time Odds on Over 30 Sportbooks</li>
+                      <li>All Sports Included</li>
+                      <li>In Game Live Odds</li>
+                      <li>Latest Lineup & Injury News</li>
+                      <li>Live Weather Updates</li>
+                      <li class="benefit-title">Bet Predictor</li>
+                      <li>In Game Odds Compared to 7 Sportsbooks</li>
+                      <li>Update Game & Player Inputs</li>
+                      <li>Run Simulations (no coding required)</li>
+                      <li>Real-time Game & Player Predictions</li>
+                      <li>Real-time Odds Predictions</li>
+                      <li>Save Bets</li>
+                      <li>Save Blueprints</li>
+                      <li>In Game Bet Predictions</li>
+                      <li class="benefit-title">Bet Reports</li>
+                      <li>Daily Hot Bet Report via Email</li>
+                      <li>Daily Contrarian Bet Report via Email</li>
+                      <li class="border-none">&nbsp;</li>
+                      <li class="benefit-title border-none">Personal Account Conceirage</li>
+                      <li class="border-none">&nbsp;</li>
+                    </ul>
+                  </div>
+                  <div class="price-Compare-Benefits-item">
+                    <h1 class="price-Compare-Benefits-item-title">Premium</h1>
+                    <ul class="price-Compare-Benefits-list">
+                      <li class="benefit-title">&nbsp;</li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="benefit-title">&nbsp;</li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="benefit-title">&nbsp;</li>
+                      <li class="yes">Pre-Game Only</li>
+                      <li class="yes">Pre-Game Only</li>
+                      <li class="yes">Pre-Game Only</li>
+                      <li class="yes">Pre-Game Only</li>
+                      <li class="yes">Pre-Game Only</li>
+                      <li class="yes"></li>
+                      <li>&nbsp;</li>
+                      <li>&nbsp;</li>
+                      <li class="benefit-title">&nbsp;</li>
+                      <li>&nbsp;</li>
+                      <li>&nbsp;</li>
+                      <li class="no-item empty-space">&nbsp;</li>
+                      <li class="benefit-title no stand-padding">&nbsp;</li>
+                      <li class="no-item empty-space">&nbsp;</li>
+                    </ul>
+                  </div>
+                  <div class="price-Compare-Benefits-item">
+                    <h1 class="price-Compare-Benefits-item-title">Sharp</h1>
+                    <ul class="price-Compare-Benefits-list">
+                      <li class="benefit-title">&nbsp;</li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="benefit-title">&nbsp;</li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="benefit-title">&nbsp;</li>
+                      <li class="yes">Pre-Game Only</li>
+                      <li class="yes">Pre-Game Only</li>
+                      <li class="yes">Pre-Game Only</li>
+                      <li class="yes">Pre-Game Only</li>
+                      <li class="yes">Pre-Game Only</li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="benefit-title">&nbsp;</li>
+                      <li class="yes"></li>
+                      <li class="yes"></li>
+                      <li class="no-item empty-space">&nbsp;</li>
+                      <li class="benefit-title yes stand-padding">&nbsp;</li>
+                      <li class="no-item empty-space">&nbsp;</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Daily Fantasy Pricing Menu + Content -->
+        <div role="tabpanel"
+             [ngClass]="{'active': lineupsDailyFantasyActive, 'in': lineupsDailyFantasyActive}"
+             class="tab-pane fade" id="Lineups-Daily-Fantasy">
+          <ul class="nav nav-tabs monthly-pricing-list" role="tablist">
+            <li class="nav-item"><a class="nav-link" (click)="onThreeDayTab()" [ngClass]="{'active': threeDayTabActive}" role="tab" data-toggle="tab">3 Day Pass</a></li>
+            <li class="nav-item"><a class="nav-link" (click)="onMonthlyTab()" [ngClass]="{'active': monthlyTabActive}" role="tab" data-toggle="tab">Monthly</a></li>
+            <li class="nav-item"><a class="nav-link" (click)="onSixMonthTab()" [ngClass]="{'active': sixMonthTabActive}" role="tab" data-toggle="tab">6 Months (Save 10%)</a></li>
+            <li class="nav-item"><a class="nav-link" (click)="onYearlyTab()" [ngClass]="{'active': yearlyTabActive}" role="tab" data-toggle="tab">Yearly (Save 30%)</a></li>
+          </ul>
+
+          <div class="tab-content inner-tabs-contents">
+            <!-- Three Day Tab Content -->
+            <div role="tabpanel" class="tab-pane fade" [ngClass]="{'active': threeDayTabActive, 'in': threeDayTabActive}" id="DayPass1">
+              <div class="inner-tabs-contents-price-items-wrap">
+                <div class="custom-wrapper">
+                  <div class="inner-tabs-contents-price-items" style=" margin:auto; float:none; display:table;">
+                    <h1 class="inner-tabs-contents-price-items-title">Premium</h1>
+                    <div class="inner-tabs-contents-price-items-price"> <span><sup>$</sup>19.99<sub>/3 days</sub></span>
+                      <p class="inner-tabs-contents-price-items-price-save">&nbsp;</p>
+                    </div>
+                    <div class="inner-tabs-contents-price-items-content">
+                      <h1 class="inner-tabs-contents-price-items-content-title">What’s included:</h1>
+                      <ul class="inner-tabs-contents-price-items-content-features">
+                        <li class="yes">FanDuel, DraftKings, Yahoo</li>
+                        <li class="yes">Live Projected Ownership %</li>
+                        <li class="yes">Machine Learning Projection Models</li>
+                        <li class="yes">Cash & GPP Projections</li>
+                        <li class="yes">Stacking</li>
+                        <li class="yes">Save & Export Lineups to FanDuel</li>
+                        <li class="yes">Save & Export Lineups to DraftKings</li>
+                        <li class="yes">Upload Projections</li>
+                        <li class="yes">Update Exposure</li>
+                        <li class="yes">Live Weather</li>
+                        <li class="yes">Live Injury Updates</li>
+                      </ul>
+                      <a (click)="onStartWinning(dailyFantasyPlanOptions.three_day_premium)" class="start-winning-btn">Start Winning</a> </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Monthly Tab Content -->
+            <div role="tabpanel" class="tab-pane fade" [ngClass]="{'active': monthlyTabActive, 'in': monthlyTabActive}" id="Monthlypass1">
+              <div class="inner-tabs-contents-price-items-wrap">
+                <div class="custom-wrapper">
+                  <div class="inner-tabs-contents-price-items" style=" margin:auto; float:none; display:table;">
+                    <h1 class="inner-tabs-contents-price-items-title">Premium</h1>
+                    <div class="inner-tabs-contents-price-items-price"> <span><sup>$</sup>49.99<sub>/month</sub></span>
+                      <p class="inner-tabs-contents-price-items-price-save">&nbsp;</p>
+                    </div>
+                    <div class="inner-tabs-contents-price-items-content">
+                      <h1 class="inner-tabs-contents-price-items-content-title">What’s included:</h1>
+                      <ul class="inner-tabs-contents-price-items-content-features">
+                        <li class="yes">FanDuel, DraftKings, Yahoo</li>
+                        <li class="yes">Live Projected Ownership %</li>
+                        <li class="yes">Machine Learning Projection Models</li>
+                        <li class="yes">Cash & GPP Projections</li>
+                        <li class="yes">Stacking</li>
+                        <li class="yes">Save & Export Lineups to FanDuel</li>
+                        <li class="yes">Save & Export Lineups to DraftKings</li>
+                        <li class="yes">Upload Projections</li>
+                        <li class="yes">Update Exposure</li>
+                        <li class="yes">Live Weather</li>
+                        <li class="yes">Live Injury Updates</li>
+                      </ul>
+                      <a (click)="onStartWinning(dailyFantasyPlanOptions.monthly_premium)" class="start-winning-btn">Start Winning</a> </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Six Month Tab Content -->
+            <div role="tabpanel" class="tab-pane fade" [ngClass]="{'active': sixMonthTabActive, 'in': sixMonthTabActive}" id="MonthsSave1">
+              <div class="inner-tabs-contents-price-items-wrap">
+                <div class="custom-wrapper">
+                  <div class="inner-tabs-contents-price-items" style=" margin:auto; float:none; display:table;">
+                    <h1 class="inner-tabs-contents-price-items-title">Premium</h1>
+                    <div class="inner-tabs-contents-price-items-price"> <span><sup>$</sup>269.99<sub>/6 months</sub></span>
+                      <p class="inner-tabs-contents-price-items-price-save">Save $30 (10% off)</p>
+                    </div>
+                    <div class="inner-tabs-contents-price-items-content">
+                      <h1 class="inner-tabs-contents-price-items-content-title">What’s included:</h1>
+                      <ul class="inner-tabs-contents-price-items-content-features">
+                        <li class="yes">FanDuel, DraftKings, Yahoo</li>
+                        <li class="yes">Live Projected Ownership %</li>
+                        <li class="yes">Machine Learning Projection Models</li>
+                        <li class="yes">Cash & GPP Projections</li>
+                        <li class="yes">Stacking</li>
+                        <li class="yes">Save & Export Lineups to FanDuel</li>
+                        <li class="yes">Save & Export Lineups to DraftKings</li>
+                        <li class="yes">Upload Projections</li>
+                        <li class="yes">Update Exposure</li>
+                        <li class="yes">Live Weather</li>
+                        <li class="yes">Live Injury Updates</li>
+                      </ul>
+                      <a (click)="onStartWinning(dailyFantasyPlanOptions.six_month_premium)" class="start-winning-btn">Start Winning</a> </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Yearly Tab Content -->
+            <div role="tabpanel" class="tab-pane fade" [ngClass]="{'active': yearlyTabActive, 'in': yearlyTabActive}" id="YearlySave1">
+              <div class="inner-tabs-contents-price-items-wrap">
+                <div class="custom-wrapper">
+                  <div class="inner-tabs-contents-price-items" style=" margin:auto; float:none; display:table;">
+                    <h1 class="inner-tabs-contents-price-items-title">Premium</h1>
+                    <div class="inner-tabs-contents-price-items-price"> <span><sup>$</sup>419.99<sub>/year</sub></span>
+                      <p class="inner-tabs-contents-price-items-price-save">Save $180 (30% off)</p>
+                    </div>
+                    <div class="inner-tabs-contents-price-items-content">
+                      <h1 class="inner-tabs-contents-price-items-content-title">What’s included:</h1>
+                      <ul class="inner-tabs-contents-price-items-content-features">
+                        <li class="yes">FanDuel, DraftKings, Yahoo</li>
+                        <li class="yes">Live Projected Ownership %</li>
+                        <li class="yes">Machine Learning Projection Models</li>
+                        <li class="yes">Cash & GPP Projections</li>
+                        <li class="yes">Stacking</li>
+                        <li class="yes">Save & Export Lineups to FanDuel</li>
+                        <li class="yes">Save & Export Lineups to DraftKings</li>
+                        <li class="yes">Upload Projections</li>
+                        <li class="yes">Update Exposure</li>
+                        <li class="yes">Live Weather</li>
+                        <li class="yes">Live Injury Updates</li>
+                      </ul>
+                      <a (click)="onStartWinning(dailyFantasyPlanOptions.yearly_premium)"
+                         class="start-winning-btn">Start Winning</a> </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- END: Pricing Wrapper -->
+
+<!-- FAQ Contents-->
+<div class="pricing-value-wrapper-outer">
+  <div class="pricing-value-wrapper" id="accordion">
+    <h1 class="inner-tabs-contents-title">FAQ</h1>
+    <div class="custom-wrapper">
+      <!-- FAQ Section -->
+      <div class="pricing-faq-section">
+        <!-- FAQ 1 -->
+        <ngb-accordion #acc="ngbAccordion" class="pricing-accordion">
+          <ngb-panel>
+            <ng-template ngbPanelTitle>
+              <span><a class="accordion-toggle plus-accordion-full" data-toggle="collapse" data-parent="#accordion" href="#faq1">Do you have a free trial?</a> </span>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              We don’t offer free trials, but we do offer a 3 Day Pass.
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+        <!-- FAQ 2 -->
+        <ngb-accordion #acc="ngbAccordion" class="pricing-accordion">
+          <ngb-panel>
+            <ng-template ngbPanelTitle>
+              <span><a class="accordion-toggle plus-accordion-full" data-toggle="collapse" data-parent="#accordion" href="#faq1">Can I see the tools before purchasing?</a> </span>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              Yes, you can also watch the How it Works Video to see the full functionality of the tools.
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+        <!-- FAQ 3 -->
+        <ngb-accordion #acc="ngbAccordion" class="pricing-accordion">
+          <ngb-panel>
+            <ng-template ngbPanelTitle>
+              <span><a class="accordion-toggle plus-accordion-full" data-toggle="collapse" data-parent="#accordion" href="#faq1">Is there a discount if I purchase both the Lineups Betting and Lineups Daily Fantasy packages?</a> </span>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              Yes, just send us an email at <a href="mailto:info@lineups.com">info@lineups.com</a> and we’ll set you up.
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+        <!-- FAQ 4 -->
+        <ngb-accordion #acc="ngbAccordion" class="pricing-accordion">
+          <ngb-panel>
+            <ng-template ngbPanelTitle>
+              <span><a class="accordion-toggle plus-accordion-full" data-toggle="collapse" data-parent="#accordion" href="#faq1">Why Lineups.com vs other Betting Tool online?</a> </span>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              We don’t sell picks, we sell tools. Lineups.com machine learning projections are accurate, but that’s not all.
+              Our tools are one of kind. We allow you to find and edge with your subjective input.
+              The power of machine learning is in your hands. Change inputs and run simulations in seconds to find the best bets for you.
+              With our real-time odds, lines and bet predictions, we truly the only Betting Tools on the market today to offer such an edge.
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+        <!-- FAQ 5 -->
+        <ngb-accordion #acc="ngbAccordion" class="pricing-accordion">
+          <ngb-panel>
+            <ng-template ngbPanelTitle>
+              <span><a class="accordion-toggle plus-accordion-full" data-toggle="collapse" data-parent="#accordion" href="#faq1">Why Lineups.com vs "Expert Pick Sellers"?</a> </span>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              There is no other tool that we've seen in 10 years that does what we provide. No other tool allows for
+              multiple subject inputs on a machine learning based simulation. We put the power of data science in your
+              hands to enable you to find even more of an edge in real-time.
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+        <!-- FAQ 6 -->
+        <ngb-accordion #acc="ngbAccordion" class="pricing-accordion">
+          <ngb-panel>
+            <ng-template ngbPanelTitle>
+              <span><a class="accordion-toggle plus-accordion-full" data-toggle="collapse" data-parent="#accordion" href="#faq1">How Accurate are Lineups.com Prediction Models without User Input?</a> </span>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              You can see all bets made, the results, bet amounts and ROI <a target="_blank" [routerLink]="['/nfl/prediction-model-accuracy']">here</a>.
+              It varies from sport to sport, model to model and bet to bet.
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+      </div>
+      <!-- END: FAQ Section -->
+    </div>
+  </div>
+</div>
+
+<div class="pricing-sub-footer">
+  <div class="custom-wrapper">
+    <div class="row col-12">
+      <div class="col-3 border-right">
+        <div class="row col-12">
+          <h6 class="sub-foot-head">Safe & Secure</h6>
+        </div>
+        <div class="row col-12">
+          <div class="col-7 aws-foot-logo">
+            <img src="/assets/images/aws-img.svg" alt="aws">
+          </div>
+          <div class="col-5 stripe-foot-logo">
+            <img src="/assets/images/stripe-logo.svg" alt="stripe">
+          </div>
+        </div>
+      </div>
+      <div class="col-3 border-right">
+        <div class="row col-12">
+          <h6 class="sub-foot-head">Need Help?</h6>
+        </div>
+        <div class="row col-12">
+          <p class="text-center">Email an account concierage at <a href="mailto:accounts@lineups.com" class="underline-link a-link">accounts@lineups.com</a></p>
+        </div>
+      </div>
+      <div class="col-3 border-right">
+        <div class="row col-12">
+          <h6 class="sub-foot-head">We Accept</h6>
+        </div>
+        <div class="row col-12">
+          <div class="cc-foot-wrapper">
+            <div class="cc-image-wrap first">
+              <img width="60px" src="/assets/images/visa-logo.svg" alt="visa-logo"/>
+            </div>
+            <div class="cc-image-wrap">
+              <img width="60px" src="/assets/images/amex-logo.svg" alt="amex-logo"/>
+            </div>
+            <div class="cc-image-wrap last">
+              <img width="60px" src="/assets/images/mc-logo.svg" alt="mc-logo"/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-3 terms-foot-wrap">
+        <div class="row col-12">
+          <h6 class="sub-foot-head">Terms</h6>
+        </div>
+        <div class="row col-12">
+          <div class="row col-12 terms-link"><a target="_blank" [routerLink]="['/terms']" class="underline-link a-link">Terms & Conditions</a></div>
+          <div class="row col-12 terms-link"><a target="_blank" [routerLink]="['/privacy-policy']" class="underline-link a-link">Privacy Policy</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

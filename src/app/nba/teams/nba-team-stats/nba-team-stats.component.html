@@ -1,0 +1,1428 @@
+<ng-template #noDataTpl>
+  <div class="col-12 mt-3">
+    <app-no-nba-stats></app-no-nba-stats>
+  </div>
+</ng-template>
+
+<div class="container-fluid pb-3">
+  <app-breadcrumb></app-breadcrumb>
+  <!-- Starting Lineups Page Title -->
+  <div class="row">
+    <div class="team-lineup-heading-wrap nfl-team-depth-chart-heading col-lg-8 col-12">
+      <!-- Team Lineup Heading Text-->
+      <div class="team-lineup-heading-text">
+        <!-- Team Lineup Heading Left -->
+        <div class="team-lineup-heading-left" [ngClass]="{'no-opponent': !(data.nav.team_news_route && isDefaultSeason)}">
+          <div class="team-logo with-status">
+            <img [type]="'white'" [appSpriteImg]="'nba'" align="middle" [src]="data.nav.team_logo_white" alt="{{data.nav.team_name_full}}"/>
+          </div>
+          <div class="team-heading-info">
+            <app-status
+              side="right"
+              [isHeader]="true"
+              mobileTitle="{{data.nav.team_name_full |lastTeamName }} Snaps"
+              [teamName]="data.page_heading  || data.nav.team_name_full "
+              [record]="data.nav.team_record + ', ' + data.nav.team_rank + ' '  + data.nav.team_division"
+            ></app-status>
+         
+
+          </div>
+        </div>
+        <!-- Team Lineup Heading Right -->
+        <div *ngIf="data.nav.opp_depth_chart_route && isDefaultSeason" class="team-lineup-heading-right">
+          <div *ngIf="!data.nav.status || (data.nav.status.status !== 'In Progress' && data.nav.status.status !== 'Final')" class="float-right">
+            <h4 class="opponent-team-name">{{data.nav.is_home ? 'vs' : 'at'}} {{data.nav.opp_abbr}}</h4>
+            <h4 class="event-date">
+              <app-general-time-format [time]="data.nav.matchup_time"></app-general-time-format>
+            </h4>
+          </div>
+          <div *ngIf="data.nav.status?.status === 'In Progress'" class="float-right">
+            <span [ngClass]="{'font-bold': data.nav.status.away_has_ball}">{{data.nav.status.away}} {{data.nav.status.away_score}}</span> @ <span [ngClass]="{'font-bold': data.nav.status.home_has_ball}">{{data.nav.status.home}} {{data.nav.status.home_score}}</span>
+            <br>
+            <p class="text-center">
+              {{data.nav.status.down}} & {{data.nav.status.distance}}, Q{{data.nav.status.quarter}} {{data.nav.status.time_remaining}}
+            </p>
+          </div>
+          <div *ngIf="data.nav.status?.status === 'Final'" class="float-right">
+            <span [ngClass]="{'font-bold': data.nav.status.away_score > data.nav.status.home_score}">{{data.nav.status.away}} {{data.nav.status.away_score}}</span> @ <span [ngClass]="{'font-bold': data.nav.status.home_score > data.nav.status.away_score}">{{data.nav.status.home}} {{data.nav.status.home_score}}</span>
+            <br>
+            <p class="text-center">Final</p>
+          </div>
+        </div>
+      </div>
+      <!-- Collapse Menu -->
+      <div class="in-page-collapse-toggle">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="isCollapsed = !isCollapsed"
+                [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+          Menu
+        </button>
+      </div>
+      <div class="in-page-nav-menu" [ngbCollapse]="!isCollapsed" [ngClass]="{'hidden': !isCollapsed}">
+        <!-- Team Lineup Heading Navigation -->
+        <div class="page-heading-navigation">
+          <div *ngIf="data.nav.is_home && data.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{ data.nav.opp_name | lastTeamName}} Depth Chart</a>
+          </div>
+          <div *ngIf="!data.nav.is_home" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.team_depth_chart_route]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="page-heading-nav-btn">{{ data.nav.team_name | lastTeamName}} Depth Chart</a>
+          </div>
+          <div *ngIf="data.nav.is_home" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.team_depth_chart_route]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="page-heading-nav-btn">{{ data.nav.team_name | lastTeamName}} Depth Chart</a>
+          </div>
+          <div *ngIf="!data.nav.is_home && data.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{ data.nav.opp_name | lastTeamName}} Depth Chart</a>
+          </div>
+          <div *ngIf="data.nav.matchup_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appNflMatchupIdPreselect]="data.nav.game_key" [routerLink]="[data.nav.matchup_route]" routerLinkActive="active" class="page-heading-nav-btn">Matchups</a>
+          </div>
+          <!--news commented-->
+          <!--<div *ngIf="data.nav.team_news_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">-->
+            <!--<a [appPreselectNflNewsTeamSeason]="params?.year" [routerLink]="[data.nav.team_news_route]" routerLinkActive="active" class="page-heading-nav-btn">News</a>-->
+          <!--</div>-->
+          <div class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appPreselectNflStatsTeamSeason]="params?.year" [routerLink]="['./']" routerLinkActive="active" class="page-heading-nav-btn">Stats</a>
+          </div>
+          <div *ngIf="data.nav.team_snaps_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appPreselectNflSnapsTeamSeason]="params?.year" [routerLink]="[data.nav.team_snaps_route]" routerLinkActive="active" class="page-heading-nav-btn">Snaps</a>
+          </div>
+          <div *ngIf="data.nav.team_roster_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appPreselectNflRosterTeamSeason]="params?.year" [routerLink]="[data.nav.team_roster_route]" routerLinkActive="active" class="page-heading-nav-btn">Roster</a>
+          </div>
+          <div *ngIf="data.nav.team_injuries_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [routerLink]="[data.nav.team_injuries_route]" routerLinkActive="active" class="page-heading-nav-btn">Injuries</a>
+          </div>
+          <div *ngIf="data.nav.team_schedule_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt last">
+            <a [appPreselectNflScheduleTeamSeason]="params?.year" [routerLink]="[data.nav.team_schedule_route]" class="page-heading-nav-btn">Schedule</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 after-heading-margin zero-lg-height smaller-lg-box">
+      <app-ad-component [league]="'nba'"></app-ad-component>
+    </div>
+  </div>
+  <div class="row">
+     <div class="col-lg-8 col-12 flex-last flex-sm-unordered">
+      <p class="site-pages-content" [innerHtml]="data.intro_paragraph | safeHtml"></p>
+    </div>
+    <div class="col-12 after-text-margin">
+      <div class="in-page-dropdown-toggle" [ngClass]="{'no-dropdown': !dropdownCollapsed}">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="dropdownCollapsed = !dropdownCollapsed"
+                [attr.aria-expanded]="!dropdownCollapsed" aria-controls="collapseExample">
+          <i class="fa fa-bars dropdown-icon" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="d-flex top-action-section">
+        <div class="d-flex action-section">
+          <div class="in-page-dropdown-menu" [ngbCollapse]="!dropdownCollapsed" [ngClass]="{'hidden-dropdown': !dropdownCollapsed}">
+            <!-- Grouped Dropdown -->
+            <div class="grouped-dropdown-wrapper btn-group my-0">
+
+              <div ngbDropdown class="grouped-dropdown dropdown">
+                <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="main-dropdown" ngbDropdownToggle>
+                  <span class="pr-0 pr-sm-3">{{handleYear(params?.year)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="main-dropdown">
+                  <div *ngFor="let season of ddData.seasons;">
+                    <button
+                      [ngClass]="{'dd-active-btn': params?.year === season.year}"
+                      (click)="onYearDdChange(season)"
+                      class="dropdown-item">
+                      <span>{{season.name}}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div ngbDropdown class="grouped-dropdown dropdown position-dd">
+                <button type="button" class="grouped-dropdown-btn btn btn-secondary px-3" id="secondary-dropdown" ngbDropdownToggle>
+                  <span class="pr-0 pr-sm-3">{{getActiveTab(true)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="secondary-dropdown">
+                  <button (click)="onTabClick('all')" class="dropdown-item" [ngClass]="{'dd-active-btn': ddData.tabs['all']}">All</button>
+                  <button (click)="onTabClick('team-stats')" class="dropdown-item" [ngClass]="{'dd-active-btn': ddData.tabs['team-stats']}">Team Stats</button>
+                  <button (click)="onTabClick('player-stats')" class="dropdown-item" [ngClass]="{'dd-active-btn': ddData.tabs['player-stats']}">Player Stats</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div [hidden]="!data.team_header" class="toggles-in-page-wrapper standard-page d-inline-block mt-0 position-tab-bar">
+            <!-- Action Header Button Group -->
+            <div class="toggles-in-page-group btn-group toggles-group">
+              <button (click)="onTabClick('all')" class="toggle-in-page first" [ngClass]="{'active': ddData.tabs['all']}">All</button>
+              <button (click)="onTabClick('team-stats')" class="toggle-in-page" [ngClass]="{'active': ddData.tabs['team-stats']}">Team Stats</button>
+              <button (click)="onTabClick('player-stats')" class="toggle-in-page last" [ngClass]="{'active': ddData.tabs['player-stats']}">Player Stats</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12" *ngIf="data.team_header">
+      <div class="d-flex team-intro">
+        <div class="csv-text"><b>Home Record:</b> {{data.team_header.home_record}}
+          <b>Away Record:</b> {{data.team_header.away_record}}
+          <b>Conference Record:</b> {{data.team_header.conference_record}}
+          <b>Division Record:</b> {{data.team_header.division_record}}
+        </div>
+        <div class="csv-text">
+          <b>Head Coach::</b> {{data.team_header.head_coach}}
+          <b>Assitant Coach:</b> {{data.team_header.assistant_coach[0]}}
+          <b>Assitant Coach:</b> {{data.team_header.assistant_coach[1]}}
+          <b>Assitant Coach:</b> {{data.team_header.assistant_coach[2]}}
+        </div>
+        <div class="csv-text" ><b>Assitant Coach:</b> {{data.team_header.assistant_coach[3]}}
+          <b>Assitant Coach:</b> {{data.team_header.assistant_coach[4]}}
+          <b>Assitant Coach:</b> {{data.team_header.assistant_coach[5]}}
+          <b>Assitant Coach:</b> {{data.team_header.assistant_coach[6]}}
+        </div>
+        <div class="csv-text"> 
+          <b>Assitant Coach:</b> {{data.team_header.assistant_coach[7]}}
+          <b>	General Manager:</b> {{data.team_header.general_manager}}
+          <b>Arena: Bank of America</b> {{data.team_header.arena}}
+        </div>
+     
+      </div>
+    </div>
+    <div class="col-12">
+      <div *ngIf="ddData.tabs['all'] || ddData.tabs['team-stats']" class="row">
+        <div class="col-12" *ngIf="data.team_rankings">
+          <h2 class="page-heading-two">
+            Team Rankings
+          </h2>
+          <div class="after-heading-margin">
+            <div class="toggles-in-page-wrapper standard-page mt-0">
+             
+              <div class="toggles-in-page-group btn-group toggles-group">
+                <button (click)="onTeamRatingsTabClick('rank')" class="toggle-in-page first" [ngClass]="{'active': ddData.teamRatingsTableDDs['rank']}">Rank</button>
+                <button (click)="onTeamRatingsTabClick('#')" class="toggle-in-page" [ngClass]="{'active': ddData.teamRatingsTableDDs['#']}">#</button>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="ddData.teamRatingsTableDDs['rank']" class="multi-row-data-table-wrapper big-table custom-width mb-0">
+            <table class="multi-row-data-table t-stripped">
+              <colgroup span="4"></colgroup>
+              <colgroup span="11"></colgroup>
+              <colgroup span="9"></colgroup>
+              <tbody>
+              <tr class="t-header">
+                <th colspan="4" scope="colgroup" class="text-center main-border">Team Rankings </th>
+                <th colspan="11" scope="colgroup" class="text-center main-border">Offense Rankings</th>
+                <th colspan="10" scope="colgroup" class="text-center">Defense Rankings</th>
+              </tr>
+              <tr class="t-sub-header">
+                <th scope="col" class="text-center">Overall</th>
+                <th scope="col" class="text-center">OFF RTG</th>
+                <th scope="col" class="text-center">DEF RTG</th>
+                <th scope="col" class="text-center main-border">PPG</th>
+
+                <th scope="col" class="text-center">ORB</th>
+                <th scope="col" class="text-center">AST</th>
+                <th scope="col" class="text-center">TO</th>
+                <th scope="col" class="text-center">FGM</th>
+                <th scope="col" class="text-center">FGA</th>
+                <th scope="col" class="text-center">3PA</th>
+                <th scope="col" class="text-center">3-PM</th>
+                <th scope="col" class="text-center">FG%</th>
+                <th scope="col" class="text-center">3PT%</th>
+                <th scope="col" class="text-center">FT%</th>
+                <!-- <th scope="col" class="text-center main-border">OFF RTG</th> -->
+
+                <th scope="col" class="text-center main-border" >Pace</th>
+                <th scope="col" class="text-center">PPG Allow</th>
+                <th scope="col" class="text-center">DRB</th>
+                <th scope="col" class="text-center">AST Allow</th>
+                <th scope="col" class="text-center">STL</th>
+                <th scope="col" class="text-center">BLK</th>
+                <th scope="col" class="text-center">FG% Allow</th>
+                <th scope="col" class="text-center">3P% Allow</th>
+                <th scope="col" class="text-center">	
+                  FORCE TO	
+                  </th>
+                  <!-- <th scope="col" class="text-center">	
+                    Defensive Rating
+                    </th> -->
+              </tr>
+              <tr class="t-content">
+                <td>
+                  <app-rating *ngIf="data.team_rankings.team_rank; let overallRating" [value]="overallRating" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.offensive_rating; let offensiveRating" [value]="offensiveRating" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.defensive_rating; let defensiveRating" [value]="defensiveRating" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td class="main-border">
+                  <app-rating *ngIf="data.team_rankings.points_per_game; let specialTeamRating" [value]="specialTeamRating" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+
+                <td>
+                  <app-rating *ngIf="data.team_rankings.offensive_rebounds; let offensive_rebounds" [value]="offensive_rebounds" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                  <!-- {{data.team_rankings.offensive_rebounds}} -->
+
+                </td>
+                <td>
+                  <!-- {data.team_rankings.assists}} -->
+                  <app-rating *ngIf="data.team_rankings.assists; let assists" [value]="assists" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+                <td>
+                  <!-- {{data.team_rankings.turnovers}} -->
+                  <app-rating *ngIf="data.team_rankings.turnovers; let turnovers" [value]="turnovers" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+                <td>
+                  <!-- {{data.team_rankings.field_goals_made}} -->
+                  <app-rating *ngIf="data.team_rankings.field_goals_made; let field_goals_made" [value]="field_goals_made" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+                <td>
+                  <!-- {{data.team_rankings.field_goals_attempted}} -->
+                  <app-rating *ngIf="data.team_rankings.field_goals_attempted; let field_goals_attempted" [value]="field_goals_attempted" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+
+                <td>
+                  <!-- {{data.team_rankings.three_pointers_attempted}} -->
+                  <app-rating *ngIf="data.team_rankings.three_pointers_attempted; let three_pointers_attempted" [value]="three_pointers_attempted" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+
+                <td>
+                  <!-- {{data.team_rankings.three_pointers_made}} -->
+                  <app-rating *ngIf="data.team_rankings.three_pointers_made; let three_pointers_made" [value]="three_pointers_made" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+                <td>
+                  <!-- {{data.team_rankings.field_goals_percentage}} -->
+                  <app-rating *ngIf="data.team_rankings.field_goals_percentage; let field_goals_percentage" [value]="field_goals_percentage" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+                <td>
+                  <!-- {{data.team_rankings.three_pointers_percentage}} -->
+                  <app-rating *ngIf="data.team_rankings.three_pointers_percentage; let three_pointers_percentage" [value]="three_pointers_percentage" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+                
+                <td>
+                  <!-- {{data.team_rankings.free_throws_percentage}} -->
+                  <app-rating *ngIf="data.team_rankings.free_throws_percentage; let free_throws_percentage" [value]="free_throws_percentage" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+                
+                <!-- <td>{{data.team_rankings.offensive_rating}}</td> -->
+
+                <td class="main-border">
+                  <!-- {{data.team_rankings.pace}} -->
+                  <app-rating *ngIf="data.team_rankings.pace; let pace" [value]="pace" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+
+                <td>
+                  <!-- {{data.team_rankings.points_per_game_allowed}} -->
+                  <app-rating *ngIf="data.team_rankings.points_per_game_allowed; let points_per_game_allowed" [value]="points_per_game_allowed" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+                <td>
+                  <!-- {{data.team_rankings.defensive_rebounds}} -->
+                  <app-rating *ngIf="data.team_rankings.defensive_rebounds; let defensive_rebounds" [value]="defensive_rebounds" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+                <td>
+                  <!-- {{data.team_rankings.assists_allowed}} -->
+                  <app-rating *ngIf="data.team_rankings.assists_allowed; let assists_allowed" [value]="assists_allowed" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+                <td>
+                  <!-- {{data.team_rankings.steals}} -->
+                  <app-rating *ngIf="data.team_rankings.steals; let steals" [value]="steals" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+                <td>
+                  <!-- {{data.team_rankings.blocked_shots}} -->
+                  <app-rating *ngIf="data.team_rankings.blocked_shots; let blocked_shots" [value]="blocked_shots" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+                <td>
+                  <!-- {{data.team_rankings.field_goals_percentage_allowed}} -->
+                  <app-rating *ngIf="data.team_rankings.field_goals_percentage_allowed; let field_goals_percentage_allowed" [value]="field_goals_percentage_allowed" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+                <td>
+                  <!-- {{data.team_rankings.three_pointers_percentage_allowed}} -->
+                  <app-rating *ngIf="data.team_rankings.three_pointers_percentage_allowed; let three_pointers_percentage_allowed" [value]="three_pointers_percentage_allowed" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+                <td>
+                  <!-- {{data.team_rankings.forced_turnover}} -->
+                  <app-rating *ngIf="data.team_rankings.forced_turnover; let forced_turnover" [value]="forced_turnover" [reverse]="true" [config]="ratingConfig"></app-rating>
+
+                </td>
+                <!-- <td>{{data.team_rankings.defensive_rating}}</td> -->
+              </tr>
+              </tbody>
+            </table> 
+          </div>
+          <div *ngIf="ddData.teamRatingsTableDDs['#']" class="multi-row-data-table-wrapper big-table custom-width mb-0">
+            <table class="multi-row-data-table t-stripped">
+              <colgroup span="4"></colgroup>
+              <colgroup span="11"></colgroup>
+              <colgroup span="9"></colgroup>
+              <tbody>
+              <tr class="t-header">
+                <th colspan="4" scope="colgroup" class="text-center main-border">Team Ratings</th>
+                <th colspan="11" scope="colgroup" class="text-center main-border">Offense Rankings</th>
+                <th colspan="10" scope="colgroup" class="text-center">Defense Rankings</th>
+              </tr>
+              <tr class="t-sub-header">
+                <th scope="col" class="text-center">Overall</th>
+                <th scope="col" class="text-center">OFF RTG</th>
+                <th scope="col" class="text-center">DEF RTG</th>
+                <th scope="col" class="text-center main-border">PPG</th>
+
+                <th scope="col" class="text-center">ORB</th>
+                <th scope="col" class="text-center">AST</th>
+                <th scope="col" class="text-center">TO</th>
+                <th scope="col" class="text-center">FGM</th>
+                <th scope="col" class="text-center">FGA</th>
+                <th scope="col" class="text-center">3PA</th>
+                <th scope="col" class="text-center">3-PM</th>
+                <th scope="col" class="text-center">FG%</th>
+                <th scope="col" class="text-center">3PT%</th>
+                <th scope="col" class="text-center">FT%</th>
+                <!-- <th scope="col" class="text-center main-border">OFF RTG</th> -->
+
+                <th scope="col" class="text-center main-border" >Pace</th>
+                <th scope="col" class="text-center">PPG Allow</th>
+                <th scope="col" class="text-center">DRB</th>
+                <th scope="col" class="text-center">AST Allow</th>
+                <th scope="col" class="text-center">STL</th>
+                <th scope="col" class="text-center">BLK</th>
+                <th scope="col" class="text-center">FG% Allow</th>
+                <th scope="col" class="text-center">3P% Allow</th>
+                <th scope="col" class="text-center">	
+                  FORCE TO	
+                  </th>
+                  <!-- <th scope="col" class="text-center">	
+                    Defensive Rating
+                    </th> -->
+              </tr>
+              <tr class="t-content">
+                <td>
+                  <app-rating *ngIf="data.team_rankings_values.team_rank; let overallRating" [value]="overallRating" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings_values.offensive_rating; let offensiveRating" [value]="offensiveRating" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings_values.defensive_rating; let defensiveRating" [value]="defensiveRating" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td class="main-border">
+                  <app-rating *ngIf="data.team_rankings_values.points_per_game; let specialTeamRating" [value]="specialTeamRating" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+
+                <td>
+                  <!-- <app-rating *ngIf="data.team_rankings.offensive_rebounds; let offensive_rebounds" [value]="offensive_rebounds" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                  {{data.team_rankings_values.offensive_rebounds}}
+
+                </td>
+                <td>
+                  {{data.team_rankings_values.assists}}
+                  <!-- <app-rating *ngIf="data.team_rankings.assists; let assists" [value]="assists" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+                <td>
+                  {{data.team_rankings_values.turnovers}}
+                  <!-- <app-rating *ngIf="data.team_rankings.turnovers; let turnovers" [value]="turnovers" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+                <td>
+                  {{data.team_rankings_values.field_goals_made}}
+                  <!-- <app-rating *ngIf="data.team_rankings.field_goals_made; let field_goals_made" [value]="field_goals_made" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+                <td>
+                  {{data.team_rankings_values.field_goals_attempted}}
+                  <!-- <app-rating *ngIf="data.team_rankings.field_goals_attempted; let field_goals_attempted" [value]="field_goals_attempted" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+
+                <td>
+                  {{data.team_rankings_values.three_pointers_attempted}}
+                  <!-- <app-rating *ngIf="data.team_rankings.three_pointers_attempted; let three_pointers_attempted" [value]="three_pointers_attempted" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+
+                <td>
+                  {{data.team_rankings_values.three_pointers_made}}
+                  <!-- <app-rating *ngIf="data.team_rankings.three_pointers_made; let three_pointers_made" [value]="three_pointers_made" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+                <td>
+                  {{data.team_rankings_values.field_goals_percentage}}
+                  <!-- <app-rating *ngIf="data.team_rankings.field_goals_percentage; let field_goals_percentage" [value]="field_goals_percentage" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+                <td>
+                  {{data.team_rankings_values.three_pointers_percentage}}
+                  <!-- <app-rating *ngIf="data.team_rankings.three_pointers_percentage; let three_pointers_percentage" [value]="three_pointers_percentage" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+                
+                <td>
+                  {{data.team_rankings_values.free_throws_percentage}}
+                  <!-- <app-rating *ngIf="data.team_rankings.free_throws_percentage; let free_throws_percentage" [value]="free_throws_percentage" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+                
+                <!-- <td>{{data.team_rankings.offensive_rating}}</td> -->
+
+                <td class="main-border">
+                  {{data.team_rankings_values.pace}}
+                  <!-- <app-rating *ngIf="data.team_rankings.pace; let pace" [value]="pace" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+
+                <td>
+                  {{data.team_rankings_values.points_per_game_allowed}}
+                  <!-- <app-rating *ngIf="data.team_rankings.points_per_game_allowed; let points_per_game_allowed" [value]="points_per_game_allowed" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+                <td>
+                  {{data.team_rankings_values.defensive_rebounds}}
+                  <!-- <app-rating *ngIf="data.team_rankings.defensive_rebounds; let defensive_rebounds" [value]="defensive_rebounds" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+                <td>
+                  {{data.team_rankings_values.assists_allowed}}
+                  <!-- <app-rating *ngIf="data.team_rankings.assists_allowed; let assists_allowed" [value]="assists_allowed" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+                <td>
+                  {{data.team_rankings_values.steals}}
+                  <!-- <app-rating *ngIf="data.team_rankings.steals; let steals" [value]="steals" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+                <td>
+                  {{data.team_rankings_values.blocked_shots}}
+                  <!-- <app-rating *ngIf="data.team_rankings.blocked_shots; let blocked_shots" [value]="blocked_shots" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+                <td>
+                  {{data.team_rankings_values.field_goals_percentage_allowed}}
+                  <!-- <app-rating *ngIf="data.team_rankings.field_goals_percentage_allowed; let field_goals_percentage_allowed" [value]="field_goals_percentage_allowed" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+                <td>
+                  {{data.team_rankings_values.three_pointers_percentage_allowed}}
+                  <!-- <app-rating *ngIf="data.team_rankings.three_pointers_percentage_allowed; let three_pointers_percentage_allowed" [value]="three_pointers_percentage_allowed" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+                <td>
+                  {{data.team_rankings_values.forced_turnover}}
+                  <!-- <app-rating *ngIf="data.team_rankings.forced_turnover; let forced_turnover" [value]="forced_turnover" [reverse]="true" [config]="ratingConfig"></app-rating> -->
+
+                </td>
+                <!-- <td>{{data.team_rankings.defensive_rating}}</td> -->
+              </tr>
+              </tbody>
+            </table>  
+          </div>
+        </div>
+        <ng-container *ngIf="hasData">
+        <div class="col-12" *ngIf="data.team_offensive_stats">
+          <h2 class="page-heading-two">
+            Team Offensive Stats
+          </h2>
+          <div class="multi-row-data-table-wrapper big-table custom-width mb-0">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="data.team_offensive_stats"
+              [(mfSortBy)]="offenseSorting.sortByTeamStats"
+              [(mfSortOrder)]="offenseSorting.sortOrderTeamStats"
+              (mfSortByChange)="onSortOrder('offenseSorting', 'sortByTeamStats', 'sortOrderTeamStats', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('offenseSorting', 'sortByTeamStats', 'sortOrderTeamStats', 'order', $event)"
+              #teamOffensiveStatsTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="1"></colgroup>
+              <colgroup span="2"></colgroup>
+              <colgroup span="9"></colgroup>
+              <colgroup span="6"></colgroup>
+              <colgroup span="4"></colgroup>
+              <colgroup span="3"></colgroup>
+              <colgroup span="3"></colgroup>
+              <colgroup span="2"></colgroup>
+              <tbody>
+              <tr class="t-header">
+                <th colspan="2" scope="colgroup" class="text-center main-border">Opponent</th>
+                <th colspan="3" scope="colgroup" class="text-center main-border">Vegas</th>
+                <th colspan="5" scope="colgroup" class="text-center main-border">Points Scored</th>
+                <th colspan="6" scope="colgroup" class="text-center main-border">Shooting</th>
+                <th colspan="3" scope="colgroup" class="text-center main-border">Rebounding</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">Assists</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">TO</th>
+                
+              </tr>
+              <tr class="t-sub-header">
+                <th scope="col" class="text-center ">
+                  <mfSorter by="Date">Date</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="Team">Team</mfSorter>
+                </th>
+                <th scope="col" class="text-center   ">
+                  <mfSorter by="point_spread">Spread</mfSorter>
+                </th>
+                <th scope="col" class="text-center  ">
+                  <mfSorter by="ml"> ML</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border ">
+                  <mfSorter by="ou">O/U</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="total_point">TOT PTS</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="pts1">Q1 PTS</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="pts2">Q2 PTS</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="pts3">Q3 PTS</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="pts4">Q4 PTS</mfSorter>
+                </th>
+             
+                <th scope="col" class="text-center">
+                  <mfSorter by="FGA">FGA</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="FGM">FGM</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="3PTA">3PTA</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="3PTM">3PTM</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="3PT">3PT%	</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border ">
+                  <mfSorter by="FG">FG%</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="DREB">DREB</mfSorter>
+                </th>
+                <th scope="col" class="text-center  ">
+                  <mfSorter by="OREB">OREB</mfSorter>
+                </th>
+
+
+                <th scope="col" class="text-center main-border ">
+                  <mfSorter by="total_rEB	">TOT REB	</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border ">
+                  <mfSorter by="total_assists">TOT ASS</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border ">
+                  <mfSorter by="Turnovers">TO</mfSorter>
+                </th>
+                
+              </tr>
+              <tr *ngFor="let teamOffensiveStats of teamOffensiveStatsTable.data" class="t-content">
+                <td>{{teamOffensiveStats.date}}</td>
+                <td class="main-border"><a *ngIf="teamOffensiveStats.opp_stats_route" [appPreselectNflStatsTeamSeason]="params?.year" [routerLink]="[teamOffensiveStats.opp_stats_route]" class="link-black-underline">
+                  {{teamOffensiveStats.opponent}}
+                </a>
+                <span *ngIf="!teamOffensiveStats.opp_stats_route">
+                  {{teamOffensiveStats.opponent}}
+                </span>
+              </td>
+
+                <td >
+                  <span *ngIf="teamOffensiveStats.spread !== null">
+                    {{teamOffensiveStats.spread}}
+                  </span>
+                  <span *ngIf="teamOffensiveStats.spread == null">
+                    0
+                  </span>
+                </td>
+                <td >
+                  <span *ngIf="teamOffensiveStats.moneyline !== null">
+                    {{teamOffensiveStats.moneyline}}
+                  </span>
+                  <span *ngIf="teamOffensiveStats.moneyline == null">
+                    0
+                  </span>
+                </td>
+                <td class="main-border" >
+                  <span *ngIf="teamOffensiveStats.over_under !== null">
+                    {{teamOffensiveStats.over_under}}
+                  </span>
+                  <span *ngIf="teamOffensiveStats.over_under == null">
+                    0
+                  </span>
+                </td>
+                <td class="main-border">
+                  <span *ngIf="teamOffensiveStats.points !== null">
+                    {{teamOffensiveStats.points}}
+                  </span>
+                  <span *ngIf="teamOffensiveStats.points == null">
+                    0
+                  </span>
+                 </td>
+                <td>
+
+                  <span *ngIf="teamOffensiveStats.quarter_1 !== null">
+                    {{teamOffensiveStats.quarter_1}}
+                  </span>
+                  <span *ngIf="teamOffensiveStats.quarter_1 == null">
+                    0
+                  </span>
+                  
+                </td>
+                <td>
+                  <span *ngIf="teamOffensiveStats.quarter_2 !== null">
+                    {{teamOffensiveStats.quarter_2}}
+                  </span>
+                  <span *ngIf="teamOffensiveStats.quarter_2 == null">
+                    0
+                  </span>
+                 </td>
+                <td>
+                  <span *ngIf="teamOffensiveStats.quarter_3 !== null">
+                    {{teamOffensiveStats.quarter_3}}
+                  </span>
+                  <span *ngIf="teamOffensiveStats.quarter_3 == null">
+                    0
+                  </span>
+                 </td>
+                <td>
+                  <span *ngIf="teamOffensiveStats.quarter_4 !== null">
+                    {{teamOffensiveStats.quarter_4}}
+                   </span>
+                  <span *ngIf="teamOffensiveStats.quarter_4 == null">
+                    0
+                  </span>
+                 </td>
+               
+                
+                <td>{{teamOffensiveStats.field_goals_attempted}}</td>
+                <td>{{teamOffensiveStats.field_goals_made}}</td>
+                <td>{{teamOffensiveStats.three_pointers_attempted}}</td>
+                <td>{{teamOffensiveStats.three_pointers_made}}</td>
+
+
+
+                <td>{{teamOffensiveStats.three_pointers_percentage}}</td>
+                <td class="main-border">{{teamOffensiveStats.field_goals_percentage}}</td>
+                <td>{{teamOffensiveStats.defensive_rebounds}}</td>
+                <td>{{teamOffensiveStats.offensive_rebounds}}</td>
+
+                <td class="main-border">{{teamOffensiveStats.rebounds}}</td>
+                <td class="main-border">{{teamOffensiveStats.assists}}</td>
+                <td class="main-border">{{teamOffensiveStats.turnovers}}</td>
+                  </tr>
+              </tbody>
+            </table> <!-- END: Yearly Lineups Table -->
+          </div>
+        </div>
+
+
+        <div class="col-12" *ngIf="data.team_defensive_stats">
+          <h2 class="page-heading-two">
+            Team Offensive Stats
+          </h2>
+          <div class="multi-row-data-table-wrapper big-table custom-width mb-0">
+            <table
+               
+              [mfData]="data.team_defensive_stats"
+              
+              
+              #teamDefensiveStatsTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="1"></colgroup>
+              <colgroup span="2"></colgroup>
+              <colgroup span="9"></colgroup>
+              <colgroup span="6"></colgroup>
+              <colgroup span="4"></colgroup>
+              <colgroup span="3"></colgroup>
+              <colgroup span="3"></colgroup>
+              <colgroup span="2"></colgroup>
+              <tbody>
+              <tr class="t-header">
+                <th colspan="2" scope="colgroup" class="text-center main-border">Opponent</th>
+                <th colspan="3" scope="colgroup" class="text-center main-border">Vegas</th>
+                <th colspan="5" scope="colgroup" class="text-center main-border">Points Allowed</th>
+                <th colspan="6" scope="colgroup" class="text-center main-border">Shooting (Allowed)</th>
+                <th colspan="3" scope="colgroup" class="text-center main-border">Rebounding (Allowed)</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">ASS Allow</th>
+                <th colspan="2" scope="colgroup" class="text-center main-border">Defensive</th>
+ 
+                
+              </tr>
+              <tr class="t-sub-header">
+                <th scope="col" class="text-center " >
+                  <mfSorter by="Date">Date</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border" >
+                  <mfSorter by="Team">Team</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border" >
+                  <mfSorter by="SpreadMLO/U">Spread </mfSorter>
+                </th>
+                <th scope="col"   class="text-center main-border" >
+                  <mfSorter by="SpreadMLO/U"> ML </mfSorter>
+                </th>
+                <th scope="col"   class="text-center main-border" >
+                  <mfSorter by="SpreadMLO/U"> O/U</mfSorter>
+                </th>
+                 
+                
+
+                <th scope="col" class="text-center ">
+                  <mfSorter by="total_point">TOT PTS</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="pts1">Q1 PTS</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="pts2">Q2 PTS</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="pts3">Q3 PTS</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="pts4">Q4 PTS</mfSorter>
+                </th>
+             
+
+                
+                <th scope="col"   class="text-center">
+                  <mfSorter by="FGA">FGA</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="FGM">FGM</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="3PTA">3PTA</mfSorter>
+                </th>
+
+
+                <th scope="col"  class="text-center">
+                  <mfSorter by="3PTM">3PTM</mfSorter>
+                </th>
+                <th scope="col"   class="text-center">
+                  <mfSorter by="3PT">3PT%</mfSorter>
+                </th>
+                <th scope="col"  class="text-center main-border">
+                  <mfSorter by="FG">FG%</mfSorter>
+                </th>
+                <th scope="col"  class="text-center ">
+                  <mfSorter by="DREB">DREB</mfSorter>
+                </th>
+
+                <th scope="col"  class="text-center">
+                  <mfSorter by="OREB">OREB</mfSorter>
+                </th>
+                <th scope="col"  class="text-center main-border">
+                  <mfSorter by="Total REB">TOT REB</mfSorter>
+                </th>
+                <th scope="col "   class="text-center main-border">
+                  <mfSorter by="Total Assists">TOT ASS</mfSorter>
+                </th>
+                <th scope="col"   class="text-center">
+                  <mfSorter by="Blocks">BLK</mfSorter>
+                </th>
+                <th scope="col"   class="text-center main-border">
+                  <mfSorter by="Steals">STL</mfSorter>
+                </th>
+                
+              
+              </tr>
+              <tr *ngFor="let teamDefensiveStats of teamDefensiveStatsTable.data" class="t-content">
+               
+                  <td >{{teamDefensiveStats.date}}</td>
+                  <td  class="main-border">
+                    <a *ngIf="teamDefensiveStats.opp_stats_route" [appPreselectNflStatsTeamSeason]="params?.year" [routerLink]="[teamDefensiveStats.opp_stats_route]" class="link-black-underline">
+                    {{teamDefensiveStats.opponent}}
+                  </a>
+                  <span *ngIf="!teamDefensiveStats.opp_stats_route">
+                    {{teamDefensiveStats.opponent}}
+                  </span>
+                </td>
+                <td  >
+                  <span *ngIf="teamDefensiveStats.spread !== null">
+                    {{teamDefensiveStats.spread}}
+                  </span>
+                  <span *ngIf="teamDefensiveStats.spread == null">
+                    0
+                  </span>
+                </td>
+                <td  >
+                  <span *ngIf="teamDefensiveStats.moneyline !== null">
+                    {{teamDefensiveStats.moneyline}}
+                  </span>
+                  <span *ngIf="teamDefensiveStats.moneyline == null">
+                    0
+                  </span>
+                </td>
+                <td    >
+                  <span *ngIf="teamDefensiveStats.over_under !== null">
+                    {{teamDefensiveStats.over_under}}
+                  </span>
+                  <span *ngIf="teamDefensiveStats.over_under == null">
+                    0
+                  </span>
+                </td>
+                
+                <td class="main-border"  >
+                  <span *ngIf="teamDefensiveStats.points_allowed !== null">
+                    {{teamDefensiveStats.points_allowed}}
+                  </span>
+                  <span *ngIf="teamDefensiveStats.points_allowed == null">
+                    0
+                  </span>
+                    
+                   
+                   </td>
+                  <td>
+                    <span *ngIf="teamDefensiveStats.quarter_1 !== null">
+                      {{teamDefensiveStats.quarter_1}}
+                    </span>
+                    <span *ngIf="teamDefensiveStats.quarter_1 == null">
+                      0
+                    </span>
+                    
+                  </td>
+                  <td>
+                    <span *ngIf="teamDefensiveStats.quarter_2 !== null">
+                      {{teamDefensiveStats.quarter_2}}
+                    </span>
+                    <span *ngIf="teamDefensiveStats.quarter_2 == null">
+                      0
+                    </span>
+                   </td>
+                  <td>
+                    <span *ngIf="teamDefensiveStats.quarter_3 !== null">
+                      {{teamDefensiveStats.quarter_3}}
+                    </span>
+                    <span *ngIf="teamDefensiveStats.quarter_3 == null">
+                      0
+                    </span>
+                    
+                   
+                  <td>
+                    <span *ngIf="teamDefensiveStats.quarter_4 !== null">
+                      {{teamDefensiveStats.quarter_4}}
+                    </span>
+                    <span *ngIf="teamDefensiveStats.quarter_4 == null">
+                      0
+                    </span>
+                   </td>
+
+                  <td>{{teamDefensiveStats.field_goals_attempted_allowed}}</td>
+
+                  <td  >{{teamDefensiveStats.field_goals_made_allowed}}</td>
+
+                  <td  >{{teamDefensiveStats.three_pointers_attempted_allowed}}</td>
+                  <td  >{{teamDefensiveStats.three_pointers_made_allowed}}</td>
+                  <td >{{teamDefensiveStats.three_pointers_percentage_allowed}}</td>
+                  <td class="main-border">{{teamDefensiveStats.field_goals_percentage_allowed}}</td>
+                  <td >{{teamDefensiveStats.defensive_rebounds_allowed}}</td>
+                  <td >{{teamDefensiveStats.offensive_rebounds_allowed}}</td>
+
+                  <td    class="main-border">{{teamDefensiveStats.rebounds_allowed}}</td>
+                  <td   class="main-border">{{teamDefensiveStats.assists_allowed}}</td>
+                  <td >{{teamDefensiveStats.blocked_shots}}</td>
+                  <td   class="main-border">{{teamDefensiveStats.steals}}</td>               
+                 </tr>
+              </tbody>
+            </table> <!-- END: Yearly Lineups Table -->
+          </div>
+        </div>
+       
+        <div *ngIf="ddData.tabs['all'] || ddData.tabs['player-stats']" class="row">
+          <ng-container *ngIf="hasData; else noDataTpl">
+          <div class="col-12" *ngIf="data.team_leaders">
+            <h2 class="page-heading-two">
+              {{data.nav.team_name | lastTeamName}} Team Leaders
+            </h2>
+            <div class="leader-container">
+              <div class="d-flex flex-wrap leader-box-wrapper">
+                <ng-container >
+                    <div class="leader-box" >
+                      <h5>Points Per Game</h5>
+                      <div>
+                        <div class="leader-image-wrapper">
+                          <a [routerLink]="[data.team_leaders.points_per_game[0]?.profile_url || '']" rel="nofollow" class="link-black">
+                            <img [src]="data.team_leaders.points_per_game[0].photo_url" alt="{{data.team_leaders.points_per_game[0].full_name}}">
+                          </a>
+                        </div>
+                        <div class="leader-content-wrapper">
+                          <div class="leader-name">
+                            <a [routerLink]="[data.team_leaders.points_per_game[0].profile_url || '']" class="link-black-underline">
+                              {{data.team_leaders.points_per_game[0].full_name}} :{{data.team_leaders.points_per_game[0].points_per_game}}
+                            </a>
+                          </div>
+                          <div>
+                            <a [routerLink]="[data.team_leaders.points_per_game[1].profile_url || '']" class="link-black-underline">
+                              {{data.team_leaders.points_per_game[1].full_name}} :{{data.team_leaders.points_per_game[1].points_per_game}}
+                            </a>                            
+                           </div>
+                          <div>
+                            <a [routerLink]="[data.team_leaders.points_per_game[2].profile_url || '']" class="link-black-underline">{{data.team_leaders.points_per_game[2].full_name}}: {{data.team_leaders.points_per_game[2].points_per_game}}
+                              </a>
+                            </div>
+                          <div> <a [routerLink]="[data.team_leaders.points_per_game[3].profile_url || '']" class="link-black-underline">
+                            {{data.team_leaders.points_per_game[3].full_name}}: {{data.team_leaders.points_per_game[3].points_per_game}}</a>
+
+                          </div>
+                          <div>
+                            
+                            <a [routerLink]="[data.team_leaders.points_per_game[4].profile_url || '']" class="link-black-underline">
+                            {{data.team_leaders.points_per_game[4].full_name}}: {{data.team_leaders.points_per_game[4].points_per_game}}
+                          </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                 
+                </ng-container>
+                <ng-container >
+                  <div class="leader-box" >
+                    <h5>Assists Per Game</h5>
+                    <div>
+                      <div class="leader-image-wrapper">
+                        <a [routerLink]="[data.team_leaders.assists_per_game[0]?.profile_url || '']" rel="nofollow" class="link-black">
+                          <img [src]="data.team_leaders.assists_per_game[0].photo_url" alt="{{data.team_leaders.assists_per_game[0].full_name}}">
+                        </a>
+                      </div>
+                      <div class="leader-content-wrapper">
+                        <div class="leader-name">
+                          <a [routerLink]="[data.team_leaders.assists_per_game[0].profile_url || '']" class="link-black-underline">
+                            {{data.team_leaders.assists_per_game[0].full_name}} :{{data.team_leaders.points_per_game[0].assists_per_game}}
+                          </a>
+                        </div>
+                        <div> <a [routerLink]="[data.team_leaders.assists_per_game[1].profile_url || '']" class="link-black-underline">
+                          {{data.team_leaders.assists_per_game[1].full_name}}: {{data.team_leaders.assists_per_game[1].assists_per_game}}
+                        </a>
+
+                        </div>
+                        <div>
+                          <a [routerLink]="[data.team_leaders.assists_per_game[2].profile_url || '']" class="link-black-underline">
+                          {{data.team_leaders.assists_per_game[2].full_name}}: {{data.team_leaders.assists_per_game[2].assists_per_game}}
+                        </a>
+
+                        </div>
+                        <div>
+                          <a [routerLink]="[data.team_leaders.assists_per_game[3].profile_url || '']" class="link-black-underline">
+                          
+                          {{data.team_leaders.assists_per_game[3].full_name}}: {{data.team_leaders.assists_per_game[3].assists_per_game}}
+                        
+                        </a>
+                      </div>
+                        <div>
+                          <a [routerLink]="[data.team_leaders.assists_per_game[4].profile_url || '']" class="link-black-underline">
+                          
+                          {{data.team_leaders.assists_per_game[4].full_name}}: {{data.team_leaders.assists_per_game[4].assists_per_game}}
+                        
+                        </a>
+                      </div>
+  
+                        
+                      </div>
+                    </div>
+                  </div>
+               
+              </ng-container>
+             
+            <ng-container >
+              <div class="leader-box" >
+                <h5>Rebounds Per Game</h5>
+                <div>
+                  <div class="leader-image-wrapper">
+                    <a [routerLink]="[data.team_leaders.rebounds_per_game[0]?.profile_url || '']" rel="nofollow" class="link-black">
+                      <img [src]="data.team_leaders.rebounds_per_game[0].photo_url" alt="{{data.team_leaders.rebounds_per_game[0].full_name}}">
+                    </a>
+                  </div>
+                  <div class="leader-content-wrapper">
+                    <div class="leader-name">
+                      <a [routerLink]="[data.team_leaders.rebounds_per_game[0].profile_url || '']" class="link-black-underline">
+                        {{data.team_leaders.rebounds_per_game[0].full_name}} :{{data.team_leaders.rebounds_per_game[0].rebounds_per_game}}
+                      </a>
+                    </div>
+                    <div>
+                      <a [routerLink]="[data.team_leaders.rebounds_per_game[1].profile_url || '']" class="link-black-underline">
+                      {{data.team_leaders.rebounds_per_game[1].full_name}}: {{data.team_leaders.rebounds_per_game[1].rebounds_per_game}}
+                    
+                    </a></div>
+                    <div>
+                      <a [routerLink]="[data.team_leaders.rebounds_per_game[2].profile_url || '']" class="link-black-underline">
+                        {{data.team_leaders.rebounds_per_game[2].full_name}}: {{data.team_leaders.rebounds_per_game[2].rebounds_per_game}}
+                      </a></div>
+                    <div>
+                      
+                      <a [routerLink]="[data.team_leaders.rebounds_per_game[3].profile_url || '']" class="link-black-underline">
+                        {{data.team_leaders.rebounds_per_game[3].full_name}}: {{data.team_leaders.rebounds_per_game[3].rebounds_per_game}}
+                      </a>
+
+                      </div>
+                    <div>
+                      <a [routerLink]="[data.team_leaders.rebounds_per_game[4].profile_url || '']" class="link-black-underline">
+                      {{data.team_leaders.rebounds_per_game[4].full_name}}: {{data.team_leaders.rebounds_per_game[4].rebounds_per_game}}
+                    </a>
+
+                    </div>
+  
+                  </div>
+                </div>
+              </div>
+           
+          </ng-container>
+          <ng-container >
+            <div class="leader-box" >
+              <h5>Steals Per Game</h5>
+              <div>
+                <div class="leader-image-wrapper">
+                  <a [routerLink]="[data.team_leaders.steals_per_game[0]?.profile_url || '']" rel="nofollow" class="link-black">
+                    <img [src]="data.team_leaders.steals_per_game[0].photo_url" alt="{{data.team_leaders.steals_per_game[0].full_name}}">
+                  </a>
+                </div>
+                <div class="leader-content-wrapper">
+                  <div class="leader-name">
+                    <a [routerLink]="[data.team_leaders.steals_per_game[0].profile_url || '']" class="link-black-underline">
+                      {{data.team_leaders.steals_per_game[0].full_name}} :{{data.team_leaders.steals_per_game[0].steals_per_game}}
+                    </a>
+                  </div>
+                  <div>
+                    <a [routerLink]="[data.team_leaders.steals_per_game[1].profile_url || '']" class="link-black-underline"> 
+                    
+                    {{data.team_leaders.steals_per_game[1].full_name}}: {{data.team_leaders.steals_per_game[1].steals_per_game}}
+                    </a>
+
+                  </div>
+                 
+                  <div>
+                    <a [routerLink]="[data.team_leaders.steals_per_game[2].profile_url || '']" class="link-black-underline">
+                    {{data.team_leaders.steals_per_game[2].full_name}}: {{data.team_leaders.steals_per_game[2].steals_per_game}}
+                  </a>
+
+                  </div>
+                  <div>
+                    <a [routerLink]="[data.team_leaders.steals_per_game[3].profile_url || '']" class="link-black-underline">
+                    {{data.team_leaders.steals_per_game[3].full_name}}: {{data.team_leaders.steals_per_game[3].steals_per_game}}
+                  </a>
+
+                  </div>
+                  <div>
+                    <a [routerLink]="[data.team_leaders.steals_per_game[4].profile_url || '']" class="link-black-underline">
+                    {{data.team_leaders.steals_per_game[4].full_name}}: {{data.team_leaders.steals_per_game[4].steals_per_game}}
+                  </a>
+                  </div>
+  
+                  
+                </div>
+              </div>
+            </div>
+         
+        </ng-container>
+  
+        <ng-container >
+          <div class="leader-box" >
+            <h5>Blocks per Game</h5>
+            <div>
+              <div class="leader-image-wrapper">
+                <a [routerLink]="[data.team_leaders.blocked_shots_per_game[0]?.profile_url || '']" rel="nofollow" class="link-black">
+                  <img [src]="data.team_leaders.blocked_shots_per_game[0].photo_url" alt="{{data.team_leaders.blocked_shots_per_game[0].full_name}}">
+                </a>
+              </div>
+              <div class="leader-content-wrapper">
+                <div class="leader-name">
+                  <a [routerLink]="[data.team_leaders.blocked_shots_per_game[0].profile_url || '']" class="link-black-underline">
+                    {{data.team_leaders.blocked_shots_per_game[0].full_name}} :{{data.team_leaders.blocked_shots_per_game[0].blocked_shots_per_game}}
+                  </a>
+                </div>
+                <div>
+                  <a [routerLink]="[data.team_leaders.blocked_shots_per_game[1]?.profile_url || '']" rel="nofollow" class="link-black">
+                  {{data.team_leaders.blocked_shots_per_game[1].full_name}}: {{data.team_leaders.blocked_shots_per_game[1].blocked_shots_per_game}}
+                </a>
+
+                </div>
+                <div>
+                  <a [routerLink]="[data.team_leaders.blocked_shots_per_game[2]?.profile_url || '']" rel="nofollow" class="link-black">
+                  {{data.team_leaders.blocked_shots_per_game[2].full_name}}: {{data.team_leaders.blocked_shots_per_game[2].blocked_shots_per_game}}
+                </a>
+
+                </div>
+                <div>
+                  <a [routerLink]="[data.team_leaders.blocked_shots_per_game[3]?.profile_url || '']" rel="nofollow" class="link-black">
+                  {{data.team_leaders.blocked_shots_per_game[3].full_name}}: {{data.team_leaders.blocked_shots_per_game[3].blocked_shots_per_game}}
+                </a>
+
+                </div>
+                <div>
+                  <a [routerLink]="[data.team_leaders.blocked_shots_per_game[4]?.profile_url || '']" rel="nofollow" class="link-black">
+                  {{data.team_leaders.blocked_shots_per_game[4].full_name}}: {{data.team_leaders.blocked_shots_per_game[4].blocked_shots_per_game}}
+                  </a></div>
+  
+                
+              </div>
+            </div>
+          </div>
+       
+      </ng-container>
+              </div>
+               
+            </div>
+          </div>
+          </ng-container>
+        </div>
+        <div class="col-12" *ngIf="data.player_stats">
+          <h2 class="page-heading-two">
+            Players Stats
+          </h2>
+          <div class="multi-row-data-table-wrapper big-table custom-width mb-0">
+            <table
+               
+               [mfData]="data.player_stats"
+             
+              #playerstatsTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="1"></colgroup>
+              <colgroup span="2"></colgroup>
+              <colgroup span="9"></colgroup>
+              <colgroup span="6"></colgroup>
+              <colgroup span="4"></colgroup>
+              <colgroup span="3"></colgroup>
+              <colgroup span="3"></colgroup>
+              <colgroup span="2"></colgroup>
+              <tbody>
+              <tr class="t-header">
+                <th colspan="1" scope="colgroup" class="text-center main-border">NAME</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">RTG</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">MINS</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">PTS</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">AST</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">REB</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">STL</th>
+
+
+                <th colspan="1" scope="colgroup" class="text-center main-border">Blk</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">TO</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">FG%</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">FGM</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">3PTM</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">3PA</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">3P%</th>
+
+
+                <th colspan="1" scope="colgroup" class="text-center main-border">FTM</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">FTA</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">FT%</th>
+                
+              </tr>
+            
+              <tr *ngFor="let player_stats_data of playerstatsTable.data" class="t-content">
+                <td>
+                  <app-player-link [league]="'nba'" [playerName]="player_stats_data.name" [playerUrl]="player_stats_data.profile_url" [generateShortName]="false"></app-player-link>
+
+             
+                </td>
+                <td>
+                  
+                  
+                  <app-rating [value]="player_stats_data.lineups_rating"></app-rating>
+                </td>
+                <td>
+                  <span *ngIf="player_stats_data.season_stats.minutes!== null">
+                    {{player_stats_data.season_stats.minutes}}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.minutes == null">
+                    0
+                  </span>
+                  <!-- {{player_stats_data.season_stats.minutes}} -->
+                </td>
+
+                <td>
+                  <span *ngIf="player_stats_data.season_stats.points !== null">
+                    {{player_stats_data.season_stats.points }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.points == null">
+                    0
+                  </span> 
+                </td>
+                <td>
+                  <span *ngIf="player_stats_data.season_stats.assists !== null">
+                    {{player_stats_data.season_stats.assists }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.assists == null">
+                    0
+                  </span> 
+                  
+                </td>
+                <td>
+                  
+                  <span *ngIf="player_stats_data.season_stats.rebounds !== null">
+                    {{player_stats_data.season_stats.rebounds }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.rebounds == null">
+                    0
+                  </span> 
+                  
+                </td>
+                 <td>
+                  <span *ngIf="player_stats_data.season_stats.steals !== null">
+                    {{player_stats_data.season_stats.steals }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.steals == null">
+                    0
+                  </span> 
+                   </td>
+
+
+                 <td>
+                  <span *ngIf="player_stats_data.season_stats.blocked_shots !== null">
+                    {{player_stats_data.season_stats.blocked_shots }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.blocked_shots == null">
+                    0
+                  </span>  
+                   </td>
+                <td>
+                  
+                  <span *ngIf="player_stats_data.season_stats.turnovers !== null">
+                    {{player_stats_data.season_stats.turnovers }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.turnovers == null">
+                    0
+                  </span> 
+                  </td>
+                <td>
+                  <span *ngIf="player_stats_data.season_stats.field_goals_percentage !== null">
+                    {{player_stats_data.season_stats.field_goals_percentage }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.field_goals_percentage == null">
+                    0
+                  </span> 
+                 
+                </td>
+                 <td>
+                   
+                  <span *ngIf="player_stats_data.season_stats.field_goals_made !== null">
+                    {{player_stats_data.season_stats.field_goals_made }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.field_goals_made == null">
+                    0
+                  </span> 
+              </td>
+
+
+                 <td>
+                   
+                  <span *ngIf="player_stats_data.season_stats.three_pointers_made !== null">
+                    {{player_stats_data.season_stats.three_pointers_made }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.three_pointers_made == null">
+                    0
+                  </span> 
+                   </td>
+
+                 <td>
+                  <span *ngIf="player_stats_data.season_stats.three_pointers_attempted !== null">
+                    {{player_stats_data.season_stats.three_pointers_attempted }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.three_pointers_attempted == null">
+                    0
+                  </span>  
+                  
+                 </td>
+                 
+                <td>
+                  
+                  <span *ngIf="player_stats_data.season_stats.three_pointers_percentage !== null">
+                    {{player_stats_data.season_stats.three_pointers_percentage }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.pothree_pointers_percentageints == null">
+                    0
+                  </span> 
+                  </td>
+                <td>
+                  
+                  <span *ngIf="player_stats_data.season_stats.free_throws_made !== null">
+                    {{player_stats_data.season_stats.free_throws_made }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.free_throws_made == null">
+                    0
+                  </span> 
+                  </td>
+                 <td>
+                   
+                  <span *ngIf="player_stats_data.season_stats.free_throws_attempted !== null">
+                    {{player_stats_data.season_stats.free_throws_attempted }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.free_throws_attempted == null">
+                    0
+                  </span> 
+                   </td>
+
+
+                 <td>
+                   
+                  <span *ngIf="player_stats_data.season_stats.free_throw_percentage !== null">
+                    {{player_stats_data.season_stats.free_throw_percentage }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.free_throw_percentage == null">
+                    0
+                  </span> 
+                 </td>
+             
+
+                
+<!-- 
+                <td>
+                  <a *ngIf="player_stats_data.profile_url" [appPreselectNflStatsTeamSeason]="params?.year" [routerLink]="[player_stats_data.profile_url]" class="link-black-underline">
+                    {{ player_stats_data.profile_url}}
+                  </a>
+                  <span *ngIf="!player_stats_data.profile_url">
+                    {{player_stats_data.profile_url}}
+                  </span>
+                </td> -->
+               
+                     </tr>
+              </tbody>
+            </table> <!-- END: Yearly Lineups Table -->
+          </div>
+        </div>
+      
+
+        </ng-container>
+      </div> 
+      
+   
+   
+   
+    </div>
+
+    <div class="col-12" *appBrowserIf="!data.team_header">
+      <div class="no-stats-cap">
+        {{handleYear(params?.year)}} Regular Season Hasn't Started. Select Last Year for Stats.
+      </div>
+    </div>
+
+    <div *ngIf="data.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="data.bottom_header" class="page-heading-two">
+        {{data.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="data.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+</div>
+
+
+

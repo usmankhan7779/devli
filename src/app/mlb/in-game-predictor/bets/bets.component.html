@@ -1,0 +1,94 @@
+<div class="row mt-2">
+  <div class="col-12">
+    <div class="row top-score-section">
+      <div class="col-lg-2">
+        <app-team-score-game></app-team-score-game>
+      </div>
+      <div class="col-lg-10">
+        <div class="multi-row-data-table-wrapper">
+          <app-score-prediction-table></app-score-prediction-table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="grouped-dropdown-wrapper btn-group">
+      <div ngbDropdown class="grouped-dropdown  dropdown">
+        <button type="button" class="grouped-dropdown-btn btn btn-secondary first px-2" id="bovada-dropdown" ngbDropdownToggle>
+          <span class="pr-2 pr-sm-5">Bovada</span> <img class="down-arrow float-right pt-2" src="/assets/images/arrow-down.png" alt="arrow-down" />
+        </button>
+      </div>
+      <div ngbDropdown class="grouped-dropdown  dropdown">
+        <button type="button" class="grouped-dropdown-btn btn btn-secondary px-2" id="bets-dropdown" ngbDropdownToggle>
+          <span class="pr-2 pr-sm-5">Game Bets</span> <img class="down-arrow float-right pt-2" src="/assets/images/arrow-down.png" alt="arrow-down" />
+        </button>
+      </div>
+      <div ngbDropdown class="grouped-dropdown  dropdown">
+        <button type="button" class="grouped-dropdown-btn btn btn-secondary px-2" id="win-dropdown" ngbDropdownToggle>
+          <span class="pr-2 pr-sm-5">Win Probability</span> <img class="down-arrow float-right pt-2" src="/assets/images/arrow-down.png" alt="arrow-down" />
+        </button>
+      </div>
+      <div ngbDropdown class="grouped-dropdown  dropdown">
+        <button type="button" class="grouped-dropdown-btn btn btn-secondary px-2" id="ev-dropdown" ngbDropdownToggle>
+          <span class="pr-2 pr-sm-5">EV</span> <img class="down-arrow float-right pt-2" src="/assets/images/arrow-down.png" alt="arrow-down" />
+        </button>
+      </div>
+      <div ngbDropdown class="grouped-dropdown  dropdown">
+        <button type="button" class="grouped-dropdown-btn btn btn-secondary last px-2" id="dollar-dropdown" ngbDropdownToggle>
+          <span class="pr-2 pr-sm-5">$$$$$$</span> <img class="down-arrow float-right pt-2" src="/assets/images/arrow-down.png" alt="arrow-down" />
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="multi-row-data-table-wrapper">
+      <table class="multi-row-data-table t-stripped">
+        <thead>
+        <tr class="t-sub-header">
+          <th class="text-center">My Bets</th>
+          <th class="text-center">Bet</th>
+          <th class="text-center">Bovada</th>
+          <th class="text-center">Lineups</th>
+          <th class="text-center">Probablity</th>
+          <th class="text-center">EV</th>
+          <th class="text-center">$$$$$</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="t-content">
+          <td>
+            <input type="checkbox">
+          </td>
+          <td>Who Will Win ?</td>
+          <td>
+            <div>
+              ATL(-7/+150)
+            </div>
+            <div>
+              NE(-7/-140)
+            </div>
+          </td>
+          <td>
+            <div>
+              ATL(-7/+150)
+            </div>
+            <div>
+              NE(-7/-140)
+            </div>
+          </td>
+          <td>
+            <app-rating [value]="95" percentage="true"></app-rating>
+          </td>
+          <td>
+            <div>-1.5</div>
+            <div>-2.6</div>
+          </td>
+          <td>
+            <app-dollars [amount]="5" [classes]="'teal'"></app-dollars>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+@import "../../../../scss/shared/variables/project";
+:host {
+  .modal-body {
+    padding: 0 20px;
+    padding-bottom: 20px;
+  }
+  .video-wrapper {
+    position: relative;
+    .video {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: inherit;
+      iframe {
+        width: 100%;
+        height: inherit;
+      }
+    }
+  }
+}

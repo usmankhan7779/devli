@@ -1,0 +1,25 @@
+:host {
+  table {
+    width: auto;
+    min-width: 100%;
+  }
+  th.notes {
+    width: 30%;
+  }
+  .pretable-text {
+    display: inline-block;
+    margin-left: 5px;
+    @media (max-width: 650px) {
+      margin-left: 0;
+      margin-top: 1.125rem;
+    }
+  }
+  @media (max-width: 1200px) {
+    .multi-row-data-table-wrapper {
+      overflow-x: auto;
+      table {
+        min-width: 1168px;
+      }
+    }
+  }
+}

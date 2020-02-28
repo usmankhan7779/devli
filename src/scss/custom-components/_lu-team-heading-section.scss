@@ -1,0 +1,269 @@
+//.page-actions-wrapper {
+//  padding: 0;
+//}
+
+.team-lineup-heading-text {
+  width: 100%;
+  display: block;
+}
+
+.team-lineup-heading-left {
+  width: 73%;
+  float: left;
+  @media (min-width: 1101px), (min-width: 776px) and (max-width: 991px) {
+    white-space: nowrap;
+  }
+}
+
+.nfl-team-depth-chart-heading .team-lineup-heading-left {
+  &.no-opponent {
+    margin-bottom: 0;
+  }
+}
+
+.team-lineup-heading-right {
+  width: 27%;
+  float: right;
+  margin-top: 5px;
+  .event-date {
+    float: right;
+  }
+}
+
+.team-logo {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  display: inline-block;
+  margin-right: 14px;
+  top: 3px;
+  &.preload {
+    background-image: linear-gradient(45deg, #eee, #e1e4e8);
+    border-radius: 4px;
+    top: -4px;
+  }
+  img {
+    height: 46px;
+    width: 46px;
+    display: block;
+    margin: auto;
+  }
+}
+
+.team-heading-info {
+  display: inline-block;
+  margin-bottom: 20px;
+  vertical-align: top;
+  &.preload {
+    height: 60px;
+    width: inherit;
+  }
+}
+
+
+
+.team-name {
+  color: #333;
+  font-size: 27px;
+  margin-bottom: 3px;
+  font-weight: 700;
+}
+
+.team-meta-info {
+  font-size: 15px;
+  margin: 0;
+}
+
+.lineup-state {
+  font-weight: 700;
+  font-size: 17px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  img {
+    position: relative;
+    top: -2px;
+  }
+  &.confirmed {
+    color: rgb(43, 182, 115);
+  }
+  &.projected {
+    color: #be1e2d;
+  }
+}
+
+.team-heading-lineup-state {
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 10px;
+  margin-top: 0;
+  @media (max-width: 0px) {
+
+  }
+}
+
+.opponent-team-name {
+  font-size: 16px;
+  margin-top: 0;
+  margin-bottom: 1px;
+  font-weight: bold;
+  line-height: 1.5;
+}
+
+.event-date {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.heading-action-cta-wrapper {
+  float: right;
+  max-width: 140px;
+  height: 100%;
+}
+
+.heading-action-cta-btn {
+  width: 100%;
+  height: 100%;
+  border: none;
+  font-size: 16px;
+  border-radius: 3px;
+  img {
+    width: 16px;
+    position: relative;
+    top: -2px;
+  }
+}
+
+.dark-purple.btn {
+  background-color: $dark-purple;
+  color: #FFF;
+}
+.in-page-collapse-toggle {
+  display: none;
+}
+.in-page-nav-menu {
+  display: block;
+  width: 100%;
+}
+
+.col-md-8 {
+  .in-page-collapse-toggle {
+    margin-top: 3px;
+  }
+}
+
+.t-header {
+  .static-t-header {
+    background: #ebebec;
+    padding: 3px 0px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .page-heading-navigation .tab-btn-wrap a.long-team-name {
+    font-size: 1rem;
+  }
+}
+
+
+@media (max-width: 1300px) {
+  .page-heading-navigation .tab-btn-wrap a.long-team-name {
+    font-size: 0.9rem;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1100px), (max-width: 775px) {
+  .team-lineup-heading-left, .nfl-team-depth-chart-heading .team-lineup-heading-left {
+    width: 100%;
+    &.no-opponent {
+      margin-bottom: 10px;
+    }
+    .team-heading-info {
+      text-align: left;
+      margin-bottom: 0
+    }
+  }
+  .team-lineup-heading-text {
+    .team-lineup-heading-left:last-child {
+      .team-heading-info {
+        margin-bottom: 30px
+      }
+    }
+  }
+  .team-lineup-heading-right {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    .float-right {
+      float: none !important;
+      margin: 5px auto 10px auto;
+      text-align: center;
+    }
+  }
+  .page-subheading.team-meta-info {
+    margin-bottom: 4px;
+  }
+}
+
+.nfl-team-depth-chart-heading {
+  @media (max-width: 360px) {
+    .team-logo {
+      margin-right: 3px;
+      height: 36px;
+      width: 36px;
+      img {
+        height: 36px;
+        width: 36px;
+        margin: 0;
+      }
+    }
+  }
+}
+
+.mlb-team-lineup-header {
+  @media (min-width: 576px) and (max-width: 885px), (max-width: 475px), (min-width: 991px) and (max-width: 1300px) {
+    .team-heading-info .team-name {
+      font-size: 22px;
+      line-height: 29px;
+    }
+  }
+  @media (max-width: 350px) {
+    .team-logo {
+      margin-right: 3px;
+      height: 36px;
+      width: 36px;
+      img {
+        height: 36px;
+        width: 36px;
+        margin: 0;
+      }
+    }
+    .team-heading-info  {
+      .team-meta-info {
+        font-size: 13px !important;
+      }
+      .team-name {
+        font-size: 18px !important;
+        line-height: 22px !important;
+      }
+    }
+    .team-heading-lineup-state {
+      p {
+        margin: 0;
+      }
+    }
+  }
+  @media (max-width: 330px) {
+    .team-heading-info  {
+      .team-meta-info {
+        font-size: 12px !important;
+      }
+      .team-name {
+        font-size: 16px !important;
+        line-height: 22px !important;
+      }
+    }
+  }
+}
+

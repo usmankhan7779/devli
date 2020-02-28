@@ -1,0 +1,131 @@
+/**About Page**/
+:host {
+  .site-pages-wrapper {
+    float: left;
+    width: 100%;
+    padding: 0px 20px;
+  }
+  .site-breadcrums {
+    float: left;
+    width: 100%;
+    clear: both;
+    list-style: none;
+    padding: 0px;
+    margin: 5px 0px;
+  }
+  .site-breadcrums li {
+    float: left;
+    font-family: 'Lato', sans-serif;
+    color: #333333;
+    font-size: 12px;
+  }
+  .site-breadcrums li a {
+    float: left;
+    color: #333333;
+    text-decoration: none;
+  }
+  .site-breadcrums li a:hover, .site-breadcrums li a:active, .site-breadcrums li a:focus {
+    color: #333333;
+    text-decoration: none;
+  }
+  .site-breadcrums li a:after {
+    content: ">";
+    margin: 0px 7px;
+  }
+  .site-pages-title {
+    float: left;
+    width: 100%;
+    color: #333333;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    margin-top: 2px;
+    margin-bottom: 20px;
+  }
+  .site-pages-content {
+    float: left;
+    width: 100%;
+    font-family: 'Lato', sans-serif;
+    color: #333333;
+    font-size: 15px;
+    line-height: 20px;
+  }
+  .site-pages-content p {
+    margin-bottom: 10px;
+  }
+  .about-teams {
+    float: left;
+    width: 100%;
+    clear: both;
+    margin-top: 40px;
+  }
+  .about-teams-item {
+    float: left;
+    width: 48%;
+    position: relative;
+    color: #333333;
+    margin-bottom: 40px;
+  }
+  .about-teams-item:nth-child(2n+2) {
+    float: right;
+  }
+  .about-teams-item img {
+    float: left;
+    width: 197px;
+    height: 197px;
+    border-radius: 100%;
+    margin-right: 20px;
+  }
+  .about-teams-item div {
+    display: table;
+  }
+  .about-teams-item div h1 {
+    float: left;
+    width: 100%;
+    font-family: 'Lato', sans-serif;
+    margin: 0px;
+    font-weight: 700;
+    font-size: 24px;
+  }
+  .about-teams-item div h2 {
+    float: left;
+    width: 100%;
+    font-family: 'Lato', sans-serif;
+    margin: 10px 0px 7px 0px;
+    font-weight: 700;
+    font-size: 17px;
+  }
+  .about-teams-item div p {
+    float: left;
+    width: 100%;
+    font-family: 'Lato', sans-serif;
+    margin: 0px;
+    font-size: 16px;
+  }
+  @media only screen and (min-width: 1px) and (max-width: 850px) {
+    .about-teams-item {
+      width: 100%;
+    }
+    .about-teams-item img {
+      margin: auto;
+      display: table;
+      float: none;
+    }
+    .about-teams-item div {
+      text-align: center;
+      margin-top: 15px;
+    }
+  }
+  .schema-wrapper {
+    padding: 20px 0 20px 0;
+    clear: both;
+  }
+  .logo {
+    width: 100px;
+    margin-bottom: 5px;
+  }
+  .clear-both {
+    clear: both;
+  }
+}
+/**About Page End**/

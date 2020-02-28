@@ -1,0 +1,33 @@
+<div class="wrapper-article w-100" (appDeferLoad)="wpSmBlogItem.displayStatus = true">
+  <div class="w-100" *ngIf="wpSmBlogItem.displayStatus">
+    <div class="content-wrapper">
+      <div class="image-container">
+        <a class="link-black" href="{{wpSmBlogItem.fullArticleUrl}}" target="_blank" rel="noopener nofollow">
+          <img  *ngIf="wpSmBlogItem.imageUrl" [src]="wpSmBlogItem.imageUrl" alt="{{wpSmBlogItem.title}}">
+        </a>
+      </div>
+      <h6 class="wp-title" *ngIf="!showFirstParagraph && !contentHTML; else showContent;">
+        <a class="link-black-underline" href="{{wpSmBlogItem.fullArticleUrl}}" target="_blank" rel="noopener" [innerHtml]="wpSmBlogItem.title | safeHtml"></a>
+      </h6>
+      <ng-template #showContent>
+        <div class="wp-title">
+          <div class="d-inline" [innerHtml]="contentHTML | safeHtml">
+          </div>
+          <a class="d-inline" href="{{wpSmBlogItem.fullArticleUrl}}" target="_blank" rel="noopener">Full Preview</a>
+        </div>
+      </ng-template>
+
+    </div>
+    <!--<div class="author d-flex" *ngIf="wpSmBlogItem.author">-->
+      <!--<div class="author-content">-->
+        <!--<div>-->
+          <!--By <a href="{{wpSmBlogItem.author.link}}" target="_blank" rel="noopener">{{wpSmBlogItem.author.name}}</a>-->
+        <!--</div>-->
+        <!--<div>-->
+          <!--Updated: {{wpSmBlogItem.modified | amDateFormat: 'h:mma ddd M/D/YY'}}-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  </div>
+</div>
+

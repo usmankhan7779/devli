@@ -1,0 +1,316 @@
+<div class="matchup" [ngClass]="{'in-individual-matchup-wrapper': isIndividual, 'ind-page': isIndividualPage, 'show-prob': status && (status.status !== 'In Progress' && status.status !== 'Final')}">
+
+  <div *ngIf="!isIndividualPage" class="matchup-header light-bg">
+    <div class="win-prob-wrapper" *ngIf="status && (status.status !== 'In Progress' && status.status !== 'Final')">
+      <div class="away-mob-win-prob">
+        <app-matchup-win-prop-box [status]="status" [singleTeam]="'away'"></app-matchup-win-prop-box>
+      </div>
+      <div class="home-mob-win-prob">
+        <app-matchup-win-prop-box [status]="status" [singleTeam]="'home'"></app-matchup-win-prop-box>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center">
+
+      <div class="hide-on-mobile team-section">
+        <app-status
+          (teamWasClicked)="preselectTeamSeason()"
+          [noFollow]="noFollow"
+          side="left"
+          [redirectUrl]="header.away.lineup_route"
+          matchupMedia="true"
+          [teamName]="header.away.away_full_name"
+          [mobileTitle]="header.away.away_full_name | lastTeamName"
+          [status]="header.away.confirmed"
+          [record]="header.away.away_record + ', ' + header.away.away_standing"
+          [pitcherInfo]="header.away.pitcher_name ? '(' + header.away.pitcher_hand + '), ' + header.away.pitcher_wins + '-' + header.away.pitcher_losses + ', ' + header.away.pitcher_era + ' ERA' : ''"
+          [pitcherName]="header.away.pitcher_name"
+          [pitcherLink]="header.away.pitcher_url"
+        >
+          <a [appPreselectMlbLineupTeamSeason]="season" *ngIf="header.away.lineup_route" [routerLink]="'/' + header.away.lineup_route" rel="nofollow">
+            <img [type]="'white'" [appSpriteImg]="'mlb'" class="same-size d-flex away-logo logo rounded" [src]="nav.away_logo_white" alt="{{header.away.away_full_name}}">
+          </a>
+          <img *ngIf="!header.away.lineup_route" [type]="'white'" [appSpriteImg]="'mlb'" class="same-size d-flex away-logo mt-1 logo rounded" [src]="nav.away_logo_white" alt="{{header.away.away_full_name}}">
+        </app-status>
+      </div>
+
+      <div class="text-center time-section">
+        <h5 *ngIf="!status || (status.status !== 'In Progress' && status.status !== 'Final')" class="mt-0 mb-0">
+          <app-general-time-format *ngIf="status.status !== 'Delayed'" [time]="header.details.game_time"></app-general-time-format>
+          <span *ngIf="status.status === 'Delayed'">Delayed</span>
+        </h5>
+        <p class="heading-p" *ngIf="!status || (status.status !== 'In Progress' && status.status !== 'Final')">
+          <app-status-only class="mobile-status" [status]="header.away.confirmed" [allowShortNames]="true" [altView]="true"></app-status-only>
+          {{header.details.away_short}} @ {{header.details.home_short}}
+          <app-status-only class="mobile-status" [status]="header.home.confirmed" [allowShortNames]="true"></app-status-only>
+        </p>
+        <p class="heading-p" *ngIf="status && status.status === 'In Progress'">
+          <span [ngClass]="{'font-bold': status.away_is_batting}">{{header.details.away_short}} {{status.away_team_runs}}</span> @ <span [ngClass]="{'font-bold': status.home_is_batting}">{{header.details.home_short}} {{status.home_team_runs}}</span>
+        </p>
+        <p class="heading-p" *ngIf="status && status.status === 'Final'">
+          <span [ngClass]="{'font-bold': isWinner(status.away_team_runs, status.home_team_runs)}">{{header.details.away_short}} {{status.away_team_runs}}</span> @ <span [ngClass]="{'font-bold': isWinner(status.home_team_runs, status.away_team_runs)}">{{header.details.home_short}} {{status.home_team_runs}}</span>
+        </p>
+        <p *ngIf="status && status.status === 'In Progress'">
+          {{status.inning_half === 'B' ? 'Bottom' : 'Top'}} {{status.inning}}, {{status.outs}} {{status.outs === '1' || status.outs === 1  ? 'Out': 'Outs'}}
+        </p>
+        <p *ngIf="status && status.status === 'Final'">
+          Final
+        </p>
+        <p *ngIf="(status.status !== 'Postponed' && status.status !== 'In Progress' && status.status !== 'Final') && !header.details.dome_text">
+          {{header.details.rain}}% Rain, {{header.details.risk}},
+          <span class="event-wind-content">
+            <span class="wind-speed">{{header.details.wind}} mph</span>
+            <img class="wind-direction-arrow"
+                 alt="wind-direction-arrow"
+                 [style.transform]="'rotate(' + header.details.dark_sky_wind_bearing + 'deg)'"
+                 src="/assets/images/arrow.png" />
+          </span>
+        </p>
+        <p *ngIf="(status.status !== 'Postponed' && status.status !== 'In Progress' && status.status !== 'Final') && header.details.dome_text">{{header.details.dome_text}}</p>
+        <p *ngIf="status.status === 'Postponed'">PPD</p>
+        <a *ngIf="!isIndividual && gateway.matchup_route" style="font-size: 14px;" [appMlbMatchupIdPreselect]="gameId" [routerLink]="[gateway.matchup_route]">See Matchup</a>
+      </div>
+
+      <div class="hide-on-mobile team-section">
+        <app-status
+          (teamWasClicked)="preselectTeamSeason()"
+          [noFollow]="noFollow"
+          side="right"
+          [redirectUrl]="header.home.lineup_route"
+          matchupMedia="true"
+          [teamName]="header.home.home_full_name"
+          [mobileTitle]="header.home.home_full_name | lastTeamName"
+          [status]="header.home.confirmed"
+          [record]="header.home.home_record + ', ' + header.home.home_standing"
+          [pitcherInfo]="header.home.pitcher_name ?'(' + header.home.pitcher_hand + '), ' + header.home.pitcher_wins + '-' + header.home.pitcher_losses + ', ' + header.home.pitcher_era + ' ERA' : ''"
+          [pitcherName]="header.home.pitcher_name"
+          [pitcherLink]="header.home.pitcher_url"
+        >
+          <a [appPreselectMlbLineupTeamSeason]="season" *ngIf="header.home.lineup_route" [routerLink]="'/' + header.home.lineup_route" rel="nofollow">
+            <img [type]="'white'" [appSpriteImg]="'mlb'" class="same-size d-flex home-logo logo rounded" [src]="nav.home_logo_white" alt="{{header.home.home_full_name}}">
+          </a>
+          <img *ngIf="!header.home.lineup_route" [type]="'white'" [appSpriteImg]="'mlb'" class="same-size d-flex home-logo mt-1 logo rounded" [src]="nav.home_logo_white" alt="{{header.home.home_full_name}}">
+        </app-status>
+      </div>
+
+    </div>
+  </div>
+  <div class="multi-row-data-table-wrapper custom-width mb-0">
+    <table class="multi-row-data-table t-stripped m-0">
+      <colgroup span="3">
+        <col span="1" class="matchup-col">
+        <col span="2">
+      </colgroup>
+      <colgroup span="2"></colgroup>
+      <colgroup span="2"></colgroup>
+      <colgroup span="2"></colgroup>
+      <colgroup span="2"></colgroup>
+      <colgroup span="1"></colgroup>
+      <tbody>
+        <tr class="t-header">
+          <th colspan="3" scope="colgroup" class="text-center main-border">Game</th>
+          <th colspan="2" scope="colgroup" class="text-center main-border">Spread</th>
+          <th colspan="2" scope="colgroup" class="text-center main-border">Team Totals</th>
+          <th colspan="2" scope="colgroup" class="text-center main-border">Over/Under</th>
+          <th colspan="2" scope="colgroup" class="text-center main-border">Moneyline</th>
+          <th colspan="1" scope="colgroup" class="text-center">Charts</th>
+        </tr>
+        <tr class="t-sub-header">
+          <th class="padded">Game</th>
+          <th scope="col" class="text-center">Hitters Rating</th>
+          <th scope="col" class="text-center main-border">Pitchers Rating</th>
+          <th scope="col" class="text-center">Open</th>
+          <th scope="col" class="text-center main-border">Live</th>
+          <th scope="col" class="text-center">Open</th>
+          <th scope="col" class="text-center main-border">Live</th>
+          <th scope="col" class="text-center">Open</th>
+          <th scope="col" class="text-center main-border">Live</th>
+          <th scope="col" class="text-center">Open</th>
+          <th scope="col" class="text-center main-border">Live</th>
+          <th scope="col" class="text-center">Line Moves</th>
+        </tr>
+          <tr class="t-content">
+            <th *ngIf="header.away.lineup_route" scope="row" class="content-border nowrap in-table-status-wrapper">
+              <a class="link-black" rel="nofollow" [appPreselectMlbLineupTeamSeason]="season" [routerLink]="'/' + header.away.lineup_route">
+                <img [type]="'white'" [appSpriteImg]="'mlb'" class="mr-1 logo-sm" [src]="nav.away_logo_white" alt="{{gateway.away.full_name}}">
+              </a>
+              <a class="link-black-underline" rel="nofollow" [appPreselectMlbLineupTeamSeason]="season" [routerLink]="'/' + header.away.lineup_route">
+                <span class="origin-matchup-team-name">{{gateway.away.full_name}}</span>
+                <span class="short-matchup-team-name">{{gateway.away.full_name | lastTeamName}}</span>
+              </a>
+              <app-status-only *ngIf="isIndividualPage" class="in-table-status" [status]="header.away.confirmed"></app-status-only>
+            </th>
+            <th *ngIf="!header.away.lineup_route" scope="row" class="content-border nowrap in-table-status-wrapper">
+              <img [type]="'white'" [appSpriteImg]="'mlb'" class="mr-1 logo-sm" [src]="nav.away_logo_white" alt="{{gateway.away.full_name}}">
+              <span class="origin-matchup-team-name">{{gateway.away.full_name}}</span>
+              <span class="short-matchup-team-name">{{gateway.away.full_name | lastTeamName}}</span>
+              <app-status-only *ngIf="isIndividualPage" class="in-table-status" [status]="header.away.confirmed"></app-status-only>
+            </th>
+            <td>
+              <app-rating-ten [rating]="gateway.away.hitter_rating"></app-rating-ten>
+            </td>
+            <td class="main-border">
+              <app-rating-ten [rating]="gateway.away.pitcher_rating"></app-rating-ten>
+            </td>
+
+            <td class="spread-col">
+              <span>
+                {{gateway.away.spread_open | plus}}
+              </span>
+              <span>
+                ({{gateway.away.spread_moneyline | plus}})
+              </span>
+            </td>
+            <td class="main-border spread-col">
+              <span>
+                {{gateway.away.spread_live | plus}}
+              </span>
+              <span>
+                ({{gateway.away.spread_moneyline_live | plus}})
+              </span>
+            </td>
+
+            <td>{{gateway.away.team_total_open}}</td>
+            <td class="main-border">{{gateway.away.team_total_live}}</td>
+
+            <td [ngClass]="{'invisible-border-bottom': !isIndividualPage}" rowspan="2">{{gateway.over_under_open}} runs</td>
+            <td [ngClass]="{'invisible-border-bottom': !isIndividualPage}" class="main-border" rowspan="2">{{gateway.over_under_live}} runs</td>
+
+            <td>{{gateway.away.moneyline_open | plus}}</td>
+            <td class="main-border">{{gateway.away.moneyline_live | plus}}</td>
+
+            <td [ngClass]="{'invisible-border-bottom': !isIndividualPage}" (click)="onLineClick()" style="cursor: pointer;border-right: none;" rowspan="2">
+              <img class="img-fluid p-1" src="/assets/images/line-movement.png" alt="line-movement">
+            </td>
+          </tr>
+        <tr class="t-content">
+          <th *ngIf="header.home.lineup_route" scope="row" class="content-border nowrap in-table-status-wrapper">
+            <a class="link-black" rel="nofollow" [appPreselectMlbLineupTeamSeason]="season" [routerLink]="'/' + header.home.lineup_route">
+              <img [type]="'white'" [appSpriteImg]="'mlb'" class="mr-1 logo-sm" [src]="nav.home_logo_white" alt="{{gateway.home.full_name}}">
+            </a>
+            <a class="link-black-underline" rel="nofollow" [appPreselectMlbLineupTeamSeason]="season" [routerLink]="'/' + header.home.lineup_route">
+              <span class="origin-matchup-team-name">{{gateway.home.full_name}}</span>
+              <span class="short-matchup-team-name">{{gateway.home.full_name | lastTeamName}}</span>
+            </a>
+            <app-status-only *ngIf="isIndividualPage" class="in-table-status" [status]="header.home.confirmed"></app-status-only>
+          </th>
+          <th *ngIf="!header.home.lineup_route" scope="row" class="content-border nowrap in-table-status-wrapper">
+            <img [type]="'white'" [appSpriteImg]="'mlb'" class="mr-1 logo-sm" [src]="nav.home_logo_white" alt="{{gateway.home.full_name}}">
+            <span class="origin-matchup-team-name">{{gateway.home.full_name}}</span>
+            <span class="short-matchup-team-name">{{gateway.home.full_name | lastTeamName}}</span>
+            <app-status-only *ngIf="isIndividualPage" class="in-table-status" [status]="header.home.confirmed"></app-status-only>
+          </th>
+          <td>
+            <app-rating-ten [rating]="gateway.home.hitter_rating"></app-rating-ten>
+          </td>
+          <td class="main-border">
+            <app-rating-ten [rating]="gateway.home.pitcher_rating"></app-rating-ten>
+          </td>
+
+          <td class="spread-col">
+            <span>
+              {{gateway.home.spread_open | plus}}
+            </span>
+            <span>
+              ({{gateway.home.spread_moneyline | plus}})
+            </span>
+          </td>
+          <td class="main-border spread-col">
+            <span>
+              {{gateway.home.spread_live | plus}}
+            </span>
+            <span>
+              ({{gateway.home.spread_moneyline_live | plus}})
+            </span>
+          </td>
+
+          <td>{{gateway.home.team_total_open}}</td>
+          <td class="main-border">{{gateway.home.team_total_live}}</td>
+
+
+          <td>{{gateway.home.moneyline_open | plus}}</td>
+          <td class="main-border">{{gateway.home.moneyline_live | plus}}</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+<div *ngIf="chartsVisible && gateway.moneyline_history && gateway.total_history" class="row mb-3">
+  <div class="col-12">
+    <hr>
+    <button (click)="onCloseChartsClick()" type="button" class="btn btn-default float-right text-center close-chart-btn">
+      <i class="fa fa-times" aria-hidden="true"></i>
+    </button>
+    <app-graph-table
+      [league]="'mlb'"
+      [awayLogo]="nav.away_logo_white"
+      [homeLogo]="nav.home_logo_white"
+      [isIndividualMatchup]="isIndividual"
+      tableName="Moneyline"
+      [bordered]="false"
+      [homeTeamName]="header.home.home_full_name"
+      [awayTeamName]="header.away.away_full_name"
+      [datasets]="lineChartData?.moneyline.data"
+      [labels]="lineChartData?.moneyline.dates"
+      [awayOpen]="gateway.away.moneyline_open | plus"
+      [awayCurrent]="gateway.away.moneyline_live | plus"
+      [awayChange]="gateway.away.moneyline_diff"
+      [homeOpen]="gateway.home.moneyline_open | plus"
+      [homeCurrent]="gateway.home.moneyline_live | plus"
+      [homeChange]="gateway.home.moneyline_diff"
+      [showLabels]="gateway.moneyline_history.show"
+    ></app-graph-table>
+  </div>
+  <div class="col-12">
+    <hr>
+    <app-graph-table
+      [league]="'mlb'"
+      [homeLogo]="nav.home_logo_white"
+      homeTeamName="Over/Under"
+      [bordered]="false"
+      [datasets]="lineChartData?.total.data"
+      [labels]="lineChartData?.total.dates"
+      [customTable]="true"
+      chartClassWrapper="col-4"
+      [isIndividualMatchup]="isIndividual"
+      [showLabels]="gateway.total_history.show"
+    >
+      <div class="col-8">
+        <table class="multi-row-data-table t-stripped">
+          <colgroup span="3"></colgroup>
+          <tbody>
+          <tr class="t-header">
+            <th colspan="3" scope="colgroup" class="text-center">Over/Under</th>
+          </tr>
+          <tr class="t-sub-header">
+            <th scope="col" class="text-center">Open</th>
+            <th scope="col" class="text-center">Current</th>
+            <th scope="col" class="text-center">Change</th>
+          </tr>
+          <tr class="t-content">
+            <td>{{gateway.over_under_open}}</td>
+            <td>{{gateway.over_under_live}}</td>
+            <td>{{gateway.over_under_diff}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </app-graph-table>
+  </div>
+</div>
+<div *ngIf="chartsVisible && (!gateway.moneyline_history || !gateway.total_history)">
+  <div class="row mb-3">
+    <div class="col-12">
+      <hr>
+      <button (click)="onCloseChartsClick()" type="button" class="btn btn-default float-right text-center close-chart-btn">
+        <i class="fa fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="col-12 text-center">
+      <h4>
+        Sorry, there is no data for Line Movement.
+      </h4>
+    </div>
+  </div>
+</div>
+

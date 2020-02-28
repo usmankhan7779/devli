@@ -1,0 +1,912 @@
+<ng-template #quarterbackTableHeader let-quarterbackMfDataTable="mfDataTable">
+  <th class="text-center" width="7%">
+    <mfSorter [mfTable]="quarterbackMfDataTable" by="position">Pos</mfSorter>
+  </th>
+  <th class="text-center" width="30%">
+    <mfSorter [mfTable]="quarterbackMfDataTable" by="name">Quarterback</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="quarterbackMfDataTable" by="rating">Rating</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="quarterbackMfDataTable" by="snaps">Snaps</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="quarterbackMfDataTable" by="passing_completions">Comp</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="quarterbackMfDataTable" by="passing_attempts">Att</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="quarterbackMfDataTable" by="passing_yards">Pass Yds</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="quarterbackMfDataTable" by="passing_touchdowns">TD</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="quarterbackMfDataTable" by="passing_interceptions">INT</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="quarterbackMfDataTable" by="possession_time">TOP</mfSorter>
+  </th>
+</ng-template>
+
+<ng-template #quarterbackTableRow let-item="item" let-swap="swap">
+  <td class="no-border no-pointer">
+    <button type="button"
+            (click)="swap(item)"
+            class="btn team-swap-btn">
+      {{item.position}}
+    </button>
+  </td>
+  <td class="text-left no-pointer">
+    {{item.name}}
+    <i *ngIf="item.has_news; else quarterbackDontHasNews;" (click)="onPlayerHistoryClick(item.has_news, item.player_id)" class="fa fa-file-text history-icon float-right mr-2 active" aria-hidden="true"></i>
+    <ng-template #quarterbackDontHasNews>
+      <div class="popover-container popover-nowrap d-inline">
+        <i placement="bottom" ngbPopover="No News" triggers="mouseenter:mouseleave" class="fa fa-file-text history-icon float-right mr-2" aria-hidden="true"></i>
+      </div>
+    </ng-template>
+    <app-arrows-up-down
+      (upClick)="onArrowClick(item, true)"
+      (downClick)="onArrowClick(item, false)"
+      class="float-right mr-2 {{disabledArrow(item)}}">
+    </app-arrows-up-down>
+    <img (click)="onInputPanelClick(item, 'qb')" class="gear-icon float-right mr-2" src="/assets/images/icon-black-wrench.png" alt="wrench">
+  </td>
+  <td [appPbDifference]="item.rating_diff" class="no-pointer">
+    <app-rating [value]="item.rating"></app-rating>
+  </td>
+  <td [appPbDifference]="item.snaps_diff" (click)="onQuarterbackModalOpen([quarterbackProps[0]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.snaps_display">
+      <span class="table-conditional-item">{{item.snaps_display_conditional}}</span> {{item.snaps_display}}
+    </span>
+    <span *ngIf="!item.snaps_display">
+        {{item.snaps}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.passing_completions_diff" (click)="onQuarterbackModalOpen([quarterbackProps[1]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.passing_completions_display">
+      <span class="table-conditional-item">{{item.passing_completions_display_conditional}}</span> {{item.passing_completions_display}}
+    </span>
+    <span *ngIf="!item.passing_completions_display">
+        {{item.passing_completions}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.passing_attempts_diff" (click)="onQuarterbackModalOpen([quarterbackProps[2]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.passing_attempts_display">
+      <span class="table-conditional-item">{{item.passing_attempts_display_conditional}}</span> {{item.passing_attempts_display}}
+    </span>
+    <span *ngIf="!item.passing_attempts_display">
+        {{item.passing_attempts}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.passing_yards_diff" (click)="onQuarterbackModalOpen([quarterbackProps[3]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.passing_yards_display">
+      <span class="table-conditional-item">{{item.passing_yards_display_conditional}}</span> {{item.passing_yards_display}}
+    </span>
+    <span *ngIf="!item.passing_yards_display">
+        {{item.passing_yards}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.passing_touchdowns_diff" (click)="onQuarterbackModalOpen([quarterbackProps[4]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.passing_touchdowns_display">
+      <span class="table-conditional-item">{{item.passing_touchdowns_display_conditional}}</span> {{item.passing_touchdowns_display}}
+    </span>
+    <span *ngIf="!item.passing_touchdowns_display">
+        {{item.passing_touchdowns}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.passing_interceptions_diff" (click)="onQuarterbackModalOpen([quarterbackProps[5]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.passing_interceptions_display">
+      <span class="table-conditional-item">{{item.passing_interceptions_display_conditional}}</span> {{item.passing_interceptions_display}}
+    </span>
+    <span *ngIf="!item.passing_interceptions_display">
+        {{item.passing_interceptions}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.possession_time_diff" (click)="onQuarterbackModalOpen([quarterbackProps[6]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.possession_time_display">
+      <span class="table-conditional-item">{{item.possession_time_display_conditional}}</span> {{item.possession_time_display | secondsToMinutes}}
+    </span>
+    <span *ngIf="!item.possession_time_display">
+        {{item.possession_time | secondsToMinutes}}
+    </span>
+  </td>
+</ng-template>
+
+<ng-template #runningbackTableHeader let-runningbackMfDataTable="mfDataTable">
+  <th class="text-center" width="7%">
+    <mfSorter [mfTable]="runningbackMfDataTable" by="position">Pos</mfSorter>
+  </th>
+  <th class="text-center" width="30%">
+    <mfSorter [mfTable]="runningbackMfDataTable" by="name">Running Back</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="runningbackMfDataTable" by="rating">Rating</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="runningbackMfDataTable" by="depth">Depth</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="runningbackMfDataTable" by="snaps">Snaps</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="runningbackMfDataTable" by="rushing_attempts">Rushes</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="runningbackMfDataTable" by="rushing_yards">Yds</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="runningbackMfDataTable" by="rushing_touchdowns">TD</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="runningbackMfDataTable" by="receiving_targets">Tgts</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="runningbackMfDataTable" by="receptions">Rec</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="runningbackMfDataTable" by="receiving_yards">Yds</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="runningbackMfDataTable" by="receiving_touchdowns">TD</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="runningbackMfDataTable" by="fumbles">Fum</mfSorter>
+  </th>
+</ng-template>
+
+<ng-template #runningbackTableRow let-item="item" let-swap="swap">
+  <td class="no-border no-pointer">
+    <button type="button"
+            (click)="swap(item)"
+            class="btn team-swap-btn">
+      {{item.position}}
+    </button>
+  </td>
+  <td class="text-left no-pointer">
+    {{item.name}}
+    <i *ngIf="item.has_news; else runningbackDontHasNews;" (click)="onPlayerHistoryClick(item.has_news, item.player_id)" class="fa fa-file-text history-icon float-right mr-2 active" aria-hidden="true"></i>
+    <ng-template #runningbackDontHasNews>
+      <div class="popover-container popover-nowrap d-inline">
+        <i placement="bottom" ngbPopover="No News" triggers="mouseenter:mouseleave" class="fa fa-file-text history-icon float-right mr-2" aria-hidden="true"></i>
+      </div>
+    </ng-template>
+    <app-arrows-up-down
+      (upClick)="onArrowClick(item, true)"
+      (downClick)="onArrowClick(item, false)"
+      class="float-right mr-2 {{disabledArrow(item)}}">
+    </app-arrows-up-down>
+    <img (click)="onInputPanelClick(item, 'rb')" class="gear-icon float-right mr-2" src="/assets/images/icon-black-wrench.png" alt="wrench">
+  </td>
+  <td [appPbDifference]="item.rating_diff" class="no-pointer">
+    <app-rating [value]="item.rating"></app-rating>
+  </td>
+  <td [appPbDifference]="item.depth_diff" (click)="onRunningbackModalOpen([runningbackProps[0]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.depth_display">
+      <span class="table-conditional-item">{{item.depth_display_conditional}}</span> {{item.depth_display}}
+    </span>
+    <span *ngIf="!item.depth_display">
+        {{item.depth}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.snaps_diff" (click)="onRunningbackModalOpen([runningbackProps[1]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.snaps_display">
+      <span class="table-conditional-item">{{item.snaps_display_conditional}}</span> {{item.snaps_display}}
+    </span>
+    <span *ngIf="!item.snaps_display">
+        {{item.snaps}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.rushing_attempts_diff" (click)="onRunningbackModalOpen([runningbackProps[2]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.rushing_attempts_display">
+      <span class="table-conditional-item">{{item.rushing_attempts_display_conditional}}</span> {{item.rushing_attempts_display}}
+    </span>
+    <span *ngIf="!item.rushing_attempts_display">
+        {{item.rushing_attempts}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.rushing_yards_diff" (click)="onRunningbackModalOpen([runningbackProps[3]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.rushing_yards_display">
+      <span class="table-conditional-item">{{item.rushing_yards_display_conditional}}</span> {{item.rushing_yards_display}}
+    </span>
+    <span *ngIf="!item.rushing_yards_display">
+        {{item.rushing_yards}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.rushing_touchdowns_diff" (click)="onRunningbackModalOpen([runningbackProps[4]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.rushing_touchdowns_display">
+      <span class="table-conditional-item">{{item.rushing_touchdowns_display_conditional}}</span> {{item.rushing_touchdowns_display}}
+    </span>
+    <span *ngIf="!item.rushing_touchdowns_display">
+        {{item.rushing_touchdowns}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.receiving_targets_diff" (click)="onRunningbackModalOpen([runningbackProps[5]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.receiving_targets_display">
+      <span class="table-conditional-item">{{item.receiving_targets_display_conditional}}</span> {{item.receiving_targets_display}}
+    </span>
+    <span *ngIf="!item.receiving_targets_display">
+        {{item.receiving_targets}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.receptions_diff" (click)="onRunningbackModalOpen([runningbackProps[6]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.receptions_display">
+      <span class="table-conditional-item">{{item.receptions_display_conditional}}</span> {{item.receptions_display}}
+    </span>
+    <span *ngIf="!item.receptions_display">
+        {{item.receptions}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.receiving_yards_diff" (click)="onRunningbackModalOpen([runningbackProps[7]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.receiving_yards_display">
+      <span class="table-conditional-item">{{item.receiving_yards_display_conditional}}</span> {{item.receiving_yards_display}}
+    </span>
+    <span *ngIf="!item.receiving_yards_display">
+        {{item.receiving_yards}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.receiving_touchdowns_diff" (click)="onRunningbackModalOpen([runningbackProps[8]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.receiving_touchdowns_display">
+      <span class="table-conditional-item">{{item.receiving_touchdowns_display_conditional}}</span> {{item.receiving_touchdowns_display}}
+    </span>
+    <span *ngIf="!item.receiving_touchdowns_display">
+        {{item.receiving_touchdowns}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.fumbles_diff" (click)="onRunningbackModalOpen([runningbackProps[9]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.fumbles_display">
+      <span class="table-conditional-item">{{item.fumbles_display_conditional}}</span> {{item.fumbles_display}}
+    </span>
+    <span *ngIf="!item.fumbles_display">
+        {{item.fumbles}}
+    </span>
+  </td>
+</ng-template>
+
+<ng-template #wideReceiverTableHeader let-wideReceiversMfDataTable="mfDataTable">
+  <th class="text-center" width="7%">
+    <mfSorter [mfTable]="wideReceiversMfDataTable" by="position">Pos</mfSorter>
+  </th>
+  <th class="text-center" width="30%">
+    <mfSorter [mfTable]="wideReceiversMfDataTable" by="name">Wide Receiver</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="wideReceiversMfDataTable" by="rating">Rating</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="wideReceiversMfDataTable" by="depth">Depth</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="wideReceiversMfDataTable" by="snaps">Snaps</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="wideReceiversMfDataTable" by="receiving_targets">Targets</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="wideReceiversMfDataTable" by="receptions">Rec</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="wideReceiversMfDataTable" by="receiving_yards">Rec Yds</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="wideReceiversMfDataTable" by="receiving_touchdowns">Rec TD</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="wideReceiversMfDataTable" by="fumbles">Fum</mfSorter>
+  </th>
+</ng-template>
+
+<ng-template #wideReceiverTableRow let-item="item" let-swap="swap">
+  <td class="no-border no-pointer">
+    <button type="button"
+            (click)="swap(item)"
+            class="btn team-swap-btn">
+      {{item.position}}
+    </button>
+  </td>
+  <td class="text-left no-pointer">
+    {{item.name}}
+    <i *ngIf="item.has_news; else wideReceiverDontHasNews;" (click)="onPlayerHistoryClick(item.has_news, item.player_id)" class="fa fa-file-text history-icon float-right mr-2 active" aria-hidden="true"></i>
+    <ng-template #wideReceiverDontHasNews>
+      <div class="popover-container popover-nowrap d-inline">
+        <i placement="bottom" ngbPopover="No News" triggers="mouseenter:mouseleave" class="fa fa-file-text history-icon float-right mr-2" aria-hidden="true"></i>
+      </div>
+    </ng-template>
+    <app-arrows-up-down
+      (upClick)="onArrowClick(item, true)"
+      (downClick)="onArrowClick(item, false)"
+      class="float-right mr-2 {{disabledArrow(item)}}">
+    </app-arrows-up-down>
+    <img (click)="onInputPanelClick(item, 'wr')" class="gear-icon float-right mr-2" src="/assets/images/icon-black-wrench.png" alt="wrench">
+  </td>
+  <td [appPbDifference]="item.rating_diff" class="no-pointer">
+    <app-rating [value]="item.rating"></app-rating>
+  </td>
+  <td [appPbDifference]="item.depth_diff" (click)="onWideReceiverModalOpen([wideReceiverProps[0]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.depth_display">
+      <span class="table-conditional-item">{{item.depth_display_conditional}}</span> {{item.depth_display}}
+    </span>
+    <span *ngIf="!item.depth_display">
+        {{item.depth}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.snaps_diff" (click)="onWideReceiverModalOpen([wideReceiverProps[1]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.snaps_display">
+      <span class="table-conditional-item">{{item.snaps_display_conditional}}</span> {{item.snaps_display}}
+    </span>
+    <span *ngIf="!item.snaps_display">
+        {{item.snaps}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.receiving_targets_diff" (click)="onWideReceiverModalOpen([wideReceiverProps[2]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.receiving_targets_display">
+      <span class="table-conditional-item">{{item.receiving_targets_display_conditional}}</span> {{item.receiving_targets_display}}
+    </span>
+    <span *ngIf="!item.receiving_targets_display">
+        {{item.receiving_targets}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.receptions_diff" (click)="onWideReceiverModalOpen([wideReceiverProps[3]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.receptions_display">
+      <span class="table-conditional-item">{{item.receptions_display_conditional}}</span> {{item.receptions_display}}
+    </span>
+    <span *ngIf="!item.receptions_display">
+        {{item.receptions}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.receiving_yards_diff" (click)="onWideReceiverModalOpen([wideReceiverProps[4]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.receiving_yards_display">
+      <span class="table-conditional-item">{{item.receiving_yards_display_conditional}}</span> {{item.receiving_yards_display}}
+    </span>
+    <span *ngIf="!item.receiving_yards_display">
+        {{item.receiving_yards}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.receiving_touchdowns_diff" (click)="onWideReceiverModalOpen([wideReceiverProps[5]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.receiving_touchdowns_display">
+      <span class="table-conditional-item">{{item.receiving_touchdowns_display_conditional}}</span> {{item.receiving_touchdowns_display}}
+    </span>
+    <span *ngIf="!item.receiving_touchdowns_display">
+        {{item.receiving_touchdowns}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.fumbles_diff" (click)="onWideReceiverModalOpen([wideReceiverProps[6]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.fumbles_display">
+      <span class="table-conditional-item">{{item.fumbles_display_conditional}}</span> {{item.fumbles_display}}
+    </span>
+    <span *ngIf="!item.fumbles_display">
+        {{item.fumbles}}
+    </span>
+  </td>
+</ng-template>
+
+<ng-template #tightEndTableHeader let-tightEndMfDataTable="mfDataTable">
+  <th class="text-center" width="7%">
+    <mfSorter [mfTable]="tightEndMfDataTable" by="position">Pos</mfSorter>
+  </th>
+  <th class="text-center" width="30%">
+    <mfSorter [mfTable]="tightEndMfDataTable" by="name">Tight End</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="tightEndMfDataTable" by="rating">Rating</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="tightEndMfDataTable" by="depth">Depth</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="tightEndMfDataTable" by="snaps">Snaps</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="tightEndMfDataTable" by="receiving_targets">Targets</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="tightEndMfDataTable" by="receptions">Rec</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="tightEndMfDataTable" by="receiving_yards">Rec Yds</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="tightEndMfDataTable" by="receiving_touchdowns">Rec TD</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="tightEndMfDataTable" by="fumbles">Fum</mfSorter>
+  </th>
+</ng-template>
+
+<ng-template #tightEndTableRow let-item="item" let-swap="swap">
+  <td class="no-border no-pointer">
+    <button type="button"
+            (click)="swap(item)"
+            class="btn team-swap-btn">
+      {{item.position}}
+    </button>
+  </td>
+  <td class="text-left no-pointer">
+    {{item.name}}
+    <i *ngIf="item.has_news; else tightEndDontHasNews;" (click)="onPlayerHistoryClick(item.has_news, item.player_id)" class="fa fa-file-text history-icon float-right mr-2 active" aria-hidden="true"></i>
+    <ng-template #tightEndDontHasNews>
+      <div class="popover-container popover-nowrap d-inline">
+        <i placement="bottom" ngbPopover="No News" triggers="mouseenter:mouseleave" class="fa fa-file-text history-icon float-right mr-2" aria-hidden="true"></i>
+      </div>
+    </ng-template>
+    <app-arrows-up-down
+      (upClick)="onArrowClick(item, true)"
+      (downClick)="onArrowClick(item, false)"
+      class="float-right mr-2 {{disabledArrow(item)}}">
+    </app-arrows-up-down>
+    <img (click)="onInputPanelClick(item, 'te')" class="gear-icon float-right mr-2" src="/assets/images/icon-black-wrench.png" alt="wrench">
+  </td>
+  <td [appPbDifference]="item.rating_diff" class="no-pointer">
+    <app-rating [value]="item.rating"></app-rating>
+  </td>
+  <td [appPbDifference]="item.depth_diff" (click)="onTightendModalOpen([tightEndProps[0]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.depth_display">
+      <span class="table-conditional-item">{{item.depth_display_conditional}}</span> {{item.depth_display}}
+    </span>
+    <span *ngIf="!item.depth_display">
+        {{item.depth}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.snaps_diff" (click)="onTightendModalOpen([tightEndProps[1]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.snaps_display">
+      <span class="table-conditional-item">{{item.snaps_display_conditional}}</span> {{item.snaps_display}}
+    </span>
+    <span *ngIf="!item.snaps_display">
+        {{item.snaps}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.receiving_targets_diff" (click)="onTightendModalOpen([tightEndProps[2]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.receiving_targets_display">
+      <span class="table-conditional-item">{{item.receiving_targets_display_conditional}}</span> {{item.receiving_targets_display}}
+    </span>
+    <span *ngIf="!item.receiving_targets_display">
+        {{item.receiving_targets}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.receptions_diff" (click)="onTightendModalOpen([tightEndProps[3]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.receptions_display">
+      <span class="table-conditional-item">{{item.receptions_display_conditional}}</span> {{item.receptions_display}}
+    </span>
+    <span *ngIf="!item.receptions_display">
+        {{item.receptions}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.receiving_yards_diff" (click)="onTightendModalOpen([tightEndProps[4]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.receiving_yards_display">
+      <span class="table-conditional-item">{{item.receiving_yards_display_conditional}}</span> {{item.receiving_yards_display}}
+    </span>
+    <span *ngIf="!item.receiving_yards_display">
+        {{item.receiving_yards}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.receiving_touchdowns_diff" (click)="onTightendModalOpen([tightEndProps[5]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.receiving_touchdowns_display">
+      <span class="table-conditional-item">{{item.receiving_touchdowns_display_conditional}}</span> {{item.receiving_touchdowns_display}}
+    </span>
+    <span *ngIf="!item.receiving_touchdowns_display">
+        {{item.receiving_touchdowns}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.fumbles_diff" (click)="onTightendModalOpen([tightEndProps[6]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.fumbles_display">
+      <span class="table-conditional-item">{{item.fumbles_display_conditional}}</span> {{item.fumbles_display}}
+    </span>
+    <span *ngIf="!item.fumbles_display">
+        {{item.fumbles}}
+    </span>
+  </td>
+</ng-template>
+
+<ng-template #kickerTableHeader let-kickerMfDataTable="mfDataTable">
+  <th class="text-center" width="7%">
+    <mfSorter [mfTable]="kickerMfDataTable" by="position">Pos</mfSorter>
+  </th>
+  <th class="text-center" width="30%">
+    <mfSorter [mfTable]="kickerMfDataTable" by="name">Kicker</mfSorter>
+  </th>
+  <th class="text-center" width="8%">
+    <mfSorter [mfTable]="kickerMfDataTable" by="rating">Rating</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="kickerMfDataTable" by="field_goals_made">FGM</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="kickerMfDataTable" by="field_goals_attempted">FGA</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="kickerMfDataTable" by="extra_points_made">XPM</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="kickerMfDataTable" by="extra_points_attempted">XPA</mfSorter>
+  </th>
+</ng-template>
+
+<ng-template #kickerTableRow let-item="item" let-swap="swap">
+  <td class="no-border no-pointer">
+    <button
+      type="button"
+      [disabled]="true"
+      style="cursor: initial"
+      (click)="swap(item)"
+      class="btn team-swap-btn"
+    >{{item.position}}</button>
+  </td>
+  <td class="text-left no-pointer">
+    {{item.name}}
+    <i *ngIf="item.has_news; else kickerDontHasNews;" (click)="onPlayerHistoryClick(item.has_news, item.player_id)" class="fa fa-file-text history-icon float-right mr-2 active" aria-hidden="true"></i>
+    <ng-template #kickerDontHasNews>
+      <div class="popover-container popover-nowrap d-inline">
+        <i placement="bottom" ngbPopover="No News" triggers="mouseenter:mouseleave" class="fa fa-file-text history-icon float-right mr-2" aria-hidden="true"></i>
+      </div>
+    </ng-template>
+    <app-arrows-up-down
+      (upClick)="onArrowClick(item, true)"
+      (downClick)="onArrowClick(item, false)"
+      class="float-right mr-2 {{disabledArrow(item)}}">
+    </app-arrows-up-down>
+    <img (click)="onInputPanelClick(item, 'k')" class="gear-icon float-right mr-2" src="/assets/images/icon-black-wrench.png" alt="wrench">
+  </td>
+  <td [appPbDifference]="item.rating_diff" class="no-pointer">
+    <app-rating [value]="item.rating"></app-rating>
+  </td>
+  <td [appPbDifference]="item.field_goals_made_diff" (click)="onKickerModalOpen([kickerProps[0]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.field_goals_made_display">
+      <span class="table-conditional-item">{{item.field_goals_made_display_conditional}}</span> {{item.field_goals_made_display}}
+    </span>
+    <span *ngIf="!item.field_goals_made_display">
+        {{item.field_goals_made}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.field_goals_attempted_diff" (click)="onKickerModalOpen([kickerProps[1]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.field_goals_attempted_display">
+      <span class="table-conditional-item">{{item.field_goals_attempted_display_conditional}}</span> {{item.field_goals_attempted_display}}
+    </span>
+    <span *ngIf="!item.field_goals_attempted_display">
+        {{item.field_goals_attempted}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.extra_points_made_diff" (click)="onKickerModalOpen([kickerProps[2]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.extra_points_made_display">
+      <span class="table-conditional-item">{{item.extra_points_made_display_conditional}}</span> {{item.extra_points_made_display}}
+    </span>
+    <span *ngIf="!item.extra_points_made_display">
+        {{item.extra_points_made}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.extra_points_attempted_diff" (click)="onKickerModalOpen([kickerProps[3]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.extra_points_attempted_display">
+      <span class="table-conditional-item">{{item.extra_points_attempted_display_conditional}}</span> {{item.extra_points_attempted_display}}
+    </span>
+    <span *ngIf="!item.extra_points_attempted_display">
+        {{item.extra_points_attempted}}
+    </span>
+  </td>
+</ng-template>
+
+<ng-template #teamDefenseTableHeader let-teamDefenseMfDataTable="mfDataTable">
+  <th class="text-center" width="7%">
+    <mfSorter [mfTable]="teamDefenseMfDataTable" by="position">Pos</mfSorter>
+  </th>
+  <th class="text-center" width="30%">
+    <mfSorter [mfTable]="teamDefenseMfDataTable" by="name">Team Defense</mfSorter>
+  </th>
+  <th class="text-center" width="8%">
+    <mfSorter [mfTable]="teamDefenseMfDataTable" by="rating">Rating</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="teamDefenseMfDataTable" by="tackles">Tackles</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="teamDefenseMfDataTable" by="tackles_for_loss">TFL</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="teamDefenseMfDataTable" by="sacks">Sacks</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="teamDefenseMfDataTable" by="interceptions">INT</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="teamDefenseMfDataTable" by="forced_fumbles">FF</mfSorter>
+  </th>
+  <th class="text-center">
+    <mfSorter [mfTable]="teamDefenseMfDataTable" by="defensive_touchdowns">TD</mfSorter>
+  </th>
+</ng-template>
+
+<ng-template #teamDefenseTableRow let-item="item" let-swap="swap">
+  <td class="no-border no-pointer">
+    <button
+      type="button"
+      [disabled]="true"
+      style="cursor: initial"
+      (click)="swap(item)"
+      class="btn team-swap-btn"
+    >{{item.position}}</button>
+  </td>
+  <td class="text-left no-pointer">
+    {{item.name}}
+    <i *ngIf="item.has_news; else teamDefenseDontHasNews;" (click)="onPlayerHistoryClick(item.has_news, item.player_id)" class="fa fa-file-text history-icon float-right mr-2 active" aria-hidden="true"></i>
+    <ng-template #teamDefenseDontHasNews>
+      <div class="popover-container popover-nowrap d-inline">
+        <i placement="bottom" ngbPopover="No News" triggers="mouseenter:mouseleave" class="fa fa-file-text history-icon float-right mr-2" aria-hidden="true"></i>
+      </div>
+    </ng-template>
+    <app-arrows-up-down
+      (upClick)="onArrowClick(item, true)"
+      (downClick)="onArrowClick(item, false)"
+      class="float-right mr-2 {{disabledArrow(item)}}">
+    </app-arrows-up-down>
+    <img (click)="onInputPanelClick(item, 'def')" class="gear-icon float-right mr-2" src="/assets/images/icon-black-wrench.png" alt="wrench">
+  </td>
+  <td [appPbDifference]="item.rating_diff" class="no-pointer">
+    <app-rating [value]="item.rating"></app-rating>
+  </td>
+  <td [appPbDifference]="item.tackles_diff" (click)="onTeamDefenseModalOpen([teamDefenseProps[0]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.tackles_display">
+      <span class="table-conditional-item">{{item.tackles_display_conditional}}</span> {{item.tackles_display}}
+    </span>
+    <span *ngIf="!item.tackles_display">
+        {{item.tackles}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.tackles_for_loss_diff" (click)="onTeamDefenseModalOpen([teamDefenseProps[1]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.tackles_for_loss_display">
+      <span class="table-conditional-item">{{item.tackles_for_loss_display_conditional}}</span> {{item.tackles_for_loss_display}}
+    </span>
+    <span *ngIf="!item.tackles_for_loss_display">
+        {{item.tackles_for_loss}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.sacks_diff" (click)="onTeamDefenseModalOpen([teamDefenseProps[2]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.sacks_display">
+      <span class="table-conditional-item">{{item.sacks_display_conditional}}</span> {{item.sacks_display}}
+    </span>
+    <span *ngIf="!item.sacks_display">
+        {{item.sacks}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.interceptions_diff" (click)="onTeamDefenseModalOpen([teamDefenseProps[3]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.interceptions_display">
+      <span class="table-conditional-item">{{item.interceptions_display_conditional}}</span> {{item.interceptions_display}}
+    </span>
+    <span *ngIf="!item.interceptions_display">
+        {{item.interceptions}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.forced_fumbles_diff" (click)="onTeamDefenseModalOpen([teamDefenseProps[4]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.forced_fumbles_display">
+      <span class="table-conditional-item">{{item.forced_fumbles_display_conditional}}</span> {{item.forced_fumbles_display}}
+    </span>
+    <span *ngIf="!item.forced_fumbles_display">
+        {{item.forced_fumbles}}
+    </span>
+  </td>
+  <td [appPbDifference]="item.defensive_touchdowns_diff" (click)="onTeamDefenseModalOpen([teamDefenseProps[5]], item)">
+    <span class="table-conditional-item-wrapper" *ngIf="item.defensive_touchdowns_display">
+      <span class="table-conditional-item">{{item.defensive_touchdowns_display_conditional}}</span> {{item.defensive_touchdowns_display}}
+    </span>
+    <span *ngIf="!item.defensive_touchdowns_display">
+        {{item.defensive_touchdowns}}
+    </span>
+  </td>
+</ng-template>
+
+<div class="team-lineup-table-editable">
+  <div class="row">
+    <div class="col-12 col-sm-7">
+      <div class="p-3 pt-4">
+        <app-status
+          side="right"
+          [teamName]="teamName"
+          [record]="teamRecord"
+        >
+          <img [type]="'white'" [appSpriteImg]="'nfl'" class="d-flex mr-3 logo rounded" [src]="'assets/images/nfl/logos/white/' + teamLogo + '-white.svg'" alt="{{teamName}}">
+        </app-status>
+      </div>
+    </div>
+    <div class="col-12 col-sm-5">
+      <div class="p-2 h-100">
+        <table class="multi-row-data-table t-stripped h-100 my-auto">
+          <thead>
+          <tr class="t-single-header">
+            <th class="text-center" width="30%">Team Total</th>
+            <th class="text-center">Win</th>
+            <th class="text-center">Spread</th>
+            <th class="text-center" width="30%">Moneyline</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="t-content">
+            <td [appPbDifference]="teamTotalDiff" (click)="onTeamModalOpen([teamProps[0]])">
+                <span class="table-conditional-item-wrapper" *ngIf="teamTotalDisplay">
+                  <span class="table-conditional-item">{{teamTotalDisplayConditional}}</span> {{teamTotalDisplay}}
+                </span>
+              <span *ngIf="!teamTotalDisplay">
+                  {{teamTotal}}
+                </span>
+              Pts
+            </td>
+            <td [appPbDifference]="teamWinDiff" (click)="onTeamModalOpen([teamProps[1]])">
+                <span class="table-conditional-item-wrapper" *ngIf="teamWinDisplay">
+                  <span class="table-conditional-item">{{teamWinDisplayConditional}}</span> {{teamWinDisplay}}
+                </span>
+              <span *ngIf="!teamWinDisplay">
+                  {{teamWin ? 'Yes' : 'No'}}
+                </span>
+            </td>
+            <td [appPbDifference]="teamSpreadDiff" (click)="onTeamModalOpen([teamProps[2]])">
+                <span class="table-conditional-item-wrapper" *ngIf="teamSpreadDisplay">
+                  <span class="table-conditional-item">{{teamSpreadDisplayConditional}}</span> {{teamSpreadDisplay | plus}}
+                </span>
+              <span *ngIf="!teamSpreadDisplay">
+                  {{teamSpread | plus}}
+                </span>
+            </td>
+            <td [appPbDifference]="teamMoneylineDiff" (click)="onTeamModalOpen([teamProps[3]])">
+                <span class="table-conditional-item-wrapper" *ngIf="teamMoneylineDisplay">
+                  <span class="table-conditional-item">{{teamMoneylineDisplayConditional}}</span> {{teamMoneylineDisplay | plus}}
+                </span>
+              <span *ngIf="!teamMoneylineDisplay">
+                  {{teamMoneyline | plus}}
+                </span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+
+    <div class="col-12" *ngIf="quarterbacks && quarterbacks.length">
+      <div class="multi-row-data-table-wrapper bet-predictor-table-wrapper">
+        <app-swappable-table
+          allowSorting="true"
+          [data]="quarterbacks"
+          [searchFunction]="searchFunction"
+          [rowTemplate]="quarterbackTableRow"
+          [theadTemplate]="quarterbackTableHeader"
+          [primaryField]="'player_id'"
+          [displayField]="'name'"
+          [columnCount]="10"
+          [dropdownFormatter]="quarterbackDDFormatter.bind(this)"
+          [buttonOnFirstColumn]="true"
+          [buttonClass]="'btn team-swap-btn'"
+          [placeholder]="'Select a player to swap with ...'"
+          [showRow]="showPlayer"
+          [doNotShowSelectedItem]="true"
+          [apiSwap]="true"
+          [showEmptyRows]="getEmptyRows('qb')"
+          (onSwap)="onSwap($event)"
+        >
+        </app-swappable-table>
+      </div>
+    </div>
+
+    <div class="col-12" *ngIf="runningbacks && runningbacks.length">
+      <div class="multi-row-data-table-wrapper bet-predictor-table-wrapper">
+        <app-swappable-table
+          allowSorting="true"
+          [data]="runningbacks"
+          [searchFunction]="searchFunction"
+          [rowTemplate]="runningbackTableRow"
+          [theadTemplate]="runningbackTableHeader"
+          [primaryField]="'player_id'"
+          [displayField]="'name'"
+          [columnCount]="13"
+          [dropdownFormatter]="runningbackDDFormatter.bind(this)"
+          [buttonOnFirstColumn]="true"
+          [buttonClass]="'btn team-swap-btn'"
+          [placeholder]="'Select a player to swap with ...'"
+          [showRow]="showPlayer"
+          [doNotShowSelectedItem]="true"
+          [apiSwap]="true"
+          [showEmptyRows]="getEmptyRows('rb')"
+          (onSwap)="onSwap($event)"
+        >
+        </app-swappable-table>
+      </div>
+    </div>
+
+    <div class="col-12" *ngIf="wideReceivers && wideReceivers.length">
+      <div class="multi-row-data-table-wrapper bet-predictor-table-wrapper">
+        <app-swappable-table
+          allowSorting="true"
+          [data]="wideReceivers"
+          [searchFunction]="searchFunction"
+          [rowTemplate]="wideReceiverTableRow"
+          [theadTemplate]="wideReceiverTableHeader"
+          [primaryField]="'player_id'"
+          [displayField]="'name'"
+          [columnCount]="10"
+          [dropdownFormatter]="wideReceiverDDFormatter.bind(this)"
+          [buttonOnFirstColumn]="true"
+          [buttonClass]="'btn team-swap-btn'"
+          [placeholder]="'Select a player to swap with ...'"
+          [showRow]="showPlayer"
+          [doNotShowSelectedItem]="true"
+          [apiSwap]="true"
+          [showEmptyRows]="getEmptyRows('wr')"
+          (onSwap)="onSwap($event)"
+        >
+        </app-swappable-table>
+      </div>
+    </div>
+
+    <div class="col-12" *ngIf="tightEnds && tightEnds.length">
+      <div class="multi-row-data-table-wrapper bet-predictor-table-wrapper">
+        <app-swappable-table
+          allowSorting="true"
+          [data]="tightEnds"
+          [searchFunction]="searchFunction"
+          [rowTemplate]="tightEndTableRow"
+          [theadTemplate]="tightEndTableHeader"
+          [primaryField]="'player_id'"
+          [displayField]="'name'"
+          [columnCount]="10"
+          [dropdownFormatter]="tightEndDDFormatter.bind(this)"
+          [buttonOnFirstColumn]="true"
+          [buttonClass]="'btn team-swap-btn'"
+          [placeholder]="'Select a player to swap with ...'"
+          [showRow]="showPlayer"
+          [doNotShowSelectedItem]="true"
+          [apiSwap]="true"
+          [showEmptyRows]="getEmptyRows('te')"
+          (onSwap)="onSwap($event)"
+        >
+        </app-swappable-table>
+      </div>
+    </div>
+
+    <div class="col-12" *ngIf="teamDefense && teamDefense.length">
+      <div class="multi-row-data-table-wrapper bet-predictor-table-wrapper">
+        <app-swappable-table
+          allowSorting="true"
+          [data]="teamDefense"
+          [searchFunction]="searchFunction"
+          [rowTemplate]="teamDefenseTableRow"
+          [theadTemplate]="teamDefenseTableHeader"
+          [primaryField]="'player_id'"
+          [displayField]="'name'"
+          [columnCount]="9"
+          [buttonOnFirstColumn]="true"
+          [buttonClass]="'btn team-swap-btn'"
+          [placeholder]="'Select a player to swap with ...'"
+          [showRow]="showPlayer"
+          [doNotShowSelectedItem]="true"
+          [apiSwap]="true"
+          (onSwap)="onSwap($event)"
+          [showEmptyRows]="getEmptyRows('def')"
+        >
+        </app-swappable-table>
+      </div>
+    </div>
+
+    <div class="col-12" *ngIf="kickers && kickers.length">
+      <div class="multi-row-data-table-wrapper bet-predictor-table-wrapper">
+        <app-swappable-table
+          allowSorting="true"
+          [data]="kickers"
+          [searchFunction]="searchFunction"
+          [rowTemplate]="kickerTableRow"
+          [theadTemplate]="kickerTableHeader"
+          [primaryField]="'player_id'"
+          [displayField]="'name'"
+          [columnCount]="7"
+          [buttonOnFirstColumn]="true"
+          [buttonClass]="'btn team-swap-btn'"
+          [placeholder]="'Select a player to swap with ...'"
+          [showRow]="showPlayer"
+          [doNotShowSelectedItem]="true"
+          [apiSwap]="true"
+          (onSwap)="onSwap($event)"
+          [showEmptyRows]="getEmptyRows('k')"
+        >
+        </app-swappable-table>
+      </div>
+    </div>
+
+  </div>
+</div>

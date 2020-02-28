@@ -1,0 +1,69 @@
+// TO USE:
+// ------
+// Separated Dropdowns with:
+//
+// - div.separated-dropdowns-wrapper
+//
+//   - Wrap the Dropdown Toggle Button with
+//     div.separated-dropdown-menu.dropdown.page-heading-right-dropdown
+//       -> If it is the first dropdown button add the class 'first'
+//       -> If it is the last dropdown button add the class 'last'
+//
+//     - button.separated-dropdown-btn.btn.btn-secondary
+//
+//     - div.dropdown-menu (contains dropdown menu items)
+// ------------------------------------------------------------------------------
+
+.separated-dropdowns-wrapper {
+  &.responsive {
+    @media (max-width: 400px) {
+      .separated-dropdown-menu {
+        width: 100%;
+        button {
+          width: 100%;
+        }
+      }
+    }
+    &.xs {
+      @media (max-width: 544px) {
+        .separated-dropdown-menu {
+          width: 100%;
+          button {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  .separated-dropdown-menu {
+    display: inline-block;
+    float: left;
+    margin: 0 6px;
+    &.first {
+      margin-left: 0;
+    }
+    &.last {
+      margin-right: 0;
+    }
+    .separated-dropdown-btn {
+      border-color: #e0e0e4;
+      border-radius: 2px;
+      background: #FFF;
+      color: #333;
+      &.input-disabled-style[disabled] {
+        opacity: 1;
+        background-color: #eceeef;
+      }
+      &:hover, &:active, &:focus {
+        background-color: #f8f8f8;
+      }
+    }
+    .dropdown-menu {
+      .dd-opt-active {
+        background-color: $lu-blue;
+        color: #FFF;
+      }
+    }
+  }
+}

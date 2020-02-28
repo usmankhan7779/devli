@@ -1,0 +1,2061 @@
+<div class="row pb-3">
+  <div *ngIf="teamLineup.intro_paragraph" class="col-12 col-lg-8 flex-last flex-sm-unordered">
+    <p class="site-pages-content mt-4 mt-sm-0 mb-0 mb-sm-3" [innerHtml]="teamLineup.intro_paragraph | safeHtml"></p>
+  </div>
+  <div class="col-12">
+    <div class="row">
+      <div class="col-lg-8 col-12 page-actions-wrapper">
+        <!-- Collapse Menu -->
+        <div class="in-page-dropdown-toggle" [ngClass]="{'no-dropdown': !dropdownCollapsed}">
+          <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="dropdownCollapsed = !dropdownCollapsed"
+                  [attr.aria-expanded]="!dropdownCollapsed" aria-controls="collapseExample">
+            <i class="fa fa-bars dropdown-icon" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="d-flex updated-date-time-block-wrapper">
+          <div class="in-page-dropdown-menu" [ngbCollapse]="!dropdownCollapsed" [ngClass]="{'hidden-dropdown': !dropdownCollapsed}">
+            <!-- Grouped Dropdown -->
+            <div class="grouped-dropdown-wrapper btn-group mb-0">
+
+              <div ngbDropdown class="grouped-dropdown dropdown">
+                <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="main-dropdown" ngbDropdownToggle>
+                  <span class="pr-0 pr-sm-3">{{activeYear}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="main-dropdown">
+                  <div *ngFor="let season of teamLineup.seasons_dropdown;">
+                    <button
+                      [ngClass]="{'dd-active-btn': activeYear === season.year}"
+                      (click)="onYearDdChange(season)"
+                      class="dropdown-item">
+                      <span>{{season.name}}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div ngbDropdown class="grouped-dropdown  dropdown">
+                <button type="button" class="grouped-dropdown-btn btn btn-secondary" id="stats-dropdown" ngbDropdownToggle>
+                  <span>{{btnGroupOneCurrentValue.label}}</span> <img class="down-arrow" alt="down-arrow" src="/assets/images/arrow-down.png" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="stats-dropdown">
+                  <div *ngFor="let opt of btnGroupOneOpts"  class="dropdown-btn-wrap">
+                    <a (click)="onSelectBtnGroupOneOpt(opt)" [ngClass]="{'dd-active-btn': btnGroupOneCurrentValue.label == opt.label}" class="dropdown-item">{{opt.label}}</a>
+                  </div>
+                </div>
+              </div>
+              <!-- Fantasy Dropdown -->
+              <div [hidden]="btnGroupOneCurrentValue.id !== 2" ngbDropdown class="grouped-dropdown  dropdown">
+                <button type="button" class="grouped-dropdown-btn btn btn-secondary last" id="season-dropdown1" ngbDropdownToggle>
+                  <span>{{btnGroupFantasyCurrentValue.label}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="season-dropdown1">
+                  <div *ngFor="let opt of btnGroupFantasyOpts"  class="dropdown-btn-wrap">
+                    <a (click)="onSelectBtnGroupFantasyOpt(opt)" [ngClass]="{'dd-active-btn': btnGroupFantasyCurrentValue.label == opt.label}" class="dropdown-item">{{opt.label}}</a>
+                  </div>
+                </div>
+              </div>
+              <div [hidden]="btnGroupOneCurrentValue.id !== 1" ngbDropdown class="grouped-dropdown  dropdown">
+                <button type="button" class="grouped-dropdown-btn btn btn-secondary" id="avg-dropdown" ngbDropdownToggle>
+                  <span>{{btnGroupTwoCurrentValue.label}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="avg-dropdown">
+                  <div *ngFor="let opt of btnGroupTwoOpts"  class="dropdown-btn-wrap">
+                    <a (click)="onSelectBtnGroupTwoOpt(opt)" [hidden]="btnGroupThreeCurrentValue.allowBothOnly && opt.id !== 'season'" [ngClass]="{'dd-active-btn': btnGroupTwoCurrentValue.label == opt.label}" class="dropdown-item">{{opt.label}}</a>
+                  </div>
+                </div>
+              </div>
+              <div [hidden]="btnGroupOneCurrentValue.id !== 1" ngbDropdown class="grouped-dropdown  dropdown">
+                <button type="button" class="grouped-dropdown-btn btn btn-secondary last" id="season-dropdown2" ngbDropdownToggle>
+                  <span>{{btnGroupThreeCurrentValue.label}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="season-dropdown2">
+                  <div *ngFor="let opt of btnGroupThreeOpts"  class="dropdown-btn-wrap">
+                    <a (click)="onSelectBtnGroupThreeOpt(opt)" [hidden]="btnGroupTwoCurrentValue.id !== 'season' && opt.allowBothOnly" [ngClass]="{'dd-active-btn': btnGroupThreeCurrentValue.label == opt.label}" class="dropdown-item">{{opt.label}}</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> <!-- END: 'in-page-nav-menu' -->
+          <div *ngIf="teamLineup.nav.updated" class="updated-date-time-block next-to-dd align-self-center">
+            Updated: <app-general-time-format [time]="teamLineup.nav.updated" [showTimeAgo]="true"></app-general-time-format>
+          </div>
+        </div>
+        <div class="heading-action-cta-wrapper">
+          <button *ngIf="false" class="heading-action-cta-btn dark-purple btn">
+            <img src="/assets/images/icon-video.png" alt="video"/> How it works
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Starting Lineup Box Loader -->
+    <div *ngIf="teamLineup === undefined" class="starting-lineup-loader">
+      <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+    </div>
+    <!-- Team Lineup Contents -->
+    <div *ngIf="teamLineup !== undefined" class="selected-team-lineup-contents">
+      <!-- Starting Lineup -->
+      <div class="starting-lineup-section" *ngIf="!(!teamLineup.starting_pitcher && !teamLineup.starting_hitters?.length && !teamLineup.bench_pitchers?.length && !teamLineup.bench_hitters?.length)">
+        <div class="team-lineup-starting-header">
+          <h2 class="page-heading-two">{{teamLineup.header_one}}</h2>
+        </div>
+        <div>
+          <div class="row">
+            <div class="col-12">
+              <div class="lineup-player-image-list mlb-lineup-player-list d-flex flex-wrap after-heading-margin">
+                <ng-container *ngFor="let player of startingPlayers">
+                  <div *ngIf="player" class="player-image-wrapper">
+                    <div>
+                      <a [routerLink]="[player.profile_url || '']" rel="nofollow" class="link-black">
+                        <img [src]="player.photo_url" alt="{{player.name}}">
+                      </a>
+                    </div>
+                    <div class="player-under-image-details">
+                      <span *ngIf="player.batting_order; let batting_order">{{batting_order}}.</span>
+                      <app-player-link [league]="'mlb'" [playerName]="player.name | shortPlayerName" [playerUrl]="player.profile_url" [generateShortName]="false"></app-player-link>,
+                      <span *ngIf="player.throwing_hand || player.bat_hand; let throwing_hand"> ({{throwing_hand}})</span>,
+                      <span>{{player.position}}</span>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Starting Pitcher Data -->
+        <div class="starting-pitcher-data">
+          <div *ngIf="teamLineup?.starting_pitcher" class="row table-row table-sect-wrap scrollbar-margin">
+            <!-- Static Positioned Tabled -->
+            <div class="static-table-wrapper">
+              <table class="static-table stats-table table table-bordered starting-pitcher-table">
+                <thead>
+                <tr>
+                  <th class="position-col">Pos</th>
+                  <th class="player-name-col">Pitcher</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td class="position-col">{{teamLineup?.starting_pitcher.position}}</td>
+                  <td class="player-name-col">
+                    <app-player-link [league]="'mlb'" [playerName]="teamLineup?.starting_pitcher.name" [playerUrl]="teamLineup?.starting_pitcher.profile_url"></app-player-link>
+                    <span class="pitcher-throwing-hand-text">({{teamLineup?.starting_pitcher.throwing_hand}})</span>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Starting Pitcher Table Wrapper -->
+            <div class="horizontal-table-wrapper team-lineups">
+              <!-- Starting Pitcher Table -->
+              <table class="table table-bordered starting-pitcher-table stats-table">
+                <thead>
+                <tr>
+                  <th class="position-col inner-col-switch">Pos</th>
+                  <th class="player-name-col inner-col-switch">Pitcher</th>
+                  <th>Rating</th>
+                  <th>GS</th>
+                  <th>Record</th>
+                  <th>IP</th>
+                  <th class="med-col">Batters Faced</th>
+                  <th>
+                    <span [hidden]="btnGroupThreeCurrentValue.id === 5">Hits</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">xFIP</span>
+                  </th>
+                  <th>
+                    <span [hidden]="btnGroupThreeCurrentValue.id === 5">Runs</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">SIERA</span>
+                  </th>
+                  <th>
+                    <span [hidden]="btnGroupThreeCurrentValue.id === 5">ER</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">LOB%</span>
+                  </th>
+                  <th class="med-col">
+                    <span [hidden]="btnGroupThreeCurrentValue.id === 5">HR Allowed</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">HR/FB</span>
+                  </th>
+                  <th>
+                    <span [hidden]="btnGroupThreeCurrentValue.id === 5">BB</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">Soft</span>
+                  </th>
+                  <th>
+                    <span [hidden]="btnGroupThreeCurrentValue.id === 5">SO</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">Medium</span>
+                  </th>
+                  <th>
+                    <span [hidden]="btnGroupThreeCurrentValue.id === 5">K%</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">Hard</span>
+                  </th>
+                  <th>
+                    <span [hidden]="btnGroupThreeCurrentValue.id === 5">BB%</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">GB</span>
+                  </th>
+                  <th>
+                    <span [hidden]="btnGroupThreeCurrentValue.id === 5">WHIP</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">FB</span>
+                  </th>
+                  <th>
+                    <span [hidden]="btnGroupThreeCurrentValue.id === 5">BABIP</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">LD</span>
+                  </th>
+                  <!-- Fantasy Predictions -->
+                  <th [hidden]="btnGroupOneCurrentValue.id !== 2">
+                    <span>Salary</span>
+                  </th>
+                  <th [hidden]="btnGroupOneCurrentValue.id !== 2">
+                    <span>Projection</span>
+                  </th>
+                  <!--<th class="med-col" [hidden]="btnGroupOneCurrentValue.id !== 2">-->
+                  <!--<span>Ownership %</span>-->
+                  <!--</th>-->
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td scope="row" class="player-position inner-col-switch">{{teamLineup?.starting_pitcher.position}}</td>
+                  <td class="player-name-col inner-col-switch">
+                    <app-player-link [league]="'mlb'" [playerName]="teamLineup?.starting_pitcher.name" [playerUrl]="teamLineup?.starting_pitcher.profile_url"></app-player-link>
+                    <span class="pitcher-throwing-hand-text">({{teamLineup?.starting_pitcher.throwing_hand}})</span>
+                  </td>
+                  <td>
+                  <span class="rating"
+                        [ngClass]="{'green': teamLineup?.starting_pitcher?.rating >= 9,
+                                    'yellow': teamLineup?.starting_pitcher?.rating < 9,
+                                    'red': teamLineup?.starting_pitcher?.rating < 7}">{{teamLineup?.starting_pitcher?.rating}}</span>
+                  </td>
+                  <td>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 1 &&  btnGroupThreeCurrentValue.id !== 5">{{teamLineup?.starting_pitcher.basic[btnGroupTwoCurrentValue.id].games_started}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{teamLineup?.starting_pitcher.last_10.games_started}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{teamLineup?.starting_pitcher.last_30.games_started}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{teamLineup?.starting_pitcher.last_60.games_started}}</span>
+                  </td>
+                  <td>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5">{{teamLineup.starting_pitcher.basic[btnGroupTwoCurrentValue.id].wins}}-{{teamLineup.starting_pitcher.basic[btnGroupTwoCurrentValue.id].losses}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{teamLineup.starting_pitcher.last_10.wins}}-{{teamLineup.starting_pitcher.last_10.losses}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{teamLineup.starting_pitcher.last_30.wins}}-{{teamLineup.starting_pitcher.last_30.losses}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{teamLineup.starting_pitcher.last_60.wins}}-{{teamLineup.starting_pitcher.last_60.losses}}</span>
+                  </td>
+                  <td>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5">{{teamLineup.starting_pitcher.basic[btnGroupTwoCurrentValue.id].innings_pitched | number : '1.0-2'}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{teamLineup.starting_pitcher.last_10.innings_pitched | number : '1.0-2'}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{teamLineup.starting_pitcher.last_30.innings_pitched | number : '1.0-2'}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{teamLineup.starting_pitcher.last_60.innings_pitched | number : '1.0-2'}}</span>
+                  </td>
+                  <td>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5">{{teamLineup?.starting_pitcher.basic[btnGroupTwoCurrentValue.id].tbf}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{teamLineup?.starting_pitcher.last_10.batters_faced}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{teamLineup?.starting_pitcher.last_30.batters_faced}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{teamLineup?.starting_pitcher.last_60.batters_faced}}</span>
+                  </td>
+                  <td>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{teamLineup?.starting_pitcher.basic[btnGroupTwoCurrentValue.id].hits}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{teamLineup?.starting_pitcher.last_10.hits}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{teamLineup?.starting_pitcher.last_30.hits}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{teamLineup?.starting_pitcher.last_60.hits}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="teamLineup?.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].xfip !== null">{{teamLineup?.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].xfip}}</span>
+              <span *ngIf="teamLineup?.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].xfip === null">N/A</span>
+            </span>
+                  </td>
+                  <td>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{teamLineup?.starting_pitcher.basic[btnGroupTwoCurrentValue.id].runs}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{teamLineup?.starting_pitcher.last_10.runs}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{teamLineup?.starting_pitcher.last_30.runs}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{teamLineup?.starting_pitcher.last_60.runs}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="teamLineup?.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].siera !== null">{{teamLineup?.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].siera}}</span>
+              <span *ngIf="teamLineup?.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].siera === null">N/A</span>
+            </span>
+                  </td>
+                  <td>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{teamLineup?.starting_pitcher.basic[btnGroupTwoCurrentValue.id].earned_runs}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{teamLineup?.starting_pitcher.last_10.earned_runs}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{teamLineup?.starting_pitcher.last_30.earned_runs}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{teamLineup?.starting_pitcher.last_60.earned_runs}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="teamLineup?.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].left_on_base_pct !== null">{{teamLineup?.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].left_on_base_pct}}%</span>
+              <span *ngIf="teamLineup?.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].left_on_base_pct === null">N/A</span>
+            </span>
+                  </td>
+                  <td>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{teamLineup?.starting_pitcher.basic[btnGroupTwoCurrentValue.id].home_runs}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{teamLineup?.starting_pitcher.last_10.home_runs}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{teamLineup?.starting_pitcher.last_30.home_runs}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{teamLineup?.starting_pitcher.last_60.home_runs}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].hr_fb !== null">{{teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].hr_fb}}</span>
+              <span *ngIf="teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].hr_fb === null">N/A</span>
+            </span>
+                  </td>
+                  <td>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{teamLineup?.starting_pitcher.basic[btnGroupTwoCurrentValue.id].walks}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{teamLineup?.starting_pitcher.last_10.walks}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{teamLineup?.starting_pitcher.last_30.walks}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{teamLineup?.starting_pitcher.last_60.walks}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].soft_pct !== null">{{teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].soft_pct}}%</span>
+              <span *ngIf="teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].soft_pct === null">N/A</span>
+            </span>
+                  </td>
+                  <td>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{teamLineup?.starting_pitcher.basic[btnGroupTwoCurrentValue.id].strikeouts}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{teamLineup?.starting_pitcher.last_10.strikeouts}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{teamLineup?.starting_pitcher.last_30.strikeouts}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{teamLineup?.starting_pitcher.last_60.strikeouts}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].med_pct !== null">{{teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].med_pct}}%</span>
+              <span *ngIf="teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].med_pct === null">N/A</span>
+            </span>
+                  </td>
+                  <td>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{teamLineup?.starting_pitcher.basic[btnGroupTwoCurrentValue.id].strikeout_pct | number: '1.2-2'}}%</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{teamLineup?.starting_pitcher.last_10.strikeout_pct | number: '1.2-2'}}%</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{teamLineup?.starting_pitcher.last_30.strikeout_pct | number: '1.2-2'}}%</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{teamLineup?.starting_pitcher.last_60.strikeout_pct | number: '1.2-2'}}%</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].hard_pct !== null">{{teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].hard_pct}}%</span>
+              <span *ngIf="teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].hard_pct === null">N/A</span>
+            </span>
+                  </td>
+                  <td>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{teamLineup?.starting_pitcher.basic[btnGroupTwoCurrentValue.id].walk_pct | number: '1.2-2'}}%</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{teamLineup?.starting_pitcher.last_10.walk_pct | number: '1.2-2'}}%</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{teamLineup?.starting_pitcher.last_30.walk_pct | number: '1.2-2'}}%</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{teamLineup?.starting_pitcher.last_60.walk_pct | number: '1.2-2'}}%</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].gb_pct !== null">{{teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].gb_pct}}%</span>
+              <span *ngIf="teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].gb_pct === null">N/A</span>
+            </span>
+                  </td>
+                  <td>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{teamLineup?.starting_pitcher.basic[btnGroupTwoCurrentValue.id].walks_hits_per_innings_pitched | number :'1.2-2'}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{teamLineup?.starting_pitcher.last_10.whip | number :'1.2-2'}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{teamLineup?.starting_pitcher.last_30.whip | number :'1.2-2'}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{teamLineup?.starting_pitcher.last_60.whip | number :'1.2-2'}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].fb_pct !== null">{{teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].fb_pct}}%</span>
+              <span *ngIf="teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].fb_pct === null">N/A</span>
+            </span>
+                  </td>
+                  <td>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{teamLineup?.starting_pitcher.basic[btnGroupTwoCurrentValue.id].babip}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{teamLineup?.starting_pitcher.last_10.babip}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{teamLineup?.starting_pitcher.last_30.babip}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{teamLineup?.starting_pitcher.last_60.babip}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].ld_pct !== null">{{teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].ld_pct}}%</span>
+              <span *ngIf="teamLineup.starting_pitcher.advanced[btnGroupTwoCurrentValue.id].ld_pct === null">N/A</span>
+            </span>
+                  </td>
+                  <!-- Fantasy Predictions -->
+                  <td [hidden]="btnGroupOneCurrentValue.id !== 2">
+                    <!-- Fan Duel Salary-->
+                    <span [hidden]="btnGroupFantasyCurrentValue.id !== 1">
+                    <span *ngIf="teamLineup.starting_pitcher.fantasy.fanduel.salary !== undefined">${{teamLineup.starting_pitcher.fantasy.fanduel.salary}}</span>
+                    <span *ngIf="teamLineup.starting_pitcher.fantasy.fanduel.salary === undefined">N/A</span>
+                  </span>
+                    <!-- Draft Kings Salary -->
+                    <span [hidden]="btnGroupFantasyCurrentValue.id !== 2">
+                    <span *ngIf="teamLineup.starting_pitcher.fantasy?.draftkings.salary !== undefined">${{teamLineup.starting_pitcher.fantasy?.draftkings.salary}}</span>
+                    <span *ngIf="teamLineup.starting_pitcher.fantasy?.draftkings.salary === undefined">N/A</span>
+                  </span>
+                    <!--&lt;!&ndash; Yahoo Salary &ndash;&gt;-->
+                    <span [hidden]="btnGroupFantasyCurrentValue.id !== 3">
+                    <span *ngIf="teamLineup.starting_pitcher.fantasy?.yahoo.salary !== undefined">${{teamLineup.starting_pitcher.fantasy?.yahoo.salary}}</span>
+                    <span *ngIf="teamLineup.starting_pitcher.fantasy?.yahoo.salary === undefined">N/A</span>
+                  </span>
+                  </td>
+                  <td [hidden]="btnGroupOneCurrentValue.id !== 2">
+                    <!-- Fan Duel Projected-->
+                    <span [hidden]="btnGroupFantasyCurrentValue.id !== 1">
+                    <span *ngIf="teamLineup.starting_pitcher.fantasy.fanduel.projection !== undefined">{{teamLineup.starting_pitcher.fantasy.fanduel.projection | number : '1.2-2'}}</span>
+                    <span *ngIf="teamLineup.starting_pitcher.fantasy.fanduel.projection === undefined">N/A</span>
+                  </span>
+                    <!-- Draft Kings Projected -->
+                    <span [hidden]="btnGroupFantasyCurrentValue.id !== 2">
+                    <span *ngIf="teamLineup.starting_pitcher.fantasy?.draftkings.projection !== undefined">{{teamLineup.starting_pitcher.fantasy?.draftkings.projection | number : '1.2-2'}}</span>
+                    <span *ngIf="teamLineup.starting_pitcher.fantasy?.draftkings.projection === undefined">N/A</span>
+                  </span>
+                    <!-- Yahoo Projected -->
+                    <span [hidden]="btnGroupFantasyCurrentValue.id !== 3">
+                    <span *ngIf="teamLineup.starting_pitcher.fantasy?.yahoo.projection !== undefined">{{teamLineup.starting_pitcher.fantasy?.yahoo.projection | number : '1.2-2'}}</span>
+                    <span *ngIf="teamLineup.starting_pitcher.fantasy?.yahoo.projection === undefined">N/A</span>
+                  </span>
+                  </td>
+                  <!--<td class="med-col" [hidden]="btnGroupOneCurrentValue.id !== 2">-->
+                  <!--&lt;!&ndash; Fan Duel Ownage&ndash;&gt;-->
+                  <!--<span [hidden]="btnGroupFantasyCurrentValue.id !== 1">-->
+                  <!--<span *ngIf="teamLineup.starting_pitcher.fantasy.fanduel.ownership !== undefined">{{teamLineup.starting_pitcher.fantasy.fanduel.ownership}}%</span>-->
+                  <!--<span *ngIf="teamLineup.starting_pitcher.fantasy.fanduel.ownership === undefined">N/A</span>-->
+                  <!--</span>-->
+                  <!--&lt;!&ndash; Draft Kings Ownage &ndash;&gt;-->
+                  <!--<span [hidden]="btnGroupFantasyCurrentValue.id !== 2">-->
+                  <!--<span *ngIf="teamLineup.starting_pitcher.fantasy?.draftkings.ownership !== undefined">{{teamLineup.starting_pitcher.fantasy?.draftkings.ownership}}%</span>-->
+                  <!--<span *ngIf="teamLineup.starting_pitcher.fantasy?.draftkings.ownership === undefined">N/A</span>-->
+                  <!--</span>-->
+                  <!--&lt;!&ndash; Yahoo Ownage &ndash;&gt;-->
+                  <!--<span [hidden]="btnGroupFantasyCurrentValue.id !== 3">-->
+                  <!--<span *ngIf="teamLineup.starting_pitcher.fantasy?.yahoo.ownership !== undefined">{{teamLineup.starting_pitcher.fantasy?.yahoo.ownership}}%</span>-->
+                  <!--<span *ngIf="teamLineup.starting_pitcher.fantasy?.yahoo.ownership === undefined">N/A</span>-->
+                  <!--</span>-->
+                  <!--</td>-->
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div *ngIf="bullpenTableActive" class="row bullpen-pitcher-table-wrapper table-row table-sect-wrap scrollbar-margin">
+            <div class="row table-row">
+              <!-- Static Positioned Tabled -->
+              <div class="static-table-wrapper">
+                <table [mfRowsOnPage]="10000" [mfData]="teamLineup.bench_pitchers" [(mfSortBy)]="sortByPitchers" [(mfSortOrder)]="sortOrderPitchers" (mfSortByChange)="onSortOrder('sortByPitchers', 'sortOrderPitchers', 'by', $event)" (mfSortOrderChange)="onSortOrder('sortByPitchers', 'sortOrderPitchers', 'order', $event)" #staticBenchPitchers="mfDataTable" class="static-table stats-table table table-bordered starting-pitcher-table">
+                  <thead>
+                  <tr>
+                    <th class="position-col">
+                      <mfSorter by="position">Pos</mfSorter>
+                    </th>
+                    <th class="player-name-col">
+                      <mfSorter by="name">Pitcher</mfSorter>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let benchPitcher of staticBenchPitchers.data">
+                    <td class="position-col">{{benchPitcher.position}}</td>
+                    <td class="player-name-col">
+                      <app-player-link [league]="'nba'" [playerName]="benchPitcher.full_name" [playerUrl]="benchPitcher.profile_url"></app-player-link>
+                      <span class="pitcher-throwing-hand-text">({{benchPitcher.throwing_hand}})</span>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div><!-- Bench Pitcher Table Wrapper -->
+              <div class="horizontal-table-wrapper">
+                <table [mfRowsOnPage]="10000" [mfData]="teamLineup.bench_pitchers" [(mfSortBy)]="sortByPitchers" [(mfSortOrder)]="sortOrderPitchers" (mfSortByChange)="onSortOrder('sortByPitchers', 'sortOrderPitchers', 'by', $event)" (mfSortOrderChange)="onSortOrder('sortByPitchers', 'sortOrderPitchers', 'order', $event)" #benchPitchers="mfDataTable" class="table table-bordered bullpen-pitcher-table stats-table">
+                  <thead>
+                  <tr>
+                    <th class="position-col inner-col-switch">
+                      <mfSorter by="position">Pos</mfSorter>
+                    </th>
+                    <th class="player-name-col inner-col-switch">
+                      <mfSorter by="name">Pitcher</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.games_started'">GS</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.games_started">GS</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.games_started">GS</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.games_started">GS</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.wins'">Record</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.wins">Record</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.wins">Record</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.wins">Record</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.innings_pitched'">IP</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.innings_pitched">IP</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.innings_pitched">IP</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.innings_pitched">IP</mfSorter>
+                    </th>
+                    <th class="med-col">
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.tbf'">Batters Faced</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.batters_faced">Batters Faced</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.batters_faced">Batters Faced</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.batters_faced">Batters Faced</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.hits'">Hits</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.hits">Hits</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.hits">Hits</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.hits">Hits</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.xfip'">xFIP</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.runs'">Runs</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.runs">Runs</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.runs">Runs</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.runs">Runs</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.siera'">SIERA</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.earned_runs'">ER</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.earned_runs">ER</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.earned_runs">ER</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.earned_runs">ER</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.left_on_base_pct'">LOB%</mfSorter>
+                    </th>
+                    <th class="med-col">
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.home_runs'">HR Allowed</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.home_runs">HR Allowed</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.home_runs">HR Allowed</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.home_runs">HR Allowed</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.hr_fb'">HR/FB</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.walks'">BB</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.walks">BB</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.walks">BB</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.walks">BB</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.soft_pct'">Soft</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.strikeouts'">SO</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.strikeouts">SO</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.strikeouts">SO</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.strikeouts">SO</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.med_pct'">Medium</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.strikeout_pct'">K%</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.strikeout_pct">K%</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.strikeout_pct">K%</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.strikeout_pct">K%</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.hard_pct'">Hard</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.walk_pct'">BB%</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.walk_pct">BB%</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.walk_pct">BB%</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.walk_pct">BB%</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.gb_pct'">GB</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.walks_hits_per_innings_pitched'">WHIP</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.whip">WHIP</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.whip">WHIP</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.whip">WHIP</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.fb_pct'">FB</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.babip'">BABIP</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.babip">BABIP</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.babip">BABIP</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.babip">BABIP</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.ld_pct'">LD</mfSorter>
+                    </th>
+                    <!-- Fantasy Predictions -->
+                    <th [hidden]="btnGroupOneCurrentValue.id !== 2">
+                      <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 1" by="fantasy.fanduel.salary">Salary</mfSorter>
+                      <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 2" by="fantasy.draftkings.salary">Salary</mfSorter>
+                      <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 3" by="fantasy.yahoo.salary">Salary</mfSorter>
+                    </th>
+                    <th [hidden]="btnGroupOneCurrentValue.id !== 2">
+                      <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 1" by="fantasy.fanduel.projection">Projection</mfSorter>
+                      <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 2" by="fantasy.draftkings.projection">Projection</mfSorter>
+                      <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 3" by="fantasy.yahoo.projection">Projection</mfSorter>
+                    </th>
+                    <!--<th class="med-col" [hidden]="btnGroupOneCurrentValue.id !== 2">-->
+                    <!--<mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 1" by="fantasy.fanduel.ownership">Ownership %</mfSorter>-->
+                    <!--<mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 2" by="fantasy.draftkings.ownership">Ownership %</mfSorter>-->
+                    <!--<mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 3" by="fantasy.yahoo.ownership">Ownership %</mfSorter>-->
+                    <!--</th>-->
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let benchPitcher of benchPitchers.data">
+                    <td scope="row" class="player-position inner-col-switch">{{benchPitcher.position}}</td>
+                    <td class="player-name-col inner-col-switch">
+                      <app-player-link [league]="'mlb'" [playerName]="benchPitcher.name" [playerUrl]="benchPitcher.profile_url"></app-player-link>
+                      <span *ngIf="benchPitcher.throwing_hand" class="pitcher-throwing-hand-text">({{benchPitcher.throwing_hand}})</span>
+                    </td>
+                    <td>
+                      <span class="rating"
+                            [ngClass]="{'green': benchPitcher.rating >= 9,
+                        'yellow': benchPitcher.rating < 9,
+                        'red': benchPitcher.rating < 7}">{{benchPitcher.rating}}</span>
+                    </td>
+                    <td>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5">
+                        <span *ngIf="benchPitcher.basic[btnGroupTwoCurrentValue.id].games_started !== null">{{benchPitcher.basic[btnGroupTwoCurrentValue.id].games_started}}</span>
+                        <span *ngIf="benchPitcher.basic[btnGroupTwoCurrentValue.id].games_started === null">N/A</span>
+                      </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{benchPitcher.last_10.games_started}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{benchPitcher.last_30.games_started}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{benchPitcher.last_60.games_started}}</span>
+                    </td>
+                    <td>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5">
+                        <span *ngIf="benchPitcher.basic[btnGroupTwoCurrentValue.id].wins !== null && benchPitcher.basic[btnGroupTwoCurrentValue.id].losses !== null">{{benchPitcher.basic[btnGroupTwoCurrentValue.id].wins}}-{{benchPitcher.basic[btnGroupTwoCurrentValue.id].losses}}</span>
+                        <span *ngIf="benchPitcher.basic[btnGroupTwoCurrentValue.id].wins === null || benchPitcher.basic[btnGroupTwoCurrentValue.id].losses === null">N/A</span>
+                      </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{benchPitcher.last_10.wins}}-{{benchPitcher.last_10.losses}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{benchPitcher.last_30.wins}}-{{benchPitcher.last_30.losses}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{benchPitcher.last_60.wins}}-{{benchPitcher.last_60.losses}}</span>
+                    </td>
+                    <td>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5">{{benchPitcher.basic[btnGroupTwoCurrentValue.id].innings_pitched | number : '1.0-2'}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{benchPitcher.last_10.innings_pitched | number : '1.0-2'}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{benchPitcher.last_30.innings_pitched | number : '1.0-2'}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{benchPitcher.last_60.innings_pitched | number : '1.0-2'}}</span>
+                    </td>
+                    <td class="med-col">
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5">{{benchPitcher.basic[btnGroupTwoCurrentValue.id].tbf}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{benchPitcher.last_10.batters_faced}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{benchPitcher.last_30.batters_faced}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{benchPitcher.last_60.batters_faced}}</span>
+                    </td>
+                    <td>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{benchPitcher.basic[btnGroupTwoCurrentValue.id].hits}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{benchPitcher.last_10.hits}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{benchPitcher.last_30.hits}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{benchPitcher.last_60.hits}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                        <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].xfip !== null">{{benchPitcher.advanced[btnGroupTwoCurrentValue.id].xfip}}</span>
+                        <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].xfip === null">N/A</span>
+                      </span>
+                    </td>
+                    <td>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{benchPitcher.basic[btnGroupTwoCurrentValue.id].runs}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{benchPitcher.last_10.runs}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{benchPitcher.last_30.runs}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{benchPitcher.last_60.runs}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                        <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].siera !== null">{{benchPitcher.advanced[btnGroupTwoCurrentValue.id].siera}}</span>
+                        <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].siera === null">N/A</span>
+                      </span>
+                    </td>
+                    <td>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{benchPitcher.basic[btnGroupTwoCurrentValue.id].earned_runs}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{benchPitcher.last_10.earned_runs}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{benchPitcher.last_30.earned_runs}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{benchPitcher.last_60.earned_runs}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                        <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].left_on_base_pct !== null">{{benchPitcher.advanced[btnGroupTwoCurrentValue.id].left_on_base_pct}}%</span>
+                        <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].left_on_base_pct === null">N/A</span>
+                      </span>
+                    </td>
+                    <td class="med-col">
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{benchPitcher.basic[btnGroupTwoCurrentValue.id].home_runs}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{benchPitcher.last_10.home_runs}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{benchPitcher.last_30.home_runs}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{benchPitcher.last_60.home_runs}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                        <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].hr_fb !== null">{{benchPitcher.advanced[btnGroupTwoCurrentValue.id].hr_fb}}</span>
+                        <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].hr_fb === null">N/A</span>
+                      </span>
+                    </td>
+                    <td>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{benchPitcher.basic[btnGroupTwoCurrentValue.id].walks}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{benchPitcher.last_10.walks}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{benchPitcher.last_30.walks}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{benchPitcher.last_60.walks}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                        <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].soft_pct !== null">{{benchPitcher.advanced[btnGroupTwoCurrentValue.id].soft_pct}}%</span>
+                        <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].soft_pct === null">N/A</span>
+                      </span>
+                    </td>
+                    <td>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{benchPitcher.basic[btnGroupTwoCurrentValue.id].strikeouts}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{benchPitcher.last_10.strikeouts}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{benchPitcher.last_30.strikeouts}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{benchPitcher.last_60.strikeouts}}</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                        <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].med_pct !== null">{{benchPitcher.advanced[btnGroupTwoCurrentValue.id].med_pct}}%</span>
+                        <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].med_pct === null">N/A</span>
+                      </span>
+                    </td>
+                    <td>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{benchPitcher.basic[btnGroupTwoCurrentValue.id].strikeout_pct | number: '1.2-2'}}%</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{benchPitcher.last_10.strikeout_pct | number: '1.2-2'}}%</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{benchPitcher.last_30.strikeout_pct | number: '1.2-2'}}%</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{benchPitcher.last_60.strikeout_pct | number: '1.2-2'}}%</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                        <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].hard_pct !== null">{{benchPitcher.advanced[btnGroupTwoCurrentValue.id].hard_pct}}%</span>
+                        <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].hard_pct === null">N/A</span>
+                      </span>
+                    </td>
+                    <td>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 1">{{benchPitcher.basic[btnGroupTwoCurrentValue.id].walk_pct | number: '1.2-2'}}%</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{benchPitcher.last_10.walk_pct | number: '1.2-2'}}%</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{benchPitcher.last_30.walk_pct | number: '1.2-2'}}%</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{benchPitcher.last_60.walk_pct | number: '1.2-2'}}%</span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                    <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].gb_pct !== null">{{benchPitcher.advanced[btnGroupTwoCurrentValue.id].gb_pct}}%</span>
+                    <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].gb_pct === null">N/A</span>
+                  </span>
+                    </td>
+                    <td>
+                  <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+                    <span *ngIf="benchPitcher.basic[btnGroupTwoCurrentValue.id].walks_hits_per_innings_pitched !== null">{{benchPitcher.basic[btnGroupTwoCurrentValue.id].walks_hits_per_innings_pitched | number :'1.2-2'}}</span>
+                    <span *ngIf="benchPitcher.basic[btnGroupTwoCurrentValue.id].walks_hits_per_innings_pitched === null">N/A</span>
+                  </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+                    <span *ngIf="benchPitcher.last_10.whip !== null">{{benchPitcher.last_10.whip | number :'1.2-2'}}</span>
+                    <span *ngIf="benchPitcher.last_10.whip === null">N/A</span>
+                  </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+                    <span *ngIf="benchPitcher.last_30.whip !== null">{{benchPitcher.last_30.whip | number :'1.2-2'}}</span>
+                    <span *ngIf="benchPitcher.last_30.whip === null">N/A</span>
+                  </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+                    <span *ngIf="benchPitcher.last_60.whip !== null">{{benchPitcher.last_60.whip | number :'1.2-2'}}</span>
+                    <span *ngIf="benchPitcher.last_60.whip === null">N/A</span>
+                  </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                    <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].fb_pct !== null">{{benchPitcher.advanced[btnGroupTwoCurrentValue.id].fb_pct}}%</span>
+                    <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].fb_pct === null">N/A</span>
+                  </span>
+                    </td>
+                    <td>
+                  <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+                    <span *ngIf="benchPitcher.basic[btnGroupTwoCurrentValue.id].babip !== null" class="babip">{{benchPitcher.basic[btnGroupTwoCurrentValue.id].babip}}</span>
+                    <span *ngIf="benchPitcher.basic[btnGroupTwoCurrentValue.id].babip === null" class="babip">N/A</span>
+                  </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+                    <span *ngIf="benchPitcher.last_10.babip !== null" class="babip">{{benchPitcher.last_10.babip}}</span>
+                    <span *ngIf="benchPitcher.last_10.babip === null" class="babip">N/A</span>
+                  </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+                    <span *ngIf="benchPitcher.last_30.babip !== null" class="babip">{{benchPitcher.last_30.babip}}</span>
+                    <span *ngIf="benchPitcher.last_30.babip === null" class="babip">N/A</span>
+                  </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+                    <span *ngIf="benchPitcher.last_60.babip !== null" class="babip">{{benchPitcher.last_60.babip}}</span>
+                    <span *ngIf="benchPitcher.last_60.babip === null" class="babip">N/A</span>
+                  </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                    <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].ld_pct !== null">{{benchPitcher.advanced[btnGroupTwoCurrentValue.id].ld_pct}}%</span>
+                    <span *ngIf="benchPitcher.advanced[btnGroupTwoCurrentValue.id].ld_pct === null">N/A</span>
+                  </span>
+                    </td>
+                    <!-- Fantasy Predictions -->
+                    <td [hidden]="btnGroupOneCurrentValue.id !== 2">
+                      <!-- Fan Duel Salary-->
+                      <span [hidden]="btnGroupFantasyCurrentValue.id !== 1">
+                    <span *ngIf="benchPitcher.fantasy.fanduel.salary !== null">${{benchPitcher.fantasy.fanduel.salary}}</span>
+                    <span *ngIf="benchPitcher.fantasy.fanduel.salary === null">N/A</span>
+                  </span>
+                      <!-- Draft Kings Salary -->
+                      <span [hidden]="btnGroupFantasyCurrentValue.id !== 2">
+                   <span *ngIf="benchPitcher.fantasy?.draftkings.salary !== null">${{benchPitcher.fantasy?.draftkings.salary}}</span>
+                    <span *ngIf="benchPitcher.fantasy?.draftkings.salary === null">N/A</span>
+                  </span>
+                      <!--&lt;!&ndash; Yahoo Salary &ndash;&gt;-->
+                      <span [hidden]="btnGroupFantasyCurrentValue.id !== 3">
+                    <span *ngIf="benchPitcher.fantasy?.yahoo.salary !== null">${{benchPitcher.fantasy?.yahoo.salary}}</span>
+                    <span *ngIf="benchPitcher.fantasy?.yahoo.salary === null">N/A</span>
+                  </span>
+                    </td>
+                    <td [hidden]="btnGroupOneCurrentValue.id !== 2">
+                      <!-- Fan Duel Salary-->
+                      <span [hidden]="btnGroupFantasyCurrentValue.id !== 1">
+                    <span *ngIf="benchPitcher.fantasy.fanduel.projection !== null">{{benchPitcher.fantasy.fanduel.projection}}</span>
+                    <span *ngIf="benchPitcher.fantasy.fanduel.projection === null">N/A</span>
+                  </span>
+                      <!-- Draft Kings Salary -->
+                      <span [hidden]="btnGroupFantasyCurrentValue.id !== 2">
+                    <span *ngIf="benchPitcher.fantasy?.draftkings.projection !== null">{{benchPitcher.fantasy?.draftkings.projection}}</span>
+                    <span *ngIf="benchPitcher.fantasy?.draftkings.projection === null">N/A</span>
+                  </span>
+                      <!--&lt;!&ndash; Yahoo Salary &ndash;&gt;-->
+                      <span [hidden]="btnGroupFantasyCurrentValue.id !== 3">
+                    <span *ngIf="benchPitcher.fantasy?.yahoo.projection !== null">{{benchPitcher.fantasy?.yahoo.projection}}</span>
+                    <span *ngIf="benchPitcher.fantasy?.yahoo.projection === null">N/A</span>
+                  </span>
+                    </td>
+                    <!--<td class="med-col" [hidden]="btnGroupOneCurrentValue.id !== 2">-->
+                    <!--&lt;!&ndash; Fan Duel Salary&ndash;&gt;-->
+                    <!--<span [hidden]="btnGroupFantasyCurrentValue.id !== 1">-->
+                    <!--<span *ngIf="benchPitcher.fantasy.fanduel.ownership !== null">{{benchPitcher.fantasy.fanduel.ownership}}%</span>-->
+                    <!--<span *ngIf="benchPitcher.fantasy.fanduel.ownership === null">N/A</span>-->
+                    <!--</span>-->
+                    <!--&lt;!&ndash; Draft Kings Salary &ndash;&gt;-->
+                    <!--<span [hidden]="btnGroupFantasyCurrentValue.id !== 2">-->
+                    <!--<span *ngIf="benchPitcher.fantasy?.draftkings.ownership !== null">{{benchPitcher.fantasy?.draftkings.ownership}}%</span>-->
+                    <!--<span *ngIf="benchPitcher.fantasy?.draftkings.ownership === null">N/A</span>-->
+                    <!--</span>-->
+                    <!--&lt;!&ndash;&lt;!&ndash; Yahoo Salary &ndash;&gt;&ndash;&gt;-->
+                    <!--<span [hidden]="btnGroupFantasyCurrentValue.id !== 3">-->
+                    <!--<span *ngIf="benchPitcher.fantasy?.yahoo.ownership !== null">{{benchPitcher.fantasy?.yahoo.ownership}}%</span>-->
+                    <!--<span *ngIf="benchPitcher.fantasy?.yahoo.ownership === null">N/A</span>-->
+                    <!--</span>-->
+                    <!--</td>-->
+                  </tr>
+                  </tbody>
+                </table> <!-- END: Bullpen Pitcher Table -->
+              </div>
+            </div>
+
+            <!-- Bullpen Pitcher Table -->
+          </div>
+          <!-- Bullpen Pitcher Table Reveal Toggle Button -->
+          <button (click)="onOpenBullpenTable()" class="btn light-gray bullpen bench">
+            <span *ngIf="!bullpenTableActive" class="btn-open-plus">+</span>
+            <span *ngIf="bullpenTableActive" class="btn-close-minus">-</span>
+            <span class="button-text">Bullpen</span>
+          </button>
+        </div>
+
+        <!-- Starting Hitters Data -->
+        <div class="starting-hitters-data">
+          <div class="row table-row table-sect-wrap scrollbar-margin">
+            <!-- Static Positioned Tabled -->
+            <div class="static-table-wrapper">
+              <table
+                [mfRowsOnPage]="10000" [mfData]="teamLineup.starting_hitters"
+                [(mfSortBy)]="sortByHitters"
+                [(mfSortOrder)]="sortOrderHitters"
+                (mfSortByChange)="onSortOrder('sortByHitters', 'sortOrderHitters', 'by', $event)"
+                (mfSortOrderChange)="onSortOrder('sortByHitters', 'sortOrderHitters', 'order', $event)"
+                #staticStartingHitters="mfDataTable"
+                class="static-table stats-table table table-bordered starting-pitcher-table">
+                <thead>
+                <tr>
+                  <th class="position-col">
+                    <mfSorter by="position">Pos</mfSorter>
+                  </th>
+                  <th class="player-name-col">
+                    <mfSorter by="name">Hitter</mfSorter>
+                  </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let startingHitter of staticStartingHitters.data">
+                  <td class="position-col">{{startingHitter.position}}</td>
+                  <td class="player-name-col">
+                    <app-player-link [league]="'mlb'" [playerName]="startingHitter.name" [playerUrl]="startingHitter.profile_url"></app-player-link>
+                    <span *ngIf="startingHitter.bat_hand" class="pitcher-throwing-hand-text">({{startingHitter.bat_hand}})</span>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Starting Hitters Table-->
+            <div class="horizontal-table-wrapper team-lineups">
+              <table
+                [mfRowsOnPage]="10000" [mfData]="teamLineup.starting_hitters"
+                [(mfSortBy)]="sortByHitters"
+                [(mfSortOrder)]="sortOrderHitters"
+                (mfSortByChange)="onSortOrder('sortByHitters', 'sortOrderHitters', 'by', $event)"
+                (mfSortOrderChange)="onSortOrder('sortByHitters', 'sortOrderHitters', 'order', $event)"
+                #startingHitters="mfDataTable"
+                class="table table-bordered starting-hitters-table stats-table">
+                <thead>
+                <tr>
+                  <th class="position-col inner-col-switch">
+                    <mfSorter by="position">Pos</mfSorter>
+                  </th>
+                  <th class="player-name-col inner-col-switch">
+                    <mfSorter by="name">Hitter</mfSorter>
+                  </th>
+                  <th>
+                    <mfSorter by="rating">Rating</mfSorter>
+                  </th>
+                  <th>
+                    <mfSorter by="batting_order">Order</mfSorter>
+                  </th>
+                  <th>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.games'">G</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.games">G</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.games">G</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.games">G</mfSorter>
+                  </th>
+                  <th>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.plate_appearances'">PA</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.plate_appearances">PA</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.plate_appearances">PA</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.plate_appearances">PA</mfSorter>
+                  </th>
+                  <th>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.hits'">Hits</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.hits">Hits</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.hits">Hits</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.hits">Hits</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.woba'">wOBA</mfSorter>
+                  </th>
+                  <th>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.singles'">1B</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.singles">1B</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.singles">1B</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.singles">1B</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.wrc_plus'">wRC+</mfSorter>
+                  </th>
+                  <th>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.doubles'">2B</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.doubles">2B</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.doubles">2B</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.doubles">2B</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.iso'">ISO</mfSorter>
+                  </th>
+                  <th>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.triples'">3B</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.triples">3B</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.triples">3B</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.triples">3B</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.strikeout_pct'">K%</mfSorter>
+                  </th>
+                  <th>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.home_runs'">HR</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.home_runs">HR</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.home_runs">HR</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.home_runs">HR</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.walk_pct'">BB%</mfSorter>
+                  </th>
+                  <th>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.rbis'">RBI</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.rbis">RBI</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.rbis">RBI</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.rbis">RBI</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.soft_pct'">Soft</mfSorter>
+                  </th>
+                  <th>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.runs'">Runs</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.runs">Runs</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.runs">Runs</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.runs">Runs</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.med_pct'">Medium</mfSorter>
+                  </th>
+                  <th>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.stolen_bases'">SB</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.stolen_bases">SB</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.stolen_bases">SB</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.stolen_bases">SB</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.hard_pct'">Hard</mfSorter>
+                  </th>
+                  <th>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.caught_stealing'">CS</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.caught_stealing">CS</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.caught_stealing">CS</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.caught_stealing">CS</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.gb_pct'">GB</mfSorter>
+                  </th>
+                  <th>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.batting_average'">AVG</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.avg">AVG</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.avg">AVG</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.avg">AVG</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.fb_pct'">FB</mfSorter>
+                  </th>
+                  <th>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.obp'">OBP</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.obp">OBP</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.obp">OBP</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.obp">OBP</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.ld_pct'">LD</mfSorter>
+                  </th>
+                  <th [hidden]="btnGroupThreeCurrentValue.id === 5">
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.slg'">SLG</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.slg">SLG</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.slg">SLG</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.slg">SLG</mfSorter>
+                  </th>
+                  <th [hidden]="btnGroupThreeCurrentValue.id === 5">
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.ops'">OPS</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.ops">OPS</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.ops">OPS</mfSorter>
+                    <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.ops">OPS</mfSorter>
+                  </th>
+                  <!-- Fantasy Predictions -->
+                  <th [hidden]="btnGroupOneCurrentValue.id !== 2">
+                    <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 1" by="fantasy.fanduel.salary">Salary</mfSorter>
+                    <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 2" by="fantasy.draftkings.salary">Salary</mfSorter>
+                    <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 3" by="fantasy.yahoo.salary">Salary</mfSorter>
+                  </th>
+                  <th [hidden]="btnGroupOneCurrentValue.id !== 2">
+                    <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 1" by="fantasy.fanduel.projection">Projection</mfSorter>
+                    <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 2" by="fantasy.draftkings.projection">Projection</mfSorter>
+                    <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 3" by="fantasy.yahoo.projection">Projection</mfSorter>
+                  </th>
+                  <!--<th class="med-col" [hidden]="btnGroupOneCurrentValue.id !== 2">-->
+                  <!--<mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 1" by="fantasy.fanduel.ownership">Ownership %</mfSorter>-->
+                  <!--<mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 2" by="fantasy.draftkings.ownership">Ownership %</mfSorter>-->
+                  <!--<mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 3" by="fantasy.yahoo.ownership">Ownership %</mfSorter>-->
+                  <!--</th>-->
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let startingHitter of startingHitters.data">
+                  <td scope="row" class="position-col inner-col-switch">{{startingHitter.position}}</td>
+                  <td class="player-name-col inner-col-switch">
+                    <app-player-link [league]="'mlb'" [playerName]="startingHitter.name" [playerUrl]="startingHitter.profile_url"></app-player-link>
+                    <span *ngIf="startingHitter.bat_hand" class="pitcher-throwing-hand-text">({{startingHitter.bat_hand}})</span>
+                  </td>
+                  <td>
+                  <span class="rating"
+                        [ngClass]="{'green': startingHitter.rating >= 9,
+                                      'yellow': startingHitter.rating < 9,
+                                      'red': startingHitter.rating < 7}">{{startingHitter.rating}}</span>
+                  </td>
+                  <td>
+                    {{startingHitter.batting_order}}
+                  </td>
+                  <td>
+              <span [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5">
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].games !== undefined" class="starting-hitter-season-games">{{startingHitter.basic[btnGroupTwoCurrentValue.id].games}}</span>
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].games === undefined" class="starting-hitter-season-games">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+                <span *ngIf="startingHitter.last_10.games !== undefined">{{startingHitter.last_10.games}}</span>
+                <span *ngIf="startingHitter.last_10.games === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+                <span *ngIf="startingHitter.last_30.games !== undefined">{{startingHitter.last_30.games}}</span>
+                <span *ngIf="startingHitter.last_30.games === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+                <span *ngIf="startingHitter.last_60.games !== undefined">{{startingHitter.last_60.games}}</span>
+                <span *ngIf="startingHitter.last_60.games === undefined">N/A</span>
+              </span>
+                  </td>
+                  <td>
+              <span [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5">
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].plate_appearances !== undefined" class="starting-hitter-season-games">{{startingHitter.basic[btnGroupTwoCurrentValue.id].plate_appearances}}</span>
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].plate_appearances === undefined" class="starting-hitter-season-games">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">{{startingHitter.last_10.plate_appearances}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">{{startingHitter.last_30.plate_appearances}}</span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">{{startingHitter.last_60.plate_appearances}}</span>
+                  </td>
+                  <td>
+              <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].hits !== undefined" class="starting-hitter-season-games">{{startingHitter.basic[btnGroupTwoCurrentValue.id].hits}}</span>
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].hits === undefined" class="starting-hitter-season-games">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+                <span *ngIf="startingHitter.last_10.hits !== undefined">{{startingHitter.last_10.hits}}</span>
+                <span *ngIf="startingHitter.last_10.hits === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+                <span *ngIf="startingHitter.last_30.hits !== undefined">{{startingHitter.last_30.hits}}</span>
+                <span *ngIf="startingHitter.last_30.hits === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+                <span *ngIf="startingHitter.last_60.hits !== undefined">{{startingHitter.last_60.hits}}</span>
+                <span *ngIf="startingHitter.last_60.hits === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].woba !== undefined">{{startingHitter.advanced[btnGroupTwoCurrentValue.id].woba}}</span>
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].woba === undefined">N/A</span>
+              </span>
+                  </td>
+                  <td>
+              <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].singles !== undefined" class="starting-hitter-season-games">{{startingHitter.basic[btnGroupTwoCurrentValue.id].singles}}</span>
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].singles === undefined" class="starting-hitter-season-games">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+                <span *ngIf="startingHitter.last_10.singles !== undefined">{{startingHitter.last_10.singles}}</span>
+                <span *ngIf="startingHitter.last_10.singles === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+                <span *ngIf="startingHitter.last_30.singles !== undefined">{{startingHitter.last_30.singles}}</span>
+                <span *ngIf="startingHitter.last_30.singles === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+                <span *ngIf="startingHitter.last_60.singles !== undefined">{{startingHitter.last_60.singles}}</span>
+                <span *ngIf="startingHitter.last_60.singles === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].wrc_plus !== undefined">{{startingHitter.advanced[btnGroupTwoCurrentValue.id].wrc_plus}}</span>
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].wrc_plus === undefined">N/A</span>
+              </span>
+                  </td>
+                  <td>
+              <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].doubles !== undefined" class="starting-hitter-season-games">{{startingHitter.basic[btnGroupTwoCurrentValue.id].doubles}}</span>
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].doubles === undefined" class="starting-hitter-season-games">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+                <span *ngIf="startingHitter.last_10.doubles !== undefined">{{startingHitter.last_10.doubles}}</span>
+                <span *ngIf="startingHitter.last_10.doubles === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+                <span *ngIf="startingHitter.last_30.doubles !== undefined">{{startingHitter.last_30.doubles}}</span>
+                <span *ngIf="startingHitter.last_30.doubles === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+                <span *ngIf="startingHitter.last_60.doubles !== undefined">{{startingHitter.last_60.doubles}}</span>
+                <span *ngIf="startingHitter.last_60.doubles === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].iso !== undefined">{{startingHitter.advanced[btnGroupTwoCurrentValue.id].iso}}</span>
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].iso === undefined">N/A</span>
+              </span>
+                  </td>
+                  <td>
+              <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].triples !== undefined" class="starting-hitter-season-games">{{startingHitter.basic[btnGroupTwoCurrentValue.id].triples}}</span>
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].triples === undefined" class="starting-hitter-season-games">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+                <span *ngIf="startingHitter.last_10.triples !== undefined">{{startingHitter.last_10.triples}}</span>
+                <span *ngIf="startingHitter.last_10.triples === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+                <span *ngIf="startingHitter.last_30.triples !== undefined">{{startingHitter.last_30.triples}}</span>
+                <span *ngIf="startingHitter.last_30.triples === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+                <span *ngIf="startingHitter.last_60.triples !== undefined">{{startingHitter.last_60.triples}}</span>
+                <span *ngIf="startingHitter.last_60.triples === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].strikeout_pct !== undefined">{{startingHitter.advanced[btnGroupTwoCurrentValue.id].strikeout_pct}}%</span>
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].strikeout_pct === undefined">N/A</span>
+              </span>
+                  </td>
+                  <td>
+              <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].home_runs !== undefined" class="starting-hitter-season-games">{{startingHitter.basic[btnGroupTwoCurrentValue.id].home_runs}}</span>
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].home_runs === undefined" class="starting-hitter-season-games">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+                <span *ngIf="startingHitter.last_10.home_runs !== undefined">{{startingHitter.last_10.home_runs}}</span>
+                <span *ngIf="startingHitter.last_10.home_runs === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+                <span *ngIf="startingHitter.last_30.home_runs !== undefined">{{startingHitter.last_30.home_runs}}</span>
+                <span *ngIf="startingHitter.last_30.home_runs === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+                <span *ngIf="startingHitter.last_60.home_runs !== undefined">{{startingHitter.last_60.home_runs}}</span>
+                <span *ngIf="startingHitter.last_60.home_runs === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].walk_pct !== undefined">{{startingHitter.advanced[btnGroupTwoCurrentValue.id].walk_pct}}%</span>
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].walk_pct === undefined">N/A</span>
+              </span>
+                  </td>
+                  <td>
+              <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].rbis !== undefined" class="starting-hitter-season-games">{{startingHitter.basic[btnGroupTwoCurrentValue.id].rbis}}</span>
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].rbis === undefined" class="starting-hitter-season-games">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+                <span *ngIf="startingHitter.last_10.rbis !== undefined">{{startingHitter.last_10.rbis}}</span>
+                <span *ngIf="startingHitter.last_10.rbis === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+                <span *ngIf="startingHitter.last_30.rbis !== undefined">{{startingHitter.last_30.rbis}}</span>
+                <span *ngIf="startingHitter.last_30.rbis === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+                <span *ngIf="startingHitter.last_60.rbis !== undefined">{{startingHitter.last_60.rbis}}</span>
+                <span *ngIf="startingHitter.last_60.rbis === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].soft_pct !== null" class="starting-hitter-season-games">{{startingHitter.advanced[btnGroupTwoCurrentValue.id].soft_pct}}%</span>
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].soft_pct === null" class="starting-hitter-season-games">N/A</span>
+              </span>
+                  </td>
+                  <td>
+              <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].runs !== undefined" class="starting-hitter-season-games">{{startingHitter.basic[btnGroupTwoCurrentValue.id].runs}}</span>
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].runs === undefined" class="starting-hitter-season-games">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+                <span *ngIf="startingHitter.last_10.runs !== undefined">{{startingHitter.last_10.runs}}</span>
+                <span *ngIf="startingHitter.last_10.runs === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+                <span *ngIf="startingHitter.last_30.runs !== undefined">{{startingHitter.last_30.runs}}</span>
+                <span *ngIf="startingHitter.last_30.runs === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+                <span *ngIf="startingHitter.last_60.runs !== undefined">{{startingHitter.last_60.runs}}</span>
+                <span *ngIf="startingHitter.last_60.runs === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].med_pct !== null" class="starting-hitter-season-games">{{startingHitter.advanced[btnGroupTwoCurrentValue.id].med_pct}}%</span>
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].med_pct === null" class="starting-hitter-season-games">N/A</span>
+              </span>
+                  </td>
+                  <td>
+              <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].stolen_bases !== undefined" class="starting-hitter-season-games">{{startingHitter.basic[btnGroupTwoCurrentValue.id].stolen_bases}}</span>
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].stolen_bases === undefined" class="starting-hitter-season-games">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+                <span *ngIf="startingHitter.last_10.stolen_bases !== undefined">{{startingHitter.last_10.stolen_bases}}</span>
+                <span *ngIf="startingHitter.last_10.stolen_bases === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+                <span *ngIf="startingHitter.last_30.stolen_bases !== undefined">{{startingHitter.last_30.stolen_bases}}</span>
+                <span *ngIf="startingHitter.last_30.stolen_bases === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+                <span *ngIf="startingHitter.last_60.stolen_bases !== undefined">{{startingHitter.last_60.stolen_bases}}</span>
+                <span *ngIf="startingHitter.last_60.stolen_bases === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].hard_pct !== null" class="starting-hitter-season-games">{{startingHitter.advanced[btnGroupTwoCurrentValue.id].hard_pct}}%</span>
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].hard_pct === null" class="starting-hitter-season-games">N/A</span>
+              </span>
+                  </td>
+                  <td>
+              <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].caught_stealing !== undefined" class="starting-hitter-season-games">{{startingHitter.basic[btnGroupTwoCurrentValue.id].caught_stealing}}</span>
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].caught_stealing === undefined" class="starting-hitter-season-games">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+                <span *ngIf="startingHitter.last_10.caught_stealing !== undefined">{{startingHitter.last_10.caught_stealing}}</span>
+                <span *ngIf="startingHitter.last_10.caught_stealing === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+                <span *ngIf="startingHitter.last_30.caught_stealing !== undefined">{{startingHitter.last_30.caught_stealing}}</span>
+                <span *ngIf="startingHitter.last_30.caught_stealing === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+                <span *ngIf="startingHitter.last_60.caught_stealing !== undefined">{{startingHitter.last_60.caught_stealing}}</span>
+                <span *ngIf="startingHitter.last_60.caught_stealing === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].gb_pct !== null" class="starting-hitter-season-games">{{startingHitter.advanced[btnGroupTwoCurrentValue.id].gb_pct}}%</span>
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].gb_pct === null" class="starting-hitter-season-games">N/A</span>
+              </span>
+                  </td>
+                  <td>
+              <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].batting_average !== undefined" class="starting-hitter-season-games">{{startingHitter.basic[btnGroupTwoCurrentValue.id].batting_average}}</span>
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].batting_average === undefined" class="starting-hitter-season-games">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+                <span *ngIf="startingHitter.last_10.avg !== undefined">{{startingHitter.last_10.avg}}</span>
+                <span *ngIf="startingHitter.last_10.avg === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+                <span *ngIf="startingHitter.last_30.avg !== undefined">{{startingHitter.last_30.avg}}</span>
+                <span *ngIf="startingHitter.last_30.avg === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+                <span *ngIf="startingHitter.last_60.avg !== undefined">{{startingHitter.last_60.avg}}</span>
+                <span *ngIf="startingHitter.last_60.avg === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].fb_pct !== null" class="starting-hitter-season-games">{{startingHitter.advanced[btnGroupTwoCurrentValue.id].fb_pct}}%</span>
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].fb_pct === null" class="starting-hitter-season-games">N/A</span>
+              </span>
+                  <td>
+              <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].obp !== undefined" class="starting-hitter-season-games">{{startingHitter.basic[btnGroupTwoCurrentValue.id].obp}}</span>
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].obp === undefined" class="starting-hitter-season-games">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+                  <span *ngIf="startingHitter.last_10.obp !== undefined">{{startingHitter.last_10.obp}}</span>
+                  <span *ngIf="startingHitter.last_10.obp === undefined">N/A</span>
+                </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+                  <span *ngIf="startingHitter.last_30.obp !== undefined">{{startingHitter.last_30.obp}}</span>
+                  <span *ngIf="startingHitter.last_30.obp === undefined">N/A</span>
+                </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+                  <span *ngIf="startingHitter.last_60.obp !== undefined">{{startingHitter.last_60.obp}}</span>
+                  <span *ngIf="startingHitter.last_60.obp === undefined">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].ld_pct !== null" class="starting-hitter-season-games">{{startingHitter.advanced[btnGroupTwoCurrentValue.id].ld_pct}}%</span>
+                <span *ngIf="startingHitter.advanced[btnGroupTwoCurrentValue.id].ld_pct === null" class="starting-hitter-season-games">N/A</span>
+              </span>
+                  </td>
+                  <td [hidden]="btnGroupThreeCurrentValue.id === 5">
+              <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].slg !== undefined" class="starting-hitter-season-games">{{startingHitter.basic[btnGroupTwoCurrentValue.id].slg | number : '1.2-2'}}</span>
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].slg === undefined" class="starting-hitter-season-games">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+                  <span *ngIf="startingHitter.last_10.slg !== undefined">{{startingHitter.last_10.slg | number : '1.2-2'}}</span>
+                  <span *ngIf="startingHitter.last_10.slg === undefined">N/A</span>
+                </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+                  <span *ngIf="startingHitter.last_30.slg !== undefined">{{startingHitter.last_30.slg | number : '1.2-2'}}</span>
+                  <span *ngIf="startingHitter.last_30.slg === undefined">N/A</span>
+                </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+                  <span *ngIf="startingHitter.last_60.slg !== undefined">{{startingHitter.last_60.slg | number : '1.2-2'}}</span>
+                  <span *ngIf="startingHitter.last_60.slg === undefined">N/A</span>
+              </span>
+                  </td>
+                  <td [hidden]="btnGroupThreeCurrentValue.id === 5">
+              <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].ops !== undefined" class="starting-hitter-season-games">{{startingHitter.basic[btnGroupTwoCurrentValue.id].ops}}</span>
+                <span *ngIf="startingHitter.basic[btnGroupTwoCurrentValue.id].ops === undefined" class="starting-hitter-season-games">N/A</span>
+              </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+                  <span *ngIf="startingHitter.last_10.ops !== undefined">{{startingHitter.last_10.ops}}</span>
+                  <span *ngIf="startingHitter.last_10.ops === undefined">N/A</span>
+                </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+                  <span *ngIf="startingHitter.last_30.ops !== undefined">{{startingHitter.last_30.ops}}</span>
+                  <span *ngIf="startingHitter.last_30.ops === undefined">N/A</span>
+                </span>
+                    <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+                  <span *ngIf="startingHitter.last_60.ops !== undefined">{{startingHitter.last_60.ops}}</span>
+                  <span *ngIf="startingHitter.last_60.ops === undefined">N/A</span>
+              </span>
+                  </td>
+                  <!-- Fantasy Predictions -->
+                  <td [hidden]="btnGroupOneCurrentValue.id !== 2">
+                    <!-- Fan Duel Salary-->
+                    <span [hidden]="btnGroupFantasyCurrentValue.id !== 1">
+                <span *ngIf="startingHitter.fantasy.fanduel.salary !== null">${{startingHitter.fantasy.fanduel.salary}}</span>
+                <span *ngIf="startingHitter.fantasy.fanduel.salary === null">N/A</span>
+              </span>
+                    <!-- Draft Kings Salary -->
+                    <span [hidden]="btnGroupFantasyCurrentValue.id !== 2">
+                <span *ngIf="startingHitter.fantasy?.draftkings.salary !== null">${{startingHitter.fantasy?.draftkings.salary}}</span>
+                <span *ngIf="startingHitter.fantasy?.draftkings.salary === null">N/A</span>
+              </span>
+                    <!-- Yahoo Salary -->
+                    <span [hidden]="btnGroupFantasyCurrentValue.id !== 3">
+                <span *ngIf="startingHitter.fantasy?.yahoo.salary !== null">${{startingHitter.fantasy?.yahoo.salary}}</span>
+                <span *ngIf="startingHitter.fantasy?.yahoo.salary === null">N/A</span>
+              </span>
+                  </td>
+                  <!-- Salary -->
+                  <td [hidden]="btnGroupOneCurrentValue.id !== 2">
+                    <!-- Fan Duel Projection-->
+                    <span [hidden]="btnGroupFantasyCurrentValue.id !== 1">
+                <span *ngIf="startingHitter.fantasy.fanduel.projection !== null">{{startingHitter.fantasy.fanduel.projection}}</span>
+                <span *ngIf="startingHitter.fantasy.fanduel.projection === null">N/A</span>
+              </span>
+                    <!-- Draft Kings Projection -->
+                    <span [hidden]="btnGroupFantasyCurrentValue.id !== 2">
+                <span *ngIf="startingHitter.fantasy?.draftkings.projection !== null">{{startingHitter.fantasy?.draftkings.projection}}</span>
+                <span *ngIf="startingHitter.fantasy?.draftkings.projection === null">N/A</span>
+              </span>
+                    <!-- Yahoo Projection -->
+                    <span [hidden]="btnGroupFantasyCurrentValue.id !== 3">
+                <span *ngIf="startingHitter.fantasy?.yahoo.projection !== null">{{startingHitter.fantasy?.yahoo.projection}}</span>
+                <span *ngIf="startingHitter.fantasy?.yahoo.projection === null">N/A</span>
+              </span>
+                  </td>
+                  <!-- Ownership -->
+                  <!--<td class="med-col" [hidden]="btnGroupOneCurrentValue.id !== 2">-->
+                  <!--&lt;!&ndash; Fan Duel Ownership&ndash;&gt;-->
+                  <!--<span [hidden]="btnGroupFantasyCurrentValue.id !== 1">-->
+                  <!--<span *ngIf="startingHitter.fantasy.fanduel.ownership !== null">{{startingHitter.fantasy.fanduel.ownership}}%</span>-->
+                  <!--<span *ngIf="startingHitter.fantasy.fanduel.ownership === null">N/A</span>-->
+                  <!--</span>-->
+                  <!--&lt;!&ndash; Draft Kings Ownership &ndash;&gt;-->
+                  <!--<span [hidden]="btnGroupFantasyCurrentValue.id !== 2">-->
+                  <!--<span *ngIf="startingHitter.fantasy?.draftkings.ownership !== null">{{startingHitter.fantasy?.draftkings.ownership}}%</span>-->
+                  <!--<span *ngIf="startingHitter.fantasy?.draftkings.ownership === null">N/A</span>-->
+                  <!--</span>-->
+                  <!--&lt;!&ndash; Yahoo Ownership &ndash;&gt;-->
+                  <!--<span [hidden]="btnGroupFantasyCurrentValue.id !== 3">-->
+                  <!--<span *ngIf="startingHitter.fantasy?.yahoo.ownership !== null">{{startingHitter.fantasy?.yahoo.ownership}}%</span>-->
+                  <!--<span *ngIf="startingHitter.fantasy?.yahoo.ownership === null">N/A</span>-->
+                  <!--</span>-->
+                  <!--</td>-->
+                  <!-- END: Fantasy Predictions -->
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div *ngIf="benchTableActive" class="row bench-hitter-table-wrapper table-row">
+            <div class="table-row row table-sect-wrap scrollbar-margin">
+              <!-- Static Positioned Tabled -->
+              <div class="static-table-wrapper">
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="teamLineup.bench_hitters"
+                  [(mfSortBy)]="sortByHittersBench"
+                  [(mfSortOrder)]="sortOrderHittersBench"
+                  (mfSortByChange)="onSortOrder('sortByHittersBench', 'sortOrderHittersBench', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('sortByHittersBench', 'sortOrderHittersBench', 'order', $event)"
+                  #staticHittersBench="mfDataTable"
+                  class="static-table stats-table table table-bordered starting-pitcher-table">
+                  <thead>
+                  <tr>
+                    <th class="position-col">
+                      <mfSorter by="position">Pos</mfSorter>
+                    </th>
+                    <th class="player-name-col">
+                      <mfSorter by="name">Hitter</mfSorter>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let benchHitter of staticHittersBench.data">
+                    <td class="position-col">{{benchHitter.position}}</td>
+                    <td class="player-name-col">
+                      <app-player-link [league]="'mlb'" [playerName]="benchHitter.name" [playerUrl]="benchHitter.profile_url"></app-player-link>
+                      <span *ngIf="benchHitter.bat_hand" class="pitcher-throwing-hand-text">({{benchHitter.bat_hand}})</span>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Bench Hitters Table -->
+              <div class="horizontal-table-wrapper">
+                <!-- Bench Hitters Table -->
+                <table
+                  [mfRowsOnPage]="10000" [mfData]="teamLineup.bench_hitters"
+                  [(mfSortBy)]="sortByHittersBench"
+                  [(mfSortOrder)]="sortOrderHittersBench"
+                  (mfSortByChange)="onSortOrder('sortByHittersBench', 'sortOrderHittersBench', 'by', $event)"
+                  (mfSortOrderChange)="onSortOrder('sortByHittersBench', 'sortOrderHittersBench', 'order', $event)"
+                  #hittersBench="mfDataTable"
+                  class="table table-bordered bench-hitters-table stats-table">
+                  <thead>
+                  <tr>
+                    <th class="position-col inner-col-switch">
+                      <mfSorter by="position">Pos</mfSorter>
+                    </th>
+                    <th class="player-name-col inner-col-switch">
+                      <mfSorter by="name">Hitter</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter by="rating">Rating</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter by="batting_order">Order</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.games'">G</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.games">G</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.games">G</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.games">G</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.plate_appearances'">PA</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.plate_appearances">PA</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.plate_appearances">PA</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.plate_appearances">PA</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.hits'">Hits</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.hits">Hits</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.hits">Hits</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.hits">Hits</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.woba'">wOBA</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.singles'">1B</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.singles">1B</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.singles">1B</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.singles">1B</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.wrc_plus'">wRC+</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.doubles'">2B</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.doubles">2B</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.doubles">2B</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.doubles">2B</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.iso'">ISO</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.triples'">3B</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.triples">3B</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.triples">3B</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.triples">3B</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.strikeout_pct'">K%</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.home_runs'">HR</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.home_runs">HR</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.home_runs">HR</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.home_runs">HR</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.walk_pct'">BB%</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.rbis'">RBI</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.rbis">RBI</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.rbis">RBI</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.rbis">RBI</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.soft_pct'">Soft</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.runs'">Runs</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.runs">Runs</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.runs">Runs</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.runs">Runs</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.med_pct'">Medium</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.stolen_bases'">SB</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.stolen_bases">SB</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.stolen_bases">SB</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.stolen_bases">SB</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.hard_pct'">Hard</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.caught_stealing'">CS</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.caught_stealing">CS</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.caught_stealing">CS</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.caught_stealing">CS</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.gb_pct'">GB</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.batting_average'">AVG</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.batting_average">AVG</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.batting_average">AVG</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.batting_average">AVG</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.fb_pct'">FB</mfSorter>
+                    </th>
+                    <th>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.obp'">OBP</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.obp">OBP</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.obp">OBP</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.obp">OBP</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 5" [by]="'advanced.' + btnGroupTwoCurrentValue.id + '.ld_pct'">LD</mfSorter>
+                    </th>
+                    <th [hidden]="btnGroupThreeCurrentValue.id === 5">
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.slg'">SLG</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.slg">SLG</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.slg">SLG</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.slg">SLG</mfSorter>
+                    </th>
+                    <th [hidden]="btnGroupThreeCurrentValue.id === 5">
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 1" [by]="'basic.' + btnGroupTwoCurrentValue.id + '.ops'">OPS</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 2" by="last_10.ops">OPS</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 3" by="last_30.ops">OPS</mfSorter>
+                      <mfSorter [hidden]="btnGroupThreeCurrentValue.id !== 4" by="last_60.ops">OPS</mfSorter>
+                    </th>
+                    <!-- Fantasy Predictions -->
+                    <th [hidden]="btnGroupOneCurrentValue.id !== 2">
+                      <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 1" by="fantasy.fanduel.salary">Salary</mfSorter>
+                      <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 2" by="fantasy.draftkings.salary">Salary</mfSorter>
+                      <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 3" by="fantasy.yahoo.salary">Salary</mfSorter>
+                    </th>
+                    <th [hidden]="btnGroupOneCurrentValue.id !== 2">
+                      <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 1" by="fantasy.fanduel.projection">Projection</mfSorter>
+                      <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 2" by="fantasy.draftkings.projection">Projection</mfSorter>
+                      <mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 3" by="fantasy.yahoo.projection">Projection</mfSorter>
+                    </th>
+                    <!--<th class="med-col" [hidden]="btnGroupOneCurrentValue.id !== 2">-->
+                    <!--<mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 1" by="fantasy.fanduel.ownership">Ownership %</mfSorter>-->
+                    <!--<mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 2" by="fantasy.draftkings.ownership">Ownership %</mfSorter>-->
+                    <!--<mfSorter [hidden]="btnGroupFantasyCurrentValue.id !== 3" by="fantasy.yahoo.ownership">Ownership %</mfSorter>-->
+                    <!--</th>-->
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let benchHitter of hittersBench.data">
+                    <td scope="row" class="position-col inner-col-switch">{{benchHitter.position}}</td>
+                    <td class="player-name-col inner-col-switch">
+                      <app-player-link [league]="'mlb'" [playerName]="benchHitter.name" [playerUrl]="benchHitter.profile_url"></app-player-link>
+                      <span *ngIf="benchHitter.bat_hand" class="pitcher-throwing-hand-text">({{benchHitter.bat_hand}})</span>
+                    </td>
+                    <td>
+                <span class="rating"
+                      [ngClass]="{
+                        'green': benchHitter.rating >= 9,
+                        'yellow': benchHitter.rating < 9,
+                        'red': benchHitter.rating < 7
+                        }"
+                      *ngIf="benchHitter.rating !== null">{{benchHitter.rating}}</span>
+                      <span *ngIf="benchHitter.rating === null">N/A</span>
+                    </td>
+                    <td>
+                      <span *ngIf="benchHitter.batting_order !== null">{{benchHitter.batting_order}}</span>
+                      <span *ngIf="benchHitter.batting_order === null">N/A</span>
+                    </td>
+                    <td scope="row">
+            <span [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].games !== undefined" class="starting-hitter-season-games">{{benchHitter.basic[btnGroupTwoCurrentValue.id].games}}</span>
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].games === undefined" class="starting-hitter-season-games">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+              <span *ngIf="benchHitter.last_10.games !== undefined">{{benchHitter.last_10.games}}</span>
+              <span *ngIf="benchHitter.last_10.games === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+              <span *ngIf="benchHitter.last_30.games !== undefined">{{benchHitter.last_30.games}}</span>
+              <span *ngIf="benchHitter.last_30.games === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+              <span *ngIf="benchHitter.last_60.games !== undefined">{{benchHitter.last_60.games}}</span>
+              <span *ngIf="benchHitter.last_60.games === undefined">N/A</span>
+            </span>
+                    </td>
+                    <td>
+            <span [hidden]="btnGroupThreeCurrentValue.id !== 1 && btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].plate_appearances !== undefined" class="starting-hitter-season-games">{{benchHitter.basic[btnGroupTwoCurrentValue.id].plate_appearances}}</span>
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].plate_appearances === undefined" class="starting-hitter-season-games">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+              <span *ngIf="benchHitter.last_10.plate_appearances !== undefined">{{benchHitter.last_10.plate_appearances}}</span>
+              <span *ngIf="benchHitter.last_10.plate_appearances === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+              <span *ngIf="benchHitter.last_30.plate_appearances !== undefined">{{benchHitter.last_30.plate_appearances}}</span>
+              <span *ngIf="benchHitter.last_30.plate_appearances === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+              <span *ngIf="benchHitter.last_60.plate_appearances !== undefined">{{benchHitter.last_60.plate_appearances}}</span>
+              <span *ngIf="benchHitter.last_60.plate_appearances === undefined">N/A</span>
+            </span>
+                    </td>
+                    <td>
+            <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].hits !== undefined" class="starting-hitter-season-games">{{benchHitter.basic[btnGroupTwoCurrentValue.id].hits}}</span>
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].hits === undefined" class="starting-hitter-season-games">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+              <span *ngIf="benchHitter.last_10.hits !== undefined">{{benchHitter.last_10.hits}}</span>
+              <span *ngIf="benchHitter.last_10.hits === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+              <span *ngIf="benchHitter.last_30.hits !== undefined">{{benchHitter.last_30.hits}}</span>
+              <span *ngIf="benchHitter.last_30.hits === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+              <span *ngIf="benchHitter.last_60.hits !== undefined">{{benchHitter.last_60.hits}}</span>
+              <span *ngIf="benchHitter.last_60.hits === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].woba !== null">{{benchHitter.advanced[btnGroupTwoCurrentValue.id].woba}}</span>
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].woba === null">N/A</span>
+            </span>
+                    </td>
+                    <td>
+            <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].singles !== undefined" class="starting-hitter-season-games">{{benchHitter.basic[btnGroupTwoCurrentValue.id].singles}}</span>
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].singles === undefined" class="starting-hitter-season-games">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+              <span *ngIf="benchHitter.last_10.singles !== undefined">{{benchHitter.last_10.singles}}</span>
+              <span *ngIf="benchHitter.last_10.singles === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+              <span *ngIf="benchHitter.last_30.singles !== undefined">{{benchHitter.last_30.singles}}</span>
+              <span *ngIf="benchHitter.last_30.singles === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+              <span *ngIf="benchHitter.last_60.singles !== undefined">{{benchHitter.last_60.singles}}</span>
+              <span *ngIf="benchHitter.last_60.singles === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].wrc_plus !== null">{{benchHitter.advanced[btnGroupTwoCurrentValue.id].wrc_plus}}</span>
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].wrc_plus === null">N/A</span>
+            </span>
+                    </td>
+                    <td scope="row">
+            <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].doubles !== undefined" class="starting-hitter-season-games">{{benchHitter.basic[btnGroupTwoCurrentValue.id].doubles}}</span>
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].doubles === undefined" class="starting-hitter-season-games">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+              <span *ngIf="benchHitter.last_10.doubles !== undefined">{{benchHitter.last_10.doubles}}</span>
+              <span *ngIf="benchHitter.last_10.doubles === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+              <span *ngIf="benchHitter.last_30.doubles !== undefined">{{benchHitter.last_30.doubles}}</span>
+              <span *ngIf="benchHitter.last_30.doubles === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+              <span *ngIf="benchHitter.last_60.doubles !== undefined">{{benchHitter.last_60.doubles}}</span>
+              <span *ngIf="benchHitter.last_60.doubles === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].iso !== null">{{benchHitter.advanced[btnGroupTwoCurrentValue.id].iso}}</span>
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].iso === null">N/A</span>
+            </span>
+                    </td>
+                    <td>
+            <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].triples !== undefined" class="starting-hitter-season-games">{{benchHitter.basic[btnGroupTwoCurrentValue.id].triples}}</span>
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].triples === undefined" class="starting-hitter-season-games">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+              <span *ngIf="benchHitter.last_10.triples !== undefined">{{benchHitter.last_10.triples}}</span>
+              <span *ngIf="benchHitter.last_10.triples === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+              <span *ngIf="benchHitter.last_30.triples !== undefined">{{benchHitter.last_30.triples}}</span>
+              <span *ngIf="benchHitter.last_30.triples === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+              <span *ngIf="benchHitter.last_60.triples !== undefined">{{benchHitter.last_60.triples}}</span>
+              <span *ngIf="benchHitter.last_60.triples === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].walk_pct !== null">{{benchHitter.advanced[btnGroupTwoCurrentValue.id].walk_pct}}%</span>
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].walk_pct === null">N/A</span>
+            </span>
+                    </td>
+                    <td>
+            <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].home_runs !== undefined" class="starting-hitter-season-games">{{benchHitter.basic[btnGroupTwoCurrentValue.id].home_runs}}</span>
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].home_runs === undefined" class="starting-hitter-season-games">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+              <span *ngIf="benchHitter.last_10.home_runs !== undefined">{{benchHitter.last_10.home_runs}}</span>
+              <span *ngIf="benchHitter.last_10.home_runs === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+              <span *ngIf="benchHitter.last_30.home_runs !== undefined">{{benchHitter.last_30.home_runs}}</span>
+              <span *ngIf="benchHitter.last_30.home_runs === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+              <span *ngIf="benchHitter.last_60.home_runs !== undefined">{{benchHitter.last_60.home_runs}}</span>
+              <span *ngIf="benchHitter.last_60.home_runs === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].walk_pct !== null">{{benchHitter.advanced[btnGroupTwoCurrentValue.id].walk_pct}}%</span>
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].walk_pct === null">N/A</span>
+            </span>
+                    </td>
+                    <td>
+            <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].rbis !== undefined" class="starting-hitter-season-games">{{benchHitter.basic[btnGroupTwoCurrentValue.id].rbis}}</span>
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].rbis === undefined" class="starting-hitter-season-games">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+              <span *ngIf="benchHitter.last_10.rbis !== undefined">{{benchHitter.last_10.rbis}}</span>
+              <span *ngIf="benchHitter.last_10.rbis === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+              <span *ngIf="benchHitter.last_30.rbis !== undefined">{{benchHitter.last_30.rbis}}</span>
+              <span *ngIf="benchHitter.last_30.rbis === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+              <span *ngIf="benchHitter.last_60.rbis !== undefined">{{benchHitter.last_60.rbis}}</span>
+              <span *ngIf="benchHitter.last_60.rbis === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].soft_pct !== null">{{benchHitter.advanced[btnGroupTwoCurrentValue.id].soft_pct}}%</span>
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].soft_pct === null">N/A</span>
+            </span>
+                    </td>
+                    <td>
+            <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].runs !== undefined" class="starting-hitter-season-games">{{benchHitter.basic[btnGroupTwoCurrentValue.id].runs}}</span>
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].runs === undefined" class="starting-hitter-season-games">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+              <span *ngIf="benchHitter.last_10.runs !== undefined">{{benchHitter.last_10.runs}}</span>
+              <span *ngIf="benchHitter.last_10.runs === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+              <span *ngIf="benchHitter.last_30.runs !== undefined">{{benchHitter.last_30.runs}}</span>
+              <span *ngIf="benchHitter.last_30.runs === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+              <span *ngIf="benchHitter.last_60.runs !== undefined">{{benchHitter.last_60.runs}}</span>
+              <span *ngIf="benchHitter.last_60.runs === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].med_pct !== null">{{benchHitter.advanced[btnGroupTwoCurrentValue.id].med_pct}}%</span>
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].med_pct === null">N/A</span>
+            </span>
+                    </td>
+                    <td>
+            <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].stolen_bases !== undefined" class="starting-hitter-season-games">{{benchHitter.basic[btnGroupTwoCurrentValue.id].stolen_bases}}</span>
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].stolen_bases === undefined" class="starting-hitter-season-games">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+              <span *ngIf="benchHitter.last_10.stolen_bases !== undefined">{{benchHitter.last_10.stolen_bases}}</span>
+              <span *ngIf="benchHitter.last_10.stolen_bases === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+              <span *ngIf="benchHitter.last_30.stolen_bases !== undefined">{{benchHitter.last_30.stolen_bases}}</span>
+              <span *ngIf="benchHitter.last_30.stolen_bases === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+              <span *ngIf="benchHitter.last_60.stolen_bases !== undefined">{{benchHitter.last_60.stolen_bases}}</span>
+              <span *ngIf="benchHitter.last_60.stolen_bases === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].hard_pct !== null">{{benchHitter.advanced[btnGroupTwoCurrentValue.id].hard_pct}}%</span>
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].hard_pct === null">N/A</span>
+            </span>
+                    </td>
+                    <td>
+            <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].caught_stealing !== undefined" class="starting-hitter-season-games">{{benchHitter.basic[btnGroupTwoCurrentValue.id].caught_stealing}}</span>
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].caught_stealing === undefined" class="starting-hitter-season-games">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+              <span *ngIf="benchHitter.last_10.caught_stealing !== undefined">{{benchHitter.last_10.caught_stealing}}</span>
+              <span *ngIf="benchHitter.last_10.caught_stealing === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+              <span *ngIf="benchHitter.last_30.caught_stealing !== undefined">{{benchHitter.last_30.caught_stealing}}</span>
+              <span *ngIf="benchHitter.last_30.caught_stealing === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+              <span *ngIf="benchHitter.last_60.caught_stealing !== undefined">{{benchHitter.last_60.caught_stealing}}</span>
+              <span *ngIf="benchHitter.last_60.caught_stealing === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].gb_pct !== null">{{benchHitter.advanced[btnGroupTwoCurrentValue.id].gb_pct}}%</span>
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].gb_pct === null">N/A</span>
+            </span>
+                    </td>
+                    <td>
+            <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].batting_average !== undefined" class="starting-hitter-season-games">{{benchHitter.basic[btnGroupTwoCurrentValue.id].batting_average}}</span>
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].batting_average === undefined" class="starting-hitter-season-games">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+              <span *ngIf="benchHitter.last_10.batting_average !== undefined">{{benchHitter.last_10.batting_average}}</span>
+              <span *ngIf="benchHitter.last_10.batting_average === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+              <span *ngIf="benchHitter.last_30.batting_average !== undefined">{{benchHitter.last_30.batting_average}}</span>
+              <span *ngIf="benchHitter.last_30.batting_average === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+              <span *ngIf="benchHitter.last_60.batting_average !== undefined">{{benchHitter.last_60.batting_average}}</span>
+              <span *ngIf="benchHitter.last_60.batting_average === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].fb_pct !== null">{{benchHitter.advanced[btnGroupTwoCurrentValue.id].fb_pct}}%</span>
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].fb_pct === null">N/A</span>
+            </span>
+                    </td>
+                    <td>
+            <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].obp !== undefined" class="starting-hitter-season-games">{{benchHitter.basic[btnGroupTwoCurrentValue.id].obp}}</span>
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].obp === undefined" class="starting-hitter-season-games">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+              <span *ngIf="benchHitter.last_10.obp !== undefined">{{benchHitter.last_10.obp}}</span>
+              <span *ngIf="benchHitter.last_10.obp === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+              <span *ngIf="benchHitter.last_30.obp !== undefined">{{benchHitter.last_30.obp}}</span>
+              <span *ngIf="benchHitter.last_30.obp === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+              <span *ngIf="benchHitter.last_60.obp !== undefined">{{benchHitter.last_60.obp}}</span>
+              <span *ngIf="benchHitter.last_60.obp === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 5">
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].ld_pct !== null">{{benchHitter.advanced[btnGroupTwoCurrentValue.id].ld_pct}}%</span>
+              <span *ngIf="benchHitter.advanced[btnGroupTwoCurrentValue.id].ld_pct === null">N/A</span>
+            </span>
+                    </td>
+                    <td [hidden]="btnGroupThreeCurrentValue.id === 5">
+            <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].slg !== undefined" class="starting-hitter-season-games">{{benchHitter.basic[btnGroupTwoCurrentValue.id].slg | number : '1.2-2'}}</span>
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].slg === undefined" class="starting-hitter-season-games">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+              <span *ngIf="benchHitter.last_10.slg !== undefined">{{benchHitter.last_10.slg | number : '1.2-2'}}</span>
+              <span *ngIf="benchHitter.last_10.slg === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+              <span *ngIf="benchHitter.last_30.slg !== undefined">{{benchHitter.last_30.slg | number : '1.2-2'}}</span>
+              <span *ngIf="benchHitter.last_30.slg === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+              <span *ngIf="benchHitter.last_60.slg !== undefined">{{benchHitter.last_60.slg | number : '1.2-2'}}</span>
+              <span *ngIf="benchHitter.last_60.slg === undefined">N/A</span>
+            </span>
+                    </td>
+                    <td [hidden]="btnGroupThreeCurrentValue.id === 5">
+            <span [hidden]="btnGroupThreeCurrentValue.id !== 1">
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].ops !== undefined" class="starting-hitter-season-games">{{benchHitter.basic[btnGroupTwoCurrentValue.id].ops}}</span>
+              <span *ngIf="benchHitter.basic[btnGroupTwoCurrentValue.id].ops === undefined" class="starting-hitter-season-games">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 2">
+              <span *ngIf="benchHitter.last_10.ops !== undefined">{{benchHitter.last_10.ops}}</span>
+              <span *ngIf="benchHitter.last_10.ops === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 3">
+              <span *ngIf="benchHitter.last_30.ops !== undefined">{{benchHitter.last_30.ops}}</span>
+              <span *ngIf="benchHitter.last_30.ops === undefined">N/A</span>
+            </span>
+                      <span [hidden]="btnGroupThreeCurrentValue.id !== 4">
+              <span *ngIf="benchHitter.last_60.ops !== undefined">{{benchHitter.last_60.ops}}</span>
+              <span *ngIf="benchHitter.last_60.ops === undefined">N/A</span>
+            </span>
+                    </td>
+                    <!-- Fantasy Predictions -->
+                    <td [hidden]="btnGroupOneCurrentValue.id !== 2">
+                      <!-- Fan Duel Salary-->
+                      <span [hidden]="btnGroupFantasyCurrentValue.id !== 1">
+              <span *ngIf="benchHitter.fantasy.fanduel.salary !== null">${{benchHitter.fantasy.fanduel.salary}}</span>
+              <span *ngIf="benchHitter.fantasy.fanduel.salary === null">N/A</span>
+            </span>
+                      <!-- Draft Kings Salary -->
+                      <span [hidden]="btnGroupFantasyCurrentValue.id !== 2">
+              <span *ngIf="benchHitter.fantasy?.draftkings.salary !== null">${{benchHitter.fantasy?.draftkings.salary}}</span>
+              <span *ngIf="benchHitter.fantasy?.draftkings.salary === null">N/A</span>
+            </span>
+                      <!-- Yahoo Salary -->
+                      <span [hidden]="btnGroupFantasyCurrentValue.id !== 3">
+              <span *ngIf="benchHitter.fantasy?.yahoo.salary !== null">${{benchHitter.fantasy?.yahoo.salary}}</span>
+              <span *ngIf="benchHitter.fantasy?.yahoo.salary === null">N/A</span>
+            </span>
+                    </td>
+                    <!-- Salary -->
+                    <td [hidden]="btnGroupOneCurrentValue.id !== 2">
+                      <!-- Fan Duel Projection-->
+                      <span [hidden]="btnGroupFantasyCurrentValue.id !== 1">
+              <span *ngIf="benchHitter.fantasy.fanduel.projection !== null">{{benchHitter.fantasy.fanduel.projection}}</span>
+              <span *ngIf="benchHitter.fantasy.fanduel.projection === null">N/A</span>
+            </span>
+                      <!-- Draft Kings Projection -->
+                      <span [hidden]="btnGroupFantasyCurrentValue.id !== 2">
+              <span *ngIf="benchHitter.fantasy?.draftkings.projection !== null">{{benchHitter.fantasy?.draftkings.projection}}</span>
+              <span *ngIf="benchHitter.fantasy?.draftkings.projection === null">N/A</span>
+            </span>
+                      <!-- Yahoo Projection -->
+                      <span [hidden]="btnGroupFantasyCurrentValue.id !== 3">
+              <span *ngIf="benchHitter.fantasy?.yahoo.projection !== null">{{benchHitter.fantasy?.yahoo.projection}}</span>
+              <span *ngIf="benchHitter.fantasy?.yahoo.projection === null">N/A</span>
+            </span>
+                    </td>
+                    <!-- Ownership -->
+                    <!--<td class="med-col" [hidden]="btnGroupOneCurrentValue.id !== 2">-->
+                    <!--&lt;!&ndash; Fan Duel Ownership&ndash;&gt;-->
+                    <!--<span [hidden]="btnGroupFantasyCurrentValue.id !== 1">-->
+                    <!--<span *ngIf="benchHitter.fantasy.fanduel.ownership !== null">{{benchHitter.fantasy.fanduel.ownership}}%</span>-->
+                    <!--<span *ngIf="benchHitter.fantasy.fanduel.ownership === null">N/A</span>-->
+                    <!--</span>-->
+                    <!--&lt;!&ndash; Draft Kings Ownership &ndash;&gt;-->
+                    <!--<span [hidden]="btnGroupFantasyCurrentValue.id !== 2">-->
+                    <!--<span *ngIf="benchHitter.fantasy?.draftkings.ownership !== null">{{benchHitter.fantasy?.draftkings.ownership}}%</span>-->
+                    <!--<span *ngIf="benchHitter.fantasy?.draftkings.ownership === null">N/A</span>-->
+                    <!--</span>-->
+                    <!--&lt;!&ndash; Yahoo Ownership &ndash;&gt;-->
+                    <!--<span [hidden]="btnGroupFantasyCurrentValue.id !== 3">-->
+                    <!--<span *ngIf="benchHitter.fantasy?.yahoo.ownership !== null">{{benchHitter.fantasy?.yahoo.ownership}}%</span>-->
+                    <!--<span *ngIf="benchHitter.fantasy?.yahoo.ownership === null">N/A</span>-->
+                    <!--</span>-->
+                    <!--</td>-->
+                    <!-- END: Fantasy Predictions -->
+                  </tr>
+                  </tbody>
+                </table> <!-- END: Bench Hitters Table -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Open Bench Table Toggle Button-->
+          <button (click)="onOpenBenchTable()" class="btn light-gray bullpen bench">
+            <span *ngIf="!benchTableActive" class="btn-open-plus">+</span>
+            <span *ngIf="benchTableActive" class="btn-close-minus">-</span>
+            Bench
+          </button>
+        </div>
+
+      </div>
+
+      <!--<div *ngIf="isDefaultSeason" class="row">-->
+        <!--<div class="col-12">-->
+          <!--<app-wp-articles-list [teamName]="teamLineup.nav.team_name" [podcasts]="false" [league]="'mlb'" [pages]="true"></app-wp-articles-list>-->
+        <!--</div>-->
+      <!--</div>-->
+
+
+      <!-- Most Common Lineups Section -->
+      <div *ngIf="teamLineup?.team?.common_lineups?.length" class="starting-lineup-section">
+        <div class="team-lineup-starting-header">
+          <h2 class="page-heading-two">{{teamLineup.header_two}}</h2>
+        </div>
+        <!-- Most Common Lineups Table -->
+        <table class="col-table table-text-left most-common-lineups-table stats-col-table">
+          <tr>
+            <!-- 1/6-->
+            <td *ngFor="let commonLineup of teamLineup.team.common_lineups; let first = first; let last = last" class="col-table-wrapper">
+              <table class="col-table-inner-table col-table-bordered" [ngClass]="{'col-table-last': last , 'col-table-first': first}">
+                <thead>
+                <tr>
+                  <td>{{commonLineup.frequency}} Game{{commonLineup.frequency > 1 ? 's' : ''}}</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let player of commonLineup.lineup;">
+                  <td>
+                    <span class="player-batting-order">{{player.batting_order}}.</span>
+                    <span class="player-name">
+                      <!--<app-player-link [league]="'mlb'" [playerName]="player.name" [playerUrl]="player.profile_url" [generateShortName]="false"></app-player-link>-->
+                      <app-player-link [league]="'mlb'" [playerName]="player.name" [generateShortName]="false"></app-player-link>
+                    </span>
+                    <!--<span class="player-batting-hand">(*R)</span>-->
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </table> <!-- END: Most Common Lineups Table -->
+
+      </div>
+      <!-- Current Year Lineups -->
+      <div class="starting-lineup-section">
+        <div class="team-lineup-starting-header">
+          <h2 class="page-heading-two fluid-heading">{{teamLineup.header_three}}</h2>
+        </div>
+        <!--Yearly Lineups Table Wrapper -->
+        <div class="stand-horizontal-table-wrapper yearly">
+          <!-- Yearly Lineups Table -->
+          <table class="table table-bordered most-common-lineups-table stats-table">
+            <thead>
+            <tr>
+              <th class="med-col">Game</th>
+              <th class="med-col">Score</th>
+              <th class="med-lgmed-lg-col">Starting Pitcher</th>
+              <th class="med-col">1</th>
+              <th class="med-col">2</th>
+              <th class="med-col">3</th>
+              <th class="med-col">4</th>
+              <th class="med-col">5</th>
+              <th class="med-col">6</th>
+              <th class="med-col">7</th>
+              <th class="med-col">8</th>
+              <th class="med-col">9</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let recentLineup of teamLineup.team.recent_lineups">
+              <td class="med-col">
+                <span class="game-date">{{recentLineup.game.date | amTimeZone | amDateFormat:'M/D'}}</span>
+                <span class="game-opp">{{recentLineup.game.at_or_vs}} {{recentLineup.game.opponent}}</span>
+              </td>
+              <td class="med-col">{{recentLineup.score.outcome}} {{recentLineup.score.team_runs}}-{{recentLineup.score.opp_runs}}</td>
+              <td class="med-lg-col">
+                <!--<app-player-link [league]="'mlb'" [playerName]="recentLineup.starting_pitcher.pitcher_name" [playerUrl]="recentLineup.starting_pitcher.profile_url"></app-player-link>-->
+                <app-player-link [league]="'mlb'" [playerName]="recentLineup.starting_pitcher.pitcher_name"></app-player-link>
+                ({{recentLineup.starting_pitcher.pitcher_hand}}), {{recentLineup.starting_pitcher.pitcher_innings}} IP, {{recentLineup.starting_pitcher.pitcher_strikeouts}} SO, {{recentLineup.starting_pitcher.pitcher_earned_runs}} ER, {{recentLineup.starting_pitcher.pitcher_outcome}}
+              </td>
+              <td class="med-col">
+                <!--<app-player-link [league]="'mlb'" [playerName]="recentLineup.one.name" [playerUrl]="recentLineup.one.profile_url"></app-player-link>-->
+                <app-player-link [league]="'mlb'" [playerName]="recentLineup.one.name"></app-player-link>
+              </td>
+              <td class="med-col">
+                <!--<app-player-link [league]="'mlb'" [playerName]="recentLineup.two.name" [playerUrl]="recentLineup.two.profile_url"></app-player-link>-->
+                <app-player-link [league]="'mlb'" [playerName]="recentLineup.two.name"></app-player-link>
+              </td>
+              <td class="med-col">
+                <!--<app-player-link [league]="'mlb'" [playerName]="recentLineup.three.name" [playerUrl]="recentLineup.three.profile_url"></app-player-link>-->
+                <app-player-link [league]="'mlb'" [playerName]="recentLineup.three.name"></app-player-link>
+              </td>
+              <td class="med-col">
+                <!--<app-player-link [league]="'mlb'" [playerName]="recentLineup.four.name" [playerUrl]="recentLineup.four.profile_url"></app-player-link>-->
+                <app-player-link [league]="'mlb'" [playerName]="recentLineup.four.name"></app-player-link>
+              </td>
+              <td class="med-col">
+                <!--<app-player-link [league]="'mlb'" [playerName]="recentLineup.five.name" [playerUrl]="recentLineup.five.profile_url"></app-player-link>-->
+                <app-player-link [league]="'mlb'" [playerName]="recentLineup.five.name"></app-player-link>
+              </td>
+              <td class="med-col">
+                <!--<app-player-link [league]="'mlb'" [playerName]="recentLineup.six.name" [playerUrl]="recentLineup.six.profile_url"></app-player-link>-->
+                <app-player-link [league]="'mlb'" [playerName]="recentLineup.six.name"></app-player-link>
+              </td>
+              <td class="med-col">
+                <!--<app-player-link [league]="'mlb'" [playerName]="recentLineup.seven.name" [playerUrl]="recentLineup.seven.profile_url"></app-player-link>-->
+                <app-player-link [league]="'mlb'" [playerName]="recentLineup.seven.name"></app-player-link>
+              </td>
+              <td class="med-col">
+                <!--<app-player-link [league]="'mlb'" [playerName]="recentLineup.eight.name" [playerUrl]="recentLineup.eight.profile_url"></app-player-link>-->
+                <app-player-link [league]="'mlb'" [playerName]="recentLineup.eight.name"></app-player-link>
+              </td>
+              <td class="med-col">
+                <!--<app-player-link [league]="'mlb'" [playerName]="recentLineup.nine.name" [playerUrl]="recentLineup.nine.profile_url"></app-player-link>-->
+                <app-player-link [league]="'mlb'" [playerName]="recentLineup.nine.name"></app-player-link>
+              </td>
+            </tr>
+            </tbody>
+          </table> <!-- END: Yearly Lineups Table -->
+        </div>
+      </div>
+    </div><!-- END: Selected Team Contents [currentTeamTabActive] -->
+  </div>
+  <div *ngIf="teamLineup.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+    <h2 *ngIf="teamLineup.bottom_header" class="page-heading-two">
+      {{teamLineup.bottom_header}}
+    </h2>
+    <p class="site-pages-content" [innerHtml]="teamLineup.bottom_paragraph | safeHtml"></p>
+  </div>
+</div>

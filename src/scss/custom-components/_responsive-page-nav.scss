@@ -1,0 +1,159 @@
+@mixin mobile-navigation($max-width: 575px, $font-breakdown: 1100px, $font-breakdown-2: 748px) {
+  .updated-block-mobile {
+    display: none;
+    font-size: 13px;
+    font-weight: normal;
+  }
+  @media (max-width: 775px) {
+    .team-lineup-heading-right .float-right {
+      h4.event-date {
+        font-size: 12px;
+      }
+      h4.opponent-team-name span {
+        font-size: 16px;
+      }
+      .updated-block-mobile {
+        font-size: 11px;
+        margin-top: 6px;
+      }
+    }
+  }
+  @media (max-width: 359px) {
+    .team-lineup-heading-right .float-right {
+      h4.opponent-team-name,h4.opponent-team-name span   {
+        font-size: 12px;
+      }
+      h4.event-date {
+        font-size: 10px;
+      }
+      .updated-block-mobile {
+        font-size: 9px;
+      }
+    }
+  }
+
+  @media (max-width: $font-breakdown) and (min-width: 992px), (max-width: 775px) {
+    .updated-block-mobile {
+      display: inline-block;
+    }
+    .team-lineup-heading-right > div > h4 {
+      display: inline-block;
+      margin-right: 4px;
+      float: none;
+      width: auto !important;
+    }
+    .final-text-mobile {
+      display: inline-block;
+    }
+    .final-text-normal {
+      display: none;
+    }
+  }
+  @media (min-width: $max-width + 1) and (max-width: $font-breakdown) {
+    .updated-block-mobile {
+      position: absolute;
+      right: 0;
+      margin-top: 3px;
+    }
+  }
+  @media (min-width: $max-width) and (max-width: $font-breakdown) {
+    .page-heading-navigation {
+      height: 45px;
+      .page-heading-nav-btn {
+        line-height: 37px;
+        font-size: 13px;
+      }
+    }
+  }
+  @media (min-width: $max-width) and (max-width: $font-breakdown-2) {
+    .page-heading-navigation {
+      .page-heading-nav-btn {
+        font-size: 12px;
+      }
+    }
+    .page-heading-navigation .tab-btn-wrap a {
+      padding: 0 6px;
+    }
+  }
+  @media (min-width: $max-width) and (max-width: $font-breakdown-2 - 100) {
+    .page-heading-navigation {
+      .page-heading-nav-btn {
+        font-size: 11px;
+      }
+    }
+  }
+  @media (min-width: $max-width + 1) {
+    .page-heading-navigation {
+      border-bottom: 2px solid #ebebec;
+      .tab-btn-wrap {
+        position: relative;
+        top: 2px;
+      }
+    }
+    .final-text-mobile {
+      display: none;
+    }
+    .final-text-normal {
+      display: block;
+    }
+  }
+  @media (max-width: $max-width) {
+    .in-page-collapse-toggle {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      margin-bottom: 20px;
+      &.alt-page {
+        top: 0;
+        margin: 20px 0;
+      }
+    }
+    .no-link {
+      display: none;
+    }
+    .mobile-tabs-wrapper {
+      min-width: 100%;
+    }
+    .in-page-nav-menu {
+      display: none;
+      &.collapse.show {
+        display: block;
+      }
+      .page-heading-navigation {
+        display: block;
+        .page-heading-nav-btn {
+          //border-left: 2px solid #ebebec;
+          //border-right: 2px solid #ebebec;
+          &.active {
+            border-bottom: 2px solid #ebebec !important;
+            background-color: #0aa7df !important;
+            color: #FFF !important;
+            border-left: 2px solid #0aa7df !important;
+            border-right: 2px solid #0aa7df !important;
+          }
+        }
+        .tab-btn-wrap {
+          max-width: none;
+          width: 100%;
+          &.last {
+            margin-bottom: 1rem;
+          }
+        }
+      }
+    }
+    .page-heading-navigation {
+      height: auto;
+      margin-top: 0;
+    }
+  }
+  .page-heading-navigation {
+    @media (min-width: $max-width) {
+      &.border-bottom {
+        border-bottom: 2px solid #ebebec;
+        .page-heading-nav-btn {
+          padding-bottom: 5px;
+        }
+      }
+    }
+  }
+}

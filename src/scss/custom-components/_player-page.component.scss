@@ -1,0 +1,27 @@
+.logo-small {
+  height: 56px;
+}
+.static-table .t-sub-header.static-sub-header th {
+  padding-top: 10px;
+  padding-bottom: 9px;
+}
+.tabs-dd {
+  margin-bottom: 0;
+}
+.player-stats > div {
+  padding-right: 20px;
+}
+
+@media (max-width: 500px) {
+  .player-name {
+    font-size: 24px;
+  }
+}
+@media (max-width: 1650px) {
+  .static-table-body {
+    td {
+      font-size: 12px;
+      vertical-align: middle;
+    }
+  }
+}

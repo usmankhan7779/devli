@@ -1,0 +1,131 @@
+<ng-template #showCurrentChat>
+  <ng-container [ngSwitch]="ddData.activeBets[0]">
+    <ng-container *ngSwitchCase="'Moneyline'">
+      <ng-template [ngTemplateOutlet]="mlTable"></ng-template>
+    </ng-container>
+    <ng-container *ngSwitchCase="'Spread'">
+      <ng-template [ngTemplateOutlet]="spreadTable"></ng-template>
+    </ng-container>
+    <ng-container *ngSwitchCase="'Over/Under'">
+      <ng-template [ngTemplateOutlet]="ouTable"></ng-template>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #mlTable>
+  <app-graph-table
+    *ngIf="lineChartData"
+    [league]="league"
+    [awayLogo]="matchup.away.logo"
+    [homeLogo]="matchup.home.logo"
+    [bordered]="false"
+    [isIndividualMatchup]="false"
+    tableName="Moneyline"
+    [homeTeamName]="matchup.home.team_name"
+    [awayTeamName]="matchup.away.team_name"
+    [datasets]="lineChartData.moneyline.data"
+    [labels]="lineChartData.moneyline.dates"
+    [awayOpen]="lineChartData.away.moneyline.open | plus"
+    [awayCurrent]="lineChartData.away.moneyline.current | plus"
+    [awayChange]="lineChartData.away.moneyline.difference"
+    [homeOpen]="lineChartData.home.moneyline.open | plus"
+    [homeCurrent]="lineChartData.home.moneyline.current | plus"
+    [homeChange]="lineChartData.home.moneyline.difference"
+    [showLabels]="lineChartData.moneyline.show_labels"
+  ></app-graph-table>
+</ng-template>
+<ng-template #spreadTable>
+  <app-graph-table
+    *ngIf="lineChartData"
+    [league]="league"
+    [awayLogo]="matchup.away.logo"
+    [homeLogo]="matchup.home.logo"
+    [bordered]="false"
+    [isIndividualMatchup]="false"
+    tableName="Spread"
+    [homeTeamName]="matchup.home.team_name"
+    [awayTeamName]="matchup.away.team_name"
+    [datasets]="lineChartData.spread.data"
+    [labels]="lineChartData.spread.dates"
+    [awayOpen]="lineChartData.away.spread.open | plus"
+    [awayCurrent]="lineChartData.away.spread.current | plus"
+    [awayChange]="lineChartData.away.spread.difference"
+    [homeOpen]="lineChartData.home.spread.open | plus"
+    [homeCurrent]="lineChartData.home.spread.current | plus"
+    [homeChange]="lineChartData.home.spread.difference"
+    [showLabels]="lineChartData.spread.show_labels"
+  ></app-graph-table>
+</ng-template>
+<ng-template #ouTable>
+  <app-graph-table
+    *ngIf="lineChartData"
+    [league]="league"
+    [awayLogo]="matchup.away.logo"
+    [homeLogo]="matchup.home.logo"
+    [bordered]="false"
+    [isIndividualMatchup]="false"
+    tableName="Over/Under"
+    [homeTeamName]="matchup.home.team_name"
+    [awayTeamName]="matchup.away.team_name"
+    [datasets]="lineChartData.overUnder.data"
+    [labels]="lineChartData.overUnder.dates"
+    [showLabels]="lineChartData.overUnder.show_labels"
+    [awayOpen]="lineChartData.away.over.open | plus"
+    [awayCurrent]="lineChartData.away.over.current | plus"
+    [awayChange]="lineChartData.away.over.difference"
+    [homeOpen]="lineChartData.home.under.open | plus"
+    [homeCurrent]="lineChartData.home.under.current | plus"
+    [homeChange]="lineChartData.home.under.difference"
+  ></app-graph-table>
+</ng-template>
+
+<div class="row">
+  <div class="col-12">
+    <div class="d-flex filter-container after-heading-margin">
+      <div class="grouped-dropdown-wrapper not-mobile btn-group mb-0 mr-4">
+        <app-dropdown
+          *ngIf="parentDdData.activeBook === 'Vegas Books'"
+          [ddData]="ddData"
+          [filterItems]="filterItems.bind(this)"
+          [className]="(parentDdData.activeBets.length === 1 ? 'first last' : 'first')"
+          [isSingleSelect]="true"
+          [scrollableMenu]="false"
+          prop="books"
+          name="Books"
+        ></app-dropdown>
+        <app-dropdown
+          *ngIf="parentDdData.activeBets.length !== 1"
+          [ddData]="ddData"
+          [className]="(parentDdData.activeBook !== 'Vegas Books' ? 'first last' :'last')"
+          [scrollableMenu]="false"
+          [isSingleSelect]="true"
+          [filterItems]="filterItems.bind(this)"
+          prop="bets"
+          name="Bets"
+        ></app-dropdown>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="row mb-3">
+      <div class="col-12">
+        <button (click)="closeLineMove()" type="button" class="btn btn-default float-right text-center close-chart-btn">
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+        <ng-container *ngIf="ddData.activeBets.length !== 1; else showCurrentChat">
+          <ng-template [ngTemplateOutlet]="mlTable"></ng-template>
+        </ng-container>
+      </div>
+      <ng-container *ngIf="ddData.activeBets.length !== 1" >
+        <div class="col-12">
+          <hr>
+          <ng-template [ngTemplateOutlet]="spreadTable"></ng-template>
+        </div>
+        <div class="col-12">
+          <hr>
+          <ng-template [ngTemplateOutlet]="ouTable"></ng-template>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

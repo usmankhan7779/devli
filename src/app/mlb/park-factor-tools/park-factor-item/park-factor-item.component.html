@@ -1,0 +1,123 @@
+<div *ngIf="parkData" class="park-factor-wrapper">
+  <div class="img-container">
+    <div class="park-img-wrapper">
+
+      <img [src]="'assets' + parkData.park_image" [alt]="parkData.park_name">
+
+      <div class="wind-container" *ngIf="parkData.wind_speed">
+        <div class="wind-content">
+          <span>{{parkData.wind_speed}}</span>
+          <img src="assets/images/wind-arrow.png" [style.transform]="'rotate(' + parkData.wind_angle + 'deg)'" alt="wind"/>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="heading-container">
+    {{parkData.park_name}}
+  </div>
+  <div class="additional-info-container">
+    <div class="city-container">
+      <span>{{parkData.park_location}}</span>
+    </div>
+    <div class="pitcher-container">
+      <span>{{parkData.away_team_pitcher}} @ {{parkData.home_team_pitcher}}</span>
+    </div>
+    <div class="weather-container" *ngIf="parkData.weather_text && parkData.weather_icon; else domTpl">
+      <img [src]="parkData.weather_icon" [alt]="parkData.weather_text"> {{parkData.weather_text}}, {{parkData.temp}} <span>&#8457;</span>
+    </div>
+    <ng-template #domTpl>
+      <div>
+        <span>Dome</span>
+      </div>
+    </ng-template>
+  </div>
+  <div class="table-container">
+    <table style="width:100%">
+      <tr>
+        <th>Game</th>
+        <td>
+          <a [routerLink]="[parkData.awayTeamUrl || '']" class="link-black-underline">
+            {{parkData.away_team}}
+          </a>
+          @
+          <a [routerLink]="[parkData.homeTeamUrl || '']" class="link-black-underline">
+            {{parkData.home_team}}
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>Time</th>
+        <td>
+          {{parkData.game_time}}
+        </td>
+      </tr>
+      <tr>
+        <th>Wind:</th>
+        <td>
+          {{parkData.wind_speed}} mph
+        </td>
+      </tr>
+      <tr>
+        <th>Chance of Rain:</th>
+        <td [ngStyle]="{backgroundColor: getRainColor(parkData.chance_of_rain)}">
+          {{parkData.chance_of_rain}}%
+        </td>
+      </tr>
+      <tr>
+        <th>Park Factor</th>
+        <td>
+          {{parkData.park_factor}}
+        </td>
+      </tr>
+      <tr>
+        <th>LHB (HR)</th>
+        <td>
+          {{parkData.lhb_hr}}
+        </td>
+      </tr>
+      <tr>
+        <th>LHB (R)</th>
+        <td>
+          {{parkData.lhb_r}}
+        </td>
+      </tr>
+      <tr>
+        <th>LHB (2B/3B)</th>
+        <td>
+          {{parkData.lhb_2b_3b}}
+        </td>
+      </tr>
+      <tr>
+        <th>RHB (HR)</th>
+        <td>
+          {{parkData.rhb_hr}}
+        </td>
+      </tr>
+      <tr>
+        <th>RHB (R)</th>
+        <td>
+          {{parkData.rhb_r}}
+        </td>
+      </tr>
+      <tr>
+        <th>RHB (2B/3B)</th>
+        <td>
+          {{parkData.rhb_2b_3b}}
+        </td>
+      </tr>
+      <tr>
+        <th>Pitchers</th>
+        <td [ngStyle]="{backgroundColor: getTdColor(parkData.pitchers)}">
+          {{parkData.pitchers}}
+        </td>
+      </tr>
+      <tr>
+        <th>Hitters</th>
+        <td [ngStyle]="{backgroundColor: getTdColor(parkData.hitters)}">
+          {{parkData.hitters}}
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

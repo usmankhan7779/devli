@@ -1,0 +1,94 @@
+@import "../../../../../scss/shared/variables/project";
+:host {
+  .week-selector {
+    width: 100%;
+    background-color: #fafafa;
+    border-top: 2px solid #ebebec;
+    border-bottom: 2px solid #ebebec;
+  }
+
+  .swiper-button-disabled i.fa {
+    display: none;
+  }
+
+  .swiper-container {
+    position: relative;
+    padding: 0 60px;
+    .selector-btn {
+      position: absolute;
+      background-image: none;
+      background-color: #fafafa;
+      height: 58px;
+      top: 20px;
+      width: 60px;
+      text-align: center;
+      line-height: 66px;
+
+
+      &.selector-left-btn {
+        left: 0;
+      }
+      &.selector-right-btn {
+        right: -2px;
+      }
+      &.selector-left-btn, &.selector-right-btn {
+        border-right: 1px solid #eceeef;
+        &:hover {
+          background-color: #e0e0e4;
+          cursor: pointer;
+        }
+      }
+
+      i {
+        color: $psd-primary;
+        font-size: 2rem;
+      }
+    }
+  }
+
+  .slide {
+    cursor: pointer;
+    padding: 8px 0px 7px;
+    border-right: 1px solid #eceeef;
+    max-width: 75px;
+
+    & * {
+      cursor: pointer;
+    }
+
+    &:first-child {
+      border-left: 1px solid #eceeef;
+    }
+
+    & > label {
+      display: block;
+      width: 75px;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+      background-color: transparent;
+      font-size: 16px;
+      text-align: center;
+
+      & > span {
+        display: block;
+        line-height: 15px;
+        font-weight: 600;
+      }
+    }
+
+    &:hover {
+      background-color: #e0e0e4;
+      border-color: #e0e0e4;
+      color: #333333;
+    }
+
+    &.active-week {
+      background-color: #4e4e6a;
+      border-color: #4e4e6a;
+      color: #FFF;
+      transition: ease all 120ms;
+    }
+  }
+}
+

@@ -1,0 +1,306 @@
+<div class="row">
+  <div class="col-12">
+    <div class="matchup" [ngClass]="{'in-individual-matchup-wrapper':isIndividual, 'ind-page': isIndividualPage}">
+
+      <div *ngIf="!isIndividualPage" class="matchup-header light-bg">
+        <div class="d-flex justify-content-center">
+
+          <div class="hide-on-mobile team-section">
+            <app-status
+              (teamWasClicked)="preselectTeamSeason()"
+              [noFollow]="noFollow"
+              side="left"
+              [redirectUrl]="'/' + gateway.away.lineup_route"
+              matchupMedia="true"
+              [status]="awayConfirmed"
+              [mobileTitle]="header.away.away_full_name | lastTeamName"
+              [teamName]="header.away.away_full_name"
+              [record]="(awayRecord ? awayRecord : header.away.away_record + ', ' + header.away.away_standing)"
+              [additionalInfo]="!isIndividual ?  (gateway.away.spread_live | plus) + ' (' + (gateway.away.spread_live_juice | plus) + ')'  : false"
+            >
+              <a *ngIf="gateway.away.lineup_route" [appPreselectNbaLineupTeamSeason]="season" [routerLink]="'/' + gateway.away.lineup_route" rel="nofollow">
+                <img [type]="'white'" [appSpriteImg]="'nba'" class="d-flex away-logo logo rounded" [src]="'/assets/images/nba/logos/white/' + header.away.away_route + '-white.svg'" alt="{{header.away.away_full_name}}">
+              </a>
+              <img *ngIf="!gateway.away.lineup_route" [type]="'white'" [appSpriteImg]="'nba'" class="d-flex away-logo logo rounded" [src]="'/assets/images/nba/logos/white/' + header.away.away_route + '-white.svg'" alt="{{header.away.away_full_name}}">
+            </app-status>
+          </div>
+
+          <div class="text-center time-section">
+            <ng-container *ngIf="!status || (status.status !== 'In Progress' && status.status !== 'Final')">
+              <h5 class="mt-0">
+                <app-general-time-format [time]="header.details.game_time"></app-general-time-format>
+              </h5>
+              <p>
+              <span class="mobile-stats stats-left" *ngIf="!isIndividual">
+                {{(gateway.away.spread_live | plus) + ' (' + (gateway.away.spread_live_juice | plus) + ')'}}
+              </span>
+                <app-status-only class="mobile-stats" [status]="awayConfirmed" [altView]="true" [onlyShortNames]="true"></app-status-only>
+                {{header.details.away_short}}
+                @
+                {{header.details.home_short}}
+                <app-status-only class="mobile-stats" [status]="homeConfirmed" [onlyShortNames]="true"></app-status-only>
+                <span class="mobile-stats stats-right" *ngIf="!isIndividual">
+                  {{(gateway.home.spread_live | plus) + ' (' + (gateway.home.spread_live_juice | plus) + ')'}}
+                </span>
+              </p>
+              <p *ngIf="header.details.stadium">
+                {{header.details.stadium}}
+              </p>
+            </ng-container>
+
+            <p *ngIf="status?.status === 'In Progress'">
+              <span>{{header.details.away_short}} {{status.away_team_score}}</span> @ <span>{{header.details.home_short}} {{status.home_team_score}}</span>
+            </p>
+            <p *ngIf="status?.status === 'Final'">
+              <span [ngClass]="{'font-bold': status.away_team_score > status.home_team_score}">{{header.details.away_short}} {{status.away_team_score}}</span> @ <span [ngClass]="{'font-bold': status.home_team_score > status.away_team_score}">{{header.details.home_short}} {{status.home_team_score}}</span>
+            </p>
+            <p *ngIf="status?.status === 'In Progress'">
+              <ng-template #inProgressTpl>
+                <span>
+                  Q{{status.quarter_integer}} {{status.minutes}}:{{status.seconds | number : '2.0-0'}}
+                </span>
+              </ng-template>
+              <span *ngIf="showHalftime(status); else inProgressTpl">
+                Halftime
+              </span>
+            </p>
+            <p *ngIf="status?.status === 'Final'">
+              Final
+            </p>
+            <p *ngIf="header.details.stadium && (status?.status === 'Final' || status?.status === 'In Progress')">
+              {{header.details.stadium}}
+            </p>
+            <a *ngIf="!isIndividual && gateway.matchup_route" style="font-size: 14px;" [appNbaMatchupIdPreselect]="gameId" [routerLink]="['/' + gateway.matchup_route]">
+              See Matchup
+            </a>
+          </div>
+
+          <div class="hide-on-mobile team-section">
+            <app-status
+              (teamWasClicked)="preselectTeamSeason()"
+              [noFollow]="noFollow"
+              side="right"
+              matchupMedia="true"
+              [redirectUrl]="'/' + gateway.home.lineup_route"
+              [mobileTitle]="header.home.home_full_name | lastTeamName"
+              [teamName]="header.home.home_full_name"
+              [status]="homeConfirmed"
+              [record]="(homeRecord ? homeRecord : header.home.home_record + ', ' + header.home.home_standing)"
+              [additionalInfo]="!isIndividual ?  (gateway.home.spread_live | plus) + ' (' + (gateway.home.spread_live_juice | plus) + ')'  : false"
+            >
+              <a [appPreselectNbaLineupTeamSeason]="season" *ngIf="gateway.home.lineup_route" [routerLink]="'/' + gateway.home.lineup_route" rel="nofollow">
+                <img [type]="'white'" [appSpriteImg]="'nba'" class="d-flex home-logo logo rounded" [src]="'/assets/images/nba/logos/white/' + header.home.home_route + '-white.svg'" alt="{{header.home.home_full_name}}">
+              </a>
+              <img *ngIf="!gateway.home.lineup_route" [type]="'white'" [appSpriteImg]="'nba'" class="d-flex home-logo logo rounded" [src]="'/assets/images/nba/logos/white/' + header.home.home_route + '-white.svg'" alt="{{header.home.home_full_name}}">
+            </app-status>
+          </div>
+
+        </div>
+      </div>
+      <div class="multi-row-data-table-wrapper mb-0">
+        <table class="multi-row-data-table t-stripped m-0">
+          <colgroup span="2">
+            <col span="1" class="matchup-col">
+            <col span="1">
+          </colgroup>
+          <colgroup *ngIf="isIndividual" span="2"></colgroup>
+          <colgroup span="2"></colgroup>
+          <colgroup span="2"></colgroup>
+          <colgroup span="2"></colgroup>
+          <colgroup span="1"></colgroup>
+          <tbody>
+            <tr class="t-header">
+              <th colspan="2" scope="colgroup" class="text-center main-border">Game</th>
+              <th *ngIf="isIndividual" colspan="2" scope="colgroup" class="text-center main-border">Spread</th>
+              <th colspan="2" scope="colgroup" class="text-center main-border">Team Totals</th>
+              <th colspan="2" scope="colgroup" class="text-center main-border">Over/Under</th>
+              <th colspan="2" scope="colgroup" class="text-center main-border">Moneyline</th>
+              <th colspan="1" scope="colgroup" class="text-center">Charts</th>
+            </tr>
+            <tr class="t-sub-header">
+              <th class="padded">Game</th>
+              <th scope="col" class="text-center main-border">Team Rating</th>
+
+              <th *ngIf="isIndividual" scope="col" class="text-center">Open</th>
+              <th *ngIf="isIndividual" scope="col" class="text-center main-border">Live</th>
+
+              <th scope="col" class="text-center">Open</th>
+              <th scope="col" class="text-center main-border">Live</th>
+
+              <th scope="col" class="text-center">Open</th>
+              <th scope="col" class="text-center main-border">Live</th>
+
+              <th scope="col" class="text-center">Open</th>
+              <th scope="col" class="text-center main-border">Live</th>
+              <th scope="col" class="text-center">Line Moves</th>
+            </tr>
+            <tr class="t-content">
+              <th *ngIf="gateway.away.lineup_route" scope="row" class="content-border nowrap in-table-status-wrapper">
+                <a [appPreselectNbaLineupTeamSeason]="season" class="link-black" [routerLink]="'/' + gateway.away.lineup_route" rel="nofollow">
+                  <img [type]="'white'" [appSpriteImg]="'nba'" class="mr-1 logo-sm " [src]="'/assets/images/nba/logos/white/' + header.away.away_route + '-white.svg'" alt="{{gateway.away.full_name}}">
+                </a>
+                <a class="link-black-underline" [appPreselectNbaLineupTeamSeason]="season" [routerLink]="'/' + gateway.away.lineup_route" rel="nofollow">
+                  <span class="origin-matchup-team-name">{{gateway.away.full_name}}</span>
+                  <span class="short-matchup-team-name">{{gateway.away.full_name | lastTeamName}}</span>
+                </a>
+                <app-status-only *ngIf="isIndividualPage" class="in-table-status" [status]="awayConfirmed"></app-status-only>
+              </th>
+              <th *ngIf="!gateway.away.lineup_route" scope="row" class="content-border nowrap in-table-status-wrapper">
+                <img [type]="'white'" [appSpriteImg]="'nba'" class="mr-1 logo-sm " [src]="'/assets/images/nba/logos/white/' + header.away.away_route + '-white.svg'" alt="{{gateway.away.full_name}}">
+                <span class="origin-matchup-team-name">{{gateway.away.full_name}}</span>
+                <span class="short-matchup-team-name">{{gateway.away.full_name | lastTeamName}}</span>
+                <app-status-only *ngIf="isIndividualPage" class="in-table-status" [status]="awayConfirmed"></app-status-only>
+              </th>
+              <td class="main-border"><app-rating [value]="gateway.away.rating"></app-rating></td>
+
+              <td *ngIf="isIndividual" class="spread-col">
+                <span>
+                  {{gateway.away.spread_open | plus}}
+                </span>
+                <span *ngIf="gateway.away.spread_open_juice != null">
+                  ({{gateway.away.spread_open_juice | plus}})
+                </span>
+              </td>
+              <td *ngIf="isIndividual" class="spread-col main-border">
+                <span>
+                  {{gateway.away.spread_live | plus}}
+                </span>
+                <span *ngIf="gateway.away.spread_live_juice != null">
+                  ({{gateway.away.spread_live_juice | plus}})
+                </span>
+              </td>
+
+              <td>{{gateway.away.team_total_open}}</td>
+              <td class="main-border">{{gateway.away.team_total_live}}</td>
+
+              <td rowspan="2">{{gateway.over_under_open}} pts</td>
+              <td rowspan="2" class="main-border">{{gateway.over_under_live}} pts</td>
+
+              <td>{{gateway.away.moneyline_open | plus}}</td>
+              <td class="main-border">{{gateway.away.moneyline_live | plus}}</td>
+
+              <td (click)="onLineClick()" style="cursor: pointer; border-right: none;" rowspan="2">
+                <img class="img-fluid p-1" src="/assets/images/line-movement.png" alt="line-movement">
+              </td>
+            </tr>
+            <tr class="t-content">
+              <th *ngIf="gateway.home.lineup_route" scope="row" class="content-border nowrap in-table-status-wrapper">
+                <a class="link-black" [appPreselectNbaLineupTeamSeason]="season" [routerLink]="'/' + gateway.home.lineup_route" rel="nofollow">
+                  <img [type]="'white'" [appSpriteImg]="'nba'" class="mr-1 logo-sm " [src]="'/assets/images/nba/logos/white/' + header.home.home_route + '-white.svg'" alt="{{gateway.home.full_name}}">
+                </a>
+                <a class="link-black-underline" [appPreselectNbaLineupTeamSeason]="season" [routerLink]="'/' + gateway.home.lineup_route" rel="nofollow">
+                  <span class="origin-matchup-team-name">{{gateway.home.full_name}}</span>
+                  <span class="short-matchup-team-name">{{gateway.home.full_name | lastTeamName}}</span>
+                </a>
+                <app-status-only *ngIf="isIndividualPage" class="in-table-status" [status]="homeConfirmed"></app-status-only>
+              </th>
+              <th *ngIf="!gateway.home.lineup_route" scope="row" class="content-border nowrap in-table-status-wrapper">
+                <img [type]="'white'" [appSpriteImg]="'nba'" class="mr-1 logo-sm " [src]="'/assets/images/nba/logos/white/' + header.home.home_route + '-white.svg'" alt="{{gateway.home.full_name}}">
+                <span class="origin-matchup-team-name">{{gateway.home.full_name}}</span>
+                <span class="short-matchup-team-name">{{gateway.home.full_name | lastTeamName}}</span>
+                <app-status-only *ngIf="isIndividualPage" class="in-table-status" [status]="homeConfirmed"></app-status-only>
+              </th>
+              <td class="main-border">
+                <app-rating [value]="gateway.home.rating"></app-rating>
+              </td>
+
+              <td *ngIf="isIndividual" class="spread-col">
+                <span>
+                  {{gateway.home.spread_open | plus}}
+                </span>
+                <span *ngIf="gateway.home.spread_open_juice != null">
+                  ({{gateway.home.spread_open_juice | plus}})
+                </span>
+              </td>
+              <td *ngIf="isIndividual" class="spread-col main-border">
+                <span>
+                  {{gateway.home.spread_live | plus}}
+                </span>
+                <span *ngIf="gateway.home.spread_live_juice != null">
+                  ({{gateway.home.spread_live_juice | plus}})
+                </span>
+              </td>
+
+              <td>{{gateway.home.team_total_open}}</td>
+              <td class="main-border">{{gateway.home.team_total_live}}</td>
+
+              <td>{{gateway.home.moneyline_open | plus}}</td>
+              <td class="main-border">{{gateway.home.moneyline_live | plus}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="chartsVisible" class="row mb-3">
+  <div class="col-12">
+    <hr>
+    <button (click)="onCloseChartsClick()" type="button" class="btn btn-default float-right text-center close-chart-btn">
+      <i class="fa fa-times" aria-hidden="true"></i>
+    </button>
+    <app-graph-table
+      [league]="'nba'"
+      [awayLogo]="'/assets/images/nba/logos/white/' + header.away.away_route + '-white.svg'"
+      [homeLogo]="'/assets/images/nba/logos/white/' + header.home.home_route + '-white.svg'"
+      [isIndividualMatchup]="isIndividual"
+      tableName="Moneyline"
+      [bordered]="false"
+      [homeTeamName]="header.home.home_full_name"
+      [awayTeamName]="header.away.away_full_name"
+      [datasets]="lineChartData.moneyline.data"
+      [labels]="lineChartData.moneyline.dates"
+      [awayOpen]="gateway.away.moneyline_open | plus"
+      [awayCurrent]="gateway.away.moneyline_live | plus"
+      [awayChange]="gateway.away.moneyline_diff"
+      [homeOpen]="gateway.home.moneyline_open | plus"
+      [homeCurrent]="gateway.home.moneyline_live | plus"
+      [homeChange]="gateway.home.moneyline_diff"
+      [showLabels]="gateway.moneyline_history.show"
+    ></app-graph-table>
+  </div>
+  <div class="col-12">
+    <hr>
+    <app-graph-table
+      [league]="'nba'"
+      [awayLogo]="'/assets/images/nba/logos/white/' + header.away.away_route + '-white.svg'"
+      [homeLogo]="'/assets/images/nba/logos/white/' + header.home.home_route + '-white.svg'"
+      [isIndividualMatchup]="isIndividual"
+      tableName="Spread"
+      [bordered]="false"
+      [homeTeamName]="header.home.home_full_name"
+      [awayTeamName]="header.away.away_full_name"
+      [datasets]="lineChartData.spread.data"
+      [labels]="lineChartData.spread.dates"
+      [awayOpen]="gateway.away.spread_open"
+      [awayCurrent]="gateway.away.spread_live"
+      [awayChange]="gateway.away.spread_diff"
+      [homeOpen]="gateway.home.spread_open"
+      [homeCurrent]="gateway.home.spread_live"
+      [homeChange]="gateway.home.spread_diff"
+      [showLabels]="gateway.spread_history.show"
+    ></app-graph-table>
+  </div>
+  <div class="col-12">
+    <hr>
+    <app-graph-table
+      [league]="'nba'"
+      [awayLogo]="'/assets/images/nba/logos/white/' + header.away.away_route + '-white.svg'"
+      [homeLogo]="'/assets/images/nba/logos/white/' + header.home.home_route + '-white.svg'"
+      [isIndividualMatchup]="isIndividual"
+      tableName="Team Totals"
+      [bordered]="false"
+      [homeTeamName]="header.home.home_full_name"
+      [awayTeamName]="header.away.away_full_name"
+      [datasets]="lineChartData.total.data"
+      [labels]="lineChartData.total.dates"
+      [homeOpen]="gateway.home.team_total_open"
+      [homeCurrent]="gateway.home.team_total_live"
+      [homeChange]="gateway.home.team_total_diff"
+      [awayOpen]="gateway.away.team_total_open"
+      [awayCurrent]="gateway.away.team_total_live"
+      [awayChange]="gateway.away.team_total_diff"
+      [showLabels]="gateway.total_history.show"
+    ></app-graph-table>
+  </div>
+</div>

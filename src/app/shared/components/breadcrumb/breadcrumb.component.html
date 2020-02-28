@@ -1,0 +1,22 @@
+<ol *ngIf="!isIframe" class="breadcrumb">
+  <li *ngIf="!hideHomeBR" class="bc-list-item">
+    <a class="breadcrumb" [routerLink]="['/']">
+      <span>Lineups</span>
+    </a>
+    <span class="breadcrumb-arrow">></span>
+  </li>
+  <li class="bc-list-item" *ngFor="let breadcrumb of breadcrumbs; let i = index;">
+    <ng-container *ngIf="breadcrumb.external; else internalTpl">
+      <a (click)="onBreadcrumbClick(breadcrumb)" class="breadcrumb" href="{{breadcrumb.url}}">{{breadcrumb.label}}</a>
+      <span *ngIf="i + 1 !== breadcrumbs.length" class="breadcrumb-arrow">></span>
+    </ng-container>
+    <ng-template #internalTpl>
+      <a (click)="onBreadcrumbClick(breadcrumb)" *ngIf="(!breadcrumb.noFollow ? setUrl(breadcrumb) : false); let brUrl" class="breadcrumb" [routerLink]="brUrl">
+        <span>{{breadcrumb.label}}</span>
+      </a>
+      <a (click)="onBreadcrumbClick(breadcrumb)" *ngIf="breadcrumb.noFollow" class="breadcrumb" rel="nofollow" [routerLink]="setUrl(breadcrumb)">{{breadcrumb.label}}</a>
+      <span *ngIf="i + 1 !== breadcrumbs.length" class="breadcrumb-arrow">></span>
+    </ng-template>
+  </li>
+</ol>
+<!--<div class="hidden-sm-up pt-4"></div>-->

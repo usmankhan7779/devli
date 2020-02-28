@@ -1,0 +1,232 @@
+<ng-template #searchInput>
+  <div class="search-input-wrapper">
+    <div class="input-group">
+      <input type="text" class="form-control hide-placeholder" [ngModel]="searchModel" (ngModelChange)="filterByName($event)" placeholder="Search Players" aria-describedby="filter-by-player">
+      <span class="input-group-addon" id="filter-by-player">
+        <i class="fa fa-search" aria-hidden="true"></i>
+    </span>
+    </div>
+  </div>
+</ng-template>
+<ng-template #csvButtonTpl>
+  <button type="button" (click)="onCsvShow()" class="btn btn-primary csv-button">Show {{csvShowed ? 'Table' : ' CSV'}}</button>
+</ng-template>
+<ng-template #loadingView>
+  <div class="starting-lineup-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+<div class="container-fluid pb-3" *ngIf="originData; else loadingView">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="d-flex header-container">
+    <div class="row">
+      <div class="col-12 col-lg-8">
+        <div #containerEl class="d-flex flex-wrap after-heading-margin">
+          <div #headingEl class="d-flex">
+            <div>
+              <h1 class="page-heading m-0">
+                {{pageTitle}}
+              </h1>
+            </div>
+            <div class="normal-search-view ml-auto">
+              <ng-template [ngTemplateOutlet]="searchInput"></ng-template>
+            </div>
+          </div>
+          <app-twitter-follow-btn [textElement]="headingEl" [containerElement]="containerEl"></app-twitter-follow-btn>
+        </div>
+        <div *ngIf="pageDescription" class="hidden-md-down">
+          <p class="site-pages-content" [innerHTML]="pageDescription | safeHtml"></p>
+        </div>
+      </div>
+      <div class="col-12 col-lg-4 gateway-video-container">
+        <app-ad-component [league]="'nfl'"></app-ad-component>
+      </div>
+    </div>
+    <div *ngIf="pageDescription" class="hidden-xs-down hidden-lg-up paragraph-wrapper">
+      <p class="site-pages-content" [innerHtml]="pageDescription | safeHtml"></p>
+    </div>
+    <div class="toggles-in-page-wrapper standard-page radio-container after-text-margin">
+      <div class="seasons-dd-wrapper dd-wrapper btn-group float-left">
+        <div class="grouped-dropdown-wrapper btn-group m-0">
+
+          <div ngbDropdown class="grouped-dropdown dropdown">
+            <button type="button" class="grouped-dropdown-btn btn btn-secondary first px-3" id="season-dd" ngbDropdownToggle>
+              <span class="pr-0 pr-sm-3">{{ddData.activeSeason | handleLeagueYear: 'nfl'}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+            </button>
+            <div class="dropdown-menu" aria-labelledby="season-dd">
+              <div *ngFor="let season of ddData.seasons;">
+                <button
+                  [ngClass]="{'dd-active-btn': ddData.activeSeason === season.year}"
+                  (click)="onYearDdChange(season)"
+                  class="dropdown-item">
+                  <span>{{season.name}}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div ngbDropdown class="grouped-dropdown dropdown">
+            <button type="button" class="grouped-dropdown-btn btn btn-secondary px-3" id="main-dropdown" ngbDropdownToggle>
+              <span class="pr-0 pr-sm-3">{{getActiveTypeName()}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+            </button>
+            <div class="dropdown-menu" aria-labelledby="main-dropdown">
+              <div *ngFor="let mainRadio of snapsMainRadio;">
+                <button
+                  [ngClass]="{'dd-active-btn': isMainTabActive(mainRadio.value)}"
+                  (click)="onSnapCountMainTabClick(mainRadio)"
+                  class="dropdown-item">
+                  <span>{{mainRadio.name}}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <app-dropdown
+              [ddData]="ddData"
+              [filterItems]="onTeamDropdownChange.bind(this)"
+              prop="teams"
+              name="Teams"
+              [className]="'last'"
+            ></app-dropdown>
+          </div>
+        </div>
+      </div>
+      <div class="float-left dd-wrapper nav-target-container">
+        <div class="grouped-dropdown-wrapper mr-2 mb-2">
+
+          <div ngbDropdown class="grouped-dropdown dropdown">
+            <button type="button" class="grouped-dropdown-btn btn btn-secondary first px-3" id="secondary-dropdown" ngbDropdownToggle>
+              <span class="pr-0 pr-sm-3">{{getActiveTargetTypeName()}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+            </button>
+            <div class="dropdown-menu" aria-labelledby="secondary-dropdown">
+              <div *ngFor="let secondaryRadio of snapsSecondaryRadio;">
+                <button
+                  [ngClass]="{'dd-active-btn': isSecondaryTabActive(secondaryRadio.name)}"
+                  *ngIf="!isSeconderyRadioDoesNotExist(secondaryRadio)"
+                  (click)="onSnapCountSecondaryTabClick(secondaryRadio)"
+                  class="dropdown-item">
+                  <span *ngIf="secondaryRadio.longName" class="inner-col-switch">{{secondaryRadio.longName}}</span>
+                  <span [ngClass]="{'inner-col-show': secondaryRadio.longName}">{{secondaryRadio.name}}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <app-dropdown
+            *ngIf="isSnapsOrTargets()"
+            [ddData]="ddData"
+            [filterItems]="onPercentageDdClick.bind(this)"
+            prop="viewTabs"
+            [isSingleSelect]="true"
+            className="last"
+          ></app-dropdown>
+
+          <app-dropdown
+            class="mobile-items-per-page"
+            [ddData]="ddData"
+            [filterItems]="onItemsToShowDropdownChange.bind(this)"
+            prop="items_per_page"
+            [totalItems]="data.length"
+            [isSingleSelect]="true"
+            className="first last"
+          ></app-dropdown>
+
+        </div>
+        <div class="toggles-in-page-group btn-group toggles-group mr-3 float-left">
+          <ng-container
+            *ngFor="let secondaryRadio of snapsSecondaryRadio; let first = first; let last = last;"
+          >
+            <a
+              *ngIf="!isSeconderyRadioDoesNotExist(secondaryRadio)"
+              class="toggle-in-page"
+              [routerLink]="getSnapCountSecondaryUrl(secondaryRadio)"
+              [ngClass]="{'active': isSecondaryTabActive(secondaryRadio.name), 'first': first, 'last': last}">
+              <span *ngIf="secondaryRadio.longName" class="inner-col-switch">{{secondaryRadio.longName}}</span>
+              <span [ngClass]="{'inner-col-show': secondaryRadio.longName}">{{secondaryRadio.name}}</span>
+            </a>
+          </ng-container>
+        </div>
+        <div *ngIf="isSnapsOrTargets()" class="toggles-in-page-group percentage-tabs btn-group toggles-group float-left">
+            <button *ngFor="let percentageTab of ddData.viewTabs; let first = first; let last = last;"
+              class="toggle-in-page"
+              (click)="onPercentageTabClick(percentageTab)"
+              [ngClass]="{'active': ddData.activeViewTab === percentageTab.name, 'first': first, last: last}">
+              <span>{{percentageTab.name}}</span>
+            </button>
+        </div>
+      </div>
+      <!--<div class="float-left dd-wrapper nav-target-container main-dds">-->
+        <!--<div class="toggles-in-page-group btn-group toggles-group float-left">-->
+          <!--<ng-container-->
+            <!--*ngFor="let mainRadio of snapsMainRadio; let first = first; let last = last;"-->
+          <!--&gt;-->
+            <!--<button-->
+              <!--(click)="onSnapCountMainTabClick(mainRadio)"-->
+              <!--[hidden]="isMainRadioDisabled(mainRadio)"-->
+              <!--class="toggle-in-page"-->
+              <!--[ngClass]="{'active': isMainTabActive(mainRadio.value), 'first': first, 'last': last}"-->
+            <!--&gt;{{mainRadio.name}}</button>-->
+          <!--</ng-container>-->
+        <!--</div>-->
+      <!--</div>-->
+      <ng-container *ngIf="originData && originData.length;">
+      <div class="down-search-view float-left  mx-3">
+        <div>
+          <ng-template [ngTemplateOutlet]="searchInput"></ng-template>
+        </div>
+        <div class="mobile-csv-btn-wrapper">
+          <div class="float-right">
+            <ng-template [ngTemplateOutlet]="csvButtonTpl"></ng-template>
+          </div>
+        </div>
+      </div>
+      <div class="float-right full-screen-csv-btn-wrapper">
+        <div class="d-flex">
+          <div class="grouped-dropdown-wrapper btn-group mb-0 mr-2">
+            <app-dropdown
+              [ddData]="ddData"
+              [filterItems]="onItemsToShowDropdownChange.bind(this)"
+              prop="items_per_page"
+              [totalItems]="data.length"
+              [isSingleSelect]="true"
+              className="first last"
+            ></app-dropdown>
+          </div>
+          <div>
+            <ng-template [ngTemplateOutlet]="csvButtonTpl"></ng-template>
+          </div>
+        </div>
+      </div>
+      </ng-container>
+    </div>
+  </div>
+  <div *ngIf="!data; else contentView" class="starting-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+  <ng-template #contentView>
+    <div *ngIf="originData && originData.length; else noDataTpl" class="row">
+      <div *ngIf="!csvShowed; else csvView" class="col-12">
+        <app-targets [params]="params" [showRowsOnPage]="ddData.activeItemsToShow" [percentageType]="ddData?.activeViewTab" [showTeam]="showTeam" [sortWeek]="sortWeek" [showPos]="showPos" [tableType]="tableType" [data]="data" [type]="route.snapshot.data['type']" [originData]="originData"></app-targets>
+      </div>
+      <ng-template #csvView>
+        <div class="col-12">
+          <p class="csv-text">
+            {{csvText}}
+          </p>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+  <ng-template #noDataTpl>
+    <app-no-stats></app-no-stats>
+  </ng-template>
+  <div *ngIf="pageDescription" class="hidden-sm-up paragraph-wrapper">
+    <p class="site-pages-content" [innerHtml]="pageDescription | safeHtml"></p>
+  </div>
+  <div *ngIf="bottomParagraph" class="paragraph-wrapper">
+    <h2 *ngIf="bottomHeading" class="page-heading-two">
+      {{bottomHeading}}
+    </h2>
+    <p class="site-pages-content" [innerHtml]="bottomParagraph | safeHtml"></p>
+  </div>
+</div>

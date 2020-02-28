@@ -1,0 +1,289 @@
+@import "../../scss/shared/variables/project";
+@import "../../assets/css/swiper.min.css";
+:host {
+  $defalut-text-color: #666666;
+  $active-text-color: #000000;
+  $muted-text-color: #a7a9ac;
+
+  .small-icon {
+    $size: 18px;
+    overflow: visible;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    width: $size;
+    height: $size;
+    background-size: 140%;
+    border-radius: 2px;
+    img {
+      width: 14px;
+      height: 14px;
+      vertical-align: initial;
+      -webkit-transform: scale(1.3);
+      transform: scale(1.3);
+      position: absolute;
+      left: 8px;
+      top: 7px;
+      margin-top: -5px;
+      margin-left: -6px;
+      &.st-louis-cardinals-white {
+        transform: scale(1.1);
+      }
+      &.cleveland-indians-white {
+        transform: scale(1);
+        margin-top: -6px;
+      }
+      &.cincinnati-reds-largest,
+      &.atlanta-braves-largest,
+      &.tampa-bay-buccaneers-largest,
+      &.carolina-panthers-largest,
+      &.seattle-seahawks-largest,
+      &.new-york-giants-largest,
+      &.detroit-lions-largest,
+      &.tennessee-titans-largest,
+      &.chicago-bears-largest {
+        margin-left: -7px;
+      }
+      &.miami-dolphins-largest {
+        margin-left: -8px;
+      }
+      &.colorado-rockies-largest {
+        margin-top: -4px;
+      }
+      &.philadelphia-phillies-largest {
+        margin-top: -3px;
+      }
+      &.new-york-mets-largest {
+        margin-top: -4px;
+      }
+      &.washington-redskins-largest {
+        margin-top: -3px;
+      }
+      &.los-angeles-rams-largest {
+        margin-top: -6px;
+        margin-left: -7px;
+      }
+      &.new-england-patriots-largest {
+        margin-left: -8px;
+        transform: scale(1.6);
+      }
+      &.minnesota-timberwolves-white {
+        transform: scale(0.9);
+      }
+    }
+  }
+
+  .final-text {
+    line-height: 1.3;
+  }
+
+  .nfl-in-progress-header span {
+    font-size: 11px;
+  }
+
+  .team-name-score {
+    min-width: 50px;
+  }
+
+  .scorebar-content {
+    border-bottom: 1px solid #eee;
+  }
+
+  .scorebar-list-wrapper {
+    width: 75%;
+    @media (max-width: 993px) {
+      width: 70%;
+    }
+    @media (min-width: 1400px) {
+      width: 80%;
+    }
+    @media (min-width: 1555px) {
+      width: 85%;
+    }
+    @media (min-width: 1700px) {
+      width: 87%;
+    }
+  }
+
+  .score-bar-list-item {
+    border-left: 1px solid #eee;
+    border-bottom: 1px solid transparent;
+    &:last-child {
+      border-right: 1px solid #eee;
+    }
+    //border-right: 1px solid #eee;
+    &.active {
+      border-bottom: 1px solid $psd-primary;
+    }
+  }
+
+  .scorebar-content {
+    background-color: #FFF;
+  }
+
+  .active-game {
+    color: $active-text-color !important;
+  }
+
+  .top-team-record {
+    color: $muted-text-color;
+  }
+
+  .swiper-container {
+    .swiper-wrapper {
+      .swiper-slide {
+        text-decoration: none;
+        display: inline-block;
+        height: 59px;
+        max-width: 105px;
+        padding: 4px 15px;
+
+        .swiper-slide-wrapper {
+          position: relative;
+          width: 100%;
+          .hover-el {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            position: absolute;
+            width: 100%;
+            visibility: hidden;
+            text-align: center;
+            line-height: 55px;
+            color: black;
+          }
+        }
+
+        &:hover {
+          background-color: #ebebed;
+          .swiper-slide-wrapper {
+            .swiper-slide-content {
+              visibility: hidden;
+            }
+            & .hover-el {
+              visibility: visible;
+            }
+          }
+        }
+      }
+    }
+    .scorebar-btn {
+      background-color: #FFF;
+      background-image: none;
+      top: 22px;
+      height: 70px;
+      width: 62px;
+      &.scorebar-left-btn {
+        border-right: 1px solid #eee;
+        left: -12px;
+        i {
+          padding: 2px 0 0 2px;
+          position: relative;
+          left: 19px;
+          top: 14px;
+        }
+      }
+      &.scorebar-right-btn {
+        border-left: 1px solid #eee;
+        right: -26px;
+        i {
+          padding: 2px 0 0 2px;
+          position: relative;
+          left: 19px;
+          top: 14px;
+        }
+      }
+      i {
+        color: $psd-primary;
+        font-size: 2rem;
+      }
+    }
+  }
+
+  .scorebar-swiper {
+    padding: 0 50px;
+  }
+
+  .score-bar-item-date {
+    white-space: nowrap;
+    font-size: 11px;
+    color: $defalut-text-color;
+  }
+
+  .team-section {
+    line-height: 1;
+    margin-top: 2px;
+  }
+
+  .text {
+    font-size: 14px;
+    color: $defalut-text-color;
+    &.muted {
+      color: $muted-text-color;
+    }
+    &.active {
+      color: $active-text-color;
+    }
+    &.bold {
+      font-weight: bold;
+    }
+  }
+
+  .ball-icon {
+    font-size: 6px;
+    padding-bottom: 1px;
+  }
+
+  .mlb-scorebar {
+    .score-bar-item-date {
+      .text {
+        font-size: 11px;
+      }
+    }
+    .text-score {
+      font-size: 13px;
+    }
+  }
+
+  .nba-in-progress-header {
+    height: 18px;
+    span {
+      font-size: 11px;
+    }
+  }
+
+  .diamond-container {
+    height: 20px;
+    position: relative;
+    right: -12px;
+    top: 2px;
+    .diamond {
+      width: 7px;
+      height: 7px;
+      background: #ebebed;
+      /* Rotate */
+      -webkit-transform: rotate(-45deg);
+      -moz-transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);
+      -o-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+      /* Rotate Origin */
+      -webkit-transform-origin: 0 100%;
+      -moz-transform-origin: 0 100%;
+      -ms-transform-origin: 0 100%;
+      -o-transform-origin: 0 100%;
+      transform-origin: 0 100%;
+      &.active {
+        background: $psd-primary;
+      }
+    }
+  }
+  .swiper-button-next, .swiper-button-prev {
+    &.swiper-button-disabled {
+      opacity: 1;
+      i {
+        opacity: 0.35;
+      }
+    }
+  }
+}

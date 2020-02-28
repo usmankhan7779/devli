@@ -1,0 +1,394 @@
+<div class="jumbotron">
+  <h1 class="text-center" style="text-transform: uppercase;">Lineups Enhanced by Data Science</h1>
+  <ngb-tabset *appBrowserIf="true" (tabChange)="onTabChange($event)" #tabset="ngbTabset" class="home-tabs">
+    <ng-container *ngIf="showNFLTab">
+      <ngb-tab id="tab-nfl">
+      <ng-template ngbTabTitle>NFL</ng-template>
+      <ng-template ngbTabContent>
+        <div class="row mt-3" *ngIf="nflLineups">
+          <ng-container *ngFor="let lineup of nflLineups | orderBy:'order'; let i = index">
+            <div *ngIf="i < showedItemsNumber" class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-12 pb-3 text-center" [ngClass]="{'single-lineup-item': nflLineups.length === 1, 'last-lineup-item': i === showedItemsNumber - 1 }">
+              <app-lineup [lineupData]="lineup" mode="nfl"></app-lineup>
+            </div>
+          </ng-container>
+        </div>
+        <div class="row j-button-container">
+          <div class="col-12 text-center">
+            <a [routerLink]="['/nfl/depth-charts']" class="btn btn-primary">View All NFL Depth Charts</a>
+          </div>
+        </div>
+      </ng-template>
+    </ngb-tab>
+    </ng-container>
+    <ng-container *ngIf="showNBATab">
+      <ngb-tab id="tab-nba">
+      <ng-template ngbTabTitle>NBA</ng-template>
+      <ng-template ngbTabContent>
+        <div class="row mt-3" *ngIf="nbaLineups">
+          <ng-container *ngFor="let lineup of nbaLineups | orderBy:'order'; let i = index;">
+            <div *ngIf="i < showedItemsNumber" class="col-lg-4 col-md-6 col-sm-12 col-12 pb-3 text-center nba-item" [ngClass]="{
+            'single-lineup-item': nbaLineups.length === 1,
+            'last-lineup-item': i === showedItemsNumber - 1,
+            'offset-xl-2': nbaLineups.length === 2 && i === 0,
+            'col-lg-6': nbaLineups.length === 2,
+            'col-xl-4': nbaLineups.length < 4, 'col-xl-3': nbaLineups.length >= 4
+            }">
+              <app-lineup [lineupData]="lineup" mode="nba"></app-lineup>
+            </div>
+          </ng-container>
+        </div>
+        <div class="row j-button-container">
+          <div class="col-12 text-center">
+            <a [routerLink]="['/nba/lineups']" class="btn btn-primary">View All NBA Lineups</a>
+          </div>
+        </div>
+      </ng-template>
+    </ngb-tab>
+    </ng-container>
+    <ng-container *ngIf="showMLBTab">
+      <ngb-tab id="tab-mlb" type="pill">
+        <ng-template ngbTabTitle>MLB</ng-template>
+        <ng-template ngbTabContent>
+          <div class="row mt-3" *ngIf="mlbLineups">
+            <ng-container *ngFor="let lineup of mlbLineups | orderBy:'order'; let i = index;">
+              <div *ngIf="i < showedItemsNumber" class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-12 pb-3 text-center" [ngClass]="{'single-lineup-item': mlbLineups.length === 1, 'last-lineup-item': i === showedItemsNumber - 1}">
+                <app-lineup [lineupData]="lineup" mode="mlb"></app-lineup>
+              </div>
+            </ng-container>
+          </div>
+          <div class="row j-button-container">
+            <div class="col-12 text-center">
+              <a [routerLink]="['/mlb/lineups']" class="btn btn-primary">View All MLB Lineups</a>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-tab>
+    </ng-container>
+  </ngb-tabset>
+</div>
+
+<div class="home-container-wrapper articles-wrapper" *ngIf="bettingArticles && bettingArticles.length" style="padding-top: 0">
+  <div class="col-12">
+    <h2 class="home-title prediction-header" style="margin-bottom: 55px">Betting News & Articles</h2>
+  </div>
+  <div class="home-container">
+    <div class="home-container-inner articles-home-container-inner">
+      <div class="row">
+        <div class="col-12 d-flex flex-wrap home-articles-wrapper">
+          <app-short-wp-article *ngFor="let article of bettingArticles" [wpSmBlogItem]="article"></app-short-wp-article>
+        </div>
+      </div>
+      <div class="row" style="padding-top: 7px">
+        <div class="col-12 text-center">
+          <a href="https://www.lineups.com/betting/news/" target="_blank" rel="noopener" class="btn btn-primary">More Betting Articles</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="home-container-wrapper" [ngClass]="{'p-0': !bettingArticles || !bettingArticles.length}" *ngIf="betsData && betsData.bottomParagraphFirstParagraphs">
+  <div class="home-container">
+    <div class="home-container-inner">
+      <div class="row">
+        <div class="col-12">
+          <h2 class="home-title prediction-header" style="margin-bottom: 55px">{{betsData.heading}}</h2>
+        </div>
+        <div class="col-12">
+          <div *ngFor="let paragraph of betsData.bottomParagraphfirstSectionParagraphs; let index = index">
+            <ng-container [ngSwitch]="index">
+              <ng-container  *ngSwitchCase="0" class="t-sub-header">
+                <app-defer-load>
+                  <ng-template>
+                    <img alt="us-flag" class="in-paragraph-image" src="/assets/images/us-flag.jpg">
+                  </ng-template>
+                </app-defer-load>
+              </ng-container>
+              <ng-container  *ngSwitchCase="1" class="t-sub-header">
+                <app-defer-load>
+                  <ng-template>
+                    <img alt="draftkings-sportsbook" class="in-paragraph-image sportsbook-img" src="/assets/images/draftkings-images/draftkings-sportsbook-app.jpg">
+                  </ng-template>
+                </app-defer-load>
+              </ng-container>
+              <ng-container  *ngSwitchCase="2" class="t-sub-header">
+                <app-defer-load>
+                  <ng-template>
+                    <img alt="fanduel-sportsbook" class="in-paragraph-image sportsbook-img" src="/assets/images/fanduel-images/fanduel-sportsbook-app.jpg">
+                  </ng-template>
+                </app-defer-load>
+              </ng-container>
+            </ng-container>
+            <div class="d-inline" [innerHtml]="paragraph | safeHtml"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="home-container-wrapper articles-wrapper" *ngIf="articles && articles.length">
+  <div class="col-12">
+    <h2 class="home-title prediction-header" style="margin-bottom: 55px">Sports News & Articles</h2>
+  </div>
+  <div class="home-container">
+    <div class="home-container-inner articles-home-container-inner">
+      <div class="row">
+        <div class="col-12 d-flex flex-wrap home-articles-wrapper">
+          <app-short-wp-article *ngFor="let article of articles" [wpSmBlogItem]="article"></app-short-wp-article>
+        </div>
+      </div>
+      <div class="row" style="padding-top: 7px">
+        <div class="col-12">
+          <div class="col-12 text-center">
+            <a href="https://www.lineups.com/articles/" target="_blank" rel="noopener" class="btn btn-primary">More Sports Articles</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="home-container-wrapper articles-wrapper" *ngIf="podcastsArticles && podcastsArticles.length">
+  <div class="col-12">
+    <h2 class="home-title prediction-header" style="margin-bottom: 55px">Podcasts</h2>
+  </div>
+  <div class="home-container">
+    <div class="home-container-inner articles-home-container-inner">
+      <div class="row">
+        <div class="col-12 d-flex flex-wrap home-articles-wrapper">
+          <app-short-wp-article *ngFor="let article of podcastsArticles" [wpSmBlogItem]="article"></app-short-wp-article>
+        </div>
+      </div>
+      <div class="row" style="padding-top: 7px">
+        <div class="col-12">
+          <div class="col-12 text-center">
+            <a href="https://www.lineups.com/podcasts/" target="_blank" rel="noopener" class="btn btn-primary">More Podcasts</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="home-container-wrapper pb-0" *ngIf="betsData">
+  <div class="home-container">
+    <div class="home-container-inner">
+      <div class="row" *ngIf="betsData.bottomParagraphRestParagraphs">
+        <div class="col-12">
+          <div [innerHtml]="betsData.secondHeading | safeHtml"></div>
+          <div>
+            <app-defer-load>
+              <ng-template>
+                <img alt="fantasy football rankings ppr" class="in-paragraph-image" src="/assets/images/2020fantasyfootballrankingsppr.jpg">
+              </ng-template>
+            </app-defer-load>
+            <div class="d-inline" [innerHtml]="betsData.secondParagraphs | safeHtml"></div>
+          </div>
+          <div [innerHtml]="betsData.thirdHeading | safeHtml"></div>
+          <div>
+            <div class="in-paragraph-image">
+              <div class="winning-systems-card betting-data">
+                <app-defer-load>
+                  <ng-template>
+                    <img src="/assets/images/lineups-betting.png" alt="">
+                  </ng-template>
+                </app-defer-load>
+                <div style="margin-top: 17px;">
+                  <h4><a class="link-black-underline" href="https://www.lineups.com/betting/">Lineups Betting</a></h4>
+                  <p>Our flagship news source for betting news across all 50 states. Find the latest odds to win, legislative news, revenue, guides to betting and more.</p>
+                </div>
+              </div>
+            </div>
+            <div class="d-inline" [innerHtml]="betsData.thirdParagraphs | safeHtml"></div>
+          </div>
+          <div [innerHtml]="betsData.bottomParagraphRestParagraphs | safeHtml"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="home-container-wrapper" *ngIf="betsData">
+  <div class="col-12">
+    <!--<h2 class="home-title prediction-header">{{betsData.title_text}}</h2>-->
+    <h2 class="home-title mb-5">NFL Prediction Results</h2>
+    <p class="text-center" [innerHtml]="betsData.body_text | safeHtml"></p>
+  </div>
+  <div class="home-container">
+    <div class="home-container-inner">
+      <div class="row betting-card-wrapper">
+        <div class="col-12 col-md-4">
+          <div class="card">
+            <div class="card-block">
+              <h4 class="header">{{betsData.left_box.title_text}}</h4>
+              <p class="value">{{betsData.left_box.body_text}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="card">
+            <div class="card-block">
+              <h4 class="header">{{betsData.center_box.title_text}}</h4>
+              <p class="value">{{betsData.center_box.body_text}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="card">
+            <div class="card-block">
+              <h4 class="header">{{betsData.right_box.title_text}}</h4>
+              <p class="value">{{betsData.right_box.body_text}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 bets-table-wrapper">
+          <table class="bets-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th *ngFor="let header of betsData.table_headers">
+                  {{header}}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let bet of betsData.table_rows">
+                <td class="text-left">
+                  <app-dollars
+                    [amount]="bet[0].dollar_signs"
+                    [classes]="'bg-dollar'"
+                    [color]="bet[0].dollar_hex"
+                    style="position: relative;top: -1px;"></app-dollars>
+                </td>
+                <td>
+                  {{bet[1] | numberWithCommas}}
+                </td>
+                <td>
+                  {{bet[2]}}%
+                </td>
+                <td>
+                  ${{bet[3] | number:'1.2-2'}}
+                </td>
+                <td>
+                  ${{bet[4] | number:'1.2-2'}}
+                </td>
+                <td>
+                  {{bet[5]}}%
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="home-container-wrapper">
+  <h2 class="home-title">How To Create Winning Systems</h2>
+  <div class="home-container">
+    <div class="home-container-inner">
+      <div class="row">
+        <div class="col-12 col-sm-6 col-md-4">
+          <div class="winning-systems-card">
+            <app-defer-load>
+              <ng-template>
+                <div class="image-wrapper">
+                  <span class="helper"></span>
+                  <img src="/assets/images/data-mining.png" alt="">
+                </div>
+              </ng-template>
+            </app-defer-load>
+            <div>
+              <h4>Data Collection & Mining</h4>
+              <p>Collected and mined over 1 million plays from 20 years of MLB & NFL data.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+          <div class="winning-systems-card">
+            <app-defer-load>
+              <ng-template>
+                <div class="image-wrapper">
+                  <span class="helper"></span>
+                  <img src="/assets/images/machine-learning-models.png" alt="">
+                </div>
+              </ng-template>
+            </app-defer-load>
+            <div>
+              <h4>Machine Learning Models</h4>
+              <p>Our Data Scientist designed proprietary models using 65 million data points for NFL.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+          <div class="winning-systems-card">
+            <app-defer-load>
+              <ng-template>
+                <div class="image-wrapper">
+                  <span class="helper"></span>
+                  <img src="/assets/images/user-input.png" alt="">
+                </div>
+              </ng-template>
+            </app-defer-load>
+            <div>
+              <h4>User Input & Simulations</h4>
+              <p>Only betting system enabling users to adjust modeling inputs and run real-time simulations</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+          <div class="winning-systems-card">
+            <app-defer-load>
+              <ng-template>
+                <div class="image-wrapper">
+                  <span class="helper"></span>
+                  <img src="/assets/images/real-time-predictions.png" alt="">
+                </div>
+              </ng-template>
+            </app-defer-load>
+            <div>
+              <h4>Real-Time Predictions</h4>
+              <p>Update bet predictions in real-time based on real-time lineup data and news.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+          <div class="winning-systems-card">
+            <app-defer-load>
+              <ng-template>
+                <div class="image-wrapper">
+                  <span class="helper"></span>
+                  <img src="/assets/images/betting-systems.png" alt="">
+                </div>
+              </ng-template>
+            </app-defer-load>
+            <div>
+              <h4>Build Betting Systems</h4>
+              <p>No coding. Build a winning system using machine learning science to find an edge.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+          <div class="winning-systems-card">
+            <app-defer-load>
+              <ng-template>
+                <div class="image-wrapper">
+                  <span class="helper"></span>
+                  <img src="/assets/images/winning-bets.png" alt="">
+                </div>
+              </ng-template>
+            </app-defer-load>
+            <div>
+              <h4>Find Winning Bets</h4>
+              <p>View betting predictions in one place for game bets, team and player prop bets.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

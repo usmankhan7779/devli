@@ -1,0 +1,428 @@
+<ng-template #loadingTpl>
+  <div class="starting-lineup-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+
+<!-- Prediction Model Accuracy -->
+<div class="container-fluid pb-5" *ngIf="totalItems != undefined; else loadingTpl;">
+  <!-- Breadcrumbs -->
+  <app-breadcrumb></app-breadcrumb>
+  <!-- Starting Lineups Page Title -->
+  <div class="row">
+
+    <div class="col-12 col-lg-8">
+      <h1 class="page-heading">{{pageHeading}}</h1>
+      <div *ngIf="introParagraph" class="hidden-md-down">
+        <p class="site-pages-content" [innerHTML]="introParagraph | safeHtml"></p>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component [league]="'nba'"></app-ad-component>
+    </div>
+
+    <div *ngIf="introParagraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+      <p class="site-pages-content" [innerHtml]="introParagraph | safeHtml"></p>
+    </div>
+
+    <div class="col-12">
+      <!-- Collapse Menu -->
+      <div class="in-page-dropdown-toggle">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="dropdownCollapsed = !dropdownCollapsed"
+                [attr.aria-expanded]="!dropdownCollapsed" aria-controls="collapseExample">
+          <i class="fa fa-bars dropdown-icon" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="in-page-dropdown-menu" [ngbCollapse]="!dropdownCollapsed" [ngClass]="{'hidden-dropdown': !dropdownCollapsed}">
+        <!-- Grouped Dropdown -->
+        <div class="d-flex justify-content-start top-dd-wrapper">
+          <div class="d-flex top-dd-wrapper-deep">
+            <div class="grouped-dropdown-wrapper btn-group">
+              <div ngbDropdown class="grouped-dropdown dropdown">
+                <button
+                  type="button"
+                  class="grouped-dropdown-btn btn btn-secondary first px-3"
+                  id="page-select-dropdown" ngbDropdownToggle>
+                  <span class="pr-0 pr-sm-3">Fantasy Projections</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="page-select-dropdown">
+                  <div>
+                    <a [routerLink]="['/nba/nba-player-minutes-per-game']" routerLinkActive="dd-active-btn" class="dropdown-item">Minutes</a>
+                  </div>
+                  <div>
+                    <a [routerLink]="['/nba/player-stats']" routerLinkActive="dd-active-btn" class="dropdown-item">Stats</a>
+                  </div>
+                  <div>
+                    <a [routerLink]="['/nba/nba-fantasy-basketball-projections']" routerLinkActive="dd-active-btn" class="dropdown-item">Fantasy Projections</a>
+                  </div>
+                  <div>
+                    <a [routerLink]="['/nba/fantasy-points-per-game']" routerLinkActive="dd-active-btn" class="dropdown-item">Fantasy Points</a>
+                  </div>
+                </div>
+              </div>
+              <app-dropdown
+                [ddData]="minutesDDs"
+                [filterItems]="onDropdownChange.bind(this)"
+                prop="fantasy"
+                isSingleSelect="true"
+              ></app-dropdown>
+              <app-dropdown
+                [ddData]="minutesDDs"
+                [filterItems]="onDropdownChange.bind(this)"
+                prop="teams"
+                name="Teams"
+                className="last"
+              ></app-dropdown>
+            </div>
+
+            <div class="grouped-dropdown-wrapper show-mobile">
+              <div ngbDropdown class="grouped-dropdown dropdown ">
+                <button type="button" class="grouped-dropdown-btn btn btn-secondary last px-3" id="secondary-dropdown" ngbDropdownToggle>
+                  <span class="pr-0 pr-sm-3">{{activeRadio + (activeRadio === 'All' ? ' Positions' : '')}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="secondary-dropdown">
+                  <div *ngFor="let radio of radios;">
+                    <button
+                      [ngClass]="{'dd-active-btn': isTabActive(radio)}"
+                      (click)="onRadioClick(radio)"
+                      class="dropdown-item">
+                      <span>{{radio + (radio === 'All' ? ' Positions' : '')}}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="toggles-in-page-wrapper m-0 show-desktop">
+              <div class="toggles-in-page-group btn-group toggles-group float-left">
+                <ng-container
+                  *ngFor="let radio of radios; let first = first; let last = last;"
+                >
+                  <button
+                    type="button"
+                    class="toggle-in-page"
+                    (click)="onRadioClick(radio)"
+                    [ngClass]="{'active': isTabActive(radio), 'first': first, 'last': last}">
+                    <span>{{radio}}</span>
+                  </button>
+                </ng-container>
+              </div>
+            </div>
+            <div class="search-input-wrapper-top">
+              <div class="search-input-wrapper">
+                <div>
+                  <div class="input-group">
+                    <input type="text" class="form-control hide-placeholder" [ngModel]="searchModel" (ngModelChange)="filterByName($event)" placeholder="Search Players" aria-describedby="filter-by-player">
+                    <span class="input-group-addon" id="filter-by-player">
+                  <i class="fa fa-search" aria-hidden="true"></i>
+                </span>
+                  </div>
+                </div>
+              </div>
+              <div class="mobile-page-dd">
+                <div class="grouped-dropdown-wrapper btn-group mb-3">
+                  <app-dropdown
+                    [ddData]="minutesDDs"
+                    [filterItems]="onItemsPerPageChange.bind(this)"
+                    prop="items_per_page"
+                    [totalItems]="totalItems"
+                    [isSingleSelect]="true"
+                    className="first last"
+                  ></app-dropdown>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-start pagination-wrapper">
+            <div class="full-screen-page-dd">
+              <div class="grouped-dropdown-wrapper btn-group mb-3">
+                <app-dropdown
+                  [ddData]="minutesDDs"
+                  [totalItems]="totalItems"
+                  [filterItems]="onItemsPerPageChange.bind(this)"
+                  prop="items_per_page"
+                  [isSingleSelect]="true"
+                  className="first last"
+                ></app-dropdown>
+              </div>
+            </div>
+            <div>
+              <pagination-controls [maxSize]="5" (pageChange)="onPageChange($event)" id="browserPagination"></pagination-controls>
+            </div>
+            <div class="ml-auto">
+              <div class="float-right">
+                <button type="button" (click)="onCsvClick()" class="btn btn-primary csv-btn">Download CSV</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Grouped Dropdown -->
+    </div>
+    <div class="col-12">
+      <div class="row">
+          <div class="col-12 table-sect-wrap">
+            <!-- Static Positioned Tabled -->
+            <div class="static-table-wrapper">
+              <table
+                [mfRowsOnPage]="10000" [mfData]="dataToShow"
+                [(mfSortBy)]="sortByFantasy"
+                [(mfSortOrder)]="sortOrderFantasy"
+                (mfSortByChange)="onSortOrder('sortByFantasy', 'sortOrderFantasy', 'by', $event)"
+                (mfSortOrderChange)="onSortOrder('sortByFantasy', 'sortOrderFantasy', 'order', $event)"
+                #staticMfTable="mfDataTable"
+                class="static-table stats-table table table-bordered multi-table-static">
+                <thead>
+                <tr class="t-header static-row-header">
+                  <th colspan="2" class="text-center main-border static-t-header">Players</th>
+                </tr>
+                <tr class="t-sub-header static-sub-header">
+                  <th class="player-name-col">
+                    <mfSorter by="full_name">Name</mfSorter>
+                  </th>
+                  <th class="position-col">
+                    <mfSorter by="team">Team</mfSorter>
+                  </th>
+                </tr>
+                </thead>
+                <tbody class="static-table-body">
+                <tr *ngFor="let player of staticMfTable.data | paginate: { id: 'browserPagination', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
+                  <td class="player-name-col text-left">
+                    <app-player-link [league]="'nba'" [playerName]="player.full_name" [playerUrl]="player.profile_url"></app-player-link>
+                  </td>
+                  <td class="position-col main-border">
+                    <a class="link-black-underline" [routerLink]="player.team_lineup_route">
+                      {{player.team}}
+                    </a>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Horizontal Scrolling-->
+            <div class="horizontal-table-wrapper">
+              <table
+                [mfRowsOnPage]="10000" [mfData]="dataToShow"
+                [(mfSortBy)]="sortByFantasy"
+                [(mfSortOrder)]="sortOrderFantasy"
+                (mfSortByChange)="onSortOrder('sortByFantasy', 'sortOrderFantasy', 'by', $event)"
+                (mfSortOrderChange)="onSortOrder('sortByFantasy', 'sortOrderFantasy', 'order', $event)"
+                #mfTable="mfDataTable"
+                class="multi-row-data-table t-stripped">
+                <colgroup span="8">
+                  <col span="1" width="13%" class="inner-col-switch">
+                  <col span="7" class="inner-col-switch">
+                </colgroup>
+                <colgroup span="6"></colgroup>
+                <colgroup span="12"></colgroup>
+                <tbody>
+                <tr class="t-header">
+                  <th colspan="8" scope="colgroup" class="text-center main-border inner-col-switch">Player</th>
+                  <th colspan="6" class="text-center inner-col-show main-border"></th>
+                  <th colspan="6" scope="colgroup" class="text-center main-border">Game</th>
+                  <th colspan="12" scope="colgroup" class="text-center">Projected Game Stats</th>
+                </tr>
+                <tr class="t-sub-header">
+                  <!-- Inner Col Switch -->
+                  <th scope="col" class="px-3 inner-col-switch">
+                    <mfSorter by="full_name">Name</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center inner-col-switch">
+                    <mfSorter by="team">Team</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center inner-col-switch">
+                    <mfSorter [by]="minutesDDs.activeFantasy + '_position_display'">Pos</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center inner-col-switch">
+                    <mfSorter [by]="minutesDDs.activeFantasy + '_projection'">Projection</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center inner-col-switch">
+                    <mfSorter [by]="minutesDDs.activeFantasy + '_salary'">Salary</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center inner-col-switch">
+                    <mfSorter [by]="minutesDDs.activeFantasy + '_ptsK'">Pts/$1k</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center inner-col-switch">
+                    <mfSorter [by]="minutesDDs.activeFantasy + '_fppm'">FPPM</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center inner-col-switch main-border">
+                    <mfSorter by="usage_rate_percentage">USG%</mfSorter>
+                  </th>
+                  <!-- END: Inner Col Switch  -->
+                  <!-- Add Inner Col Show  -->
+                  <th scope="col" class="text-center inner-col-show">
+                    <mfSorter [by]="minutesDDs.activeFantasy + '_position_display'">Pos</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center inner-col-show">
+                    <mfSorter [by]="minutesDDs.activeFantasy + '_projection'">Projection</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center inner-col-show">
+                    <mfSorter [by]="minutesDDs.activeFantasy + '_salary'">Salary</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center inner-col-show">
+                    <mfSorter [by]="minutesDDs.activeFantasy + '_ptsK'">Pts/$1k</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center inner-col-show">
+                    <mfSorter [by]="minutesDDs.activeFantasy + '_fppm'">FPPM</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center inner-col-show main-border">
+                    <mfSorter by="usage_rate_percentage">USG%</mfSorter>
+                  </th>
+                  <!-- END: Inner Col Show -->
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent">Opp</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_rank">OPP Rank</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_position_rank">DvP</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="spread">Spread</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="vegas_total">Total</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="over_under">O/U</mfSorter>
+                  </th>
+
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="minutes">Minutes</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="points">PTS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="assists">AST</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="rebounds">REB</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="steals">STL</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="blocks">BLK</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="free_throws">FT</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="field_goal_attempts">FGA</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="field_goal_made">FGM</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="player_efficiency_rating">PER</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="field_goal_percentage">FG%</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="effective_field_goal_percentage">eFG%</mfSorter>
+                  </th>
+                </tr>
+                <tr class="t-content" *ngFor="let player of mfTable.data | paginate: { id: 'browserPagination', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
+                  <td class="text-left px-3 inner-col-switch">
+                    <app-player-link [league]="'nba'" [playerName]="player.full_name" [playerUrl]="player.profile_url"></app-player-link>
+                  </td>
+                  <td class="inner-col-switch">
+                    <a class="link-black-underline" [routerLink]="player.team_lineup_route">
+                      {{player.team}}
+                    </a>
+                  </td>
+                  <td>
+                    {{player[minutesDDs.activeFantasy + '_position_display']}}
+                  </td>
+                  <td>{{player[minutesDDs.activeFantasy + '_projection'] | number : '1.0-1'}}</td>
+                  <td>{{player[minutesDDs.activeFantasy + '_salary'] | currency:'USD':'symbol':'4.0-0'}}</td>
+                  <td>
+                    <app-color-badge [value]="player[minutesDDs.activeFantasy + '_ptsK']" [reverseColors]="true" [reverse]="true" [colorValues]="colorConfig.pointsPerK[player[minutesDDs.activeFantasy + '_position'][0] || 'PG']"></app-color-badge>
+                  </td>
+                  <td>
+                    {{player[minutesDDs.activeFantasy + '_fppm']}}
+                  </td>
+                  <td class="main-border">
+                    {{player.usage_rate_percentage | number : '1.0-1'}}%
+                  </td>
+
+
+                  <td>
+                    <a class="link-black-underline" [routerLink]="player.opp_lineup_route">
+                      {{player.opponent}}
+                    </a>
+                  </td>
+                  <td>
+                    {{player.opponent_rank}}
+                  </td>
+                  <td>
+                    <app-color-badge [value]="player.opponent_position_rank" [reverse]="true" [reverseColors]="true" [colorValues]="colorConfig.opponent_position_rank"></app-color-badge>
+                  </td>
+                  <td>
+                    <app-color-badge [value]="player.spread" [reverse]="true" [abs]="true" [colorValues]="colorConfig.spread"></app-color-badge>
+                  </td>
+                  <td>
+                    <app-color-badge [value]="player.vegas_total" [reverse]="true" [reverseColors]="true" [colorValues]="colorConfig.vegas_total"></app-color-badge>
+                  </td>
+                  <td class="main-border">
+                    <app-color-badge [value]="player.over_under" [reverse]="true" [reverseColors]="true" [colorValues]="colorConfig.over_under"></app-color-badge>
+                  </td>
+
+
+                  <td>
+                    <app-color-badge [value]="player.minutes" [colorValues]="colorConfig.minutes"></app-color-badge>
+                  </td>
+                  <td>
+                    {{player.points | number : '1.0-1'}}
+                  </td>
+                  <td>
+                    {{player.assists | number : '1.0-1'}}
+                  </td>
+                  <td>
+                    {{player.rebounds | number : '1.0-1'}}
+                  </td>
+                  <td>
+                    {{player.steals | number : '1.0-1'}}
+                  </td>
+                  <td>
+                    {{player.blocks | number : '1.0-1'}}
+                  </td>
+                  <td>
+                    {{player.free_throws | number : '1.0-1'}}
+                  </td>
+                  <td>
+                    {{player.field_goal_attempts | number : '1.0-1'}}
+                  </td>
+                  <td>
+                    {{player.field_goal_made | number : '1.0-1'}}
+                  </td>
+                  <td>
+                    {{player.player_efficiency_rating | number : '1.0-1'}}
+                  </td>
+                  <td>
+                    {{player.field_goal_percentage | number : '1.0-1'}}%
+                  </td>
+                  <td>
+                    {{player.effective_field_goal_percentage | number : '1.0-1'}}%
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div *ngIf="bottomInfo?.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="bottomInfo.bottom_header" class="page-heading-two">
+        {{bottomInfo.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="bottomInfo.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+</div>

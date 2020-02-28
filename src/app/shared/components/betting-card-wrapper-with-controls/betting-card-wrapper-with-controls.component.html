@@ -1,0 +1,30 @@
+<ng-template #noBetCardTpl>
+  <app-bet-cap
+    [league]="league"
+    [isMatchupsGatewayPage]="isMatchupsGatewayPage"
+  ></app-bet-cap>
+</ng-template>
+<ng-container *ngIf="(isBrowser || allowServerRender) && _cards?.length && (!status || (status.status !== 'In Progress' && status.status !== 'Final')); else noBetCardTpl">
+  <div *ngIf="_cards[currentIndex]; let card" class="betting-card-with-controls">
+    <app-betting-card
+      [topLeftHeading]="'Basic'"
+      [title]="card.title"
+      [cardType]="card.bet_type"
+      [awayProbability]="card.away_probability"
+      [homeProbability]="card.home_probability"
+      [bets]="card.predicted_bets"
+      [noCardSave]="gameId"
+      [index]="currentIndex"
+      (predictorClick)="onPredictorClick($event)"
+    >
+      <div *ngIf="_cards.length > 1" class="ml-auto">
+        <div class="arrow-container">
+          <i class="fa fa-chevron-left" aria-hidden="true" (click)="prevIndex()"></i>
+          <i class="fa fa-chevron-right" aria-hidden="true" (click)="nextIndex()"></i>
+        </div>
+      </div>
+    </app-betting-card>
+  </div>
+</ng-container>
+
+

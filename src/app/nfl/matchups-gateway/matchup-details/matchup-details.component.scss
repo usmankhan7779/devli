@@ -1,0 +1,131 @@
+:host {
+  .page-heading-two {
+    margin-top: 5px;
+  }
+  th img.logo-sm {
+    margin-bottom: 2px;
+  }
+  .updated-date-time-block {
+    margin-left: 0;
+    float: right;
+    &.with-action-dds {
+      margin-top: 8px;
+    }
+    @media (max-width: 1424px) {
+      display: none;
+    }
+  }
+  ::ng-deep .matchup-datails .matchup {
+    .logo {
+      width: 40px !important;
+      height: 40px !important;
+    }
+  }
+  .static-width-header {
+    width: 150px;
+    @media (max-width: 1500px) {
+      width: 115px;
+    }
+  }
+  .multi-row-data-table-wrapper.custom-width {
+
+    &.big-table-wrapper {
+      @media (max-width: 1040px) {
+        overflow-x: auto;
+        table {
+          min-width: 1008px;
+        }
+      }
+    }
+
+    &.odds-comparison-table {
+      @media (max-width: 509px) {
+        overflow-x: auto;
+        table {
+          min-width: 477px;
+        }
+      }
+    }
+
+    &.big-odds-table {
+      @media (max-width: 555px) {
+        overflow-x: auto;
+        table {
+          min-width: 523px;
+        }
+      }
+    }
+
+    &.medium-table {
+      @media (max-width: 443px) {
+        overflow-x: auto;
+        table {
+          min-width: 411px;
+        }
+      }
+    }
+
+    &.scoring-table {
+      @media (max-width: 525px) {
+        overflow-x: auto;
+        table {
+          min-width: 493px;
+        }
+      }
+    }
+
+    &.small-table {
+      @media (max-width: 397px) {
+        overflow-x: auto;
+        table {
+          min-width: 365px;
+        }
+      }
+    }
+
+  }
+
+  .short-anchor-names {
+    display: none;
+  }
+  @media (max-width: 1877px) {
+    .anchor-block a {
+      margin: 0 5px;
+    }
+  }
+  @media (max-width: 1700px) {
+    .anchor-block {
+      .short-anchor-names {
+        display: inline;
+      }
+      .long-anchor-names {
+        display: none;
+      }
+    }
+  }
+  @media (min-width: 651px) and (max-width: 700px) {
+    .anchor-block {
+      font-size: 11px;
+      a {
+        margin: 0 4px;
+      }
+    }
+  }
+  .grouped-dropdown-wrapper.btn-group {
+    margin: 0;
+  }
+  @media (max-width: 650px) {
+    .grouped-dropdown-wrapper.btn-group {
+      margin-bottom: 15px;
+    }
+    .anchor-block-wrapper {
+      margin-bottom: 15px;
+      .anchor-block {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+}
+
+

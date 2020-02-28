@@ -1,0 +1,119 @@
+@import "../../../../scss/shared/variables/project";
+:host {
+  .probability-box {
+    text-align: center;
+    border-radius: 3px;
+    color: #000000;
+    width: 100px;
+    padding: 2px 0;
+    position: relative;
+    margin: 0 auto;
+    &:not(.single-team).winner-away:before {
+      content:"";
+      position: absolute;
+      height: 0;
+      width: 0;
+      top: 4px;
+      left: -29px;
+      border-width: 15px;
+      border-color: transparent #79d35d transparent transparent;
+      border-style: solid;
+    }
+    &:not(.single-team).winner-home:after {
+      content: "";
+      position: absolute;
+      height: 0;
+      width: 0;
+      top: 4px;
+      right: -29px;
+      border-width: 15px;
+      border-color: transparent transparent transparent #79d35d;
+      border-style: solid;
+      z-index: 1;
+    }
+    &.single-team {
+      width: 45px;
+      .probability-name {
+        display: none;
+      }
+    }
+  }
+  .box-header {
+    font-size: 12px;
+  }
+  .box-probability {
+    font-size: 17px;
+    line-height: 16px;
+  }
+
+  .like-rating-win-prob {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 2px;
+    font-weight: normal;
+  }
+
+  .box-bg-dark-red {
+    background-color: $win-prob-box-dark-red;
+    &:not(.single-team).winner-away:before {
+      border-color: transparent $win-prob-box-dark-red transparent transparent;
+    }
+    &:not(.single-team).winner-home:after {
+      border-color: transparent transparent transparent $win-prob-box-dark-red;
+    }
+  }
+  .box-bg-red {
+    background-color: $win-prob-box-red;
+    &:not(.single-team).winner-away:before {
+      border-color: transparent $win-prob-box-red transparent transparent;
+    }
+    &:not(.single-team).winner-home:after {
+      border-color: transparent transparent transparent $win-prob-box-red;
+    }
+  }
+  .box-bg-light-red {
+    background-color: $win-prob-box-light-red;
+    &:not(.single-team).winner-away:before {
+      border-color: transparent $win-prob-box-light-red transparent transparent;
+    }
+    &:not(.single-team).winner-home:after {
+      border-color: transparent transparent transparent $win-prob-box-light-red;
+    }
+  }
+  .box-bg-yellow {
+    background-color: $win-prob-box-yellow;
+    &:not(.single-team).winner-away:before {
+      border-color: transparent $win-prob-box-yellow transparent transparent;
+    }
+    &:not(.single-team).winner-home:after {
+      border-color: transparent transparent transparent $win-prob-box-yellow;
+    }
+  }
+  .box-bg-light-green {
+    background-color: $win-prob-box-light-green;
+    &:not(.single-team).winner-away:before {
+      border-color: transparent $win-prob-box-light-green transparent transparent;
+    }
+    &:not(.single-team).winner-home:after {
+      border-color: transparent transparent transparent $win-prob-box-light-green;
+    }
+  }
+  .box-bg-green {
+    background-color: $win-prob-box-green;
+    &:not(.single-team).winner-away:before {
+      border-color: transparent $win-prob-box-green transparent transparent;
+    }
+    &:not(.single-team).winner-home:after {
+      border-color: transparent transparent transparent $win-prob-box-green;
+    }
+  }
+  .box-bg-dark-green {
+    background-color: $win-prob-box-dark-green;
+    &:not(.single-team).winner-away:before {
+      border-color: transparent $win-prob-box-dark-green transparent transparent;
+    }
+    &:not(.single-team).winner-home:after {
+      border-color: transparent transparent transparent $win-prob-box-dark-green;
+    }
+  }
+}

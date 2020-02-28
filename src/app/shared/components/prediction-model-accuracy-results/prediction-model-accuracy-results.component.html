@@ -1,0 +1,331 @@
+<!-- Prediction Model Accuracy -->
+<div class="container-fluid prediction-model-accuracy pb-4">
+  <!-- Breadcrumbs -->
+  <app-breadcrumb></app-breadcrumb>
+  <!-- Starting Lineups Page Title -->
+  <div class="d-flex flex-sm-row flex-column">
+    <div class="mr-auto">
+      <h1 class="page-heading">{{league | uppercase}} Prediction Model Accuracy</h1>
+    </div>
+    <div class="ml-auto">
+      <div class="actions">
+        <div class="heading-action-cta-wrapper">
+          <button (click)="onHowItWorksClick()" class="heading-action-cta-btn how-it-works-btn btn">
+            <img src="/assets/images/icon-video.png" alt="How it works"/> How it works
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Page Heading Actions-->
+  <div class="row">
+    <div class="col-md-8 page-actions-wrapper">
+      <!-- Collapse Menu -->
+      <div class="in-page-dropdown-toggle">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="dropdownCollapsed = !dropdownCollapsed"
+                [attr.aria-expanded]="!dropdownCollapsed" aria-controls="collapseExample">
+          <i class="fa fa-bars dropdown-icon" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="in-page-dropdown-menu" [ngbCollapse]="!dropdownCollapsed" [ngClass]="{'hidden-dropdown': !dropdownCollapsed}">
+        <!-- Grouped Dropdown -->
+        <div *ngIf="predictionData" class="grouped-dropdown-wrapper btn-group">
+          <div ngbDropdown class="grouped-dropdown dropdown">
+            <button type="button" class="grouped-dropdown-btn btn btn-secondary first px-3" id="page-select-dropdown" ngbDropdownToggle>
+              <span class="pr-0 pr-sm-3">{{league | uppercase}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down"/>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="page-select-dropdown">
+              <div class="dropdown-btn-wrap">
+                <a [routerLink]="['/nfl/prediction-model-accuracy']" routerLinkActive="dd-active-btn" class="dropdown-item">NFL</a>
+              </div>
+              <div class="dropdown-btn-wrap">
+                <a [routerLink]="['/mlb/prediction-model-accuracy']" routerLinkActive="dd-active-btn" class="dropdown-item">MLB</a>
+              </div>
+            </div>
+          </div>
+          <app-dropdown
+            *ngIf="league === 'mlb'"
+            [ddData]="predictionData"
+            [filterItems]="filterItems.bind(this)"
+            [isSingleSelect]="true"
+            prop="seasons"
+          ></app-dropdown>
+          <app-dropdown
+            [ddData]="predictionData"
+            [filterItems]="filterItems.bind(this)"
+            prop="models"
+            name="Models"
+            [allowHiddenFiltering]="true"
+          ></app-dropdown>
+          <app-dropdown
+            [ddData]="predictionData"
+            [filterItems]="filterItems.bind(this)"
+            prop="bet_types"
+            name="Bet Types"
+          ></app-dropdown>
+          <app-dropdown
+            [ddData]="predictionData"
+            [filterItems]="filterItems.bind(this)"
+            prop="result_types"
+            name="Results"
+          ></app-dropdown>
+          <app-dropdown
+            [ddData]="predictionData"
+            [filterItems]="filterItems.bind(this)"
+            prop="probabilities"
+            name="Probability"
+          ></app-dropdown>
+          <app-dropdown
+            [ddData]="predictionData"
+            [filterItems]="filterItems.bind(this)"
+            prop="ev_ranges"
+            name="EV"
+          ></app-dropdown>
+          <app-dropdown
+            [ddData]="predictionData"
+            [filterItems]="filterItems.bind(this)"
+            prop="dollar_ranges"
+            type="dollar"
+            [withColors]="predictionData.dollar_range_colors"
+            className="last"
+          ></app-dropdown>
+        </div>
+      </div> <!-- END: 'in-page-nav-menu' -->
+      <!-- End Grouped Dropdown -->
+    </div><!-- END: Page Heading Actions -->
+  </div>
+
+  <!-- Page Loader -->
+  <!-- Starting Lineup Box Loader -->
+  <div *ngIf="!predictionData" class="starting-lineup-loader">
+    <img class="loader-image" alt="loader-image" src="/assets/images/Ripple.svg">
+  </div>
+
+  <!-- Prediction Accuracy Wrapper -->
+  <div class="row">
+    <div *ngIf="predictionData" class="prediction-accuracy-wrapper col-12">
+      <!-- Overview Section -->
+      <div class="overview-section">
+        <div class="page-heading-two-wrapper">
+          <h2 class="page-heading-two">Overview</h2>
+        </div>
+        <!-- Overview Table -->
+        <div class="multi-row-data-table-wrapper">
+          <!-- Yearly Lineups Table -->
+          <table class="multi-row-data-table">
+            <thead>
+            <tr class="t-sub-header">
+              <th class="text-center">Total</th>
+              <th class="text-center">Bets Made</th>
+              <th class="text-center">Win</th>
+              <th class="text-center">Loss</th>
+              <th class="text-center">Push</th>
+              <th class="text-center">Bet Win %</th>
+              <th class="text-center" width="16%">Bet Units</th>
+              <th class="text-center">Bet Amount</th>
+              <th class="text-center">Net Profit</th>
+              <th class="text-center">ROI</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="t-content">
+              <td>
+                <span>{{predictionData.overview.total_picks}}</span>
+              </td>
+              <td>
+                <span>{{predictionData.overview.bets_made}}</span>
+              </td>
+              <td>
+                <span>{{predictionData.overview.wins}}</span>
+              </td>
+              <td>
+                <span>{{predictionData.overview.losses}}</span>
+              </td>
+              <td>
+                <span>{{predictionData.overview.pushes}}</span>
+              </td>
+              <td>
+                <span>{{predictionData.overview.win_percentage}}</span>
+              </td>
+              <td>
+                <app-dollars [amount]="getMaxDollarSelected(predictionData)" [classes]="'teal'" style="display: inline-block;" [color]="predictionData.dollar_range_colors[getMaxDollarSelected(predictionData)]"></app-dollars>
+              </td>
+              <td>
+                <span *ngIf="predictionData.overview.bet_amount == '-'; else amountElse">-</span>
+                <ng-template #amountElse >
+                  <span *ngIf="predictionData.overview.bet_amount < 0; else amountElsePositive;">-${{(predictionData.overview.bet_amount * -1) | number:'1.2-2'}}</span>
+                  <ng-template #amountElsePositive >
+                    <span>${{predictionData.overview.bet_amount | number:'1.2-2'}}</span>
+                  </ng-template>
+                </ng-template>
+              </td>
+              <td>
+                <span *ngIf="predictionData.overview.profit == '-'; else profitElse">-</span>
+                <ng-template #profitElse >
+                  <span *ngIf="predictionData.overview.profit < 0; else profitElsePositive;">-${{(predictionData.overview.profit * -1) | number:'1.2-2'}}</span>
+                  <ng-template #profitElsePositive >
+                    <span>${{predictionData.overview.profit | number:'1.2-2'}}</span>
+                  </ng-template>
+                </ng-template>
+              </td>
+              <td>
+                <span>{{predictionData.overview.total_roi}}%</span>
+              </td>
+            </tr>
+            </tbody>
+          </table> <!-- END: Yearly Lineups Table -->
+        </div>
+      </div>
+    </div><!-- END: Overview Section -->
+  </div>
+  <!-- Detailed Results Section -->
+  <div *ngIf="predictionData" class="prediction-accuracy-details-wrapper">
+
+    <!-- Overview Section -->
+    <div class="detailed-results-section">
+      <div class="page-heading-two-wrapper">
+        <div class="d-flex justify-content-start top-pagination-wrapper">
+          <h2 class="page-heading-two">Detailed Results</h2>
+          <div class="d-flex justify-content-start pagination-wrapper">
+            <div>
+              <div class="grouped-dropdown-wrapper btn-group mb-3">
+                <app-dropdown
+                  [ddData]="predictionData"
+                  [filterItems]="filterItems.bind(this)"
+                  prop="items_per_page"
+                  [isSingleSelect]="true"
+                  className="first last"
+                ></app-dropdown>
+              </div>
+            </div>
+            <div>
+              <pagination-controls [maxSize]="5" (pageChange)="filterItems($event)" id="server"></pagination-controls>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- Overview Table -->
+      <div class="multi-row-data-table-wrapper">
+        <!-- Yearly Lineups Table -->
+        <table
+          [mfDataApi]="predictionData.data"
+          [mfRowsOnPage]="10000"
+          [(mfSortBy)]="sortBy"
+          [(mfSortOrder)]="sortOrder"
+          (mfSortByChange)="onSortOrder('by', $event)"
+          (mfSortOrderChange)="onSortOrder('order', $event)"
+          mfSortBy="date"
+          #detailedResults="mfDataApiTable"
+          class="multi-row-data-table t-stripped">
+          <thead>
+          <tr class="t-sub-header">
+            <th class="text-center">
+              <mfSorterApi by="date">Date</mfSorterApi>
+            </th>
+            <th width="12%" class="text-center">
+              <mfSorterApi by="model_type">Model</mfSorterApi>
+            </th>
+            <th class="text-center">
+              <mfSorterApi by="team">Game</mfSorterApi>
+            </th>
+            <th class="text-center">
+              <mfSorterApi by="bet">Bet Type</mfSorterApi>
+            </th>
+            <th width="12%" class="text-center">
+              <mfSorterApi by="prediction_text">Bet</mfSorterApi>
+            </th>
+            <th class="text-center probability-col">
+              <mfSorterApi by="win_prob">Probability%</mfSorterApi>
+            </th>
+            <th class="text-center">
+              <mfSorterApi by="ev">EV</mfSorterApi>
+            </th>
+            <th width="130px" class="text-center">
+              <mfSorterApi by="dollar_signs">Bet Units</mfSorterApi>
+            </th>
+            <th class="text-center">
+              <mfSorterApi by="result_outcome">Result</mfSorterApi>
+            </th>
+            <th class="text-center">
+              <mfSorterApi [by]="'bet_amount'">Bet Amount</mfSorterApi>
+            </th>
+            <th class="text-center">
+              <mfSorterApi [by]="'bet_profit'">Net Profit</mfSorterApi>
+            </th>
+            <th class="text-center">
+              <mfSorterApi [by]="'bet_roi'">ROI</mfSorterApi>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="t-content" *ngFor="let detailedResult of detailedResults.data | paginate: { id: 'server', itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }; let i = index;">
+            <td>
+              <span>{{detailedResult.date | amTimeZone | amDateFormat: 'M/D/YY'}}</span>
+            </td>
+            <td>
+              <span>{{detailedResult.model_name}}</span>
+            </td>
+            <td>
+              <span>{{detailedResult.matchup}}</span>
+            </td>
+            <td>
+              <span>{{detailedResult.bet_type}}</span>
+            </td>
+            <td>
+              <span>{{detailedResult.prediction_text}}</span>
+            </td>
+            <td
+              class="probability-cell"
+              [ngClass]="{'good': detailedResult.win_prob >= 50, 'poor': detailedResult.win_prob < 50}"
+            >
+              <span>{{detailedResult.win_prob}}%</span>
+            </td>
+            <td>
+              <span *ngIf="detailedResult.ev > 0">+{{detailedResult.ev}}</span>
+              <span *ngIf="detailedResult.ev <= 0">{{detailedResult.ev}}</span>
+            </td>
+            <td>
+              <div class="popover-container popover-nowrap">
+                <app-dollars
+                  triggers="mouseenter:mouseleave"
+                  [ngbPopover]="detailedResult.bankroll_text"
+                  [amount]="detailedResult.dollar_signs"
+                  [classes]="'teal'" style="display: inline-block;"
+                  [color]="detailedResult.dollar_sign_hex">
+                </app-dollars>
+              </div>
+            </td>
+            <td>
+              <span *ngIf="detailedResult.result_outcome === 1">Win</span>
+              <span *ngIf="detailedResult.result_outcome === 0">Loss</span>
+              <span *ngIf="detailedResult.result_outcome === 2">Push</span>
+            </td>
+            <td>
+              <span *ngIf="detailedResult.bet_amount === '-'; else betAmElse">-</span>
+              <ng-template #betAmElse >
+                <span>{{detailedResult.bet_amount | currency:'USD':'symbol':'1.2-2'}}</span>
+              </ng-template>
+            </td>
+            <td>
+              <span *ngIf="detailedResult.bet_profit === '-'; else betProfitElse">-</span>
+              <ng-template #betProfitElse >
+                <span *ngIf="detailedResult.bet_profit < 0; else betProfitElsePositive;">-${{(detailedResult.bet_profit * -1) | number:'1.2-2'}}</span>
+                <ng-template #betProfitElsePositive >
+                  <span>${{detailedResult.bet_profit | number:'1.2-2'}}</span>
+                </ng-template>
+              </ng-template>
+            </td>
+            <td>
+              <span *ngIf="detailedResult.bet_roi === '-'; else betRoiElse">-</span>
+              <ng-template #betRoiElse >
+                <span>{{detailedResult.bet_roi}}%</span>
+              </ng-template>
+            </td>
+          </tr>
+          </tbody>
+        </table> <!-- END: Yearly Lineups Table -->
+      </div>
+    </div>
+  </div><!-- END: Detailed Results Section -->
+</div>

@@ -1,0 +1,38 @@
+@import "../../../../scss/shared/variables/project";
+:host {
+  div {
+    padding: 0 6px;
+    border-radius: $psd-rating-border-radius;
+    display: inline-block;
+    &.red {
+      color: $psd-rating-red;
+      background: $psd-rating-red-bg;
+    }
+    &.orange {
+      color: $psd-rating-orange;
+      background: $psd-rating-orange-bg;
+    }
+    &.yellow {
+      color: $psd-rating-yellow;
+      background: $psd-rating-yellow-bg;
+    }
+    &.light-green {
+      color: $psd-rating-light-green;
+      background: $psd-rating-light-green-bg;
+    }
+    &.green {
+      color: $psd-rating-green;
+      background: $psd-rating-green-bg;
+    }
+  }
+  &.rating-big {
+    font-size: 1.3rem;
+    padding: 0 6px;
+    @media (max-width: 1500px) {
+      font-size: 1rem;
+    }
+  }
+}
+
+
+

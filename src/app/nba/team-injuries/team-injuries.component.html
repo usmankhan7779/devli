@@ -1,0 +1,23 @@
+<div class="row">
+  <div *ngIf="bottomContent?.intro_paragraph" class="col-12 flex-last flex-sm-unordered after-text-margin">
+    <p class="site-pages-content m-0" [innerHtml]="bottomContent.intro_paragraph | safeHtml"></p>
+  </div>
+  <div class="col-12" [ngClass]="{'pt-lg-5 pt-md-0': !bottomContent?.intro_paragraph}">
+    <div class="pb-3">
+      <app-injuries
+        [isTeamPage]="true"
+        [currentLeague]="'nba'"
+        [selectedTeamNames]="[data.nav.team_abbr]"
+        [itemsPerPage]="1000"
+        (onApiUpdate)="onApiUpdate($event)"
+      ></app-injuries>
+    </div>
+  </div>
+  <div *ngIf="bottomContent?.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+    <h2 *ngIf="bottomContent.bottom_header" class="page-heading-two">
+      {{bottomContent.bottom_header}}
+    </h2>
+    <p class="site-pages-content" [innerHtml]="bottomContent.bottom_paragraph | safeHtml"></p>
+  </div>
+</div>
+

@@ -1,0 +1,18 @@
+@import '../../../scss/shared/variables/project';
+@import "../../../scss/custom-components/responsive-page-nav";
+:host {
+  @include mobile-navigation($nfl-nav-breakdown-1, $nfl-nav-breakdown-2, $nfl-nav-breakdown-3);
+  ::ng-deep app-status .app-status .media-body {
+    p {
+      font-weight: bold;
+    }
+  }
+  @media (max-width: 900px) {
+    .multi-row-data-table-wrapper {
+      overflow-x: auto;
+      table {
+        min-width: 900px;
+      }
+    }
+  }
+}

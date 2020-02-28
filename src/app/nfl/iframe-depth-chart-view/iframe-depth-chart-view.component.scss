@@ -1,0 +1,16 @@
+:host {
+  .matchup-col {
+    width: 220px;
+    @media (max-width: 1500px) {
+      width: 170px;
+    }
+    @media (max-width: 480px) {
+      width: 90px;
+    }
+  }
+  .logo-link-container {
+    @media (max-width: 480px) {
+      display: none;
+    }
+  }
+}

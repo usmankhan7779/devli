@@ -1,0 +1,20 @@
+@import "../../../scss/custom-components/responsive-page-nav";
+:host {
+  @include mobile-navigation();
+
+  //@media (max-width: 385px) {
+  //  .team-logo {
+  //    margin-right: 4px;
+  //  }
+  //  .team-heading-info  {
+  //    .team-meta-info {
+  //      font-size: 13px;
+  //    }
+  //    .team-name {
+  //      font-size: 19px;
+  //      line-height: 28px;
+  //    }
+  //  }
+  //}
+}
+

@@ -1,0 +1,125 @@
+<div class="container-fluid individual-matchup pb-3">
+  <app-breadcrumb (performActionOnClick)="performActionOnBreadcrumbClick($event)"></app-breadcrumb>
+  <div class="row">
+    <div class="col-12 col-lg-8 mobile-tabs-wrapper">
+      <app-matchup-heading
+        mobileView="true"
+        league="mlb"
+        [isBorderedLogos]="false"
+        (teamWasClicked)="preselectTeamSeason()"
+        [awayTeamUrl]="matchup.nav.away_lineup_route"
+        [homeTeamUrl]="matchup.nav.home_lineup_route"
+        [homeTeamName]="matchup.nav.home_name_full"
+        [homeTeamDetails]="matchup.nav.home_record + ', ' + matchup.nav.home_rank + ' ' + matchup.nav.home_league + ' ' + matchup.nav.home_division"
+        [homeTeamLogoSrc]="matchup.nav.home_logo_white"
+        [awayTeamName]="matchup.nav.away_name_full"
+        [awayTeamDetails]="matchup.nav.away_record + ', ' + matchup.nav.away_rank + ' ' + matchup.nav.away_league + ' ' + matchup.nav.away_division"
+        [awayTeamLogoSrc]="matchup.nav.away_logo_white"
+        [status]="matchup.nav.status"
+        [date]="matchup.nav.matchup_time"
+        [homeTeamShort]="matchup.nav.home_abbr"
+        [awayTeamShort]="matchup.nav.away_abbr"
+        [allowShortNames]="allowShortNames()"
+        [updated]="matchup.nav.updated"
+        [additionalInfo]="additionalInfo"
+      ></app-matchup-heading>
+      <div>
+        <!-- Collapse Menu -->
+        <div class="in-page-collapse-toggle">
+          <button
+            type="button"
+            class="collapse-page-nav-btn btn btn-outline-primary mt-4"
+            (click)="isCollapsed = !isCollapsed"
+            [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+            Menu
+          </button>
+        </div>
+        <div class="in-page-nav-menu" [ngbCollapse]="!isCollapsed" [ngClass]="{'hidden': !isCollapsed}">
+          <!-- Team Lineup Heading Navigation -->
+          <div class="page-heading-navigation mb-lg-1">
+            <div *ngIf="matchup.nav.away_lineup_route" class="away-team-tab tab-btn-wrap">
+              <a [appPreselectMlbLineupTeamSeason]="params.year" [routerLink]="matchup.nav.away_lineup_route" class="page-heading-nav-btn">{{matchup.nav.away_name_full | lastTeamName}} Lineup</a>
+            </div>
+            <div *ngIf="matchup.nav.home_lineup_route" class="away-team-tab tab-btn-wrap">
+              <a [appPreselectMlbLineupTeamSeason]="params.year" [routerLink]="matchup.nav.home_lineup_route" class="page-heading-nav-btn">{{matchup.nav.home_name_full | lastTeamName}} Lineup</a>
+            </div>
+            <div *ngIf="matchup.nav.matchup_route" class="tab-btn-wrap">
+              <a
+                [routerLink]="matchup.nav.matchup_route"
+                (click)="onTabClick('all', false)"
+                [class.active]="!showTabs.schedule && !showTabs.injuries && !showTabs.matchupNews && isActive(matchup.nav.matchup_route)"
+                class="page-heading-nav-btn">
+                Matchups
+              </a>
+            </div>
+            <!--news commented-->
+            <!--<div class="tab-btn-wrap">-->
+              <!--<span-->
+                <!--(click)="onTabClick('matchupNews', true)"-->
+                <!--[ngClass]="{'active': showTabs.matchupNews}"-->
+                <!--class="page-heading-nav-btn">-->
+                <!--News-->
+              <!--</span>-->
+            <!--</div>-->
+            <div *ngIf="matchup.nav.home_injuries_route" class="tab-btn-wrap">
+            <span
+              (click)="onTabClick('injuries', true)"
+              [ngClass]="{'active': showTabs.injuries}"
+              class="page-heading-nav-btn">
+              Injuries
+            </span>
+            </div>
+            <div class="tab-btn-wrap">
+            <span
+              (click)="onTabClick('schedule', true)"
+              [ngClass]="{'active': showTabs.schedule}"
+              class="page-heading-nav-btn">
+              Schedule
+            </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 zero-lg-height">
+      <app-ad-component [league]="'mlb'"></app-ad-component>
+    </div>
+    <!--<div class="col-lg-4 hidden-md-down heading-betting-card-wrapper">-->
+      <!--<app-betting-card-wrapper-with-controls-->
+        <!--[league]="'mlb'"-->
+        <!--[status]="matchup.nav.status"-->
+        <!--[cards]="matchup.bet_cards"-->
+        <!--[gameId]="matchup.nav.game_id"></app-betting-card-wrapper-with-controls>-->
+    <!--</div>-->
+  </div>
+  <div [hidden]="showTabs.schedule || showTabs.injuries || showTabs.matchupNews">
+    <router-outlet></router-outlet>
+  </div>
+  <div class="py-4" *ngIf="showTabs.schedule">
+    <app-schedule-content
+      (matchupLinkClicked)="onTabClick('all', false)"
+      [preSelectedDate]="preSelectedDate"
+    ></app-schedule-content>
+  </div>
+  <div *ngIf="showTabs.matchupNews" class="mt-lg-4 mt-sm-2">
+    <app-matchup-news [gameId]="matchup.nav.game_id"></app-matchup-news>
+  </div>
+  <div class="pb-4" *ngIf="showTabs.injuries">
+    <h2 class="page-heading-two">{{matchup.nav.home_name_full}} Injuries</h2>
+    <app-injuries
+      [isMatchupInjuriesPage]="true"
+      [isTeamPage]="true"
+      [currentLeague]="'mlb'"
+      [selectedTeamNames]="[matchup.nav.home_abbr]"
+      [itemsPerPage]="1000"
+    ></app-injuries>
+    <h2 class="page-heading-two">{{matchup.nav.away_name_full}} Injuries</h2>
+    <app-injuries
+      [isMatchupInjuriesPage]="true"
+      [isTeamPage]="true"
+      [currentLeague]="'mlb'"
+      [selectedTeamNames]="[matchup.nav.away_abbr]"
+      [itemsPerPage]="1000"
+    ></app-injuries>
+  </div>
+</div>

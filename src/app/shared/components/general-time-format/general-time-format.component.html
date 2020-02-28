@@ -1,0 +1,19 @@
+<ng-container *ngIf="showSeoTime; else showTime">
+  <time [attr.datetime]="time"  itemprop="dateModified" [attr.content]="time">
+    <ng-template [ngTemplateOutlet]="showTime"></ng-template>
+  </time>
+</ng-container>
+
+<ng-template #showTime>
+  <ng-container *ngIf="showTimeAgo && isLessThan24Hours(); else normalTime">
+    <ng-template [ngTemplateOutlet]="timeAgo"></ng-template>
+  </ng-container>
+</ng-template>
+
+<ng-template #timeAgo>
+  {{time | amTimeZone | amTimeAgo | mobileMinutes}}
+</ng-template>
+
+<ng-template #normalTime>
+  {{time | amTimeZone | amDateFormat:'h:mm a'| lowercase}}<span *ngIf="showTZ" class="time-zone"> {{timeZone}}</span><span *ngIf="showDay" class="date">, {{time | amTimeZone | amDateFormat:'M/D'| lowercase}}</span>
+</ng-template>

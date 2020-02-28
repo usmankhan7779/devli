@@ -1,0 +1,271 @@
+<ng-template #noNewsTpl>
+  <div class="popover-container popover-nowrap d-inline">
+    <i placement="bottom" ngbPopover="No News" triggers="mouseenter:mouseleave" class="fa fa-file-text history-icon float-right mr-2" aria-hidden="true"></i>
+  </div>
+</ng-template>
+
+<div class="container-fluid pb-3">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="d-flex header-container">
+    <div>
+      <div #headingContainerEl class="d-flex flex-wrap after-heading-margin">
+        <div>
+          <h1 #headingEl class="page-heading mb-0">{{data.heading}}</h1>
+        </div>
+        <!--<ng-container *ngIf="params.url === gatewayUrl">-->
+          <!--<app-twitter-follow-btn [textElement]="headingEl" [containerElement]="headingContainerEl"></app-twitter-follow-btn>-->
+        <!--</ng-container>-->
+      </div>
+    </div>
+  </div>
+  <div class="row">
+
+    <div *ngIf="data.intro_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <p class="site-pages-content" [innerHtml]="data.intro_paragraph | safeHtml"></p>
+    </div>
+
+    <div class="col-12">
+      <!-- Collapse Menu -->
+      <div class="in-page-dropdown-toggle">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="dropdownCollapsed = !dropdownCollapsed"
+                [attr.aria-expanded]="!dropdownCollapsed" aria-controls="collapseExample">
+          <i class="fa fa-bars dropdown-icon" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="in-page-dropdown-menu" [ngbCollapse]="!dropdownCollapsed" [ngClass]="{'hidden-dropdown': !dropdownCollapsed}">
+        <!-- Grouped Dropdown -->
+        <div class="d-flex first-section-nav after-heading-margin">
+          <div class="left-side-wrapper">
+            <div class="top-dd-wrapper">
+              <div class="grouped-dropdown-wrapper btn-group">
+                <app-dropdown
+                  [ddData]="ddData"
+                  [filterItems]="onTabDropdownChange.bind(this)"
+                  prop="seasonTabs"
+                  [className]="'first'"
+                  [isSingleSelect]="true"
+                ></app-dropdown>
+                <app-dropdown
+                  [ddData]="ddData"
+                  [filterItems]="onTabDropdownChange.bind(this)"
+                  prop="positionTabs"
+                  [className]="'last'"
+                  [linksOnly]="true"
+                  (onLinkClick)="showSpinner($event.selected)"
+                ></app-dropdown>
+
+                <app-dropdown
+                  *ngIf="ddData.activeItemPerPage"
+                  class="mobile-page-dd"
+                  [ddData]="ddData"
+                  [totalItems]="totalItems"
+                  [filterItems]="onPageDropdownChange.bind(this)"
+                  prop="items_per_page"
+                  [isSingleSelect]="true"
+                  className="first last"
+                ></app-dropdown>
+              </div>
+            </div>
+            <div class="toggles-in-page-wrapper my-0">
+              <div class="toggles-in-page-group btn-group toggles-group mr-3">
+                <button *ngFor="let tab of ddData.seasonTabs; let first = first; let last = last;"
+                        (click)="onTabClick(tab.prop);"
+                        class="toggle-in-page" [ngClass]="{'active': tab.selected, 'first': first, 'last': last}">
+                  {{tab.name}}
+                </button>
+              </div>
+              <div class="toggles-in-page-group btn-group toggles-group">
+                <a (click)="showSpinner(tab.selected)" [routerLink]="[tab.url]" *ngFor="let tab of ddData.positionTabs; let first = first; let last = last;"
+                   class="toggle-in-page" [ngClass]="{'active': tab.selected, 'first': first, 'last': last}">
+                  {{tab.name}}
+                </a>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="ddData.activeItemPerPage" class="d-flex justify-content-start pagination-wrapper">
+            <div class="full-screen-page-dd">
+              <div class="grouped-dropdown-wrapper btn-group">
+                <app-dropdown
+                  [ddData]="ddData"
+                  [filterItems]="onPageDropdownChange.bind(this)"
+                  prop="items_per_page"
+                  [totalItems]="totalItems"
+                  [isSingleSelect]="true"
+                  className="first last"
+                ></app-dropdown>
+              </div>
+            </div>
+            <div>
+              <pagination-controls [maxSize]="5" (pageChange)="onPageChange($event)" id="server"></pagination-controls>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Grouped Dropdown -->
+    </div>
+    <div class="col-12">
+      <div class="multi-row-data-table-wrapper custom-width">
+        <table class="multi-row-data-table t-stripped">
+          <thead>
+            <tr class="t-sub-header">
+              <th class="text-center px-2">
+                ADP
+              </th>
+              <th class="text-center">
+                OV Rank
+              </th>
+              <th class="text-center">
+                POS Rank
+              </th>
+              <th *ngIf="!data.is_off_season" class="text-center">
+                Move
+              </th>
+              <th class="text-center col-name">
+                Player
+              </th>
+              <th class="text-center" *ngIf="data.is_off_season && removeOnIDP()">
+                {{data.season}} FPTS
+              </th>
+              <th class="text-center">
+                Team
+              </th>
+              <th class="text-center">
+                Depth
+              </th>
+              <th class="text-center px-2">
+                Bye
+              </th>
+              <ng-template #inSeasonTpl>
+                <th class="text-center">
+                  Last Week Rank
+                </th>
+                <th class="text-center">
+                  {{data.season}} Stats
+                </th>
+                <th *ngIf="ddData.activeSeasonTab != ''" class="text-center">
+                  Receptions
+                </th>
+                <th class="text-center">
+                  DraftKings Proj
+                </th>
+                <th class="text-center">
+                  DraftKings Rank
+                </th>
+                <th class="text-center">
+                  FanDuel Proj
+                </th>
+                <th class="text-center">
+                  FanDuel Rank
+                </th>
+                <th class="text-center">
+                  Yahoo DFS Proj
+                </th>
+                <th class="text-center">
+                  Yahoo DFS Rank
+                </th>
+              </ng-template>
+              <ng-container *ngIf="data.is_off_season; else inSeasonTpl">
+                <ng-container *ngIf="params.url">
+                  <th class="text-center" *ngIf="removeOnIDP()">
+                    {{data.season}} Projected Stats
+                  </th>
+                  <th *ngIf="ddData.activeSeasonTab != '' && removeOnIDP()" class="text-center">
+                    {{data.season}} Projected REC
+                  </th>
+                  <th class="text-center">
+                    {{data.season - 1}} Stats
+                  </th>
+                  <th *ngIf="ddData.activeSeasonTab != '' && removeOnIDP()" class="text-center">
+                    {{data.season - 1}} REC
+                  </th>
+                  <th class="text-center">
+                    {{data.season - 1}} FPTS
+                  </th>
+                  <th class="text-center">
+                    {{data.season - 1}} OV Rank
+                  </th>
+                  <th class="text-center">
+                    {{data.season - 1}} POS Rank
+                  </th>
+                </ng-container>
+              </ng-container>
+
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let tier of playersData | paginate: { id: 'server', itemsPerPage: ddData.activeItemPerPage?.prop, currentPage: currentPage, totalItems: totalItems }; let index = index;">
+              <tr class="tier-row" [ngClass]="[positionOrOverall, 'tier-' + tier.tier]">
+                <td *ngFor="let tierTd of tierRowArr; let first = first" [ngClass]="{'tier-text': first}">
+                  <ng-container *ngIf="first">
+                    Tier {{tier.tier}}
+                  </ng-container>
+                </td>
+              </tr>
+              <tr class="t-content" *ngFor="let playerData of tier.data | orderBy : (data.is_off_season ? 'average_draft_position' + ddData.activeSeasonTab : orderByParam) : data.is_off_season">
+                <td>{{playerData['average_draft_position' + ddData.activeSeasonTab]}}</td>
+                <td>{{playerData[orderByParam]}}</td>
+                <td>{{playerData.position}}{{playerData['position_rank' + ddData.activeSeasonTab]}}</td>
+                <td *ngIf="!data.is_off_season">{{playerData['rank_move' + ddData.activeSeasonTab]}}</td>
+                <td class="nowrap text-left pl-1">
+                  <app-player-link [league]="'nfl'" [playerName]="playerData.name" [playerUrl]="playerData.profile_url" [generateShortName]="false"></app-player-link>
+                  <i *ngIf="playerData.has_news; else noNewsTpl;" (click)="onPlayerNewsClick(playerData.has_news, playerData.player_id)" class="fa fa-file-text history-icon float-right mr-2 active" aria-hidden="true"></i>
+                </td>
+                <td *ngIf="data.is_off_season && removeOnIDP()" class="lineups-fantasy-points-col">
+                  {{playerData['lineups_fantasy_points' + ddData.activeSeasonTab]}}
+                </td>
+                <td class="text-left nowrap pr-1">
+                  <a [routerLink]="[playerData.team_depth_chart_route || '']" rel="nofollow" class="link-black-underline">
+                    <img [type]="'white'" [appSpriteImg]="'nfl'" class="team-logo-mini" *ngIf="playerData.team_logo_white" [src]="playerData.team_logo_white" alt="{{playerData.team_full_name}}" />
+                  </a>
+                  <a [routerLink]="[playerData.team_depth_chart_route || '']" class="link-black-underline">
+                    <span class="team-name-short">
+                      {{playerData.team_full_name | lastTeamName}}
+                    </span>
+                    <span class="team-name-full">
+                      {{playerData.team_full_name}}
+                    </span>
+                  </a>
+                </td>
+                <td>{{playerData.depth}}</td>
+                <td>{{playerData.team_bye}}</td>
+                <ng-container  *ngIf="!data.is_off_season">
+                  <td>{{playerData['last_week_fantasy_points_rank' + ddData.activeSeasonTab]}}</td>
+                  <td>{{playerData.season_stats}}</td>
+                  <td *ngIf="ddData.activeSeasonTab != ''">
+                    {{playerData.receptions}}
+                  </td>
+                  <td>{{playerData.fantasy_points_draft_kings}}</td>
+                  <td>{{playerData.draft_kings_rank}}</td>
+                  <td>{{playerData.fantasy_points_fan_duel}}</td>
+                  <td>{{playerData.fan_duel_rank}}</td>
+                  <td>{{playerData.fantasy_points_yahoo}}</td>
+                  <td>{{playerData.yahoo_rank}}</td>
+                </ng-container>
+                <ng-container *ngIf="data.is_off_season">
+                  <ng-container *ngIf="params.url">
+                    <td *ngIf="removeOnIDP()">{{playerData.season_projected_stats}}</td>
+                    <td *ngIf="ddData.activeSeasonTab != '' && removeOnIDP()">{{playerData.receptions}}</td>
+                    <td>{{playerData.last_season_stats}}</td>
+                    <td *ngIf="ddData.activeSeasonTab != '' && removeOnIDP()">{{playerData.last_season_receptions}}</td>
+                    <td>{{playerData['last_season_fantasy_points' + ddData.activeSeasonTab]}}</td>
+                    <td>{{playerData['last_season_fantasy_points' + ddData.activeSeasonTab + '_rank']}}</td>
+                    <td>{{playerData.last_season_position}}{{playerData['last_season_fantasy_points' + ddData.activeSeasonTab + '_position_rank']}}</td>
+                  </ng-container>
+                </ng-container>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div *ngIf="data.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="data.bottom_header" class="page-heading-two">
+        {{data.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="data.bottom_paragraph | safeHtml"></p>
+    </div>
+
+  </div>
+</div>

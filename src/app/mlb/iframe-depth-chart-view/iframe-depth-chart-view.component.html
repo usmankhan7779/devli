@@ -1,0 +1,70 @@
+<ng-template #loadingTpl>
+  <div class="starting-lineup-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<div class="container-fluid pb-3 before-text-margin" *ngIf="depthChartsList && !loading; else loadingTpl">
+  <div class="row">
+    <div class="col-12 multi-row-data-table-wrapper custom-width">
+        <table class="multi-row-data-table t-stripped" [mfRowsOnPage]="10000" [mfData]="depthChartsList" mfSortBy="teamInfo.full_name" mfSortOrder="asc" #teamsTable="mfDataTable">
+          <colgroup span="1" class="matchup-col">
+          </colgroup>
+          <colgroup span="9">
+          </colgroup>
+          <colgroup span="1">
+          </colgroup>
+          <thead>
+            <tr class="t-header">
+              <th class="text-center matchup-col main-border" colspan="1" scope="colgroup" rowspan="2">
+                <mfSorter by="teamInfo.full_name">Team</mfSorter>
+              </th>
+              <th class="text-center main-border" colspan="9" scope="colgroup">
+                Hitters
+              </th>
+              <th class="text-center" colspan="1" scope="colgroup" rowspan="2">
+                Pitcher
+              </th>
+            </tr>
+            <tr class="t-sub-header">
+              <th *ngFor="let num of nineArr" class="text-center">
+                {{num + 1}}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="t-content" *ngFor="let teamData of teamsTable.data">
+
+              <td class="text-left pl-2">
+                <div class="nowrap">
+                  <a [routerLink]="[teamData.teamInfo.lineup_route || '']" rel="nofollow" class="link-black logo-link-container">
+                    <img [type]="'white'" [appSpriteImg]="'mlb'" class="mr-1 logo-sm" [src]="teamData.teamInfo.white_logo" alt="{{teamData.teamInfo.full_name}}"/>
+                  </a>
+                  <a [routerLink]="[teamData.teamInfo.lineup_route || '']" class="link-black-underline">
+                    <span class="player-name-col-xs">
+                      {{teamData.teamInfo.name}}
+                    </span>
+                    <span class="player-name-col-lg">
+                      {{teamData.teamInfo.full_name}}
+                    </span>
+                  </a>
+                </div>
+              </td>
+              <td *ngFor="let plIndex of nineArr">
+                <ng-container *ngIf="teamData.teamInfo.hitters[plIndex]; let player;">
+                  <app-player-link [league]="'mlb'" [playerName]="player.name" [playerUrl]="player.profile_url"></app-player-link> {{player.position}} ({{player.bat_hand}})
+                </ng-container>
+              </td>
+              <td>
+                <ng-container *ngIf="teamData.teamInfo.pitcher">
+                  <app-player-link [league]="'mlb'" [playerName]="teamData.teamInfo.pitcher.name" [playerUrl]="teamData.teamInfo.pitcher.profile_url"></app-player-link>
+                  <span class="pitcher-bat-hand">({{teamData.teamInfo.pitcher.hand}})</span>,
+                  <span class="pitcher-win-loss-record">{{teamData.teamInfo.pitcher.wins}}-{{teamData.teamInfo.pitcher.losses}}</span>
+                </ng-container>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+<div class="summary">
+  <h1>
+    {{ game.data.game.season }}
+    <span class="team-name-long">{{ game.data.game.away_team_full }}</span>
+    <span class="team-name-short">{{ game.data.game.away_team_name }}</span>
+    at
+    {{ game.data.game.season }}
+    <span class="team-name-long">{{ game.data.game.home_team_full }}</span>
+    <span class="team-name-short">{{ game.data.game.home_team_name }}</span>
+  </h1>
+  <h4>{{ game.data.game.stadium_name }}</h4>
+</div>
+
+<div class="score-row">
+  <app-score-box [game]="(displayMode === DisplayMode.Highlights ? highlights : game)"></app-score-box>
+  <div></div>
+
+  <div class="control-box">
+    <div class="tabs">
+      <a [ngClass]="{ active: displayMode === DisplayMode.WatchGame }" (click)="displayMode = DisplayMode.WatchGame">Watch Game</a>
+      <a [ngClass]="{ active: displayMode === DisplayMode.Highlights }" (click)="displayMode = DisplayMode.Highlights">Highlights</a>
+      <a [ngClass]="{ active: displayMode === DisplayMode.Recap }" (click)="displayMode = DisplayMode.Recap">Recap</a>
+    </div>
+    <div *ngIf="displayMode === DisplayMode.WatchGame" class="game-controls">
+      <a [inlineSVG]="icons.back" (click)="back(game)"></a>
+      <a [inlineSVG]="icons.play" *ngIf="!game.isRunning" (click)="start(game)"></a>
+      <a [inlineSVG]="icons.pause" *ngIf="game.isRunning" (click)="pause(game)" class="active"></a>
+      <a [inlineSVG]="icons.speed2x" [ngClass]="{ active: game.speed == 2 }" (click)="toggleSpeed(game, 2)"></a>
+      <a [inlineSVG]="icons.speed3x" [ngClass]="{ active: game.speed == 3 }" (click)="toggleSpeed(game, 3)"></a>
+      <a [inlineSVG]="muted ? icons.mute : icons.sound" (click)="toggleMute()"></a>
+
+      <div *ngIf="debugControls" class="debug-controls">
+        <button (click)="nextPlay(game)">Next</button>
+        <input [value]="game.playIndex" #playIndex (blur)="setPlayIndex(playIndex.value)" type="number">
+        <button (click)="runPlay(game)">Run</button>
+      </div>
+    </div>
+    <div *ngIf="displayMode === DisplayMode.Highlights && highlights" class="game-controls">
+      <a [inlineSVG]="icons.back" (click)="back(highlights)"></a>
+      <a [inlineSVG]="icons.play" *ngIf="!highlights.isRunning" (click)="start(highlights)"></a>
+      <a [inlineSVG]="icons.pause" *ngIf="highlights.isRunning" (click)="pause(highlights)" class="active"></a>
+      <a [inlineSVG]="icons.speed2x" [ngClass]="{ active: highlights.speed == 2 }" (click)="toggleSpeed(highlights, 2)"></a>
+      <a [inlineSVG]="icons.speed3x" [ngClass]="{ active: highlights.speed == 3 }" (click)="toggleSpeed(highlights, 3)"></a>
+      <a [inlineSVG]="muted ? icons.mute : icons.sound" (click)="toggleMute()"></a>
+    </div>
+
+    <div *ngIf="displayMode === DisplayMode.Recap" class="recap-controls">
+      <a [ngClass]="{ active: recapMode === RecapMode.BoxScore }" (click)="recapMode = RecapMode.BoxScore">Box Score</a>
+      <a [ngClass]="{ active: recapMode === RecapMode.PlayByPlay }" (click)="recapMode = RecapMode.PlayByPlay">Play by Play</a>
+      <a [ngClass]="{ active: recapMode === RecapMode.ScoringSummary }" (click)="recapMode = RecapMode.ScoringSummary">Scoring Summary</a>
+      <a [ngClass]="{ active: recapMode === RecapMode.GameReview }" (click)="recapMode = RecapMode.GameReview">Game Review</a>
+    </div>
+  </div>
+</div>
+
+<div class="desc-wrapper">
+  <div class="description" *ngIf="description()">
+    {{ description() }}
+  </div>
+</div>

@@ -1,0 +1,87 @@
+$row-bg: #FAFAFA;
+$preload-gradient-light: linear-gradient(90deg, #FFF, #FFF, #F9F9F9, #FFF);
+$preload-gradient-norm: linear-gradient(90deg, #EEE, #EEE, #e2e6e6, #EEE);
+
+
+.data-mining {
+  margin-top: 60px;
+}
+
+// Data Mining Page Heading
+.team-logo-preload {
+ background: $preload-gradient-norm;
+ background-size: 600% 100%;
+ -webkit-animation: Gradient 15s ease infinite;
+ animation: Gradient 3s ease infinite;
+ border-radius: 6px;
+ top: 4px;
+}
+
+.page-heading-navigation.data-mining {
+  margin-bottom: 30px;
+}
+
+// Data Mining Page Content
+
+   #data-mining-content {
+     overflow: hidden;
+     margin-top: 30px;
+   }
+
+.data-mining-dataset-inner {
+  width: 49%;
+  height: auto;
+  float: left;
+  background: #FFF;
+  transition: ease-in all 0.12s;
+  margin-bottom: 21px;
+  border: 1px solid #eee;
+  display: table;
+}
+
+.data-mining-dataset-inner.center {
+  float: none;
+  clear: both;
+  margin: 0 auto;
+  margin-bottom: 56px;
+}
+
+.data-mining-dataset-inner.right {
+  float: right;
+}
+
+.data-mining-dataset-inner .team-logo-thumb {
+  width: 26px;
+  height: 26px;
+  display: inline-block;
+  float: left;
+}
+
+th span.insight-label {
+  display: inherit;
+  padding: 2px 10px 2px;
+  font-size: 11pt;
+}
+
+.stat-full {
+  width: 100%;
+}
+
+.team-logo-thumb.team-logo-preload {
+  background: $preload-gradient-light;
+  background-size: 600% 100%;
+  -webkit-animation: Gradient 15s ease infinite;
+  animation: Gradient 3s ease infinite;
+  border-radius: 6px;
+  top: 4px;
+}
+
+.data-mining-dataset-inner tr:nth-child(even) {
+  background-color: $row-bg;
+}
+
+.data-mining-dataset-inner td.stat-full {
+  padding: 8px 11px;
+  font-size: 10pt;
+  font-weight: 500;
+}

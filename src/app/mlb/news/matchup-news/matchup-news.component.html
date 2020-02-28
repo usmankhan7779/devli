@@ -1,0 +1,60 @@
+<ng-template #loadingTpl>
+  <div class="starting-lineup-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</ng-template>
+
+<!-- News Data Content-->
+<section *ngIf="newsData; else loadingTpl" id="selected-team-news" class="team-news">
+  <!-- Team Name Label -->
+  <div class="row">
+    <div class="col-12 col-lg-8">
+      <div class="team-name-label d-flex flex-wrap justify-content-between">
+        <div>
+          <h2 class="mt-4 mr-4 mb-3">News</h2>
+        </div>
+        <div class="align-self-center mt-2">
+          <app-search-input [searchFn]="filterByName.bind(this)" (onDataFiltered)="updateNews($event)"></app-search-input>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="row">
+        <div class="col-md-6 col-12">
+          <div class="team-name-label">
+            <h3 class="mt-2">{{newsData.away.team_name_full}} News</h3>
+          </div>
+          <ng-container  *ngFor="let newsItem of awayNewsItems | orderBy: 'updated': false;">
+            <app-news-item
+              class="inner-news-item"
+              cardLeague="mlb"
+              [cardTitle]="newsItem.title"
+              [cardContent]="newsItem.content"
+              [cardImageRoute]="newsData.away.team_logo_white"
+              [cardDate]="newsItem.updated"
+              [fullLogoUrl]="true"
+              [borderedLogo]="false"
+            ></app-news-item>
+          </ng-container>
+        </div>
+        <div class="col-md-6 col-12">
+          <div class="team-name-label">
+            <h3 class="mt-2">{{newsData.home.team_name_full}} News</h3>
+          </div>
+          <ng-container  *ngFor="let newsItem of homeNewsItems | orderBy:'updated': false;">
+            <app-news-item
+              class="inner-news-item"
+              cardLeague="mlb"
+              [cardTitle]="newsItem.title"
+              [cardContent]="newsItem.content"
+              [cardImageRoute]="newsData.home.team_logo_white"
+              [cardDate]="newsItem.updated"
+              [fullLogoUrl]="true"
+              [borderedLogo]="false"
+            ></app-news-item>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

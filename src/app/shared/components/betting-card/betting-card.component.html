@@ -1,0 +1,75 @@
+<div class="card">
+  <div class="card-block">
+    <div class="d-flex flex-nowrap w-100">
+      <div>
+        <h4 class="card-title">{{_title}} <span class="float-right">{{additionalInfo}}</span></h4>
+      </div>
+      <ng-content></ng-content>
+    </div>
+  </div>
+  <div class="card-table-content">
+    <div class="card-table-wrapper">
+      <table class="table table-striped table-bordered lu-bet-table">
+        <thead>
+        <tr>
+          <th>{{topLeftHeading}}</th>
+          <th class="probability" [ngClass]="{'green': homeProbability < awayProbability, 'red': homeProbability > awayProbability}">{{awayProbability}}% Prob</th>
+          <th class="probability" [ngClass]="{'green': homeProbability > awayProbability, 'red': homeProbability < awayProbability}">{{homeProbability}}% Prob</th>
+        </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let bet of bets">
+            <tr *ngIf="bet && bet.home && bet.away">
+              <td>{{bet.book}}</td>
+              <td (click)="onBetClick(bet, 'away')"
+                  [ngStyle]="{'background-color': selectedBetTeam === bet.away ? selectedBetTeam.hex : '', 'border-color': selectedBetTeam === bet.away ? selectedBetTeam.hex : ''}"
+                  [ngClass]="{'active': selectedBetTeam === bet.away, 'lineups-bet': bet.book === 'Lineups.com'}">
+                <div class="bet-team">
+                  <span>{{bet.away.description}} </span>
+                  <span *ngIf="cardType === 1">{{bet.away.spread | plus }} </span>
+                  <span *ngIf="cardType === 2">{{bet.away.total}} </span>
+                  <span>({{bet.away.vegas_moneyline | plus }})
+                    <!--<span class="public-money" *ngIf="!hidePM && bet.away.public_money">PM</span>-->
+                  </span>
+                </div>
+              </td>
+              <td (click)="onBetClick(bet, 'home')"
+                  [ngStyle]="{'background-color': selectedBetTeam === bet.home ? selectedBetTeam.hex : '', 'border-color': selectedBetTeam === bet.home ? selectedBetTeam.hex : ''}"
+                  [ngClass]="{'active': selectedBetTeam === bet.home, 'lineups-bet': bet.book === 'Lineups.com'}">
+                <div class="bet-team">
+                  <span>{{bet.home.description}} </span>
+                  <span *ngIf="cardType === 1">{{bet.home.spread | plus }} </span>
+                  <span *ngIf="cardType === 2">{{bet.home.total}} </span>
+                  <span>({{bet.home.vegas_moneyline | plus }})
+                    <!--<span class="public-money" *ngIf="!hidePM && bet.home.public_money">PM</span>-->
+                  </span>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div *ngIf="selectedBet"
+       class="card-block text-center lu-card-active-footer"
+       [ngStyle]="{'background-color': selectedBetTeam.hex}"
+  >
+    <span>{{selectedBetTeam.expected_value | plus}} EV <span>{{selectedBetTeam.difference}} Diff</span></span>
+    <div class="dollar-container popover-container popover-nowrap">
+      <app-dollars
+        [ngbPopover]="selectedBetTeam.kelly"
+        [amount]="selectedBetTeam.dollar_signs"
+        [type]="'filled'"
+        [color]="selectedBetTeam.hex">
+      </app-dollars>
+    </div>
+    <ng-template #noCardSaveTpl>
+      <button (click)="onPredictorClick()" class="btn btn-primary predictor-btn">Predictor</button>
+    </ng-template>
+    <button *ngIf="!noCardSave; else noCardSaveTpl" (click)="onCardSaveClick()" class="btn btn-save" [ngClass]="{'saved': selectedBetTeam.saved}"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+  </div>
+  <div *ngIf="!selectedBet" class="card-block lu-card-default-footer">
+    Click A Bet To See Details
+  </div>
+</div>

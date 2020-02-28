@@ -1,0 +1,95 @@
+<div class="simulator-content">
+  <div class="simulator-header-wrap container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <app-breadcrumb></app-breadcrumb>
+      </div>
+      <div class="col-12">
+        <div class="d-flex flex-wrap">
+          <div class="sim-header" [ngClass]="{'iframe': isIframe}">
+            <h1 class="page-heading">NFL Game Simulator</h1>
+          </div>
+          <div *ngIf="isIframe" class="powered-by-logo">
+            <a [routerLink]="['./']" target="_blank" rel="noopener">
+              <img width="110px" src="assets/images/logo/powered_by.png" alt="powered by lineups">
+            </a>
+          </div>
+          <div class="ml-auto">
+            <div class="actions">
+              <div class="heading-action-cta-wrapper">
+                <button class="heading-action-cta-btn how-it-works-btn after-text-margin btn">
+                  <img src="/assets/images/icon-video.png" alt="video"/> How <span class="it-works-txt">it works</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <p class="site-pages-content">
+          Run NFL game simulations to see the overall simulation and player stats. You can also watch the animated game play out with play by play descriptions driven by our proprietary simulator. Watch the entire game unfold at normal speed, which takes about 12 minutes. Speed up the action with ability to watch the game at 2X or 3X normal speed or just watch the scoring highlights.  Match up any 2017 NFL team or build your own team with a dream trade or stacking the best wide receivers in the league. Run simulations of recent trades using any 2017 NFL player or create your own roster from your fantasy team. It's fun and driving by machine learning.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="simulator-content-wrap container-fluid">
+
+    <!--<div class="row">-->
+      <!--<div class="col-12">-->
+        <!--<div class="page-heading-navigation simulator-global-nav">-->
+          <!--<div class="tab-group">-->
+            <!--<div *ngFor="let tab of topTabs" (click)="onTabClick(tab)" class="tab-btn-wrap">-->
+              <!--<a class="page-heading-nav-btn" [ngClass]="{'active': activeTab.id === tab.id}">{{tab.label}}</a>-->
+            <!--</div>-->
+            <!--<div class="clearfix"></div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+
+    <div class="row">
+      <!--<div [hidden]="activeTab.id !== topTabs[0].id" class="col-12">-->
+
+      <!--</div>-->
+      <!--<div [hidden]="activeTab.id !== topTabs[1].id" class="col-12">-->
+      <div class="col-12">
+        <app-historic-team [resultData]="simResultsData" [activeView]="activeView" [dropdowns]="dropdowns" [data]="historicTeamSlimData"></app-historic-team>
+      </div>
+      <!--<div [hidden]="activeTab.id !== topTabs[2].id" class="col-12">-->
+
+      <!--</div>-->
+    </div>
+
+    <div *ngIf="historicTeamSlimData" class="row action-wrapper">
+      <div *ngIf="activeView === availableViews[0]" class="col-12 col-sm-6 text-center text-sm-right mb-3 mb-sm-0">
+        <button [disabled]="!activeDropdownValues" (click)="onSimResClick()" class="btn-x-big btn">
+          <span>
+            <span class="button-name no-sim-num">
+              Simulation Results
+            </span>
+            <!--<span class="sim-num">-->
+              <!--(3,000 sims)-->
+            <!--</span>-->
+          </span>
+          <i class="fa fa-angle-right"></i>
+        </button>
+      </div>
+      <div class="text-center" [ngClass]="[(activeView === availableViews[0] ? 'col-12 col-sm-6 text-sm-left' : 'col-12')]">
+        <button [disabled]="!activeDropdownValues" (click)="onWatchGameClick()" class="btn-x-big btn">
+          <span>
+            <span class="button-name">
+              Watch Simulated Game
+            </span>
+            <span *ngIf="historicTeamSlimData.simulations_run != null" class="sim-num">
+              ({{historicTeamSlimData.simulations_run}} sims)
+            </span>
+          </span>
+          <i class="fa fa-angle-right"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+

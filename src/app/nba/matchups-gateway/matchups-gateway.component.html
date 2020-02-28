@@ -1,0 +1,100 @@
+<div *ngIf="loading">
+  <div class="starting-loader">
+    <img class="loader-image" alt="spinner" src="/assets/images/Ripple.svg">
+  </div>
+</div>
+<div *ngIf="!loading" class="container-fluid pb-5">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="row">
+
+    <div class="col-12 col-lg-8">
+      <div #containerEl class="d-flex flex-wrap after-heading-margin">
+        <div>
+          <h1 #headingEl class="page-heading m-0">
+            <span class="hidden-xs-down">{{pageTitle}}</span>
+            <span class="hidden-sm-up">NBA Matchups</span>
+          </h1>
+        </div>
+        <app-twitter-follow-btn [textElement]="headingEl" [containerElement]="containerEl"></app-twitter-follow-btn>
+      </div>
+      <div *ngIf="introParagraph" class="hidden-md-down">
+        <p class="site-pages-content after-heading-margin" [innerHTML]="introParagraph | safeHtml"></p>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component [league]="'nba'"></app-ad-component>
+    </div>
+
+    <div *ngIf="introParagraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+      <p class="site-pages-content" [innerHtml]="introParagraph | safeHtml"></p>
+    </div>
+
+    <div class="col-12">
+      <div>
+        <ng-template #noMatchups>
+          <div class="starting-loader" style="width: auto">
+            <h3 class="text-center" *ngIf="!nbaService.forceOffseason">No NBA Matchups Today</h3>
+            <h3 class="text-center" *ngIf="nbaService.forceOffseason">The regular season will begin in October 2019</h3>
+          </div>
+        </ng-template>
+        <ng-container *ngIf="matchups?.length; else noMatchups">
+          <!-- Grouped Dropdown -->
+          <div class="grouped-dropdown-wrapper btn-group">
+            <div ngbDropdown class="grouped-dropdown  dropdown">
+              <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-2" id="matchups-dropdown" ngbDropdownToggle>
+                <span class="pr-2 pr-sm-5">{{matchups | dropdownTitleShow:'Showing':'game':'games':'All Games'}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+              </button>
+              <div class="dropdown-menu" aria-labelledby="matchups-dropdown">
+                <div *ngIf="showSelectNone()" [appHideAllItems]="matchups" (hideMatchupDetails)="showedIndividualMatchup = $event" class="dropdown-item">
+                  <div class="form-check pl-1">
+                    <label>
+                      Select None
+                    </label>
+                  </div>
+                </div>
+                <div *ngIf="!showSelectNone()" [appHideAllItems]="matchups" mode="true" (hideMatchupDetails)="showedIndividualMatchup = $event" class="dropdown-item">
+                  <div class="form-check pl-1">
+                    <label>
+                      Select All
+                    </label>
+                  </div>
+                </div>
+                <div *ngFor="let matchup of matchups | orderBy:'order'" (click)="onToggleItem($event, matchup)" class="dropdown-item">
+                  <div class="form-check pl-1">
+                    <input [checked]="matchup.showed" class="form-check-input" type="checkbox">
+                    <label>
+                      {{matchup.header.details.away_short}} @ {{matchup.header.details.home_short}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="!showedIndividualMatchup">
+            <ng-container *ngFor="let matchup of matchups">
+              <div class="col-12">
+                <app-matchup
+                  [ngStyle]="{'display': matchup.showed ? 'block' : 'none'}"
+                  [gateway]="matchup.gateway"
+                  [gameId]="matchup.game_id"
+                  [status]="matchup.nav.status"
+                  [header]="matchup.header"
+                  [awayConfirmed]="matchup.away_nav.lineup_confirmed"
+                  [homeConfirmed]="matchup.home_nav.lineup_confirmed"
+                ></app-matchup>
+              </div>
+            </ng-container>
+          </div>
+          <div class="row" *ngIf="showedIndividualMatchup">
+            <div class="col-12">
+              <app-matchup-details [matchupId]="showedIndividualMatchup"></app-matchup-details>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+  </div>
+
+</div>

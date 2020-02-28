@@ -1,0 +1,37 @@
+<div class="schedule-content content container-fluid pb-5">
+  <app-breadcrumb></app-breadcrumb>
+
+  <div class="row">
+
+    <div class="col-12 col-lg-8">
+      <h1 class="page-heading">{{pageTitle || 'NBA Schedule'}}</h1>
+      <div *ngIf="introParagraph" class="hidden-md-down">
+        <p class="site-pages-content" [innerHTML]="introParagraph | safeHtml"></p>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 gateway-video-container">
+      <app-ad-component [league]="'nba'"></app-ad-component>
+    </div>
+
+    <div *ngIf="introParagraph" class="col-12 flex-last flex-sm-unordered hidden-lg-up">
+      <p class="site-pages-content" [innerHtml]="introParagraph | safeHtml"></p>
+    </div>
+
+    <div class="col-12">
+      <app-schedule-content
+        [startDate]="startDate"
+        [preSelectedDate]="preSelectedDate"
+        (returnData)="handleApiResponse($event)"
+      ></app-schedule-content>
+    </div>
+
+    <div *ngIf="bottomParagraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="bottomHeader" class="page-heading-two">
+        {{bottomHeader}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="bottomParagraph | safeHtml"></p>
+    </div>
+
+  </div>
+
+</div>

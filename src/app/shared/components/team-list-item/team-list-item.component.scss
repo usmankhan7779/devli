@@ -1,0 +1,101 @@
+@import '../../../../scss/shared/variables/project';
+
+$mobile-br: 350px;
+:host {
+  .team-item-wrapper {
+    width: 100%;
+  }
+  .team-item-heading {
+    background-color: $psd-primary;
+    border: 2px solid $psd-primary;
+    h4 {
+      height: 44px;
+      line-height: 44px;
+      margin: 0;
+      text-align: center;
+      width: 100%;
+      color: white;
+      //font-weight: bold;
+      font-size: 24px;
+      padding: 0 30px;
+      @media (max-width: $mobile-br) {
+        padding: 0;
+        font-size: 20px;
+      }
+    }
+  }
+  .team-info-wrapper {
+    border: 2px solid #e1e1e1;
+    border-top: none;
+    .team-info-item {
+      &:nth-child(even) {
+        background-color: #fafafa;
+      }
+      &:nth-child(odd) {
+        background-color: #ffffff;
+      }
+      width: 100%;
+      padding: 16px 30px;
+      @media (max-width: $mobile-br) {
+        padding: 16px 15px;
+      }
+      .team-info-logo img {
+        height: 42px;
+        width: 42px;
+        display: block;
+        margin: 0 18px 0 0;
+      }
+      .team-info-item-name {
+        line-height: 0.8;
+        font-size: 20px;
+        font-weight: bold;
+        @media (max-width: $mobile-br) {
+          font-size: 18px;
+        }
+      }
+      .team-info-item-links {
+        font-size: 14px;
+        margin-top: 10px;
+        line-height: 1;
+        & > span {
+          white-space: nowrap;
+          &:before {
+            content: '\25CF';
+            font-size: 10px;
+            margin: 0 3px;
+            position: relative;
+            top: -1px;
+            text-align: center;
+          }
+        }
+        @media (max-width: 400px) {
+          font-size: 11px !important;
+          line-height: 17px;
+        }
+        @media (max-width: 359px) {
+          font-size: 13px !important;
+          line-height: 20px;
+          & > span {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+
+  .team-item-wrapper.cfb-league {
+    .team-info-item-links {
+      display: none;
+    }
+    .team-info-item .team-info-item-name {
+      line-height: 42px;
+      font-size: 19px;
+    }
+  }
+  .team-item-wrapper.nfl-league {
+    .team-info-wrapper .team-info-item {
+        width: 100%;
+        padding: 16px 13px;
+    }
+  }
+}

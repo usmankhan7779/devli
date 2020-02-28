@@ -1,0 +1,36 @@
+ol.breadcrumb {
+  //overflow: hidden;
+  //white-space: nowrap;
+  white-space: normal;
+  padding: 21px 0 0;
+  background: none;
+  min-height: 48px;
+  li.bc-list-item {
+    display: inline-block;
+    padding: 0 1px;
+    height: 25px;
+    a.breadcrumb {
+      display: inline-block;
+      background: none;
+      padding: 0 1px;
+      font-size: 0.85rem;
+      color: #333333;
+    }
+    .breadcrumb-arrow {
+      padding: 0;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  ol.breadcrumb {
+    li.bc-list-item {
+      a.breadcrumb {
+        font-size: 0.72rem;
+      }
+      .breadcrumb-arrow {
+        font-size: 0.72rem;
+      }
+    }
+  }
+}

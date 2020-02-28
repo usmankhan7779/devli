@@ -1,0 +1,16 @@
+<div *ngIf="teamArticles?.length" class="row">
+  <div class="col-12">
+    <h2 class="page-heading-two">
+      <ng-container *ngIf="podcasts; else noPodcastsTpl">
+        Latest {{_teamName}} News, Articles & Podcasts
+      </ng-container>
+      <ng-template #noPodcastsTpl>
+        Latest {{_teamName}} News, Articles
+      </ng-template>
+    </h2>
+  </div>
+  <div class="col-12 d-flex short-articles-wrapper">
+    <app-short-wp-article *ngFor="let article of teamArticles | slice: 0 : 5" [wpSmBlogItem]="article"></app-short-wp-article>
+  </div>
+</div>
+

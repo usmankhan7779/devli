@@ -1,0 +1,2349 @@
+<ng-template #noDataTpl>
+  <div class="col-12 mt-3">
+    <app-no-stats></app-no-stats>
+  </div>
+</ng-template>
+
+<div class="container-fluid pb-3">
+  <app-breadcrumb></app-breadcrumb>
+  <!-- Starting Lineups Page Title -->
+  <div class="row">
+    <div class="team-lineup-heading-wrap nfl-team-depth-chart-heading col-lg-8 col-12">
+      <!-- Team Lineup Heading Text-->
+      <div class="team-lineup-heading-text">
+        <!-- Team Lineup Heading Left -->
+        <div class="team-lineup-heading-left" [ngClass]="{'no-opponent': !(data.nav.opp_depth_chart_route && isDefaultSeason)}">
+          <div class="team-logo with-status">
+            <img [type]="'white'" [appSpriteImg]="'nfl'" align="middle" [src]="data.nav.team_logo_white" alt="{{data.nav.team_name}}"/>
+          </div>
+          <div class="team-heading-info">
+            <app-status
+              side="right"
+              [isHeader]="true"
+              mobileTitle="{{data.nav.team_name | lastTeamName}} Snaps"
+              [teamName]="data.page_heading || data.heading"
+              [record]="data.nav.team_record + ', ' + data.nav.team_rank + ' ' + data.nav.team_league + ' ' + data.nav.team_division"
+            ></app-status>
+          </div>
+        </div>
+        <!-- Team Lineup Heading Right -->
+        <div *ngIf="data.nav.opp_depth_chart_route && isDefaultSeason" class="team-lineup-heading-right">
+          <div *ngIf="!data.nav.status || (data.nav.status.status !== 'In Progress' && data.nav.status.status !== 'Final')" class="float-right">
+            <h4 class="opponent-team-name">{{data.nav.is_home ? 'vs' : 'at'}} {{data.nav.opp_abbr}}</h4>
+            <h4 class="event-date">
+              <app-general-time-format [time]="data.nav.matchup_time"></app-general-time-format>
+            </h4>
+          </div>
+          <div *ngIf="data.nav.status?.status === 'In Progress'" class="float-right">
+            <span [ngClass]="{'font-bold': data.nav.status.away_has_ball}">{{data.nav.status.away}} {{data.nav.status.away_score}}</span> @ <span [ngClass]="{'font-bold': data.nav.status.home_has_ball}">{{data.nav.status.home}} {{data.nav.status.home_score}}</span>
+            <br>
+            <p class="text-center">
+              {{data.nav.status.down}} & {{data.nav.status.distance}}, Q{{data.nav.status.quarter}} {{data.nav.status.time_remaining}}
+            </p>
+          </div>
+          <div *ngIf="data.nav.status?.status === 'Final'" class="float-right">
+            <span [ngClass]="{'font-bold': data.nav.status.away_score > data.nav.status.home_score}">{{data.nav.status.away}} {{data.nav.status.away_score}}</span> @ <span [ngClass]="{'font-bold': data.nav.status.home_score > data.nav.status.away_score}">{{data.nav.status.home}} {{data.nav.status.home_score}}</span>
+            <br>
+            <p class="text-center">Final</p>
+          </div>
+        </div>
+      </div>
+      <!-- Collapse Menu -->
+      <div class="in-page-collapse-toggle">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="isCollapsed = !isCollapsed"
+                [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+          Menu
+        </button>
+      </div>
+      <div class="in-page-nav-menu" [ngbCollapse]="!isCollapsed" [ngClass]="{'hidden': !isCollapsed}">
+        <!-- Team Lineup Heading Navigation -->
+        <div class="page-heading-navigation">
+          <div *ngIf="data.nav.is_home && data.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{ data.nav.opp_name | lastTeamName}} Depth Chart</a>
+          </div>
+          <div *ngIf="!data.nav.is_home" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.team_depth_chart_route]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="page-heading-nav-btn">{{ data.nav.team_name | lastTeamName}} Depth Chart</a>
+          </div>
+          <div *ngIf="data.nav.is_home" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.team_depth_chart_route]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="page-heading-nav-btn">{{ data.nav.team_name | lastTeamName}} Depth Chart</a>
+          </div>
+          <div *ngIf="!data.nav.is_home && data.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{ data.nav.opp_name | lastTeamName}} Depth Chart</a>
+          </div>
+          <div *ngIf="data.nav.matchup_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appNflMatchupIdPreselect]="data.nav.game_key" [routerLink]="[data.nav.matchup_route]" routerLinkActive="active" class="page-heading-nav-btn">Matchups</a>
+          </div>
+          <!--news commented-->
+          <!--<div *ngIf="data.nav.team_news_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">-->
+            <!--<a [appPreselectNflNewsTeamSeason]="params?.year" [routerLink]="[data.nav.team_news_route]" routerLinkActive="active" class="page-heading-nav-btn">News</a>-->
+          <!--</div>-->
+          <div class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appPreselectNflStatsTeamSeason]="params?.year" [routerLink]="['./']" routerLinkActive="active" class="page-heading-nav-btn">Stats</a>
+          </div>
+          <div *ngIf="data.nav.team_snaps_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appPreselectNflSnapsTeamSeason]="params?.year" [routerLink]="[data.nav.team_snaps_route]" routerLinkActive="active" class="page-heading-nav-btn">Snaps</a>
+          </div>
+          <div *ngIf="data.nav.team_roster_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [appPreselectNflRosterTeamSeason]="params?.year" [routerLink]="[data.nav.team_roster_route]" routerLinkActive="active" class="page-heading-nav-btn">Roster</a>
+          </div>
+          <div *ngIf="data.nav.team_injuries_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
+            <a [routerLink]="[data.nav.team_injuries_route]" routerLinkActive="active" class="page-heading-nav-btn">Injuries</a>
+          </div>
+          <div *ngIf="data.nav.team_schedule_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt last">
+            <a [appPreselectNflScheduleTeamSeason]="params?.year" [routerLink]="[data.nav.team_schedule_route]" class="page-heading-nav-btn">Schedule</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 after-heading-margin zero-lg-height smaller-lg-box">
+      <app-ad-component [league]="'nfl'"></app-ad-component>
+    </div>
+  </div>
+  <div class="row">
+    <div *ngIf="data.intro_paragraph" class="col-lg-8 col-12 flex-last flex-sm-unordered">
+      <p class="site-pages-content" [innerHtml]="data.intro_paragraph | safeHtml"></p>
+    </div>
+    <div class="col-12 after-text-margin">
+      <div class="in-page-dropdown-toggle" [ngClass]="{'no-dropdown': !dropdownCollapsed}">
+        <button type="button" class="collapse-page-nav-btn btn btn-outline-primary" (click)="dropdownCollapsed = !dropdownCollapsed"
+                [attr.aria-expanded]="!dropdownCollapsed" aria-controls="collapseExample">
+          <i class="fa fa-bars dropdown-icon" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="d-flex top-action-section">
+        <div class="d-flex action-section">
+          <div class="in-page-dropdown-menu" [ngbCollapse]="!dropdownCollapsed" [ngClass]="{'hidden-dropdown': !dropdownCollapsed}">
+            <!-- Grouped Dropdown -->
+            <div class="grouped-dropdown-wrapper btn-group my-0">
+
+              <div ngbDropdown class="grouped-dropdown dropdown">
+                <button type="button" class="grouped-dropdown-btn btn btn-secondary first last px-3" id="main-dropdown" ngbDropdownToggle>
+                  <span class="pr-0 pr-sm-3">{{handleYear(params?.year)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="main-dropdown">
+                  <div *ngFor="let season of ddData.seasons;">
+                    <button
+                      [ngClass]="{'dd-active-btn': params?.year === season.year}"
+                      (click)="onYearDdChange(season)"
+                      class="dropdown-item">
+                      <span>{{season.name}}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div ngbDropdown class="grouped-dropdown dropdown position-dd">
+                <button type="button" class="grouped-dropdown-btn btn btn-secondary px-3" id="secondary-dropdown" ngbDropdownToggle>
+                  <span class="pr-0 pr-sm-3">{{getActiveTab(true)}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="secondary-dropdown">
+                  <button (click)="onTabClick('all')" class="dropdown-item" [ngClass]="{'dd-active-btn': ddData.tabs['all']}">All</button>
+                  <button (click)="onTabClick('team-stats')" class="dropdown-item" [ngClass]="{'dd-active-btn': ddData.tabs['team-stats']}">Team Stats</button>
+                  <button (click)="onTabClick('player-stats')" class="dropdown-item" [ngClass]="{'dd-active-btn': ddData.tabs['player-stats']}">Player Stats</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div [hidden]="!data.team_header" class="toggles-in-page-wrapper standard-page d-inline-block mt-0 position-tab-bar">
+            <!-- Action Header Button Group -->
+            <div class="toggles-in-page-group btn-group toggles-group">
+              <button (click)="onTabClick('all')" class="toggle-in-page first" [ngClass]="{'active': ddData.tabs['all']}">All</button>
+              <button (click)="onTabClick('team-stats')" class="toggle-in-page" [ngClass]="{'active': ddData.tabs['team-stats']}">Team Stats</button>
+              <button (click)="onTabClick('player-stats')" class="toggle-in-page last" [ngClass]="{'active': ddData.tabs['player-stats']}">Player Stats</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12" *ngIf="data.team_header">
+      <div class="d-flex team-intro">
+        <div class="csv-text"><b>Home Record:</b> {{data.team_header.home_record}}
+          <b>Away Record:</b> {{data.team_header.away_record}}
+          <b>Conference Record:</b> {{data.team_header.conference_record}}
+          <b>Division Record:</b> {{data.team_header.division_record}}
+        </div>
+        <div class="csv-text"><b>Bye Week:</b> {{data.team_header.bye_week}}
+          <b>Head Coach:</b> {{data.team_header.head_coach}}
+          <b>Offensive Coordinator:</b> {{data.team_header.offensive_coordinator}}
+          <b>Defensive Coordinator:</b> {{data.team_header.defensive_coordinator}}
+        </div>
+        <div class="csv-text"><b>Special Teams:</b> {{data.team_header.special_teams_coach}}
+          <b>Owner:</b> {{data.team_header.team_owner}}
+          <b>Stadium:</b> {{data.team_header.stadium}}
+          <b>Surface:</b> {{data.team_header.surface}}
+        </div>
+        <div class="csv-text"><b>City:</b> {{data.team_header.city}}
+          <b>Offensive Scheme:</b> {{data.team_header.offensive_scheme}}
+          <b>Defensive Alignment:</b> {{data.team_header.defensive_scheme}}
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div *ngIf="ddData.tabs['all'] || ddData.tabs['team-stats']" class="row">
+        <div class="col-12" *ngIf="data.team_rankings">
+          <h2 class="page-heading-two">
+            Team Rankings
+          </h2>
+          <div class="after-heading-margin">
+            <div class="toggles-in-page-wrapper standard-page mt-0">
+              <!-- Action Header Button Group -->
+              <div class="toggles-in-page-group btn-group toggles-group">
+                <button (click)="onTeamRatingsTabClick('rank')" class="toggle-in-page first" [ngClass]="{'active': ddData.teamRatingsTableDDs['rank']}">Rank</button>
+                <button (click)="onTeamRatingsTabClick('#')" class="toggle-in-page" [ngClass]="{'active': ddData.teamRatingsTableDDs['#']}">#</button>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="ddData.teamRatingsTableDDs['#']" class="multi-row-data-table-wrapper big-table custom-width mb-0">
+            <table class="multi-row-data-table t-stripped">
+              <colgroup span="4"></colgroup>
+              <colgroup span="11"></colgroup>
+              <colgroup span="9"></colgroup>
+              <tbody>
+              <tr class="t-header">
+                <th colspan="4" scope="colgroup" class="text-center main-border">Team Ratings</th>
+                <th colspan="11" scope="colgroup" class="text-center main-border">Offense Stats</th>
+                <th colspan="9" scope="colgroup" class="text-center">Defense Stats</th>
+              </tr>
+              <tr class="t-sub-header">
+                <th scope="col" class="text-center">Overall</th>
+                <th scope="col" class="text-center">Offense</th>
+                <th scope="col" class="text-center">Defense</th>
+                <th scope="col" class="text-center main-border">SP Teams</th>
+
+                <th scope="col" class="text-center">FPTS</th>
+                <th scope="col" class="text-center">Off Plays</th>
+                <th scope="col" class="text-center">TOP</th>
+                <th scope="col" class="text-center">PTS</th>
+                <th scope="col" class="text-center">YDS</th>
+                <th scope="col" class="text-center">Pass Yds</th>
+                <th scope="col" class="text-center">Pass TD</th>
+                <th scope="col" class="text-center">Rush Yds</th>
+                <th scope="col" class="text-center">Rush TD</th>
+                <th scope="col" class="text-center">RZ TD</th>
+                <th scope="col" class="text-center main-border">OV TD</th>
+
+                <th scope="col" class="text-center">PTS Allow</th>
+                <th scope="col" class="text-center">YDS Allow</th>
+                <th scope="col" class="text-center">Pass Yds Allow</th>
+                <th scope="col" class="text-center">Pass TD Allow</th>
+                <th scope="col" class="text-center">Rush Yds Allow</th>
+                <th scope="col" class="text-center">Rush TD Allow</th>
+                <th scope="col" class="text-center">RZ TD Allow</th>
+                <th scope="col" class="text-center">OV TD Allow</th>
+                <th scope="col" class="text-center">TOP Allow</th>
+              </tr>
+              <tr class="t-content">
+                <td>
+                  <app-rating *ngIf="data.team_rankings.overall_rating; let overallRating" [value]="overallRating"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.offensive_rating; let offensiveRating" [value]="offensiveRating"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.defensive_rating; let defensiveRating" [value]="defensiveRating"></app-rating>
+                </td>
+                <td class="main-border">
+                  <app-rating *ngIf="data.team_rankings.special_teams_rating; let specialTeamRating" [value]="specialTeamRating"></app-rating>
+                </td>
+
+                <td>{{data.team_rankings.fantasy_points}}</td>
+                <td>{{data.team_rankings.offensive_plays}}</td>
+                <td>{{data.team_rankings.time_of_possession}}</td>
+                <td>{{data.team_rankings.points}}</td>
+                <td>{{data.team_rankings.total_yards}}</td>
+                <td>{{data.team_rankings.passing_yards}}</td>
+                <td>{{data.team_rankings.passing_touchdowns}}</td>
+                <td>{{data.team_rankings.rushing_yards}}</td>
+                <td>{{data.team_rankings.rushing_touchdowns}}</td>
+                <td>{{data.team_rankings.red_zone_conversions}}</td>
+                <td class="main-border">{{data.team_rankings.touchdowns}}</td>
+
+                <td>{{data.team_rankings.opponent_points}}</td>
+                <td>{{data.team_rankings.opponent_offensive_yards}}</td>
+                <td>{{data.team_rankings.opponent_passing_yards}}</td>
+                <td>{{data.team_rankings.opponent_passing_touchdowns}}</td>
+                <td>{{data.team_rankings.opponent_rushing_yards}}</td>
+                <td>{{data.team_rankings.opponent_rushing_touchdowns}}</td>
+                <td>{{data.team_rankings.opponent_red_zone_conversions}}</td>
+                <td>{{data.team_rankings.opponent_touchdowns}}</td>
+                <td>{{data.team_rankings.opponent_time_of_possession}}</td>
+              </tr>
+              </tbody>
+            </table> <!-- END: Yearly Lineups Table -->
+          </div>
+          <div *ngIf="ddData.teamRatingsTableDDs['rank']" class="multi-row-data-table-wrapper big-table custom-width mb-0">
+            <table class="multi-row-data-table t-stripped">
+              <colgroup span="4"></colgroup>
+              <colgroup span="11"></colgroup>
+              <colgroup span="9"></colgroup>
+              <tbody>
+              <tr class="t-header">
+                <th colspan="4" scope="colgroup" class="text-center main-border">Team Rankings</th>
+                <th colspan="11" scope="colgroup" class="text-center main-border">Offense Rankings</th>
+                <th colspan="9" scope="colgroup" class="text-center">Defense Rankings</th>
+              </tr>
+              <tr class="t-sub-header">
+                <th scope="col" class="text-center">Overall</th>
+                <th scope="col" class="text-center">Offense</th>
+                <th scope="col" class="text-center">Defense</th>
+                <th scope="col" class="text-center main-border">SP Teams</th>
+
+                <th scope="col" class="text-center">FPTS</th>
+                <th scope="col" class="text-center">Off Plays</th>
+                <th scope="col" class="text-center">TOP</th>
+                <th scope="col" class="text-center">PTS</th>
+                <th scope="col" class="text-center">YDS</th>
+                <th scope="col" class="text-center">Pass Yds</th>
+                <th scope="col" class="text-center">Pass TD</th>
+                <th scope="col" class="text-center">Rush Yds</th>
+                <th scope="col" class="text-center">Rush TD</th>
+                <th scope="col" class="text-center">RZ TD</th>
+                <th scope="col" class="text-center main-border">OV TD</th>
+
+                <th scope="col" class="text-center">PTS Allow</th>
+                <th scope="col" class="text-center">YDS Allow</th>
+                <th scope="col" class="text-center">Pass Yds Allow</th>
+                <th scope="col" class="text-center">Pass TD Allow</th>
+                <th scope="col" class="text-center">Rush Yds Allow</th>
+                <th scope="col" class="text-center">Rush TD Allow</th>
+                <th scope="col" class="text-center">RZ TD Allow</th>
+                <th scope="col" class="text-center">OV TD Allow</th>
+                <th scope="col" class="text-center">TOP Allow</th>
+              </tr>
+              <tr class="t-content">
+                <td>
+                  <app-rating *ngIf="data.team_rankings.overall_rating_rank; let overallRank" [value]="overallRank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.offensive_rating_rank; let offensiveRank" [value]="offensiveRank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.defensive_rating_rank; let defensiveRank" [value]="defensiveRank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td class="main-border">
+                  <app-rating *ngIf="data.team_rankings.special_teams_rank; let specialTeamRank" [value]="specialTeamRank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+
+                <td>
+                  <app-rating *ngIf="data.team_rankings.fantasy_points_rank; let fantasy_points_rank" [value]="fantasy_points_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.offensive_plays_rank; let offensive_plays_rank" [value]="offensive_plays_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.offensive_time_of_possession_rank; let offensive_time_of_possession_rank" [value]="offensive_time_of_possession_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.points_rank; let points_rank" [value]="points_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.offensive_yards_rank; let offensive_yards_rank" [value]="offensive_yards_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.passing_yards_rank; let passing_yards_rank" [value]="passing_yards_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.passing_touchdowns_rank; let passing_touchdowns_rank" [value]="passing_touchdowns_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.rushing_yards_rank; let rushing_yards_rank" [value]="rushing_yards_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.rushing_touchdowns_rank; let rushing_touchdowns_rank" [value]="rushing_touchdowns_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.red_zone_conversions_rank; let red_zone_conversions_rank" [value]="red_zone_conversions_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td class="main-border">
+                  <app-rating *ngIf="data.team_rankings.touchdowns_rank; let touchdowns_rank" [value]="touchdowns_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+
+                <td>
+                  <app-rating *ngIf="data.team_rankings.defensive_points_allow_rank; let defensive_points_allow_rank" [value]="defensive_points_allow_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.defensive_yards_allow_rank; let defensive_yards_allow_rank" [value]="defensive_yards_allow_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.defensive_passing_yards_allow_rank; let defensive_passing_yards_allow_rank" [value]="defensive_passing_yards_allow_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.defensive_passing_touchdowns_allow_rank; let defensive_passing_touchdowns_allow_rank" [value]="defensive_passing_touchdowns_allow_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.defensive_rushing_yards_allow_rank; let defensive_rushing_yards_allow_rank" [value]="defensive_rushing_yards_allow_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.defensive_rushing_touchdowns_allow_rank; let defensive_rushing_touchdowns_allow_rank" [value]="defensive_rushing_touchdowns_allow_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.defensive_red_zone_conversions_allow_rank; let defensive_red_zone_conversions_allow_rank" [value]="defensive_red_zone_conversions_allow_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.defensive_touchdowns_allow_rank; let defensive_touchdowns_allow_rank" [value]="defensive_touchdowns_allow_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+                <td>
+                  <app-rating *ngIf="data.team_rankings.defensive_opponent_top_rank; let defensive_opponent_top_rank" [value]="defensive_opponent_top_rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+              </tr>
+              </tbody>
+            </table> <!-- END: Yearly Lineups Table -->
+          </div>
+        </div>
+        <ng-container *ngIf="hasData">
+        <div class="col-12" *ngIf="data.team_offensive_stats">
+          <h2 class="page-heading-two">
+            Team Offensive Stats
+          </h2>
+          <div class="multi-row-data-table-wrapper big-table custom-width mb-0">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="data.team_offensive_stats"
+              [(mfSortBy)]="offenseSorting.sortByTeamStats"
+              [(mfSortOrder)]="offenseSorting.sortOrderTeamStats"
+              (mfSortByChange)="onSortOrder('offenseSorting', 'sortByTeamStats', 'sortOrderTeamStats', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('offenseSorting', 'sortByTeamStats', 'sortOrderTeamStats', 'order', $event)"
+              #teamOffensiveStatsTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="3"></colgroup>
+              <colgroup span="3"></colgroup>
+              <colgroup span="9"></colgroup>
+              <colgroup span="6"></colgroup>
+              <colgroup span="4"></colgroup>
+              <colgroup span="3"></colgroup>
+              <colgroup span="3"></colgroup>
+              <colgroup span="2"></colgroup>
+              <tbody>
+              <tr class="t-header">
+                <th colspan="3" scope="colgroup" class="text-center main-border">Opponent</th>
+                <th colspan="3" scope="colgroup" class="text-center main-border">Vegas</th>
+                <th colspan="9" scope="colgroup" class="text-center main-border">Total Offense</th>
+                <th colspan="4" scope="colgroup" class="text-center main-border">Rushing Offense</th>
+                <th colspan="6" scope="colgroup" class="text-center main-border">Passing Offense</th>
+                <th colspan="3" scope="colgroup" class="text-center main-border">Redzone</th>
+                <th colspan="3" scope="colgroup" class="text-center main-border">Turnovers</th>
+                <th colspan="2" scope="colgroup" class="text-center">Penalties</th>
+              </tr>
+              <tr class="t-sub-header">
+                <th scope="col" class="text-center">
+                  <mfSorter by="week">Wk</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="opponent">TEAM</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="opponent_defensive_rank">DEF RNK</mfSorter>
+                </th>
+
+                <th scope="col" class="text-center custom-formatting">
+                  <mfSorter by="point_spread">Spread</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="moneyline">ML</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="over_under">O/U</mfSorter>
+                </th>
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="time_of_possession">TOP</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="score">PTS</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="score_quarter1">Q1 PTS</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="score_quarter2">Q2 PTS</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="score_quarter3">Q3 PTS</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="score_quarter4">Q4 PTS</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="offensive_plays">PLAYS</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="offensive_yards">YDS</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="offensive_yards_per_play">YDS/PLAY</mfSorter>
+                </th>
+
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="rushing_attempts">ATT</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="rushing_yards">YDS</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="rushing_yards_per_attempt">YDS/ATT</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="rushing_touchdowns">TD</mfSorter>
+                </th>
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="passing_attempts">ATT</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="passing_yards_per_attempt">YDS/ATT</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="passing_completions">COMP</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="passing_yards_per_completion">YDS/COMP</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="passing_yards">YDS</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="passing_touchdowns">TD</mfSorter>
+                </th>
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="red_zone_attempts">RZ ATT</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="red_zone_conversions">RZ TD</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="red_zone_percentage">RZ %</mfSorter>
+                </th>
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="giveaways">TOV</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="passing_interceptions">INT</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="fumbles">FUML</mfSorter>
+                </th>
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="penalties">PEN</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="penalty_yards">YDS</mfSorter>
+                </th>
+              </tr>
+              <tr *ngFor="let teamOffensiveStats of teamOffensiveStatsTable.data" class="t-content">
+                <td>{{teamOffensiveStats.week}}</td>
+                <td>
+                  <a *ngIf="teamOffensiveStats.opp_stats_route" [appPreselectNflStatsTeamSeason]="params?.year" [routerLink]="[teamOffensiveStats.opp_stats_route]" class="link-black-underline">
+                    {{teamOffensiveStats.opponent}}
+                  </a>
+                  <span *ngIf="!teamOffensiveStats.opp_stats_route">
+                    {{teamOffensiveStats.opponent}}
+                  </span>
+                </td>
+                <td class="main-border">
+                  <app-rating *ngIf="teamOffensiveStats.opponent_defensive_rank; let rank" [value]="rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                </td>
+
+                <td>{{teamOffensiveStats.point_spread}}</td>
+                <td>{{teamOffensiveStats.moneyline}}</td>
+                <td class="main-border">{{teamOffensiveStats.over_under}}</td>
+
+                <td>{{teamOffensiveStats.time_of_possession}}</td>
+                <td>{{teamOffensiveStats.score}}</td>
+                <td>{{teamOffensiveStats.score_quarter1}}</td>
+                <td>{{teamOffensiveStats.score_quarter2}}</td>
+                <td>{{teamOffensiveStats.score_quarter3}}</td>
+                <td>{{teamOffensiveStats.score_quarter4}}</td>
+                <td>{{teamOffensiveStats.offensive_plays}}</td>
+                <td>{{teamOffensiveStats.offensive_yards}}</td>
+                <td class="main-border">{{teamOffensiveStats.offensive_yards_per_play}}</td>
+
+                <td>{{teamOffensiveStats.rushing_attempts}}</td>
+                <td>{{teamOffensiveStats.rushing_yards}}</td>
+                <td>{{teamOffensiveStats.rushing_yards_per_attempt}}</td>
+                <td class="main-border">{{teamOffensiveStats.rushing_touchdowns}}</td>
+
+                <td>{{teamOffensiveStats.passing_attempts}}</td>
+                <td>{{teamOffensiveStats.passing_yards_per_attempt}}</td>
+                <td>{{teamOffensiveStats.passing_completions}}</td>
+                <td>{{teamOffensiveStats.passing_yards_per_completion}}</td>
+                <td>{{teamOffensiveStats.passing_yards}}</td>
+                <td class="main-border">{{teamOffensiveStats.passing_touchdowns}}</td>
+
+                <td>{{teamOffensiveStats.red_zone_attempts}}</td>
+                <td>{{teamOffensiveStats.red_zone_conversions}}</td>
+                <td class="main-border">{{teamOffensiveStats.red_zone_percentage | percentage}}</td>
+
+                <td>{{teamOffensiveStats.giveaways}}</td>
+                <td>{{teamOffensiveStats.passing_interceptions}}</td>
+                <td class="main-border">{{teamOffensiveStats.fumbles}}</td>
+
+                <td>{{teamOffensiveStats.penalties}}</td>
+                <td>{{teamOffensiveStats.penalty_yards}}</td>
+              </tr>
+              </tbody>
+            </table> <!-- END: Yearly Lineups Table -->
+          </div>
+        </div>
+        <div class="col-12" *ngIf="data.team_defensive_stats">
+          <h2 class="page-heading-two">
+            Team Defensive Stats
+          </h2>
+          <div class="multi-row-data-table-wrapper big-table custom-width mb-0">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="data.team_defensive_stats"
+              [(mfSortBy)]="defenseSorting.sortByTeamStats"
+              [(mfSortOrder)]="defenseSorting.sortOrderTeamStats"
+              (mfSortByChange)="onSortOrder('defenseSorting', 'sortByTeamStats', 'sortOrderTeamStats', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('defenseSorting', 'sortByTeamStats', 'sortOrderTeamStats', 'order', $event)"
+              #teamDefensiveStatsTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="4"></colgroup>
+              <colgroup span="9"></colgroup>
+              <colgroup span="6"></colgroup>
+              <colgroup span="4"></colgroup>
+              <colgroup span="3"></colgroup>
+              <colgroup span="3"></colgroup>
+              <colgroup span="2"></colgroup>
+              <tbody>
+                <tr class="t-header">
+                  <th colspan="4" scope="colgroup" class="text-center main-border">Opponent</th>
+                  <th colspan="8" scope="colgroup" class="text-center main-border">Total Offense Allowed</th>
+                  <th colspan="4" scope="colgroup" class="text-center main-border">Rushing Allowed</th>
+                  <th colspan="6" scope="colgroup" class="text-center main-border">Passing Allowed</th>
+                  <th colspan="3" scope="colgroup" class="text-center main-border">Redzone Allowed</th>
+                  <th colspan="3" scope="colgroup" class="text-center main-border">Opp Turnovers</th>
+                  <th colspan="2" scope="colgroup" class="text-center">Opp Penalties</th>
+                </tr>
+                <tr class="t-sub-header">
+                  <th scope="col" class="text-center">
+                    <mfSorter by="week">Wk</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent">TEAM</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_offensive_rank">OFF RNK</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="opponent_time_of_possession">TOF</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_score">PTS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_score_quarter1">Q1 PTS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_score_quarter2">Q2 PTS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_score_quarter3">Q3 PTS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_score_quarter4">Q4 PTS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_offensive_plays">PLAYS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_offensive_yards">YDS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="opponent_offensive_yards_per_play">YDS/PLAY</mfSorter>
+                  </th>
+
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_rushing_attempts">ATT</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_rushing_yards">YDS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_rushing_yards_per_attempt">YDS/ATT</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="opponent_rushing_touchdowns">TD</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_passing_attempts">ATT</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_passing_yards_per_attempt">YDS/ATT</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_passing_completions">COMP</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_passing_yards_per_completion">YDS/COMP</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_passing_yards">YDS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="opponent_passing_touchdowns">TD</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_red_zone_attempts">ATT</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_red_zone_conversions">TD</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="opponent_red_zone_percentage">%</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_giveaways">TOV</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_passing_interceptions">INT</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="opponent_fumbles">FUML</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_penalties">PEN</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_penalty_yards">YDS</mfSorter>
+                  </th>
+                </tr>
+                <tr *ngFor="let teamDefensiveStats of teamDefensiveStatsTable.data" class="t-content">
+                  <td>{{teamDefensiveStats.week}}</td>
+                  <td>
+                    <span>
+                      {{teamDefensiveStats.opponent}}
+                    </span>
+                  </td>
+                  <td>
+                    <app-rating *ngIf="teamDefensiveStats.opponent_offensive_rank; let rank" [value]="rank" [reverse]="true" [config]="ratingConfig"></app-rating>
+                  </td>
+                  <td class="main-border">{{teamDefensiveStats.opponent_time_of_possession}}</td>
+
+                  <td>{{teamDefensiveStats.opponent_score}}</td>
+                  <td>{{teamDefensiveStats.opponent_score_quarter1}}</td>
+                  <td>{{teamDefensiveStats.opponent_score_quarter2}}</td>
+                  <td>{{teamDefensiveStats.opponent_score_quarter3}}</td>
+                  <td>{{teamDefensiveStats.opponent_score_quarter4}}</td>
+                  <td>{{teamDefensiveStats.opponent_offensive_plays}}</td>
+                  <td>{{teamDefensiveStats.opponent_offensive_yards}}</td>
+                  <td class="main-border">{{teamDefensiveStats.opponent_offensive_yards_per_play}}</td>
+
+                  <td>{{teamDefensiveStats.opponent_rushing_attempts}}</td>
+                  <td>{{teamDefensiveStats.opponent_rushing_yards}}</td>
+                  <td>{{teamDefensiveStats.opponent_rushing_yards_per_attempt}}</td>
+                  <td class="main-border">{{teamDefensiveStats.opponent_rushing_touchdowns}}</td>
+
+                  <td>{{teamDefensiveStats.opponent_passing_attempts}}</td>
+                  <td>{{teamDefensiveStats.opponent_passing_yards_per_attempt}}</td>
+                  <td>{{teamDefensiveStats.opponent_passing_completions}}</td>
+                  <td>{{teamDefensiveStats.opponent_passing_yards_per_completion}}</td>
+                  <td>{{teamDefensiveStats.opponent_passing_yards}}</td>
+                  <td class="main-border">{{teamDefensiveStats.opponent_passing_touchdowns}}</td>
+
+                  <td>{{teamDefensiveStats.opponent_red_zone_attempts}}</td>
+                  <td>{{teamDefensiveStats.opponent_red_zone_conversions}}</td>
+                  <td class="main-border">{{teamDefensiveStats.opponent_red_zone_percentage | percentage}}</td>
+
+                  <td>{{teamDefensiveStats.opponent_giveaways}}</td>
+                  <td>{{teamDefensiveStats.opponent_passing_interceptions}}</td>
+                  <td class="main-border">{{teamDefensiveStats.opponent_fumbles}}</td>
+
+                  <td>{{teamDefensiveStats.opponent_penalties}}</td>
+                  <td>{{teamDefensiveStats.opponent_penalty_yards}}</td>
+                </tr>
+              </tbody>
+            </table> <!-- END: Yearly Lineups Table -->
+          </div>
+        </div>
+        <div class="col-12" *ngIf="data.special_team_stats">
+          <h2 class="page-heading-two">
+            Special Teams Stats
+          </h2>
+          <div class="multi-row-data-table-wrapper custom-width special-team-table mb-0">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="data.special_team_stats"
+              [(mfSortBy)]="spSorting.sortByTeamStats"
+              [(mfSortOrder)]="spSorting.sortOrderTeamStats"
+              (mfSortByChange)="onSortOrder('spSorting', 'sortByTeamStats', 'sortOrderTeamStats', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('spSorting', 'sortByTeamStats', 'sortOrderTeamStats', 'order', $event)"
+              #spStatsTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="2"></colgroup>
+              <colgroup span="8"></colgroup>
+              <colgroup span="8"></colgroup>
+              <tbody>
+                <tr class="t-header">
+                  <th colspan="2" scope="colgroup" class="text-center main-border">Opponent</th>
+                  <th colspan="8" scope="colgroup" class="text-center main-border">Special Teams</th>
+                  <th colspan="8" scope="colgroup" class="text-center">Special Teams Allowed</th>
+                </tr>
+                <tr class="t-sub-header">
+                  <th scope="col" class="text-center">
+                    <mfSorter by="week">Wk</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="opponent">TEAM</mfSorter>
+                  </th>
+                  <!--<th scope="col" class="text-center main-border">-->
+                    <!--<mfSorter by="special_teams_rank">OPP SP RNK</mfSorter>-->
+                  <!--</th>-->
+
+
+                  <!--<th scope="col" class="text-center">-->
+                    <!--<mfSorter by="week">RTG</mfSorter>-->
+                  <!--</th>-->
+                  <th scope="col" class="text-center">
+                    <mfSorter by="field_goals_made">FGM</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="field_goal_attempts">FGA</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="extra_point_kicking_conversions">XPM</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="extra_point_kicking_attempts">XPA</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="punt_returns">PUNT RET</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="punt_return_yards">PUNT RET YDS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="kick_returns">KICK RET</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="kick_return_yards">KICK RET YDS</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_field_goals_made">OPP FGM</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_field_goal_attempts">OPP FGA</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_extra_point_kicking_conversions">OPP XPM</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_extra_point_kicking_attempts">OPP XPA</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_punt_returns">OPP PUNT RET</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_punt_return_yards">OPP PUNT RET YDS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_kick_returns">OPP KICK RET</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="opponent_kick_return_yards">OPP KICK RET YDS</mfSorter>
+                  </th>
+                </tr>
+                <tr *ngFor="let teamSpStats of spStatsTable.data" class="t-content">
+                  <td>{{teamSpStats.week}}</td>
+                  <td class="main-border">
+                    <span>
+                      {{teamSpStats.opponent}}
+                    </span>
+                  </td>
+                  <!--<td class="main-border" >{{teamSpStats.special_teams_rank}}</td>-->
+
+                  <!--<td>RTG</td>-->
+                  <td>{{teamSpStats.field_goals_made}}</td>
+                  <td>{{teamSpStats.field_goal_attempts}}</td>
+                  <td>{{teamSpStats.extra_point_kicking_conversions}}</td>
+                  <td>{{teamSpStats.extra_point_kicking_attempts}}</td>
+                  <td>{{teamSpStats.punt_returns}}</td>
+                  <td>{{teamSpStats.punt_return_yards}}</td>
+                  <td>{{teamSpStats.kick_returns}}</td>
+                  <td class="main-border">{{teamSpStats.kick_return_yards}}</td>
+
+                  <td>{{teamSpStats.opponent_field_goals_made}}</td>
+                  <td>{{teamSpStats.opponent_field_goal_attempts}}</td>
+                  <td>{{teamSpStats.opponent_extra_point_kicking_conversions}}</td>
+                  <td>{{teamSpStats.opponent_extra_point_kicking_attempts}}</td>
+                  <td>{{teamSpStats.opponent_punt_returns}}</td>
+                  <td>{{teamSpStats.opponent_punt_return_yards}}</td>
+                  <td>{{teamSpStats.opponent_kick_returns}}</td>
+                  <td>{{teamSpStats.opponent_kick_return_yards}}</td>
+                </tr>
+              </tbody>
+            </table> <!-- END: Yearly Lineups Table -->
+          </div>
+        </div>
+        </ng-container>
+      </div>
+      <div *ngIf="ddData.tabs['all'] || ddData.tabs['player-stats']" class="row">
+        <ng-container *ngIf="hasData; else noDataTpl">
+        <div class="col-12" *ngIf="data.team_leaders">
+          <h2 class="page-heading-two">
+            {{data.nav.team_name | lastTeamName}} Team Leaders
+          </h2>
+          <div class="leader-container">
+            <div class="d-flex flex-wrap leader-box-wrapper">
+              <ng-container *ngFor="let leaderType of teamLeadersDictionary;">
+                <ng-container *ngIf="getLeader(leaderType); let leader">
+                  <div class="leader-box" *ngIf="leader.name">
+                    <h5>{{leaderType}}</h5>
+                    <div>
+                      <div class="leader-image-wrapper">
+                        <a [routerLink]="[leader.profile_url || '']" rel="nofollow" class="link-black">
+                          <img [src]="leader.photo_url" alt="{{leader.name}}">
+                        </a>
+                      </div>
+                      <div class="leader-content-wrapper">
+                        <div class="leader-name">
+                          <a [routerLink]="[leader.profile_url || '']" class="link-black-underline">
+                            {{leader.name}}
+                          </a>
+                        </div>
+                        <ng-container [ngSwitch]="leaderType">
+                          <ng-container *ngSwitchCase="teamLeadersDictionary[0]">
+                            <div>ATT: {{leader.passing_attempts}}</div>
+                            <div>COMP: {{leader.passing_completions}}</div>
+                            <div>YDS: {{leader.passing_yards | numberWithCommas}}</div>
+                            <div>TD: {{leader.passing_touchdowns}}</div>
+                          </ng-container>
+                          <ng-container *ngSwitchCase="teamLeadersDictionary[1]">
+                            <div>ATT: {{leader.rushing_attempts}}</div>
+                            <div>YDS: {{leader.rushing_yards | numberWithCommas}}</div>
+                            <div>YPG: {{leader.rushing_yards_per_game}}</div>
+                            <div>TD: {{leader.rushing_touchdowns}}</div>
+                          </ng-container>
+                          <ng-container *ngSwitchCase="teamLeadersDictionary[2]">
+                            <div>TGT: {{leader.receiving_targets}}</div>
+                            <div>REC: {{leader.receptions}}</div>
+                            <div>YDS: {{leader.recieving_yards | numberWithCommas}}</div>
+                            <div>TD: {{leader.receiving_touchdowns}}</div>
+                          </ng-container>
+                          <ng-container *ngSwitchCase="teamLeadersDictionary[3]">
+                            <div>TCKL: {{leader.tackles}}</div>
+                            <div>SOLO: {{leader.solo_tackles}}</div>
+                            <div>AST: {{leader.assisted_tackles}}</div>
+                            <div>SCK: {{leader.sacks}}</div>
+                          </ng-container>
+                          <ng-container *ngSwitchCase="teamLeadersDictionary[4]">
+                            <div>INT: {{leader.interceptions}}</div>
+                            <div>INT/YDS: {{leader.interception_return_yards}}</div>
+                            <div>PDEF: {{leader.passes_defended}}</div>
+                            <div>PDEF/G: {{leader.passes_defended_per_game}}</div>
+                          </ng-container>
+                          <ng-container *ngSwitchCase="teamLeadersDictionary[5]">
+                            <div>FGA: {{leader.field_goals_attempted}}</div>
+                            <div>FGM: {{leader.field_goals_made}}</div>
+                            <div>FG%: {{leader.field_goal_percentage | percentage}}</div>
+                            <div>XPM: {{leader.extra_points_made}}</div>
+                          </ng-container>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <div class="col-12" *ngIf="data.quarterback_stats">
+          <h2 class="page-heading-two">
+            Quarterback Stats
+          </h2>
+          <div class="multi-row-data-table-wrapper custom-width medium-table mb-0">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="data.quarterback_stats"
+              [(mfSortBy)]="posSorting.sortByQbs"
+              [(mfSortOrder)]="posSorting.sortOrderQbs"
+              (mfSortByChange)="onSortOrder('posSorting', 'sortByQbs', 'sortOrderQbs', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('posSorting', 'sortByQbs', 'sortOrderQbs', 'order', $event)"
+              #qbStatsTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="6">
+                <col span="1" class="player-name-col"/>
+                <col span="5"/>
+              </colgroup>
+              <colgroup span="12"></colgroup>
+              <colgroup span="4"></colgroup>
+              <colgroup span="2"></colgroup>
+              <colgroup span="3"></colgroup>
+              <tbody>
+              <tr class="t-header">
+                <th colspan="3" scope="colgroup" class="text-center main-border">Player</th>
+                <th colspan="14" scope="colgroup" class="text-center main-border">Passing</th>
+                <th colspan="4" scope="colgroup" class="text-center main-border">Turnovers</th>
+                <th colspan="2" scope="colgroup" class="text-center main-border">Snaps</th>
+                <th colspan="3" scope="colgroup" class="text-center">Sacks</th>
+              </tr>
+              <tr class="t-sub-header">
+                <th scope="col" class="player-name-col text-center">
+                  <mfSorter by="name">Name</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="lineups_rating">RTG</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="played">GP</mfSorter>
+                </th>
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_rating">PASS RTG</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_attempts">ATT</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_attempts_per_game">ATT/G</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_completions">COMP</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_completions_per_game">COMP/G</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_completion_percentage">COMP %</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_yards_per_attempt">Yds/Att</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_yards_per_completion">Yds/COMP</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter [by]="customSortFns.sortByQbsPassYDS">YDS</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_yards_per_game">YPG</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_yard_games_300_plus">300+</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_long">Long</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_touchdowns">TDs</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="season_stats.passing_touchdowns_per_game">TDs/G</mfSorter>
+                </th>
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_interceptions">INT</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_interceptions_per_game">INT/G</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.fumbles">FUM</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="season_stats.fumbles_lost">FUML</mfSorter>
+                </th>
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_snaps">#</mfSorter>
+                </th>
+                <th scope="col" class="text-center main-border">
+                  <mfSorter by="season_stats.snaps_percentage">off %</mfSorter>
+                </th>
+
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_sacks">#</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_sacks_per_game">#/G</mfSorter>
+                </th>
+                <th scope="col" class="text-center">
+                  <mfSorter by="season_stats.passing_sack_yards">YDS</mfSorter>
+                </th>
+              </tr>
+              <tr *ngFor="let qbStats of qbStatsTable.data" class="t-content">
+                <td class="player-name-col-td">
+                  <app-player-link [league]="'nfl'" [playerName]="qbStats.name" [playerUrl]="qbStats.profile_url" [generateShortName]="false"></app-player-link>
+                </td>
+                <td>
+                  <app-rating [value]="qbStats.lineups_rating"></app-rating>
+                </td>
+                <td class="main-border">
+                  {{qbStats.played}}
+                </td>
+
+                <td>
+                  {{qbStats.season_stats.passing_rating}}
+                </td>
+                <td>
+                  {{qbStats.season_stats.passing_attempts}}
+                </td>
+                <td>
+                  {{qbStats.season_stats.passing_attempts_per_game}}
+                </td>
+                <td>
+                  {{qbStats.season_stats.passing_completions}}
+                </td>
+                <td>
+                  {{qbStats.season_stats.passing_completions_per_game}}
+                </td>
+                <td>
+                  {{qbStats.season_stats.passing_completion_percentage | percentage}}
+                </td>
+                <td>
+                  {{qbStats.season_stats.passing_yards_per_attempt}}
+                </td>
+                <td>
+                  {{qbStats.season_stats.passing_yards_per_completion}}
+                </td>
+                <td>
+                  {{qbStats.season_stats.passing_yards}}
+                </td>
+                <td>
+                  {{qbStats.season_stats.passing_yards_per_game}}
+                </td>
+                <td>
+                  {{qbStats.season_stats.passing_yard_games_300_plus}}
+                </td>
+                <td>
+                  {{qbStats.season_stats.passing_long}}
+                </td>
+                <td>
+                  {{qbStats.season_stats.passing_touchdowns}}
+                </td>
+                <td class="main-border">
+                  {{qbStats.season_stats.passing_touchdowns_per_game}}
+                </td>
+
+                <td>
+                  {{qbStats.season_stats.passing_interceptions}}
+                </td>
+                <td>
+                  {{qbStats.season_stats.passing_interceptions_per_game}}
+                </td>
+                <td>
+                  {{qbStats.season_stats.fumbles}}
+                </td>
+                <td class="main-border">
+                  {{qbStats.season_stats.fumbles_lost}}
+                </td>
+
+                <td>
+                  {{qbStats.season_stats.passing_snaps | numberWithCommas}}
+                </td>
+                <td class="main-border">
+                  {{qbStats.season_stats.snaps_percentage | percentage : true}}
+                </td>
+
+                <td>
+                  {{qbStats.season_stats.passing_sacks}}
+                </td>
+                <td>
+                  {{qbStats.season_stats.passing_sacks_per_game}}
+                </td>
+                <td>
+                  {{qbStats.season_stats.passing_sack_yards}}
+                </td>
+              </tr>
+              </tbody>
+            </table> <!-- END: Yearly Lineups Table -->
+          </div>
+        </div>
+        <div class="col-12" *ngIf="data.running_back_stats">
+          <h2 class="page-heading-two">
+            Running Back Stats
+          </h2>
+          <div class="multi-row-data-table-wrapper custom-width big-table mb-0">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="data.running_back_stats"
+              [(mfSortBy)]="posSorting.sortByRbs"
+              [(mfSortOrder)]="posSorting.sortOrderRbs"
+              (mfSortByChange)="onSortOrder('posSorting', 'sortByRbs', 'sortOrderRbs', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('posSorting', 'sortByRbs', 'sortOrderRbs', 'order', $event)"
+              #rbStatsTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="3">
+                <col span="1" class="player-name-col"/>
+                <col span="2"/>
+              </colgroup>
+              <colgroup span="9"></colgroup>
+              <colgroup span="11"></colgroup>
+              <colgroup span="5"></colgroup>
+              <colgroup span="2"></colgroup>
+              <colgroup span="2"></colgroup>
+              <tbody>
+                <tr class="t-header">
+                  <th colspan="3" scope="colgroup" class="text-center main-border">Player</th>
+                  <th colspan="9" scope="colgroup" class="text-center main-border">Rushing</th>
+                  <th colspan="11" scope="colgroup" class="text-center main-border">Receiving</th>
+                  <th colspan="5" scope="colgroup" class="text-center main-border">Totals (Rush + Rec)</th>
+                  <th colspan="2" scope="colgroup" class="text-center main-border">Snaps</th>
+                  <th colspan="2" scope="colgroup" class="text-center">Turnovers</th>
+                </tr>
+                <tr class="t-sub-header">
+                  <th scope="col" class="player-name-col text-center">
+                    <mfSorter by="name">Name</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="lineups_rating">RTG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="played">GP</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.rushing_attempts">ATT</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.rushing_attempts_per_game">ATT/G</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.rushing_yards_per_attempt">YDS/ATT</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.sortByRbsRecYDS">YDS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.rushing_yards_per_game">YPG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.rushing_long">Long</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.rushing_yard_games_100_plus">100+</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.rushing_touchdowns">TD</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="season_stats.rushing_touchdowns_per_game">TD/G</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_targets">TGTS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.targets_per_game">TGTS/G</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receptions">REC</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receptions_per_game">RPG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.receiving_yards">YDS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_yards_per_reception">YPR</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_yards_per_game">YPG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_long">Long</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_yard_games_100_plus">100+</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_touchdowns">TD</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="season_stats.receiving_touchdowns_per_game">TD/G</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.season_touches">TCH</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.season_touch_percent">TCH %</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.totals">YDS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.totals_per_game">YPG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="season_stats.total_attempts_targets_per_game">ATT/G + TGT/G</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.snaps">#</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="season_stats.snaps_percentage">Off %</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.fumbles">FUM</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.fumbles_lost">FUML</mfSorter>
+                  </th>
+                </tr>
+                <tr *ngFor="let rbStats of rbStatsTable.data" class="t-content">
+                  <td class="player-name-col-td">
+                    <app-player-link [league]="'nfl'" [playerName]="rbStats.name" [playerUrl]="rbStats.profile_url" [generateShortName]="false"></app-player-link>
+                  </td>
+                  <td>
+                    <app-rating [value]="rbStats.lineups_rating"></app-rating>
+                  </td>
+                  <td class="main-border">
+                    {{rbStats.played}}
+                  </td>
+
+                  <td>
+                    {{rbStats.season_stats.rushing_attempts}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.rushing_attempts_per_game}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.rushing_yards_per_attempt}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.rushing_yards}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.rushing_yards_per_game}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.rushing_long}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.rushing_yard_games_100_plus}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.rushing_touchdowns}}
+                  </td>
+                  <td class="main-border">
+                    {{rbStats.season_stats.rushing_touchdowns_per_game}}
+                  </td>
+
+                  <td>
+                    {{rbStats.season_stats.receiving_targets}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.targets_per_game}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.receptions}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.receptions_per_game}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.receiving_yards}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.receiving_yards_per_reception}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.receiving_yards_per_game}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.receiving_long}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.receiving_yard_games_100_plus}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.receiving_touchdowns}}
+                  </td>
+                  <td class="main-border">
+                    {{rbStats.season_stats.receiving_touchdowns_per_game}}
+                  </td>
+
+                  <td>
+                    {{rbStats.season_stats.season_touches}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.season_touch_percent | percentage : true}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.totals | numberWithCommas}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.totals_per_game}}
+                  </td>
+                  <td class="main-border">
+                    {{rbStats.season_stats.total_attempts_targets_per_game}}
+                  </td>
+
+                  <td>
+                    {{rbStats.season_stats.snaps | numberWithCommas}}
+                  </td>
+                  <td class="main-border">
+                    {{rbStats.season_stats.snaps_percentage | percentage : true}}
+                  </td>
+
+                  <td>
+                    {{rbStats.season_stats.fumbles}}
+                  </td>
+                  <td>
+                    {{rbStats.season_stats.fumbles_lost}}
+                  </td>
+                </tr>
+              </tbody>
+            </table> <!-- END: Yearly Lineups Table -->
+          </div>
+        </div>
+        <div class="col-12" *ngIf="data.wide_receiver_stats">
+          <h2 class="page-heading-two">
+            Wide Receiver Stats
+          </h2>
+          <div class="multi-row-data-table-wrapper custom-width medium-table mb-0">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="data.wide_receiver_stats"
+              [(mfSortBy)]="posSorting.sortByWrs"
+              [(mfSortOrder)]="posSorting.sortOrderWrs"
+              (mfSortByChange)="onSortOrder('posSorting', 'sortByWrs', 'sortOrderWrs', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('posSorting', 'sortByWrs', 'sortOrderWrs', 'order', $event)"
+              #wrStatsTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="3">
+                <col span="1" class="player-name-col"/>
+                <col span="2"/>
+              </colgroup>
+              <colgroup span="14"></colgroup>
+              <colgroup span="5"></colgroup>
+              <colgroup span="2"></colgroup>
+              <colgroup span="2"></colgroup>
+              <tbody>
+                <tr class="t-header">
+                  <th colspan="3" scope="colgroup" class="text-center main-border">Player</th>
+                  <th colspan="14" scope="colgroup" class="text-center main-border">Receiving</th>
+                  <th colspan="5" scope="colgroup" class="text-center main-border">Totals (Rec + Rush)</th>
+                  <th colspan="2" scope="colgroup" class="text-center main-border">Snaps</th>
+                  <th colspan="2" scope="colgroup" class="text-center">Turnovers</th>
+                </tr>
+                <tr class="t-sub-header">
+                  <th scope="col" class="player-name-col text-center">
+                    <mfSorter by="name">Name</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="lineups_rating">RTG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="played">GP</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.passing_attempts">TM Pass</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_targets">TGTS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_target_percentage">TGT %</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.targets_per_game">TGTS/G</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receptions">Rec</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_reception_percent">Rec %</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receptions_per_game">RPG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.sortByWrsRecYDS">Yds</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_yards_per_reception">YPR</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_yards_per_game">YPG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_long">Long</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_yard_games_100_plus">100+</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_touchdowns">TD</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="season_stats.receiving_touchdowns_per_game">TD/G</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.season_touches">TCH</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.season_touch_percent">TCH %</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.total_attempts_targets_per_game">ATT/G + TGT/G</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.totals">YDS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="season_stats.totals_per_game">YPG</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.snaps">#</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="season_stats.snaps_percentage">Off %</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.fumbles">FUM</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.fumbles_lost">FUML</mfSorter>
+                  </th>
+                </tr>
+                <tr *ngFor="let wrStats of wrStatsTable.data" class="t-content">
+                  <td class="player-name-col-td">
+                    <app-player-link [league]="'nfl'" [playerName]="wrStats.name" [playerUrl]="wrStats.profile_url" [generateShortName]="false"></app-player-link>
+                  </td>
+                  <td>
+                    <app-rating [value]="wrStats.lineups_rating"></app-rating>
+                  </td>
+                  <td class="main-border">
+                    {{wrStats.played}}
+                  </td>
+
+                  <td>
+                    {{wrStats.season_stats.passing_attempts}}
+                  </td>
+                  <td>
+                    {{wrStats.season_stats.receiving_targets}}
+                  </td>
+                  <td>
+                    {{wrStats.season_stats.receiving_target_percentage | percentage}}
+                  </td>
+                  <td>
+                    {{wrStats.season_stats.targets_per_game}}
+                  </td>
+                  <td>
+                    {{wrStats.season_stats.receptions}}
+                  </td>
+                  <td>
+                    {{wrStats.season_stats.receiving_reception_percent | percentage : true}}
+                  </td>
+                  <td>
+                    {{wrStats.season_stats.receptions_per_game}}
+                  </td>
+                  <td>
+                    {{wrStats.season_stats.receiving_yards | numberWithCommas}}
+                  </td>
+                  <td>
+                    {{wrStats.season_stats.receiving_yards_per_reception}}
+                  </td>
+                  <td>
+                    {{wrStats.season_stats.receiving_yards_per_game}}
+                  </td>
+                  <td>
+                    {{wrStats.season_stats.receiving_long}}
+                  </td>
+                  <td>
+                    {{wrStats.season_stats.receiving_yard_games_100_plus}}
+                  </td>
+                  <td>
+                    {{wrStats.season_stats.receiving_touchdowns}}
+                  </td>
+                  <td class="main-border">
+                    {{wrStats.season_stats.receiving_touchdowns_per_game}}
+                  </td>
+
+                  <td>
+                    {{wrStats.season_stats.season_touches}}
+                  </td>
+                  <td>
+                    {{wrStats.season_stats.season_touch_percent | percentage : true}}
+                  </td>
+                  <td>
+                    {{wrStats.season_stats.total_attempts_targets_per_game}}
+                  </td>
+                  <td>
+                    {{wrStats.season_stats.totals | numberWithCommas}}
+                  </td>
+                  <td class="main-border">
+                    {{wrStats.season_stats.totals_per_game}}
+                  </td>
+
+                  <td>
+                    {{wrStats.season_stats.snaps | numberWithCommas}}
+                  </td>
+                  <td class="main-border">
+                    {{wrStats.season_stats.snaps_percentage | percentage : true}}
+                  </td>
+
+                  <td>
+                    {{wrStats.season_stats.fumbles}}
+                  </td>
+                  <td>
+                    {{wrStats.season_stats.fumbles_lost}}
+                  </td>
+                </tr>
+              </tbody>
+            </table> <!-- END: Yearly Lineups Table -->
+          </div>
+        </div>
+        <div class="col-12" *ngIf="data.tight_end_stats">
+          <h2 class="page-heading-two">
+            Tight End Stats
+          </h2>
+          <div class="multi-row-data-table-wrapper custom-width small-table mb-0">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="data.tight_end_stats"
+              [(mfSortBy)]="posSorting.sortByTes"
+              [(mfSortOrder)]="posSorting.sortOrderTes"
+              (mfSortByChange)="onSortOrder('posSorting', 'sortByTes', 'sortOrderTes', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('posSorting', 'sortByTes', 'sortOrderTes', 'order', $event)"
+              #teStatsTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="3">
+                <col span="1" class="player-name-col"/>
+                <col span="2"/>
+              </colgroup>
+              <colgroup span="14"></colgroup>
+              <colgroup span="2"></colgroup>
+              <colgroup span="2"></colgroup>
+              <tbody>
+                <tr class="t-header">
+                  <th colspan="3" scope="colgroup" class="text-center main-border">Player</th>
+                  <th colspan="14" scope="colgroup" class="text-center main-border">Receiving</th>
+                  <th colspan="2" scope="colgroup" class="text-center main-border">Snaps</th>
+                  <th colspan="2" scope="colgroup" class="text-center">Turnovers</th>
+                </tr>
+                <tr class="t-sub-header">
+                  <th scope="col" class="player-name-col text-center">
+                    <mfSorter by="name">Name</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="lineups_rating">RTG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="played">GP</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.passing_attempts">TM Pass</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_targets">TGTS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_target_percentage">TGT %</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.targets_per_game">TGTS/G</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receptions">Rec</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_reception_percent">Rec %</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receptions_per_game">RPG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_yards">Yds</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_yards_per_reception">YPR</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_yards_per_game">YPG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_long">Long</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_yard_games_100_plus">100+</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.receiving_touchdowns">TD</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="season_stats.receiving_touchdowns_per_game">TD/G</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.snaps">#</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="season_stats.snaps_percentage">Off %</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.fumbles">FUM</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.fumbles_lost">FUML</mfSorter>
+                  </th>
+                </tr>
+                <tr *ngFor="let teStats of teStatsTable.data" class="t-content">
+                  <td class="player-name-col-td">
+                    <app-player-link [league]="'nfl'" [playerName]="teStats.name" [playerUrl]="teStats.profile_url" [generateShortName]="false"></app-player-link>
+                  </td>
+                  <td>
+                    <app-rating [value]="teStats.lineups_rating"></app-rating>
+                  </td>
+                  <td class="main-border">
+                    {{teStats.played}}
+                  </td>
+
+                  <td>
+                    {{teStats.season_stats.passing_attempts}}
+                  </td>
+                  <td>
+                    {{teStats.season_stats.receiving_targets}}
+                  </td>
+                  <td>
+                    {{teStats.season_stats.receiving_target_percentage | percentage}}
+                  </td>
+                  <td>
+                    {{teStats.season_stats.targets_per_game}}
+                  </td>
+                  <td>
+                    {{teStats.season_stats.receptions}}
+                  </td>
+                  <td>
+                    {{teStats.season_stats.receiving_reception_percent | percentage : true}}
+                  </td>
+                  <td>
+                    {{teStats.season_stats.receptions_per_game}}
+                  </td>
+                  <td>
+                    {{teStats.season_stats.receiving_yards}}
+                  </td>
+                  <td>
+                    {{teStats.season_stats.receiving_yards_per_reception}}
+                  </td>
+                  <td>
+                    {{teStats.season_stats.receiving_yards_per_game}}
+                  </td>
+                  <td>
+                    {{teStats.season_stats.receiving_long}}
+                  </td>
+                  <td>
+                    {{teStats.season_stats.receiving_yard_games_100_plus}}
+                  </td>
+                  <td>
+                    {{teStats.season_stats.receiving_touchdowns}}
+                  </td>
+                  <td class="main-border">
+                    {{teStats.season_stats.receiving_touchdowns_per_game}}
+                  </td>
+
+                  <td>
+                    {{teStats.season_stats.snaps | numberWithCommas}}
+                  </td>
+                  <td class="main-border">
+                    {{teStats.season_stats.snaps_percentage | percentage : true}}
+                  </td>
+
+                  <td>
+                    {{teStats.season_stats.fumbles}}
+                  </td>
+                  <td>
+                    {{teStats.season_stats.fumbles_lost}}
+                  </td>
+                </tr>
+              </tbody>
+            </table> <!-- END: Yearly Lineups Table -->
+          </div>
+        </div>
+        <div class="col-12" *ngIf="data.field_goal_kicker_stats">
+          <h2 class="page-heading-two">
+            Field Goal Kicker Stats
+          </h2>
+          <div class="multi-row-data-table-wrapper custom-width small-table mb-0">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="data.field_goal_kicker_stats"
+              [(mfSortBy)]="posSorting.sortByFgs"
+              [(mfSortOrder)]="posSorting.sortOrderFgs"
+              (mfSortByChange)="onSortOrder('posSorting', 'sortByFgs', 'sortOrderFgs', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('posSorting', 'sortByFgs', 'sortOrderFgs', 'order', $event)"
+              #fgStatsTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="3">
+                <col span="1" class="player-name-col"/>
+                <col span="2"/>
+              </colgroup>
+              <colgroup span="11"></colgroup>
+              <colgroup span="4"></colgroup>
+              <colgroup span="2"></colgroup>
+              <tbody>
+                <tr class="t-header">
+                  <th colspan="3" scope="colgroup" class="text-center main-border">Player</th>
+                  <th colspan="11" scope="colgroup" class="text-center main-border">Field Goals</th>
+                  <th colspan="4" scope="colgroup" class="text-center main-border">Extra Points</th>
+                  <th colspan="2" scope="colgroup" class="text-center">Points</th>
+                </tr>
+                <tr class="t-sub-header">
+                  <th scope="col" class="player-name-col text-center">
+                    <mfSorter by="name">Name</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="lineups_rating">RTG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="played">GP</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.field_goals_made">FGM</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.field_goals_attempted">FGA</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.field_goals_longest_made">LONG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.field_goals_made0to19">FG (0-19)</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.field_goals_made20to29">FG (20-29)</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.field_goals_made30to39">FG (30-39)</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.field_goals_made40to49">FG (40-49)</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.field_goals_made50_plus">FG (50+)</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.field_goals_made_per_game">FGM/G</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.field_goals_attempted_per_game">FGA/G</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="season_stats.field_goal_percentage">FG%</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.extra_points_made">XPM</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.extra_points_attempted">XPA</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.extra_points_per_game">XP/G</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="season_stats.extra_points_percentage">XP%</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.points">PTS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.points_per_game">PTS/G</mfSorter>
+                  </th>
+                </tr>
+                <tr *ngFor="let fgStats of fgStatsTable.data" class="t-content">
+                  <td class="player-name-col-td">
+                    <app-player-link [league]="'nfl'" [playerName]="fgStats.name" [playerUrl]="fgStats.profile_url" [generateShortName]="false"></app-player-link>
+                  </td>
+                  <td>
+                    <app-rating [value]="fgStats.lineups_rating"></app-rating>
+                  </td>
+                  <td class="main-border">
+                    {{fgStats.played}}
+                  </td>
+
+                  <td>
+                    {{fgStats.season_stats.field_goals_made}}
+                  </td>
+                  <td>
+                    {{fgStats.season_stats.field_goals_attempted}}
+                  </td>
+                  <td>
+                    {{fgStats.season_stats.field_goals_longest_made}}
+                  </td>
+                  <td>
+                    {{fgStats.season_stats.field_goals_made0to19}}
+                  </td>
+                  <td>
+                    {{fgStats.season_stats.field_goals_made20to29}}
+                  </td>
+                  <td>
+                    {{fgStats.season_stats.field_goals_made30to39}}
+                  </td>
+                  <td>
+                    {{fgStats.season_stats.field_goals_made40to49}}
+                  </td>
+                  <td>
+                    {{fgStats.season_stats.field_goals_made50_plus}}
+                  </td>
+                  <td>
+                    {{fgStats.season_stats.field_goals_made_per_game}}
+                  </td>
+                  <td>
+                    {{fgStats.season_stats.field_goals_attempted_per_game}}
+                  </td>
+                  <td class="main-border">
+                    {{fgStats.season_stats.field_goal_percentage | percentage}}
+                  </td>
+
+                  <td>
+                    {{fgStats.season_stats.extra_points_made}}
+                  </td>
+                  <td>
+                    {{fgStats.season_stats.extra_points_attempted}}
+                  </td>
+                  <td>
+                    {{fgStats.season_stats.extra_points_per_game}}
+                  </td>
+                  <td class="main-border">
+                    {{fgStats.season_stats.extra_points_percentage | percentage}}
+                  </td>
+
+                  <td>
+                    {{fgStats.season_stats.points}}
+                  </td>
+                  <td>
+                    {{fgStats.season_stats.points_per_game}}
+                  </td>
+                </tr>
+              </tbody>
+            </table> <!-- END: Yearly Lineups Table -->
+          </div>
+        </div>
+        <div class="col-12" *ngIf="data.punter_stats">
+          <h2 class="page-heading-two">
+            Punter Stats
+          </h2>
+          <div class="multi-row-data-table-wrapper mb-0">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="data.punter_stats"
+              [(mfSortBy)]="posSorting.sortByPss"
+              [(mfSortOrder)]="posSorting.sortOrderPss"
+              (mfSortByChange)="onSortOrder('posSorting', 'sortByPss', 'sortOrderPss', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('posSorting', 'sortByPss', 'sortOrderPss', 'order', $event)"
+              #psStatsTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="3">
+                <col span="1" class="player-name-col"/>
+                <col span="2"/>
+              </colgroup>
+              <colgroup span="6"></colgroup>
+              <tbody>
+                <tr class="t-header">
+                  <th colspan="3" scope="colgroup" class="text-center main-border">Player</th>
+                  <th colspan="6" scope="colgroup" class="text-center">Punts</th>
+                </tr>
+                <tr class="t-sub-header">
+                  <th scope="col" class="player-name-col text-center">
+                    <mfSorter by="name">Name</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="played">GP</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="season_stats.punts">Punts</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.punts_per_game">Punts/G</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.punt_average">Punt Avg</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.punt_net_average">Net Punt Avg</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.punt_inside20">IN 20</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.punt_touchbacks">Touchbacks</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.punt_long">Long</mfSorter>
+                  </th>
+                </tr>
+                <tr *ngFor="let psStats of psStatsTable.data" class="t-content">
+                  <td class="player-name-col-td">
+                    <app-player-link [league]="'nfl'" [playerName]="psStats.name" [playerUrl]="psStats.profile_url" [generateShortName]="false"></app-player-link>
+                  </td>
+                  <td>
+                    {{psStats.played}}
+                  </td>
+                  <td class="main-border">
+                    {{psStats.season_stats.punts}}
+                  </td>
+
+                  <td>
+                    {{psStats.season_stats.punts_per_game}}
+                  </td>
+                  <td>
+                    {{psStats.season_stats.punt_average}}
+                  </td>
+                  <td>
+                    {{psStats.season_stats.punt_net_average}}
+                  </td>
+                  <td>
+                    {{psStats.season_stats.punt_inside20}}
+                  </td>
+                  <td>
+                    {{psStats.season_stats.punt_touchbacks}}
+                  </td>
+                  <td>
+                    {{psStats.season_stats.punt_long}}
+                  </td>
+                </tr>
+              </tbody>
+            </table> <!-- END: Yearly Lineups Table -->
+          </div>
+        </div>
+        <div class="col-12" *ngIf="data.defensive_player_stats">
+          <h2 class="page-heading-two">
+            Defensive Player Stats
+          </h2>
+          <div class="multi-row-data-table-wrapper custom-width big-table mb-0">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="data.defensive_player_stats"
+              [(mfSortBy)]="posSorting.sortByDefs"
+              [(mfSortOrder)]="posSorting.sortOrderDefs"
+              (mfSortByChange)="onSortOrder('posSorting', 'sortByDefs', 'sortOrderDefs', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('posSorting', 'sortByDefs', 'sortOrderDefs', 'order', $event)"
+              #defStatsTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="4">
+                <col span="1" class="player-name-col"/>
+                <col span="3"/>
+              </colgroup>
+              <colgroup span="7"></colgroup>
+              <colgroup span="4"></colgroup>
+              <colgroup span="2"></colgroup>
+              <colgroup span="4"></colgroup>
+              <colgroup span="4"></colgroup>
+              <colgroup span="2"></colgroup>
+              <tbody>
+                <tr class="t-header">
+                  <th colspan="4" scope="colgroup" class="text-center main-border">Player</th>
+                  <th colspan="7" scope="colgroup" class="text-center main-border">Tackles</th>
+                  <th colspan="4" scope="colgroup" class="text-center main-border">Sacks</th>
+                  <th colspan="2" scope="colgroup" class="text-center main-border"></th>
+                  <th colspan="4" scope="colgroup" class="text-center main-border">Fumbles</th>
+                  <th colspan="4" scope="colgroup" class="text-center main-border">Interceptions</th>
+                  <th colspan="2" scope="colgroup" class="text-center">Snaps</th>
+                </tr>
+                <tr class="t-sub-header">
+                  <th scope="col" class="player-name-col text-center">
+                    <mfSorter by="name">Name</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.position">POS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="lineups_rating">RTG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="played">GP</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.tackles">TCKL</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.tackles_per_game">TCKL/G</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.solo_tackles">SOLO</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.solo_tackles_per_game">SOLO/G</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.assisted_tackles">AST</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.assisted_tackles_per_game">AST/G</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter [by]="customSortFns.defFns.tackles_for_loss">TFL</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.sacks">SCK</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.sacks_per_game">SCK/G</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.sack_yards">SCK YDS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter [by]="customSortFns.defFns.quarterback_hits">QBH</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.passes_defended">PASS DEF</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter [by]="customSortFns.defFns.passes_defended_per_game">Pass Def/G</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.fumbles_forced">FF</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.fumbles_recovered">FR</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.fumble_return_yards">F RET YDS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter [by]="customSortFns.defFns.fumble_return_touchdowns">F TD</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.interceptions">INT</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.interceptions_per_game">INT/G</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.interception_return_yards">INT YDS</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter [by]="customSortFns.defFns.interception_return_touchdowns">INT TD</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.snaps">#</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.defFns.snaps_percentage">DEF %</mfSorter>
+                  </th>
+                </tr>
+                <tr *ngFor="let defStats of defStatsTable.data" class="t-content">
+                  <td class="player-name-col-td">
+                    <app-player-link [league]="'nfl'" [playerName]="defStats.name" [playerUrl]="defStats.profile_url" [generateShortName]="false"></app-player-link>
+                  </td>
+                  <td>
+                    {{defStats.season_stats.position}}
+                  </td>
+                  <td>
+                    <app-rating [value]="defStats.lineups_rating"></app-rating>
+                  </td>
+                  <td class="main-border">
+                    {{defStats.played}}
+                  </td>
+
+                  <td>
+                    {{defStats.season_stats.tackles}}
+                  </td>
+                  <td>
+                    {{defStats.season_stats.tackles_per_game}}
+                  </td>
+                  <td>
+                    {{defStats.season_stats.solo_tackles}}
+                  </td>
+                  <td>
+                    {{defStats.season_stats.solo_tackles_per_game}}
+                  </td>
+                  <td>
+                    {{defStats.season_stats.assisted_tackles}}
+                  </td>
+                  <td>
+                    {{defStats.season_stats.assisted_tackles_per_game}}
+                  </td>
+                  <td class="main-border">
+                    {{defStats.season_stats.tackles_for_loss}}
+                  </td>
+
+                  <td>
+                    {{defStats.season_stats.sacks}}
+                  </td>
+                  <td>
+                    {{defStats.season_stats.sacks_per_game}}
+                  </td>
+                  <td>
+                    {{defStats.season_stats.sack_yards}}
+                  </td>
+                  <td class="main-border">
+                    {{defStats.season_stats.quarterback_hits}}
+                  </td>
+
+                  <td>
+                    {{defStats.season_stats.passes_defended}}
+                  </td>
+                  <td class="main-border">
+                    {{defStats.season_stats.passes_defended_per_game}}
+                  </td>
+
+                  <td>
+                    {{defStats.season_stats.fumbles_forced}}
+                  </td>
+                  <td>
+                    {{defStats.season_stats.fumbles_recovered}}
+                  </td>
+                  <td>
+                    {{defStats.season_stats.fumble_return_yards}}
+                  </td>
+                  <td class="main-border">
+                    {{defStats.season_stats.fumble_return_touchdowns}}
+                  </td>
+
+                  <td>
+                    {{defStats.season_stats.interceptions}}
+                  </td>
+                  <td>
+                    {{defStats.season_stats.interceptions_per_game}}
+                  </td>
+                  <td>
+                    {{defStats.season_stats.interception_return_yards}}
+                  </td>
+                  <td class="main-border">
+                    {{defStats.season_stats.interception_return_touchdowns}}
+                  </td>
+
+                  <td>
+                    {{defStats.season_stats.snaps | numberWithCommas}}
+                  </td>
+                  <td>
+                    {{defStats.season_stats.snaps_percentage | percentage : true}}
+                  </td>
+                </tr>
+              </tbody>
+            </table> <!-- END: Yearly Lineups Table -->
+          </div>
+        </div>
+        <div class="col-12" *ngIf="data.special_teams_player_stats">
+          <h2 class="page-heading-two">
+            Special Teams Stats
+          </h2>
+          <div class="multi-row-data-table-wrapper" [ngClass]="{'mb-0': data.bottom_paragraph && data.bottom_header}">
+            <table
+              [mfRowsOnPage]="10000" [mfData]="data.special_teams_player_stats"
+              [(mfSortBy)]="posSorting.sortBySpts"
+              [(mfSortOrder)]="posSorting.sortOrderSpts"
+              (mfSortByChange)="onSortOrder('posSorting', 'sortBySpts', 'sortOrderSpts', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('posSorting', 'sortBySpts', 'sortOrderSpts', 'order', $event)"
+              #sptStatsTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="4">
+                <col span="1" class="player-name-col"/>
+                <col span="3"/>
+              </colgroup>
+              <colgroup span="3"></colgroup>
+              <colgroup span="3"></colgroup>
+              <tbody>
+                <tr class="t-header">
+                  <th colspan="4" scope="colgroup" class="text-center main-border">Player</th>
+                  <th colspan="3" scope="colgroup" class="text-center main-border">Kickoffs</th>
+                  <th colspan="3" scope="colgroup" class="text-center">Punts</th>
+                </tr>
+                <tr class="t-sub-header">
+                  <th scope="col" class="player-name-col text-center">
+                    <mfSorter by="name">NAME</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="lineups_rating">RTG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.fumbles">FUML</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="season_stats.touchdowns">TD</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.kick_returns">KICK RET</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.kick_return_average">KICK RET AVG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center main-border">
+                    <mfSorter by="season_stats.kick_return_percentage">KICK RET %</mfSorter>
+                  </th>
+
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.punt_returns">PUNT RET</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter by="season_stats.punt_return_average">PUNT RET AVG</mfSorter>
+                  </th>
+                  <th scope="col" class="text-center">
+                    <mfSorter [by]="customSortFns.sortBySptsPuntRetPercentage">PUNT RET %</mfSorter>
+                  </th>
+                </tr>
+                <tr *ngFor="let sptStats of sptStatsTable.data" class="t-content">
+                  <td class="player-name-col-td">
+                    <app-player-link [league]="'nfl'" [playerName]="sptStats.name" [playerUrl]="sptStats.profile_url" [generateShortName]="false"></app-player-link>
+                  </td>
+                  <td>
+                    <app-rating [value]="sptStats.lineups_rating"></app-rating>
+                  </td>
+                  <td>
+                    {{sptStats.season_stats.fumbles}}
+                  </td>
+                  <td scope="col" class="main-border">
+                    {{sptStats.season_stats.touchdowns}}
+                  </td>
+
+                  <td>
+                    {{sptStats.season_stats.kick_returns}}
+                  </td>
+                  <td>
+                    {{sptStats.season_stats.kick_return_average}}
+                  </td>
+                  <td scope="col" class="main-border">
+                    {{sptStats.season_stats.kick_return_percentage | percentage}}
+                  </td>
+
+                  <td>
+                    {{sptStats.season_stats.punt_returns}}
+                  </td>
+                  <td>
+                    {{sptStats.season_stats.punt_return_average}}
+                  </td>
+                  <td>
+                    {{sptStats.season_stats.punt_return_percentage | percentage}}
+                  </td>
+                </tr>
+              </tbody>
+            </table> <!-- END: Yearly Lineups Table -->
+          </div>
+        </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="col-12" *appBrowserIf="!data.team_header">
+      <div class="no-stats-cap">
+        {{handleYear(params?.year)}} Regular Season Hasn't Started. Select Last Year for Stats.
+      </div>
+    </div>
+
+    <div *ngIf="data.bottom_paragraph" class="col-12 flex-last flex-sm-unordered">
+      <h2 *ngIf="data.bottom_header" class="page-heading-two">
+        {{data.bottom_header}}
+      </h2>
+      <p class="site-pages-content" [innerHtml]="data.bottom_paragraph | safeHtml"></p>
+    </div>
+  </div>
+</div>
+
+
+

@@ -1,0 +1,74 @@
+:host {
+  $disabled-up: #95c1ac;
+  $disabled-down: #ffc5c5;
+  &.disabled {
+    .arrow {
+      pointer-events: none;
+      &.up-arrow {
+        color: $disabled-up !important;
+      }
+      &.down-arrow {
+        color: $disabled-down !important;
+      }
+    }
+  }
+  &.disabled-up {
+    .arrow {
+      &.up-arrow {
+        color: $disabled-up !important;
+        pointer-events: none;
+      }
+    }
+  }
+  &.disabled-down {
+    .arrow {
+      &.down-arrow {
+        color: $disabled-down !important;
+        pointer-events: none;
+      }
+    }
+  }
+}
+.app-arrows-up-down {
+  display: inline-block;
+  height: 16px;
+  vertical-align: middle;
+  & > div {
+    height: 18px;
+    width: 16px;
+    position: relative;
+    top: -4px;
+  }
+  .arrow-container {
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    &:hover {
+      .arrow {
+        &.up-arrow {
+          color: #397759;
+        }
+        &.down-arrow {
+          color: #bd0000;
+        }
+      }
+    }
+    .arrow {
+      line-height: 0;
+      font-size: 20px;
+      position: absolute;
+      &.up-arrow {
+        color: #2bb673;
+        top: 9px;
+        left: 0px;
+      }
+      &.down-arrow {
+        color: #ee0f0f;
+        top: 1px;
+        left: 0;
+      }
+    }
+  }
+
+
+}

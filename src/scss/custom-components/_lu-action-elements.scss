@@ -1,0 +1,32 @@
+button {
+  font-family: $lu-font-family;
+}
+
+.light-gray {
+  background-color: #f0f0f1;
+  color: #333;
+  &:hover {
+    background-color: #dbdbdc;
+  }
+}
+
+.bullpen {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 10px;
+  height: 28px;
+  width: 108px;
+  margin-top: 10px;
+  padding: 0;
+}
+
+.underline-link {
+  color: #333;
+  border-bottom: 1px solid #333;
+  text-decoration: none !important;
+  transition: ease all 0.12s;
+  &:hover {
+    color: #0aa7df;
+    border-color: #0aa7df;
+  }
+}

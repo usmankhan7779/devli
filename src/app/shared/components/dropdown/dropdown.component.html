@@ -1,0 +1,58 @@
+<div *ngIf="!linksOnly; else showLinksOnly" ngbDropdown [ngClass]="{'readonly': readonly}" class="grouped-dropdown dropdown">
+  <button [disabled]="isDisabled" type="button" class="grouped-dropdown-btn btn btn-secondary px-3" [ngClass]="[type === 'dollar' ? 'dd-dollar' : '', className ? className : '', showTeamLogo ? 'has-logo' : '']" ngbDropdownToggle>
+    <ng-container *ngIf="showTeamLogo && teamLogoType && league">
+      <img *ngIf="getActiveTeamLogo(ddData[prop]); let activeLogo;"  [type]="teamLogoType" [appSpriteImg]="league" class="mr-1 logo-sm" [src]="activeLogo | logo : league : teamLogoType" alt="">
+    </ng-container>
+    <span *ngIf="type !== 'dollar'">{{prefix}}{{showSelectedValues(name, ddData[prop])}}</span>
+    <app-dollars
+      *ngIf="type === 'dollar'"
+      [amount]="getMaxDollarSelected(ddData)"
+      [classes]="'teal'"
+      style="display: inline-block;"
+      [color]="withColors ? withColors[getMaxDollarSelected(ddData)] : undefined"
+    ></app-dollars>
+    <img [hidden]="readonly" class="down-arrow" alt="down-arrow" src="/assets/images/arrow-down.png" />
+  </button>
+  <div class="dropdown-menu" [ngClass]="{'scrollable-menu': scrollableMenu}">
+    <div class="dropdown-item" *ngIf="!isSingleSelect && !isSelectedNone(ddData[prop])" (click)="toggleAll($event, ddData[prop], false)">
+      <div class="form-check pl-1 m-0">
+        <label class="m-0">
+          Select None
+        </label>
+      </div>
+    </div>
+    <div class="dropdown-item" *ngIf="!isSingleSelect && isSelectedNone(ddData[prop])" (click)="toggleAll($event, ddData[prop], true)">
+      <div class="form-check pl-1 m-0">
+        <label class="m-0">
+          Select All
+        </label>
+      </div>
+    </div>
+    <ng-container *ngFor="let item of ddData[prop]">
+      <div *ngIf="!item._hiddenItemsPerPage && (!allowHiddenFiltering || (allowHiddenFiltering && !item.hidden))" (click)="onToggleItem($event, item)" [ngClass]="{'dd-opt-active': isSingleSelect && item.selected}" class="dropdown-item">
+        <div class="form-check pl-1 m-0">
+          <input *ngIf="!isSingleSelect" [checked]="item.selected" class="form-check-input" type="checkbox">
+          <label *ngIf="type !== 'dollar'" class="m-0">
+            <img *ngIf="showTeamLogo && teamLogoType && league" [type]="teamLogoType" [appSpriteImg]="league" class="mr-1 logo-sm" [src]="getLogoFromName(item.name) | logo : league : teamLogoType" alt="">
+            {{item.name}}
+          </label>
+          <label *ngIf="type === 'dollar'" class="m-0">
+            <app-dollars [amount]="item.name" [classes]="'teal'" style="display: inline-block;" [color]="withColors ? withColors[item.name] : undefined"></app-dollars>
+          </label>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+<ng-template #showLinksOnly>
+  <div ngbDropdown class="grouped-dropdown dropdown">
+    <button type="button" class="grouped-dropdown-btn btn btn-secondary {{className}} px-3" id="page-select-dropdown" ngbDropdownToggle>
+      <span class="pr-0 pr-sm-3">{{showSelectedValues(name, ddData[prop])}}</span> <img class="down-arrow" src="/assets/images/arrow-down.png" alt="arrow-down" />
+    </button>
+    <div class="dropdown-menu" aria-labelledby="page-select-dropdown">
+      <div [hidden]="item.hidden" [ngClass]="wrapperClass" *ngFor="let item of ddData[prop]">
+        <a (click)="onLinkClicked(item)" [routerLink]="[item.url]" [routerLinkActive]="'dd-active-btn'" [routerLinkActiveOptions]="{exact: true}" class="dropdown-item">{{item.name}}</a>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,110 @@
+@import "../../../../scss/shared/variables/project";
+@import "../../../../scss/shared/variables/bootstrap";
+
+:host {
+	& > div {
+		display: inline-block;
+
+		& > div {
+			display: inline-block;
+			position: relative;
+			border: 1px solid transparentize(black, 0.8);
+			color: transparentize(black, 0.8);
+			background-color: transparent;
+			border-radius: 50%;
+			margin: 0 0.1rem;
+			font-size: 12px;
+			height: 20px;
+			width: 20px;
+			text-align: center;
+			line-height: 1.5;
+
+			& > i {
+				margin: 0;
+				padding: 0;
+			}
+
+			&.highlighted {
+				color: $gray-dark;
+				border-color: $gray-dark;
+			}
+		}
+
+		&.filled > div {
+			border: none;
+			padding-top: 1px;
+			background: transparentize(white, 0.75);
+			&.highlighted {
+				background: white;
+			}
+		}
+
+		// Color variants
+
+		&.teal {
+			&.filled > div {
+				color: $psd-teal;
+			}
+			&.outline > .highlighted {
+				border-color: $psd-teal;
+				color: $psd-teal;
+			}
+		}
+
+		&.red {
+			&.filled > div {
+				color: $psd-red;
+			}
+			&.outline > .highlighted {
+				border-color: $psd-red;
+				color: $psd-red;
+			}
+		}
+
+		&.amber {
+			&.filled > div {
+				color: $psd-amber;
+			}
+			&.outline > .highlighted {
+				border-color: $psd-amber;
+				color: $psd-amber;
+			}
+		}
+
+		&.green {
+			&.filled > div {
+				color: $psd-green;
+			}
+			&.outline > .highlighted {
+				border-color: $psd-green;
+				color: $psd-green;
+			}
+		}
+
+		&.blue {
+			&.filled > div {
+				color: $psd-primary;
+			}
+			&.outline > .highlighted {
+				border-color: $psd-primary;
+				color: $psd-primary;
+			}
+		}
+
+
+	}
+
+}
+
+:host-context(.dollar-container) {
+  @media (max-width: 1468px) {
+    & > div {
+      & > div {
+        font-size: 9px;
+        height: 15px;
+        width: 15px;
+        line-height: 1.5;
+      }
+    }
+  }
+}

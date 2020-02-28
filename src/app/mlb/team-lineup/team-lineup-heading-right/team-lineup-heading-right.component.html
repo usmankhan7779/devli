@@ -1,0 +1,45 @@
+<div *ngIf="nav" class="team-lineup-heading-right">
+  <!-- Team Lineup Heading Right -->
+  <ng-container *ngIf="nav.opp_abbr && (!nav.status || (nav.status.status !== 'In Progress' && nav.status.status !== 'Final'))">
+    <div class="float-right">
+      <h4 class="opponent-team-name">
+        <span *ngIf="!nav.is_home" class="team-game-location">at</span>
+        <span *ngIf="nav.is_home" class="team-game-location">vs</span>
+        <span class="opponent-team-name">{{nav.opp_abbr}}</span>
+      </h4>
+      <h4 *ngIf="nav.status.status !== 'Delayed'" class="event-date"><app-general-time-format [time]="nav.matchup_time"></app-general-time-format></h4>
+      <h4 *ngIf="nav.status.status === 'Delayed'" class="event-date">Delayed</h4>
+      <div *ngIf="showUpdated && nav.updated" class="updated-block-mobile">
+        Updated: <app-general-time-format [time]="nav.updated" [showSeoTime]="true" [showTimeAgo]="true"></app-general-time-format>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="nav.status?.status === 'In Progress'" >
+    <div class="float-right">
+      <h4 class="opponent-team-name text-center" style="font-weight: normal">
+        <span [ngClass]="{'font-bold': nav.status.away_is_batting}">{{nav.is_home ? nav.opp_abbr : nav.team_abbr}} {{nav.status.away_team_runs}}</span>
+        @
+        <span [ngClass]="{'font-bold': nav.status.home_is_batting}">{{nav.is_home ? nav.team_abbr : nav.opp_abbr}} {{nav.status.home_team_runs}}</span>
+      </h4>
+      <h4 class="event-date text-center" style="font-weight: normal">
+        {{nav.status.inning_half === 'B' ? 'Bottom' : 'Top'}} {{nav.status.inning}}, {{nav.status.outs}} {{nav.status.outs === '1' || nav.status.outs === 1  ? 'Out': 'Outs'}}
+      </h4>
+      <div *ngIf="showUpdated && nav.updated" class="updated-block-mobile">
+        Updated: <app-general-time-format [time]="nav.updated" [showSeoTime]="true" [showTimeAgo]="true"></app-general-time-format>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="nav.status?.status === 'Final'"  >
+    <div class="float-right">
+      <h4 class="opponent-team-name text-center" style="font-weight: normal">
+        <span [ngClass]="{'font-bold': isWinner(nav.status.away_team_runs, nav.status.home_team_runs)}">{{nav.is_home ? nav.opp_abbr : nav.team_abbr}} {{nav.status.away_team_runs}}</span>
+        @
+        <span [ngClass]="{'font-bold': isWinner(nav.status.home_team_runs, nav.status.away_team_runs)}">{{nav.is_home ? nav.team_abbr : nav.opp_abbr}} {{nav.status.home_team_runs}}</span>
+      </h4>
+      <h4 style="font-weight: normal" class="event-date text-center w-100">Final</h4>
+      <div *ngIf="showUpdated && nav.updated" class="updated-block-mobile">
+        Updated: <app-general-time-format [time]="nav.updated" [showSeoTime]="true" [showTimeAgo]="true"></app-general-time-format>
+      </div>
+    </div>
+  </ng-container>
+</div>
