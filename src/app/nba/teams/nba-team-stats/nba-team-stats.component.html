@@ -60,39 +60,37 @@
       <div class="in-page-nav-menu" [ngbCollapse]="!isCollapsed" [ngClass]="{'hidden': !isCollapsed}">
         <!-- Team Lineup Heading Navigation -->
         <div class="page-heading-navigation">
-          <div *ngIf="data.nav.is_home && data.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
-            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{ data.nav.opp_name | lastTeamName}} Depth Chart</a>
+          <div *ngIf="data.nav.is_home && data.nav.team_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
+            <a [appPreselectNbaDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.team_depth_chart_route]" class="page-heading-nav-btn">{{ data.nav.opp_name | lastTeamName}} Depth Chart</a>
           </div>
           <div *ngIf="!data.nav.is_home" class="tab-btn-xl depth-chart-team tab-btn-wrap">
-            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.team_depth_chart_route]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="page-heading-nav-btn">{{ data.nav.team_name | lastTeamName}} Depth Chart</a>
+            <a [appPreselectNbaDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.team_depth_chart_route]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="page-heading-nav-btn">{{ data.nav.team_name | lastTeamName}} Depth Chart</a>
           </div>
           <div *ngIf="data.nav.is_home" class="tab-btn-xl depth-chart-team tab-btn-wrap">
-            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.team_depth_chart_route]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="page-heading-nav-btn">{{ data.nav.team_name | lastTeamName}} Depth Chart</a>
+            <a [appPreselectNbaDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.team_depth_chart_route]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="page-heading-nav-btn">{{ data.nav.team_name | lastTeamName}} Depth Chart</a>
           </div>
           <div *ngIf="!data.nav.is_home && data.nav.opp_depth_chart_route" class="tab-btn-xl depth-chart-team tab-btn-wrap">
-            <a [appPreselectNflDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{ data.nav.opp_name | lastTeamName}} Depth Chart</a>
+            <a [appPreselectNbaDepthChartTeamSeason]="params?.year" [routerLink]="[data.nav.opp_depth_chart_route]" class="page-heading-nav-btn">{{ data.nav.opp_name | lastTeamName}} Depth Chart</a>
           </div>
           <div *ngIf="data.nav.matchup_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
-            <a [appNflMatchupIdPreselect]="data.nav.game_key" [routerLink]="[data.nav.matchup_route]" routerLinkActive="active" class="page-heading-nav-btn">Matchups</a>
+            <a [appNbaMatchupIdPreselect]="data.nav.game_key" [routerLink]="[data.nav.matchup_route]" routerLinkActive="active" class="page-heading-nav-btn">Matchups</a>
           </div>
           <!--news commented-->
           <!--<div *ngIf="data.nav.team_news_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">-->
             <!--<a [appPreselectNflNewsTeamSeason]="params?.year" [routerLink]="[data.nav.team_news_route]" routerLinkActive="active" class="page-heading-nav-btn">News</a>-->
           <!--</div>-->
           <div class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
-            <a [appPreselectNflStatsTeamSeason]="params?.year" [routerLink]="['./']" routerLinkActive="active" class="page-heading-nav-btn">Stats</a>
+            <a   [routerLink]="['./']" routerLinkActive="active" class="page-heading-nav-btn">Stats</a>
           </div>
-          <div *ngIf="data.nav.team_snaps_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
-            <a [appPreselectNflSnapsTeamSeason]="params?.year" [routerLink]="[data.nav.team_snaps_route]" routerLinkActive="active" class="page-heading-nav-btn">Snaps</a>
-          </div>
+         
           <div *ngIf="data.nav.team_roster_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
-            <a [appPreselectNflRosterTeamSeason]="params?.year" [routerLink]="[data.nav.team_roster_route]" routerLinkActive="active" class="page-heading-nav-btn">Roster</a>
+            <a [appPreselectNbaRosterTeamSeason]="params?.year" [routerLink]="[data.nav.team_roster_route]" routerLinkActive="active" class="page-heading-nav-btn">Roster</a>
           </div>
           <div *ngIf="data.nav.team_injuries_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt">
-            <a [routerLink]="[data.nav.team_injuries_route]" routerLinkActive="active" class="page-heading-nav-btn">Injuries</a>
+            <a [routerLink]="[data.nav.opp_injuries_route]" routerLinkActive="active" class="page-heading-nav-btn">Injuries</a>
           </div>
           <div *ngIf="data.nav.team_schedule_route" class="tab-btn-xsm tab-btn-wrap depth-chart-opt last">
-            <a [appPreselectNflScheduleTeamSeason]="params?.year" [routerLink]="[data.nav.team_schedule_route]" class="page-heading-nav-btn">Schedule</a>
+            <a [appPreselectNbaScheduleTeamSeason]="params?.year" [routerLink]="[data.nav.team_schedule_route]" class="page-heading-nav-btn">Schedule</a>
           </div>
         </div>
       </div>
@@ -165,19 +163,24 @@
           <b>Conference Record:</b> {{data.team_header.conference_record}}
           <b>Division Record:</b> {{data.team_header.division_record}}
         </div>
-        <div class="csv-text">
-          <b>Head Coach::</b> {{data.team_header.head_coach}}
-          <b>Assitant Coach:</b> {{data.team_header.assistant_coach[0]}}
+        <div class="csv-text" style="
+        margin-top: -21px;">
+          <b>Head Coach:</b> {{data.team_header.head_coach}}
+          <b >Assitant Coach:</b> {{data.team_header.assistant_coach[0]}}
           <b>Assitant Coach:</b> {{data.team_header.assistant_coach[1]}}
           <b>Assitant Coach:</b> {{data.team_header.assistant_coach[2]}}
         </div>
-        <div class="csv-text" ><b>Assitant Coach:</b> {{data.team_header.assistant_coach[3]}}
+
+        <!-- <div class="csv-text" ><b>Assitant Coach:</b> {{data.team_header.assistant_coach[3]}}
           <b>Assitant Coach:</b> {{data.team_header.assistant_coach[4]}}
           <b>Assitant Coach:</b> {{data.team_header.assistant_coach[5]}}
           <b>Assitant Coach:</b> {{data.team_header.assistant_coach[6]}}
-        </div>
-        <div class="csv-text"> 
-          <b>Assitant Coach:</b> {{data.team_header.assistant_coach[7]}}
+        </div> -->
+        <div class="csv-text" style="
+        margin-top: -21px;
+    "> 
+          <b>Assitant Coach:</b> {{data.team_header.assistant_coach[3]}}
+          <b>Assitant Coach:</b> {{data.team_header.assistant_coach[4]}}
           <b>	General Manager:</b> {{data.team_header.general_manager}}
           <b>Arena: Bank of America</b> {{data.team_header.arena}}
         </div>
@@ -668,7 +671,7 @@
                     0
                   </span>
                 </td>
-                <td class="main-border">
+                <td >
                   <span *ngIf="teamOffensiveStats.points !== null">
                     {{teamOffensiveStats.points}}
                   </span>
@@ -702,7 +705,7 @@
                     0
                   </span>
                  </td>
-                <td>
+                <td class="main-border">
                   <span *ngIf="teamOffensiveStats.quarter_4 !== null">
                     {{teamOffensiveStats.quarter_4}}
                    </span>
@@ -872,7 +875,7 @@
                     0
                   </span>
                 </td>
-                <td    >
+                <td class="main-border"    >
                   <span *ngIf="teamDefensiveStats.over_under !== null">
                     {{teamDefensiveStats.over_under}}
                   </span>
@@ -881,7 +884,7 @@
                   </span>
                 </td>
                 
-                <td class="main-border"  >
+                <td  >
                   <span *ngIf="teamDefensiveStats.points_allowed !== null">
                     {{teamDefensiveStats.points_allowed}}
                   </span>
@@ -917,7 +920,7 @@
                     </span>
                     
                    
-                  <td>
+                  <td  class="main-border" >
                     <span *ngIf="teamDefensiveStats.quarter_4 !== null">
                       {{teamDefensiveStats.quarter_4}}
                     </span>
@@ -947,242 +950,7 @@
           </div>
         </div>
        
-        <div *ngIf="ddData.tabs['all'] || ddData.tabs['player-stats']" class="row">
-          <ng-container *ngIf="hasData; else noDataTpl">
-          <div class="col-12" *ngIf="data.team_leaders">
-            <h2 class="page-heading-two">
-              {{data.nav.team_name | lastTeamName}} Team Leaders
-            </h2>
-            <div class="leader-container">
-              <div class="d-flex flex-wrap leader-box-wrapper">
-                <ng-container >
-                    <div class="leader-box" >
-                      <h5>Points Per Game</h5>
-                      <div>
-                        <div class="leader-image-wrapper">
-                          <a [routerLink]="[data.team_leaders.points_per_game[0]?.profile_url || '']" rel="nofollow" class="link-black">
-                            <img [src]="data.team_leaders.points_per_game[0].photo_url" alt="{{data.team_leaders.points_per_game[0].full_name}}">
-                          </a>
-                        </div>
-                        <div class="leader-content-wrapper">
-                          <div class="leader-name">
-                            <a [routerLink]="[data.team_leaders.points_per_game[0].profile_url || '']" class="link-black-underline">
-                              {{data.team_leaders.points_per_game[0].full_name}} :{{data.team_leaders.points_per_game[0].points_per_game}}
-                            </a>
-                          </div>
-                          <div>
-                            <a [routerLink]="[data.team_leaders.points_per_game[1].profile_url || '']" class="link-black-underline">
-                              {{data.team_leaders.points_per_game[1].full_name}} :{{data.team_leaders.points_per_game[1].points_per_game}}
-                            </a>                            
-                           </div>
-                          <div>
-                            <a [routerLink]="[data.team_leaders.points_per_game[2].profile_url || '']" class="link-black-underline">{{data.team_leaders.points_per_game[2].full_name}}: {{data.team_leaders.points_per_game[2].points_per_game}}
-                              </a>
-                            </div>
-                          <div> <a [routerLink]="[data.team_leaders.points_per_game[3].profile_url || '']" class="link-black-underline">
-                            {{data.team_leaders.points_per_game[3].full_name}}: {{data.team_leaders.points_per_game[3].points_per_game}}</a>
-
-                          </div>
-                          <div>
-                            
-                            <a [routerLink]="[data.team_leaders.points_per_game[4].profile_url || '']" class="link-black-underline">
-                            {{data.team_leaders.points_per_game[4].full_name}}: {{data.team_leaders.points_per_game[4].points_per_game}}
-                          </a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                 
-                </ng-container>
-                <ng-container >
-                  <div class="leader-box" >
-                    <h5>Assists Per Game</h5>
-                    <div>
-                      <div class="leader-image-wrapper">
-                        <a [routerLink]="[data.team_leaders.assists_per_game[0]?.profile_url || '']" rel="nofollow" class="link-black">
-                          <img [src]="data.team_leaders.assists_per_game[0].photo_url" alt="{{data.team_leaders.assists_per_game[0].full_name}}">
-                        </a>
-                      </div>
-                      <div class="leader-content-wrapper">
-                        <div class="leader-name">
-                          <a [routerLink]="[data.team_leaders.assists_per_game[0].profile_url || '']" class="link-black-underline">
-                            {{data.team_leaders.assists_per_game[0].full_name}} :{{data.team_leaders.points_per_game[0].assists_per_game}}
-                          </a>
-                        </div>
-                        <div> <a [routerLink]="[data.team_leaders.assists_per_game[1].profile_url || '']" class="link-black-underline">
-                          {{data.team_leaders.assists_per_game[1].full_name}}: {{data.team_leaders.assists_per_game[1].assists_per_game}}
-                        </a>
-
-                        </div>
-                        <div>
-                          <a [routerLink]="[data.team_leaders.assists_per_game[2].profile_url || '']" class="link-black-underline">
-                          {{data.team_leaders.assists_per_game[2].full_name}}: {{data.team_leaders.assists_per_game[2].assists_per_game}}
-                        </a>
-
-                        </div>
-                        <div>
-                          <a [routerLink]="[data.team_leaders.assists_per_game[3].profile_url || '']" class="link-black-underline">
-                          
-                          {{data.team_leaders.assists_per_game[3].full_name}}: {{data.team_leaders.assists_per_game[3].assists_per_game}}
-                        
-                        </a>
-                      </div>
-                        <div>
-                          <a [routerLink]="[data.team_leaders.assists_per_game[4].profile_url || '']" class="link-black-underline">
-                          
-                          {{data.team_leaders.assists_per_game[4].full_name}}: {{data.team_leaders.assists_per_game[4].assists_per_game}}
-                        
-                        </a>
-                      </div>
-  
-                        
-                      </div>
-                    </div>
-                  </div>
-               
-              </ng-container>
-             
-            <ng-container >
-              <div class="leader-box" >
-                <h5>Rebounds Per Game</h5>
-                <div>
-                  <div class="leader-image-wrapper">
-                    <a [routerLink]="[data.team_leaders.rebounds_per_game[0]?.profile_url || '']" rel="nofollow" class="link-black">
-                      <img [src]="data.team_leaders.rebounds_per_game[0].photo_url" alt="{{data.team_leaders.rebounds_per_game[0].full_name}}">
-                    </a>
-                  </div>
-                  <div class="leader-content-wrapper">
-                    <div class="leader-name">
-                      <a [routerLink]="[data.team_leaders.rebounds_per_game[0].profile_url || '']" class="link-black-underline">
-                        {{data.team_leaders.rebounds_per_game[0].full_name}} :{{data.team_leaders.rebounds_per_game[0].rebounds_per_game}}
-                      </a>
-                    </div>
-                    <div>
-                      <a [routerLink]="[data.team_leaders.rebounds_per_game[1].profile_url || '']" class="link-black-underline">
-                      {{data.team_leaders.rebounds_per_game[1].full_name}}: {{data.team_leaders.rebounds_per_game[1].rebounds_per_game}}
-                    
-                    </a></div>
-                    <div>
-                      <a [routerLink]="[data.team_leaders.rebounds_per_game[2].profile_url || '']" class="link-black-underline">
-                        {{data.team_leaders.rebounds_per_game[2].full_name}}: {{data.team_leaders.rebounds_per_game[2].rebounds_per_game}}
-                      </a></div>
-                    <div>
-                      
-                      <a [routerLink]="[data.team_leaders.rebounds_per_game[3].profile_url || '']" class="link-black-underline">
-                        {{data.team_leaders.rebounds_per_game[3].full_name}}: {{data.team_leaders.rebounds_per_game[3].rebounds_per_game}}
-                      </a>
-
-                      </div>
-                    <div>
-                      <a [routerLink]="[data.team_leaders.rebounds_per_game[4].profile_url || '']" class="link-black-underline">
-                      {{data.team_leaders.rebounds_per_game[4].full_name}}: {{data.team_leaders.rebounds_per_game[4].rebounds_per_game}}
-                    </a>
-
-                    </div>
-  
-                  </div>
-                </div>
-              </div>
-           
-          </ng-container>
-          <ng-container >
-            <div class="leader-box" >
-              <h5>Steals Per Game</h5>
-              <div>
-                <div class="leader-image-wrapper">
-                  <a [routerLink]="[data.team_leaders.steals_per_game[0]?.profile_url || '']" rel="nofollow" class="link-black">
-                    <img [src]="data.team_leaders.steals_per_game[0].photo_url" alt="{{data.team_leaders.steals_per_game[0].full_name}}">
-                  </a>
-                </div>
-                <div class="leader-content-wrapper">
-                  <div class="leader-name">
-                    <a [routerLink]="[data.team_leaders.steals_per_game[0].profile_url || '']" class="link-black-underline">
-                      {{data.team_leaders.steals_per_game[0].full_name}} :{{data.team_leaders.steals_per_game[0].steals_per_game}}
-                    </a>
-                  </div>
-                  <div>
-                    <a [routerLink]="[data.team_leaders.steals_per_game[1].profile_url || '']" class="link-black-underline"> 
-                    
-                    {{data.team_leaders.steals_per_game[1].full_name}}: {{data.team_leaders.steals_per_game[1].steals_per_game}}
-                    </a>
-
-                  </div>
-                 
-                  <div>
-                    <a [routerLink]="[data.team_leaders.steals_per_game[2].profile_url || '']" class="link-black-underline">
-                    {{data.team_leaders.steals_per_game[2].full_name}}: {{data.team_leaders.steals_per_game[2].steals_per_game}}
-                  </a>
-
-                  </div>
-                  <div>
-                    <a [routerLink]="[data.team_leaders.steals_per_game[3].profile_url || '']" class="link-black-underline">
-                    {{data.team_leaders.steals_per_game[3].full_name}}: {{data.team_leaders.steals_per_game[3].steals_per_game}}
-                  </a>
-
-                  </div>
-                  <div>
-                    <a [routerLink]="[data.team_leaders.steals_per_game[4].profile_url || '']" class="link-black-underline">
-                    {{data.team_leaders.steals_per_game[4].full_name}}: {{data.team_leaders.steals_per_game[4].steals_per_game}}
-                  </a>
-                  </div>
-  
-                  
-                </div>
-              </div>
-            </div>
-         
-        </ng-container>
-  
-        <ng-container >
-          <div class="leader-box" >
-            <h5>Blocks per Game</h5>
-            <div>
-              <div class="leader-image-wrapper">
-                <a [routerLink]="[data.team_leaders.blocked_shots_per_game[0]?.profile_url || '']" rel="nofollow" class="link-black">
-                  <img [src]="data.team_leaders.blocked_shots_per_game[0].photo_url" alt="{{data.team_leaders.blocked_shots_per_game[0].full_name}}">
-                </a>
-              </div>
-              <div class="leader-content-wrapper">
-                <div class="leader-name">
-                  <a [routerLink]="[data.team_leaders.blocked_shots_per_game[0].profile_url || '']" class="link-black-underline">
-                    {{data.team_leaders.blocked_shots_per_game[0].full_name}} :{{data.team_leaders.blocked_shots_per_game[0].blocked_shots_per_game}}
-                  </a>
-                </div>
-                <div>
-                  <a [routerLink]="[data.team_leaders.blocked_shots_per_game[1]?.profile_url || '']" rel="nofollow" class="link-black">
-                  {{data.team_leaders.blocked_shots_per_game[1].full_name}}: {{data.team_leaders.blocked_shots_per_game[1].blocked_shots_per_game}}
-                </a>
-
-                </div>
-                <div>
-                  <a [routerLink]="[data.team_leaders.blocked_shots_per_game[2]?.profile_url || '']" rel="nofollow" class="link-black">
-                  {{data.team_leaders.blocked_shots_per_game[2].full_name}}: {{data.team_leaders.blocked_shots_per_game[2].blocked_shots_per_game}}
-                </a>
-
-                </div>
-                <div>
-                  <a [routerLink]="[data.team_leaders.blocked_shots_per_game[3]?.profile_url || '']" rel="nofollow" class="link-black">
-                  {{data.team_leaders.blocked_shots_per_game[3].full_name}}: {{data.team_leaders.blocked_shots_per_game[3].blocked_shots_per_game}}
-                </a>
-
-                </div>
-                <div>
-                  <a [routerLink]="[data.team_leaders.blocked_shots_per_game[4]?.profile_url || '']" rel="nofollow" class="link-black">
-                  {{data.team_leaders.blocked_shots_per_game[4].full_name}}: {{data.team_leaders.blocked_shots_per_game[4].blocked_shots_per_game}}
-                  </a></div>
-  
-                
-              </div>
-            </div>
-          </div>
-       
-      </ng-container>
-              </div>
-               
-            </div>
-          </div>
-          </ng-container>
-        </div>
+     
         <div class="col-12" *ngIf="data.player_stats">
           <h2 class="page-heading-two">
             Players Stats
@@ -1404,7 +1172,242 @@
         </ng-container>
       </div> 
       
-   
+      <div *ngIf="ddData.tabs['all'] || ddData.tabs['player-stats']" class="row">
+        <ng-container *ngIf="hasData; else noDataTpl">
+        <div class="col-12" *ngIf="data.team_leaders">
+          <h2 class="page-heading-two">
+            {{data.nav.team_name | lastTeamName}} Team Leaders
+          </h2>
+          <div class="leader-container">
+            <div class="d-flex flex-wrap leader-box-wrapper">
+              <ng-container >
+                  <div class="leader-box" >
+                    <h5>Points Per Game</h5>
+                    <div>
+                      <div class="leader-image-wrapper">
+                        <a [routerLink]="[data.team_leaders.points_per_game[0]?.profile_url || '']" rel="nofollow" class="link-black">
+                          <img [src]="data.team_leaders.points_per_game[0].photo_url" alt="{{data.team_leaders.points_per_game[0].full_name}}">
+                        </a>
+                      </div>
+                      <div class="leader-content-wrapper">
+                        <div class="leader-name">
+                          <a [routerLink]="[data.team_leaders.points_per_game[0].profile_url || '']" class="link-black-underline">
+                            {{data.team_leaders.points_per_game[0].full_name}} :{{data.team_leaders.points_per_game[0].points_per_game}}
+                          </a>
+                        </div>
+                        <div>
+                          <a [routerLink]="[data.team_leaders.points_per_game[1].profile_url || '']" class="link-black-underline">
+                            {{data.team_leaders.points_per_game[1].full_name}} :{{data.team_leaders.points_per_game[1].points_per_game}}
+                          </a>                            
+                         </div>
+                        <div>
+                          <a [routerLink]="[data.team_leaders.points_per_game[2].profile_url || '']" class="link-black-underline">{{data.team_leaders.points_per_game[2].full_name}}: {{data.team_leaders.points_per_game[2].points_per_game}}
+                            </a>
+                          </div>
+                        <div> <a [routerLink]="[data.team_leaders.points_per_game[3].profile_url || '']" class="link-black-underline">
+                          {{data.team_leaders.points_per_game[3].full_name}}: {{data.team_leaders.points_per_game[3].points_per_game}}</a>
+
+                        </div>
+                        <div>
+                          
+                          <a [routerLink]="[data.team_leaders.points_per_game[4].profile_url || '']" class="link-black-underline">
+                          {{data.team_leaders.points_per_game[4].full_name}}: {{data.team_leaders.points_per_game[4].points_per_game}}
+                        </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+               
+              </ng-container>
+              <ng-container >
+                <div class="leader-box" >
+                  <h5>Assists Per Game</h5>
+                  <div>
+                    <div class="leader-image-wrapper">
+                      <a [routerLink]="[data.team_leaders.assists_per_game[0]?.profile_url || '']" rel="nofollow" class="link-black">
+                        <img [src]="data.team_leaders.assists_per_game[0].photo_url" alt="{{data.team_leaders.assists_per_game[0].full_name}}">
+                      </a>
+                    </div>
+                    <div class="leader-content-wrapper">
+                      <div class="leader-name">
+                        <a [routerLink]="[data.team_leaders.assists_per_game[0].profile_url || '']" class="link-black-underline">
+                          {{data.team_leaders.assists_per_game[0].full_name}} :{{data.team_leaders.points_per_game[0].assists_per_game}}
+                        </a>
+                      </div>
+                      <div> <a [routerLink]="[data.team_leaders.assists_per_game[1].profile_url || '']" class="link-black-underline">
+                        {{data.team_leaders.assists_per_game[1].full_name}}: {{data.team_leaders.assists_per_game[1].assists_per_game}}
+                      </a>
+
+                      </div>
+                      <div>
+                        <a [routerLink]="[data.team_leaders.assists_per_game[2].profile_url || '']" class="link-black-underline">
+                        {{data.team_leaders.assists_per_game[2].full_name}}: {{data.team_leaders.assists_per_game[2].assists_per_game}}
+                      </a>
+
+                      </div>
+                      <div>
+                        <a [routerLink]="[data.team_leaders.assists_per_game[3].profile_url || '']" class="link-black-underline">
+                        
+                        {{data.team_leaders.assists_per_game[3].full_name}}: {{data.team_leaders.assists_per_game[3].assists_per_game}}
+                      
+                      </a>
+                    </div>
+                      <div>
+                        <a [routerLink]="[data.team_leaders.assists_per_game[4].profile_url || '']" class="link-black-underline">
+                        
+                        {{data.team_leaders.assists_per_game[4].full_name}}: {{data.team_leaders.assists_per_game[4].assists_per_game}}
+                      
+                      </a>
+                    </div>
+
+                      
+                    </div>
+                  </div>
+                </div>
+             
+            </ng-container>
+           
+          <ng-container >
+            <div class="leader-box" >
+              <h5>Rebounds Per Game</h5>
+              <div>
+                <div class="leader-image-wrapper">
+                  <a [routerLink]="[data.team_leaders.rebounds_per_game[0]?.profile_url || '']" rel="nofollow" class="link-black">
+                    <img [src]="data.team_leaders.rebounds_per_game[0].photo_url" alt="{{data.team_leaders.rebounds_per_game[0].full_name}}">
+                  </a>
+                </div>
+                <div class="leader-content-wrapper">
+                  <div class="leader-name">
+                    <a [routerLink]="[data.team_leaders.rebounds_per_game[0].profile_url || '']" class="link-black-underline">
+                      {{data.team_leaders.rebounds_per_game[0].full_name}} :{{data.team_leaders.rebounds_per_game[0].rebounds_per_game}}
+                    </a>
+                  </div>
+                  <div>
+                    <a [routerLink]="[data.team_leaders.rebounds_per_game[1].profile_url || '']" class="link-black-underline">
+                    {{data.team_leaders.rebounds_per_game[1].full_name}}: {{data.team_leaders.rebounds_per_game[1].rebounds_per_game}}
+                  
+                  </a></div>
+                  <div>
+                    <a [routerLink]="[data.team_leaders.rebounds_per_game[2].profile_url || '']" class="link-black-underline">
+                      {{data.team_leaders.rebounds_per_game[2].full_name}}: {{data.team_leaders.rebounds_per_game[2].rebounds_per_game}}
+                    </a></div>
+                  <div>
+                    
+                    <a [routerLink]="[data.team_leaders.rebounds_per_game[3].profile_url || '']" class="link-black-underline">
+                      {{data.team_leaders.rebounds_per_game[3].full_name}}: {{data.team_leaders.rebounds_per_game[3].rebounds_per_game}}
+                    </a>
+
+                    </div>
+                  <div>
+                    <a [routerLink]="[data.team_leaders.rebounds_per_game[4].profile_url || '']" class="link-black-underline">
+                    {{data.team_leaders.rebounds_per_game[4].full_name}}: {{data.team_leaders.rebounds_per_game[4].rebounds_per_game}}
+                  </a>
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+         
+        </ng-container>
+        <ng-container >
+          <div class="leader-box" >
+            <h5>Steals Per Game</h5>
+            <div>
+              <div class="leader-image-wrapper">
+                <a [routerLink]="[data.team_leaders.steals_per_game[0]?.profile_url || '']" rel="nofollow" class="link-black">
+                  <img [src]="data.team_leaders.steals_per_game[0].photo_url" alt="{{data.team_leaders.steals_per_game[0].full_name}}">
+                </a>
+              </div>
+              <div class="leader-content-wrapper">
+                <div class="leader-name">
+                  <a [routerLink]="[data.team_leaders.steals_per_game[0].profile_url || '']" class="link-black-underline">
+                    {{data.team_leaders.steals_per_game[0].full_name}} :{{data.team_leaders.steals_per_game[0].steals_per_game}}
+                  </a>
+                </div>
+                <div>
+                  <a [routerLink]="[data.team_leaders.steals_per_game[1].profile_url || '']" class="link-black-underline"> 
+                  
+                  {{data.team_leaders.steals_per_game[1].full_name}}: {{data.team_leaders.steals_per_game[1].steals_per_game}}
+                  </a>
+
+                </div>
+               
+                <div>
+                  <a [routerLink]="[data.team_leaders.steals_per_game[2].profile_url || '']" class="link-black-underline">
+                  {{data.team_leaders.steals_per_game[2].full_name}}: {{data.team_leaders.steals_per_game[2].steals_per_game}}
+                </a>
+
+                </div>
+                <div>
+                  <a [routerLink]="[data.team_leaders.steals_per_game[3].profile_url || '']" class="link-black-underline">
+                  {{data.team_leaders.steals_per_game[3].full_name}}: {{data.team_leaders.steals_per_game[3].steals_per_game}}
+                </a>
+
+                </div>
+                <div>
+                  <a [routerLink]="[data.team_leaders.steals_per_game[4].profile_url || '']" class="link-black-underline">
+                  {{data.team_leaders.steals_per_game[4].full_name}}: {{data.team_leaders.steals_per_game[4].steals_per_game}}
+                </a>
+                </div>
+
+                
+              </div>
+            </div>
+          </div>
+       
+      </ng-container>
+
+      <ng-container >
+        <div class="leader-box" >
+          <h5>Blocks per Game</h5>
+          <div>
+            <div class="leader-image-wrapper">
+              <a [routerLink]="[data.team_leaders.blocked_shots_per_game[0]?.profile_url || '']" rel="nofollow" class="link-black">
+                <img [src]="data.team_leaders.blocked_shots_per_game[0].photo_url" alt="{{data.team_leaders.blocked_shots_per_game[0].full_name}}">
+              </a>
+            </div>
+            <div class="leader-content-wrapper">
+              <div class="leader-name">
+                <a [routerLink]="[data.team_leaders.blocked_shots_per_game[0].profile_url || '']" class="link-black-underline">
+                  {{data.team_leaders.blocked_shots_per_game[0].full_name}} :{{data.team_leaders.blocked_shots_per_game[0].blocked_shots_per_game}}
+                </a>
+              </div>
+              <div>
+                <a [routerLink]="[data.team_leaders.blocked_shots_per_game[1]?.profile_url || '']" rel="nofollow" class="link-black">
+                {{data.team_leaders.blocked_shots_per_game[1].full_name}}: {{data.team_leaders.blocked_shots_per_game[1].blocked_shots_per_game}}
+              </a>
+
+              </div>
+              <div>
+                <a [routerLink]="[data.team_leaders.blocked_shots_per_game[2]?.profile_url || '']" rel="nofollow" class="link-black">
+                {{data.team_leaders.blocked_shots_per_game[2].full_name}}: {{data.team_leaders.blocked_shots_per_game[2].blocked_shots_per_game}}
+              </a>
+
+              </div>
+              <div>
+                <a [routerLink]="[data.team_leaders.blocked_shots_per_game[3]?.profile_url || '']" rel="nofollow" class="link-black">
+                {{data.team_leaders.blocked_shots_per_game[3].full_name}}: {{data.team_leaders.blocked_shots_per_game[3].blocked_shots_per_game}}
+              </a>
+
+              </div>
+              <div>
+                <a [routerLink]="[data.team_leaders.blocked_shots_per_game[4]?.profile_url || '']" rel="nofollow" class="link-black">
+                {{data.team_leaders.blocked_shots_per_game[4].full_name}}: {{data.team_leaders.blocked_shots_per_game[4].blocked_shots_per_game}}
+                </a></div>
+
+              
+            </div>
+          </div>
+        </div>
+     
+    </ng-container>
+            </div>
+             
+          </div>
+        </div>
+        </ng-container>
+      </div>
    
    
     </div>

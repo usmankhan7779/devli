@@ -31,7 +31,7 @@ import { PlayersPageComponent } from '../shared/components/players-page/players-
 // Services
 import { TeamLineupService } from './team-lineup/team-lineup.service';
 import { LineupsGatewayService } from './lineups-gateway/lienups.service';
-// import { ScheduleService } from './schedule/schedule.service';
+ 
 // Resolvers
 import { IndividualRosterResolver } from './roster/individual-roster.resolver';
 import { IndividualTeamLineupResolver } from './team-lineup/individual-team-lineup.resolver';
@@ -57,9 +57,12 @@ import { NoNbaStatsComponent } from './stats/no-nba-stats-component/no-nba-stats
 import { TeamService } from 'app/nfl/teams/team.service';
 import { TeamRankingsService } from 'app/nfl/teams/team-rankings/team-rankings.service';
 import { IndTeamStatsService } from 'app/nfl/teams/ind-team-stats/ind-team-stats.service';
-// import { ScheduleService } from './schedule/schedule.service';
-import { PreselectNflScheduleTeamSeasonDirective } from 'app/shared/directives/nfl/preselect-nfl-schedule-team-season.directive';
-import { ScheduleService } from 'app/nfl/schedule/schedule.service';
+  
+import { ScheduleService } from './schedule/schedule.service';
+// import { ScheduleService } from 'app/nfl/schedule/schedule.service';
+import { DepthChartService } from './depth-charts/depth-chart.service';
+import { TeamSnapCountsService } from 'app/nfl/team-snap-counts-page/team-snap-counts.service';
+ 
 
 const nbaRouting: ModuleWithProviders = RouterModule.forChild([
   {
@@ -180,7 +183,13 @@ const nbaRouting: ModuleWithProviders = RouterModule.forChild([
         component: NbaTeamStatsComponent,
         resolve: {
           pageData: NbaTeamStatsResolver
-        }
+        },
+        data: {
+          breadcrumb: 'NBA Team Stats',
+          title: 'NBA Teams',
+          league: 'nba'
+        },
+         
       },
       {
         path: 'depth-charts/:year/:team_name',
@@ -478,10 +487,12 @@ const nbaRouting: ModuleWithProviders = RouterModule.forChild([
     nbaRouting
   ],
   providers: [
+    DepthChartService,
     TeamLineupService,
     LineupsGatewayService,
     ScheduleService,
-   
+    TeamSnapCountsService,
+  //  ScheduleService,
     // Resolvers
     IndividualRosterResolver,
     NbaTeamStatsService,
