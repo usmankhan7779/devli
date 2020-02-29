@@ -29,6 +29,7 @@ import { PreselectNbaLineupTeamSeasonDirective } from './nba/preselect-nba-lineu
 import { BrowserIfDirective } from './browserIf.directive';
 import { PreselectMlbLineupTeamSeasonDirective } from './mlb/preselect-mlb-lineup-team-season.directive';
 import { DataApiTableDirective } from './mf-data-api-table.directive';
+import { PreNbaStatsTeamSeasonDirective } from './nba/preselect-nba-stats-team-season.directive';
 
 
 @NgModule({
@@ -47,6 +48,7 @@ import { DataApiTableDirective } from './mf-data-api-table.directive';
     PreselectNbaDepthChartTeamSeasonDirective,
     PreselectNbaRosterTeamSeasonDirective,
     PreselectNbaScheduleTeamSeasonDirective,
+    PreNbaStatsTeamSeasonDirective,
     PreselectNbaNewsTeamSeasonDirective,
     PreselectMlbNewsTeamSeasonDirective,
     AutofocusDirective,
@@ -79,6 +81,7 @@ import { DataApiTableDirective } from './mf-data-api-table.directive';
     PreselectNbaDepthChartTeamSeasonDirective,
     PreselectNbaRosterTeamSeasonDirective,
     PreselectNbaScheduleTeamSeasonDirective,
+    PreNbaStatsTeamSeasonDirective,
     PreselectNbaNewsTeamSeasonDirective,
     PreselectMlbNewsTeamSeasonDirective,
     AutofocusDirective,

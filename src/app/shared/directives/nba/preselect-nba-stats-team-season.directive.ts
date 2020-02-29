@@ -5,7 +5,7 @@ import { NbaTeamStatsService } from 'app/nba/teams/nba-team-stats/nba-team-stats
 @Directive({
   selector: '[appPreselectNbaStatsTeamSeason]'
 })
-export class PreselectNflStatsTeamSeasonDirective {
+export class PreNbaStatsTeamSeasonDirective {
   // tslint:disable-next-line:no-input-rename
   @Input('appPreselectNbaStatsTeamSeason') season: string;
   constructor(
@@ -13,7 +13,7 @@ export class PreselectNflStatsTeamSeasonDirective {
   ) { }
 
   @HostListener('click') onClick() {
-    alert(this.season)
+   
     if (this.season) {
       this.nbaTeamStatsService.setPreSelectedTeamSeason(this.season);
       // console.log(  this.indTeamStatsService.setPreSelectedTeamSeason(this.season))

@@ -6,7 +6,7 @@
 export const environment = {
   production: false,
   environment: 'dev',
-  api_url: 'https://dev-api.lineups.com',
+  api_url: 'https://staging-api.lineups.com',
   stripe: {
     key: 'pk_test_gCyw0Cd1MoCq43er7CJe8Nb6'
   },

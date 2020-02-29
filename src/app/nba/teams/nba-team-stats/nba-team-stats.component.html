@@ -44,7 +44,7 @@
             </p>
           </div>
           <div *ngIf="data.nav.status?.status === 'Final'" class="float-right">
-            <span [ngClass]="{'font-bold': data.nav.status.away_score > data.nav.status.home_score}">{{data.nav.status.away}} {{data.nav.status.away_score}}</span> @ <span [ngClass]="{'font-bold': data.nav.status.home_score > data.nav.status.away_score}">{{data.nav.status.home}} {{data.nav.status.home_score}}</span>
+            <span [ngClass]="{'font-bold': data.nav.status.away_team_score > data.nav.status.home_team_score}">{{data.nav.status.away}} {{data.nav.status.away_team_score}}</span> @ <span [ngClass]="{'font-bold': data.nav.status.home_team_score > data.nav.status.away_team_score}">{{data.nav.status.home}} {{data.nav.status.home_team_score}}</span>
             <br>
             <p class="text-center">Final</p>
           </div>
@@ -951,222 +951,12 @@
         </div>
        
      
-        <div class="col-12" *ngIf="data.player_stats">
-          <h2 class="page-heading-two">
-            Players Stats
-          </h2>
-          <div class="multi-row-data-table-wrapper big-table custom-width mb-0">
-            <table
-               
-               [mfData]="data.player_stats"
-             
-              #playerstatsTable="mfDataTable"
-              class="multi-row-data-table t-stripped">
-              <colgroup span="1"></colgroup>
-              <colgroup span="2"></colgroup>
-              <colgroup span="9"></colgroup>
-              <colgroup span="6"></colgroup>
-              <colgroup span="4"></colgroup>
-              <colgroup span="3"></colgroup>
-              <colgroup span="3"></colgroup>
-              <colgroup span="2"></colgroup>
-              <tbody>
-              <tr class="t-header">
-                <th colspan="1" scope="colgroup" class="text-center main-border">NAME</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">RTG</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">MINS</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">PTS</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">AST</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">REB</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">STL</th>
 
 
-                <th colspan="1" scope="colgroup" class="text-center main-border">Blk</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">TO</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">FG%</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">FGM</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">3PTM</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">3PA</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">3P%</th>
 
 
-                <th colspan="1" scope="colgroup" class="text-center main-border">FTM</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">FTA</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">FT%</th>
-                
-              </tr>
-            
-              <tr *ngFor="let player_stats_data of playerstatsTable.data" class="t-content">
-                <td>
-                  <app-player-link [league]="'nba'" [playerName]="player_stats_data.name" [playerUrl]="player_stats_data.profile_url" [generateShortName]="false"></app-player-link>
-
-             
-                </td>
-                <td>
-                  
-                  
-                  <app-rating [value]="player_stats_data.lineups_rating"></app-rating>
-                </td>
-                <td>
-                  <span *ngIf="player_stats_data.season_stats.minutes!== null">
-                    {{player_stats_data.season_stats.minutes}}
-                  </span>
-                  <span *ngIf="player_stats_data.season_stats.minutes == null">
-                    0
-                  </span>
-                  <!-- {{player_stats_data.season_stats.minutes}} -->
-                </td>
-
-                <td>
-                  <span *ngIf="player_stats_data.season_stats.points !== null">
-                    {{player_stats_data.season_stats.points }}
-                  </span>
-                  <span *ngIf="player_stats_data.season_stats.points == null">
-                    0
-                  </span> 
-                </td>
-                <td>
-                  <span *ngIf="player_stats_data.season_stats.assists !== null">
-                    {{player_stats_data.season_stats.assists }}
-                  </span>
-                  <span *ngIf="player_stats_data.season_stats.assists == null">
-                    0
-                  </span> 
-                  
-                </td>
-                <td>
-                  
-                  <span *ngIf="player_stats_data.season_stats.rebounds !== null">
-                    {{player_stats_data.season_stats.rebounds }}
-                  </span>
-                  <span *ngIf="player_stats_data.season_stats.rebounds == null">
-                    0
-                  </span> 
-                  
-                </td>
-                 <td>
-                  <span *ngIf="player_stats_data.season_stats.steals !== null">
-                    {{player_stats_data.season_stats.steals }}
-                  </span>
-                  <span *ngIf="player_stats_data.season_stats.steals == null">
-                    0
-                  </span> 
-                   </td>
-
-
-                 <td>
-                  <span *ngIf="player_stats_data.season_stats.blocked_shots !== null">
-                    {{player_stats_data.season_stats.blocked_shots }}
-                  </span>
-                  <span *ngIf="player_stats_data.season_stats.blocked_shots == null">
-                    0
-                  </span>  
-                   </td>
-                <td>
-                  
-                  <span *ngIf="player_stats_data.season_stats.turnovers !== null">
-                    {{player_stats_data.season_stats.turnovers }}
-                  </span>
-                  <span *ngIf="player_stats_data.season_stats.turnovers == null">
-                    0
-                  </span> 
-                  </td>
-                <td>
-                  <span *ngIf="player_stats_data.season_stats.field_goals_percentage !== null">
-                    {{player_stats_data.season_stats.field_goals_percentage }}
-                  </span>
-                  <span *ngIf="player_stats_data.season_stats.field_goals_percentage == null">
-                    0
-                  </span> 
-                 
-                </td>
-                 <td>
-                   
-                  <span *ngIf="player_stats_data.season_stats.field_goals_made !== null">
-                    {{player_stats_data.season_stats.field_goals_made }}
-                  </span>
-                  <span *ngIf="player_stats_data.season_stats.field_goals_made == null">
-                    0
-                  </span> 
-              </td>
-
-
-                 <td>
-                   
-                  <span *ngIf="player_stats_data.season_stats.three_pointers_made !== null">
-                    {{player_stats_data.season_stats.three_pointers_made }}
-                  </span>
-                  <span *ngIf="player_stats_data.season_stats.three_pointers_made == null">
-                    0
-                  </span> 
-                   </td>
-
-                 <td>
-                  <span *ngIf="player_stats_data.season_stats.three_pointers_attempted !== null">
-                    {{player_stats_data.season_stats.three_pointers_attempted }}
-                  </span>
-                  <span *ngIf="player_stats_data.season_stats.three_pointers_attempted == null">
-                    0
-                  </span>  
-                  
-                 </td>
-                 
-                <td>
-                  
-                  <span *ngIf="player_stats_data.season_stats.three_pointers_percentage !== null">
-                    {{player_stats_data.season_stats.three_pointers_percentage }}
-                  </span>
-                  <span *ngIf="player_stats_data.season_stats.pothree_pointers_percentageints == null">
-                    0
-                  </span> 
-                  </td>
-                <td>
-                  
-                  <span *ngIf="player_stats_data.season_stats.free_throws_made !== null">
-                    {{player_stats_data.season_stats.free_throws_made }}
-                  </span>
-                  <span *ngIf="player_stats_data.season_stats.free_throws_made == null">
-                    0
-                  </span> 
-                  </td>
-                 <td>
-                   
-                  <span *ngIf="player_stats_data.season_stats.free_throws_attempted !== null">
-                    {{player_stats_data.season_stats.free_throws_attempted }}
-                  </span>
-                  <span *ngIf="player_stats_data.season_stats.free_throws_attempted == null">
-                    0
-                  </span> 
-                   </td>
-
-
-                 <td>
-                   
-                  <span *ngIf="player_stats_data.season_stats.free_throw_percentage !== null">
-                    {{player_stats_data.season_stats.free_throw_percentage }}
-                  </span>
-                  <span *ngIf="player_stats_data.season_stats.free_throw_percentage == null">
-                    0
-                  </span> 
-                 </td>
-             
-
-                
-<!-- 
-                <td>
-                  <a *ngIf="player_stats_data.profile_url" [appPreselectNflStatsTeamSeason]="params?.year" [routerLink]="[player_stats_data.profile_url]" class="link-black-underline">
-                    {{ player_stats_data.profile_url}}
-                  </a>
-                  <span *ngIf="!player_stats_data.profile_url">
-                    {{player_stats_data.profile_url}}
-                  </span>
-                </td> -->
-               
-                     </tr>
-              </tbody>
-            </table> <!-- END: Yearly Lineups Table -->
-          </div>
-        </div>
+        
+        
       
 
         </ng-container>
@@ -1407,6 +1197,222 @@
           </div>
         </div>
         </ng-container>
+        <div class="col-12" *ngIf="data.player_stats">
+          <h2 class="page-heading-two">
+            Players Stats
+          </h2>
+          <div class="multi-row-data-table-wrapper big-table custom-width mb-0">
+            <table
+               
+               [mfData]="data.player_stats"
+             
+              #playerstatsTable="mfDataTable"
+              class="multi-row-data-table t-stripped">
+              <colgroup span="1"></colgroup>
+              <colgroup span="2"></colgroup>
+              <colgroup span="9"></colgroup>
+              <colgroup span="6"></colgroup>
+              <colgroup span="4"></colgroup>
+              <colgroup span="3"></colgroup>
+              <colgroup span="3"></colgroup>
+              <colgroup span="2"></colgroup>
+              <tbody>
+              <tr class="t-header">
+                <th colspan="1" scope="colgroup" class="text-center main-border">NAME</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">RTG</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">MINS</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">PTS</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">AST</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">REB</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">STL</th>
+
+
+                <th colspan="1" scope="colgroup" class="text-center main-border">Blk</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">TO</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">FG%</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">FGM</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">3PTM</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">3PA</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">3P%</th>
+
+
+                <th colspan="1" scope="colgroup" class="text-center main-border">FTM</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">FTA</th>
+                <th colspan="1" scope="colgroup" class="text-center main-border">FT%</th>
+                
+              </tr>
+            
+              <tr *ngFor="let player_stats_data of playerstatsTable.data" class="t-content">
+                <td>
+                  <app-player-link [league]="'nba'" [playerName]="player_stats_data.name" [playerUrl]="player_stats_data.profile_url" [generateShortName]="false"></app-player-link>
+
+             
+                </td>
+                <td>
+                  
+                  
+                  <app-rating [value]="player_stats_data.lineups_rating"></app-rating>
+                </td>
+                <td>
+                  <span *ngIf="player_stats_data.season_stats.minutes!== null">
+                    {{player_stats_data.season_stats.minutes}}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.minutes == null">
+                    0
+                  </span>
+                  <!-- {{player_stats_data.season_stats.minutes}} -->
+                </td>
+
+                <td>
+                  <span *ngIf="player_stats_data.season_stats.points !== null">
+                    {{player_stats_data.season_stats.points }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.points == null">
+                    0
+                  </span> 
+                </td>
+                <td>
+                  <span *ngIf="player_stats_data.season_stats.assists !== null">
+                    {{player_stats_data.season_stats.assists }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.assists == null">
+                    0
+                  </span> 
+                  
+                </td>
+                <td>
+                  
+                  <span *ngIf="player_stats_data.season_stats.rebounds !== null">
+                    {{player_stats_data.season_stats.rebounds }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.rebounds == null">
+                    0
+                  </span> 
+                  
+                </td>
+                 <td>
+                  <span *ngIf="player_stats_data.season_stats.steals !== null">
+                    {{player_stats_data.season_stats.steals }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.steals == null">
+                    0
+                  </span> 
+                   </td>
+
+
+                 <td>
+                  <span *ngIf="player_stats_data.season_stats.blocked_shots !== null">
+                    {{player_stats_data.season_stats.blocked_shots }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.blocked_shots == null">
+                    0
+                  </span>  
+                   </td>
+                <td>
+                  
+                  <span *ngIf="player_stats_data.season_stats.turnovers !== null">
+                    {{player_stats_data.season_stats.turnovers }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.turnovers == null">
+                    0
+                  </span> 
+                  </td>
+                <td>
+                  <span *ngIf="player_stats_data.season_stats.field_goals_percentage !== null">
+                    {{player_stats_data.season_stats.field_goals_percentage }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.field_goals_percentage == null">
+                    0
+                  </span> 
+                 
+                </td>
+                 <td>
+                   
+                  <span *ngIf="player_stats_data.season_stats.field_goals_made !== null">
+                    {{player_stats_data.season_stats.field_goals_made }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.field_goals_made == null">
+                    0
+                  </span> 
+              </td>
+
+
+                 <td>
+                   
+                  <span *ngIf="player_stats_data.season_stats.three_pointers_made !== null">
+                    {{player_stats_data.season_stats.three_pointers_made }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.three_pointers_made == null">
+                    0
+                  </span> 
+                   </td>
+
+                 <td>
+                  <span *ngIf="player_stats_data.season_stats.three_pointers_attempted !== null">
+                    {{player_stats_data.season_stats.three_pointers_attempted }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.three_pointers_attempted == null">
+                    0
+                  </span>  
+                  
+                 </td>
+                 
+                <td>
+                  
+                  <span *ngIf="player_stats_data.season_stats.three_pointers_percentage !== null">
+                    {{player_stats_data.season_stats.three_pointers_percentage }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.pothree_pointers_percentageints == null">
+                    0
+                  </span> 
+                  </td>
+                <td>
+                  
+                  <span *ngIf="player_stats_data.season_stats.free_throws_made !== null">
+                    {{player_stats_data.season_stats.free_throws_made }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.free_throws_made == null">
+                    0
+                  </span> 
+                  </td>
+                 <td>
+                   
+                  <span *ngIf="player_stats_data.season_stats.free_throws_attempted !== null">
+                    {{player_stats_data.season_stats.free_throws_attempted }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.free_throws_attempted == null">
+                    0
+                  </span> 
+                   </td>
+
+
+                 <td>
+                   
+                  <span *ngIf="player_stats_data.season_stats.free_throw_percentage !== null">
+                    {{player_stats_data.season_stats.free_throw_percentage }}
+                  </span>
+                  <span *ngIf="player_stats_data.season_stats.free_throw_percentage == null">
+                    0
+                  </span> 
+                 </td>
+             
+
+                
+<!-- 
+                <td>
+                  <a *ngIf="player_stats_data.profile_url" [appPreselectNflStatsTeamSeason]="params?.year" [routerLink]="[player_stats_data.profile_url]" class="link-black-underline">
+                    {{ player_stats_data.profile_url}}
+                  </a>
+                  <span *ngIf="!player_stats_data.profile_url">
+                    {{player_stats_data.profile_url}}
+                  </span>
+                </td> -->
+               
+                     </tr>
+              </tbody>
+            </table> <!-- END: Yearly Lineups Table -->
+          </div>
+        </div>
       </div>
    
    
