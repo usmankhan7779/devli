@@ -5,7 +5,22 @@
 </ng-template>
 
 <div class="container-fluid pb-3">
-  <app-breadcrumb></app-breadcrumb>
+  <!-- <app-breadcrumb  ></app-breadcrumb> -->
+  <ol  class="breadcrumb">
+    <li   class="bc-list-item">
+      <a class="breadcrumb" [routerLink]="['/']">
+        <span>Lineups</span>
+      </a>
+      <span class="breadcrumb-arrow">></span>
+    </li>
+    <li class="bc-list-item" *ngFor="let x of breadcrumbs; let i = index;">
+        <a (click)="onBreadcrumbClick(breadcrumb)" class="breadcrumb" href="{{x.url}}">{{x.label}}</a>
+        <span  *ngIf="i + 1 !== breadcrumbs.length"   class="breadcrumb-arrow">></span>      
+    </li>
+  </ol>
+
+
+
   <!-- Starting Lineups Page Title -->
   <div class="row">
     <div class="team-lineup-heading-wrap nfl-team-depth-chart-heading col-lg-8 col-12">
@@ -17,13 +32,37 @@
             <img [type]="'white'" [appSpriteImg]="'nba'" align="middle" [src]="data.nav.team_logo_white" alt="{{data.nav.team_name_full}}"/>
           </div>
           <div class="team-heading-info">
-            <app-status
+            <!-- <app-status
               side="right"
               [isHeader]="true"
               mobileTitle="{{data.nav.team_name_full |lastTeamName }} Snaps"
               [teamName]="data.page_heading  || data.nav.team_name_full "
               [record]="data.nav.team_record + ', ' + data.nav.team_rank + ' '  + data.nav.team_division"
-            ></app-status>
+            ></app-status> -->
+
+
+            <!-- <app-status
+            side="right"
+            [isHeader]="true"
+            mobileTitle="{{data.nav.team_name_full | lastTeamName}} Snaps"
+            [teamName]="data.page_heading || data.nav.team_name_full"
+          ></app-status> -->
+          <!-- [record]="data.nav.team_record + ', ' + data.nav.team_rank + ' ' + data.nav.team_conference + ' ' + data.nav.team_division" -->
+
+          <div class="team-heading-info">
+            <h1 class="team-name">
+              <span class="hidden-xs-down">{{pageTitle}}</span>
+              <span class="hidden-sm-up">{{pageTitle | lastTeamName}} {{pageHeader === 'Lineup' ? 'Starting Lineup' : pageHeader}}</span>
+            </h1>
+            <h4 class="page-subheading team-meta-info">
+            
+
+              <span class="team-record">{{data.nav.team_record}},</span>
+              <!-- Team Division Rank -->
+              <span class="team-division-rank">{{data.nav.team_rank | ordinal}}</span>
+              <span class="team-league-and-division"> in {{data.nav.team_conference}} {{data.nav.team_division}}</span>
+            </h4>
+          </div>
          
 
           </div>
@@ -164,7 +203,8 @@
           <b>Division Record:</b> {{data.team_header.division_record}}
         </div>
         <div class="csv-text" style="
-        margin-top: -21px;">
+        margin-top: -21px;"
+        >
           <b>Head Coach:</b> {{data.team_header.head_coach}}
           <b >Assitant Coach:</b> {{data.team_header.assistant_coach[0]}}
           <b>Assitant Coach:</b> {{data.team_header.assistant_coach[1]}}
@@ -182,7 +222,7 @@
           <b>Assitant Coach:</b> {{data.team_header.assistant_coach[3]}}
           <b>Assitant Coach:</b> {{data.team_header.assistant_coach[4]}}
           <b>	General Manager:</b> {{data.team_header.general_manager}}
-          <b>Arena: Bank of America</b> {{data.team_header.arena}}
+          <b>Arena:</b>Bank of America {{data.team_header.arena}}
         </div>
      
       </div>
@@ -414,16 +454,21 @@
               </tr>
               <tr class="t-content">
                 <td>
-                  <app-rating *ngIf="data.team_rankings_values.team_rank; let overallRating" [value]="overallRating" [reverse]="true" [config]="ratingConfig"></app-rating>
+                  {{data.team_rankings_values.team_rank}}
+                  <!-- <app-rating *ngIf="data.team_rankings_values.team_rank; let overallRating" [value]="overallRating" [reverse]="true" [config]="ratingConfig"></app-rating> -->
                 </td>
                 <td>
-                  <app-rating *ngIf="data.team_rankings_values.offensive_rating; let offensiveRating" [value]="offensiveRating" [reverse]="true" [config]="ratingConfig"></app-rating>
+                  {{data.team_rankings_values.offensive_rating}}
+                  <!-- <app-rating *ngIf="data.team_rankings_values.offensive_rating; let offensiveRating" [value]="offensiveRating" [reverse]="true" [config]="ratingConfig"></app-rating> -->
                 </td>
                 <td>
-                  <app-rating *ngIf="data.team_rankings_values.defensive_rating; let defensiveRating" [value]="defensiveRating" [reverse]="true" [config]="ratingConfig"></app-rating>
+                  {{data.team_rankings_values.defensive_rating}}
+                  <!-- <app-rating *ngIf="data.team_rankings_values.defensive_rating; let defensiveRating" [value]="defensiveRating" [reverse]="true" [config]="ratingConfig"></app-rating> -->
                 </td>
                 <td class="main-border">
-                  <app-rating *ngIf="data.team_rankings_values.points_per_game; let specialTeamRating" [value]="specialTeamRating" [reverse]="true" [config]="ratingConfig"></app-rating>
+{{data.team_rankings_values.points_per_game}}
+
+                  <!-- <app-rating *ngIf="data.team_rankings_values.points_per_game; let specialTeamRating" [value]="specialTeamRating" [reverse]="true" [config]="ratingConfig"></app-rating> -->
                 </td>
 
                 <td>
@@ -542,7 +587,8 @@
           </h2>
           <div class="multi-row-data-table-wrapper big-table custom-width mb-0">
             <table
-              [mfRowsOnPage]="10000" [mfData]="data.team_offensive_stats"
+              [mfRowsOnPage]="10000" 
+              [mfData]="data.team_offensive_stats"
               [(mfSortBy)]="offenseSorting.sortByTeamStats"
               [(mfSortOrder)]="offenseSorting.sortOrderTeamStats"
               (mfSortByChange)="onSortOrder('offenseSorting', 'sortByTeamStats', 'sortOrderTeamStats', 'by', $event)"
@@ -570,7 +616,7 @@
               </tr>
               <tr class="t-sub-header">
                 <th scope="col" class="text-center ">
-                  <mfSorter by="Date">Date</mfSorter>
+                  <mfSorter by="date" >Date</mfSorter>
                 </th>
                 <th scope="col" class="text-center main-border">
                   <mfSorter by="Team">Team</mfSorter>
@@ -739,14 +785,22 @@
 
         <div class="col-12" *ngIf="data.team_defensive_stats">
           <h2 class="page-heading-two">
-            Team Offensive Stats
+            Team Defensive Stats
           </h2>
           <div class="multi-row-data-table-wrapper big-table custom-width mb-0">
             <table
                
+         
+
+
+
+
+              [mfRowsOnPage]="10000" 
               [mfData]="data.team_defensive_stats"
-              
-              
+              [(mfSortBy)]="defenseSorting.sortByTeamStats"
+              [(mfSortOrder)]="defenseSorting.sortOrderTeamStats"
+              (mfSortByChange)="onSortOrder('defenseSorting', 'sortByTeamStats', 'sortOrderTeamStats', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('defenseSorting', 'sortByTeamStats', 'sortOrderTeamStats', 'order', $event)"
               #teamDefensiveStatsTable="mfDataTable"
               class="multi-row-data-table t-stripped">
               <colgroup span="1"></colgroup>
@@ -771,7 +825,7 @@
               </tr>
               <tr class="t-sub-header">
                 <th scope="col" class="text-center " >
-                  <mfSorter by="Date">Date</mfSorter>
+                  <mfSorter by="date">Date</mfSorter>
                 </th>
                 <th scope="col" class="text-center main-border" >
                   <mfSorter by="Team">Team</mfSorter>
@@ -991,7 +1045,8 @@
                           </a>                            
                          </div>
                         <div>
-                          <a [routerLink]="[data.team_leaders.points_per_game[2].profile_url || '']" class="link-black-underline">{{data.team_leaders.points_per_game[2].full_name}}: {{data.team_leaders.points_per_game[2].points_per_game}}
+                          <a [routerLink]="[data.team_leaders.points_per_game[2].profile_url || '']" class="link-black-underline">
+                            {{data.team_leaders.points_per_game[2].full_name}}: {{data.team_leaders.points_per_game[2].points_per_game}}
                             </a>
                           </div>
                         <div> <a [routerLink]="[data.team_leaders.points_per_game[3].profile_url || '']" class="link-black-underline">
@@ -1021,7 +1076,7 @@
                     <div class="leader-content-wrapper">
                       <div class="leader-name">
                         <a [routerLink]="[data.team_leaders.assists_per_game[0].profile_url || '']" class="link-black-underline">
-                          {{data.team_leaders.assists_per_game[0].full_name}} :{{data.team_leaders.points_per_game[0].assists_per_game}}
+                          {{data.team_leaders.assists_per_game[0].full_name}} :{{data.team_leaders.assists_per_game[0].assists_per_game}}
                         </a>
                       </div>
                       <div> <a [routerLink]="[data.team_leaders.assists_per_game[1].profile_url || '']" class="link-black-underline">
@@ -1204,8 +1259,20 @@
           <div class="multi-row-data-table-wrapper big-table custom-width mb-0">
             <table
                
-               [mfData]="data.player_stats"
-             
+                
+
+
+
+
+
+
+
+              [mfRowsOnPage]="10000" 
+              [mfData]="data.player_stats"
+              [(mfSortBy)]="spSorting.sortByTeamStats"
+              [(mfSortOrder)]="spSorting.sortOrderTeamStats"
+              (mfSortByChange)="onSortOrder('spSorting', 'sortByTeamStats', 'sortOrderTeamStats', 'by', $event)"
+              (mfSortOrderChange)="onSortOrder('spSorting', 'sortByTeamStats', 'sortOrderTeamStats', 'order', $event)"
               #playerstatsTable="mfDataTable"
               class="multi-row-data-table t-stripped">
               <colgroup span="1"></colgroup>
@@ -1218,39 +1285,72 @@
               <colgroup span="2"></colgroup>
               <tbody>
               <tr class="t-header">
-                <th colspan="1" scope="colgroup" class="text-center main-border">NAME</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">RTG</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">MINS</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">PTS</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">AST</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">REB</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">STL</th>
+                <th scope="col" class="text-center" style="width: 175px;">
+                  <mfSorter by="name">NAME</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="RTG">RTG</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="MINS">MINS</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="PTS">PTS</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="AST">AST</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="REB">REB</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="STL">STL</mfSorter>
+                </th>
+
+                <th scope="col" class="text-center ">
+                  <mfSorter by="Blk">Blk</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="TO">TO</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="FG%">FG%</mfSorter>
+                </th>
 
 
-                <th colspan="1" scope="colgroup" class="text-center main-border">Blk</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">TO</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">FG%</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">FGM</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">3PTM</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">3PA</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">3P%</th>
-
-
-                <th colspan="1" scope="colgroup" class="text-center main-border">FTM</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">FTA</th>
-                <th colspan="1" scope="colgroup" class="text-center main-border">FT%</th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="FGM">FGM</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="3PTM">3PTM</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="3PA">3PA</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="3P%">3P%</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="FTM">FTM</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="FTA">FTA</mfSorter>
+                </th>
+                <th scope="col" class="text-center ">
+                  <mfSorter by="FT%">FT%</mfSorter>
+                </th>
+                 
+          
                 
               </tr>
             
-              <tr *ngFor="let player_stats_data of playerstatsTable.data" class="t-content">
-                <td>
-                  <app-player-link [league]="'nba'" [playerName]="player_stats_data.name" [playerUrl]="player_stats_data.profile_url" [generateShortName]="false"></app-player-link>
-
-             
+              <tr *ngFor="let player_stats_data of playerstatsTable.data" class="t-content  ">
+                <td style="text-align: left;">
+                  <app-player-link class="text-paddding" [league]="'nba'" [playerName]="player_stats_data.name" [playerUrl]="player_stats_data.profile_url" [generateShortName]="false">
+                    
+                  </app-player-link>
                 </td>
                 <td>
-                  
-                  
                   <app-rating [value]="player_stats_data.lineups_rating"></app-rating>
                 </td>
                 <td>

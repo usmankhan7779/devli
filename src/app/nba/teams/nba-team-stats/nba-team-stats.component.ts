@@ -36,24 +36,29 @@ export class NbaTeamStatsComponent implements OnInit {
   ratingConfig: any;
   ddData: any;
   pageTitle;
+  set_title;
   params: {
     team_name: string
     year?: string
   };
   hasData: boolean;
+  breadcrumbs = [];
 
+
+  
   offenseSorting = {
-    sortByTeamStats: 'Team/Date',
+     
+    sortByTeamStats: 'date',
     sortOrderTeamStats: 'asc',
   };
 
   defenseSorting = {
-    sortByTeamStats: 'total_points',
+    sortByTeamStats: 'date',
     sortOrderTeamStats: 'asc',
   };
 
   spSorting = {
-    sortByTeamStats: '3PTM',
+    sortByTeamStats: 'name',
     sortOrderTeamStats: 'asc',
   };
 
@@ -127,11 +132,11 @@ export class NbaTeamStatsComponent implements OnInit {
       this.params = {
         team_name: params.team_name.replace('-team-stats', ''),
       };
-      this.handleResponse(this.route.snapshot.data['pageData']);
-      console.log(this.route.snapshot.data['pageData']['team_leaders']['steals_per_game'][0]['profile_url'])
-   
-     
+      this.handleResponse(this.route.snapshot.data['pageData']);     
     });
+
+ 
+     
   }
 
   ngOnInit() {
@@ -236,26 +241,54 @@ export class NbaTeamStatsComponent implements OnInit {
           '@type': 'Person',
           'name': this.data.team_header.head_coach
         }
-        // ,
-        // 'member': [
-        //   ...this.generateMembers('quarterback_stats', 'Quarterback'),
-        //   ...this.generateMembers('running_back_stats', 'Running Back'),
-        //   ...this.generateMembers('wide_receiver_stats', 'Wide Receiver'),
-        //   ...this.generateMembers('tight_end_stats', 'Tight End'),
-        //   ...this.generateMembers('field_goal_kicker_stats', 'Field Goal Kicker'),
-        //   ...this.generateMembers('punter_stats', 'Punter'),
-        //   ...this.generateMembers('defensive_player_stats', 'Defensive Player')
-        // ]
+         
       }
     ]);
-    this.breadcrumbService.changeBreadcrumbs([
+    // this.breadcrumbService.changeBreadcrumbs([
+    //   {label: 'NBA', url: '/nba'},
+    //   {label: 'NBA Team Stats', url: '/nba/team-stats'},
+    //   {label: this.data.team_name_full, url: this.data.nav.team_stats_route},
+    // ]);
+
+
+    // this.pageTitle = this.data.page_data.heading;
+    
+    // this.title.setTitle(this.data.page_data.page_title);
+    if ( this.data.heading ==  ""){
+      
+      this.pageTitle = this.data.nav.team_name_full
+    }
+    else if (this.data.heading !== ""){
+      this.pageTitle = this.data.heading
+       
+    }
+    console.log(this.pageTitle)
+    if( this.data.page_title == ""){
+      this.set_title = this.data.nav.team_name_full  
+   
+    }
+    else if ( this.data.page_data !== ""){
+      this.set_title = this.data.page_data
+     
+    }
+    console.log(this.set_title)
+    this.title.setTitle(this.set_title);
+  
+    this.breadcrumbService.changeBreadcrumbs(this.breadcrumbs)
+
+    this.breadcrumbs =[
       {label: 'NBA', url: '/nba'},
       {label: 'NBA Team Stats', url: '/nba/team-stats'},
-      {label: this.data.team_name_full, url: this.data.nav.team_stats_route},
-    ]);
-    this.title.setTitle(this.data.page_title);
-  }
+      {label: this.pageTitle, url: `/nba/team-stats/${this.params.team_name}`
+    }
+       
+    ];
 
+ 
+    // this.title.setTitle('Milwaukee Bucks Depth Chart 2020');
+   
+  }
+ 
   private generateMembers(prop, role) {
     let data;
     try {
@@ -291,15 +324,15 @@ export class NbaTeamStatsComponent implements OnInit {
     };
   }
 
-  // getLeader(leaderType) {
-  //   let leader;
-  //   try {
-  //     leader = this.data.team_leaders[leaderType][0];
-  //   } catch (err) {
-  //     // console.error('No Such leader key in team_leaders object', leaderType);
-  //   }
-  //   return leader;
-  // }
+  getLeader(leaderType) {
+    let leader;
+    try {
+      leader = this.data.team_leaders[leaderType][0];
+    } catch (err) {
+      // console.error('No Such leader key in team_leaders object', leaderType);
+    }
+    return leader;
+  }
 
   onSortOrder(model, sortBy, sortOrder, mode, $event) {
     if (mode === 'by') {
