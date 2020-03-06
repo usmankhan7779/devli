@@ -105,7 +105,7 @@
     "tinycolor2": "1.4.1",
     "ts-helpers": "1.1.2",
     "tslib": "1.10.0",
-    "webpack-bundle-analyzer": "3.0.3",
+    "webpack-bundle-analyzer": "3.6.0",
     "zone.js": "0.9.1"
   },
   "devDependencies": {
